@@ -17,7 +17,7 @@
 		///     Compiles all assets of the compiler's asset source type.
 		/// </summary>
 		/// <param name="assets">The assets that should be compiled.</param>
-		public override bool Compile(IEnumerable<Asset> assets)
+		public override void Compile(IEnumerable<Asset> assets)
 		{
 			var xamlAssets = assets.OfType<XamlAsset>().ToArray();
 
@@ -45,8 +45,6 @@
 
 				File.WriteAllText(Configuration.CSharpXamlFile, serializer.GetGeneratedCode());
 			}
-
-			return true;
 		}
 
 		/// <summary>

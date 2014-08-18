@@ -59,7 +59,6 @@
 				if (!Configuration.XamlFilesOnly)
 					Configuration.CheckFxcAvailability();
 
-				var success = true;
 				using (var compilationUnit = new CompilationUnit())
 				{
 					compilationUnit.LoadAssets();
@@ -68,7 +67,7 @@
 						compilationUnit.Clean();
 
 					if (compile)
-						success = compilationUnit.Compile();
+						compilationUnit.Compile();
 
 					var elapsedSeconds = watch.ElapsedMilliseconds / 1000.0;
 
@@ -76,15 +75,13 @@
 						Log.Info("Done.");
 					else
 					{
-						if (success)
-							Configuration.StoreAssetFileVersion();
-
+						Configuration.StoreAssetFileVersion();
 						Console.WriteLine();
 						Log.Info("Asset compilation completed ({0:F2}s).", elapsedSeconds);
 					}
 				}
 
-				return success ? 0 : -1;
+				return 0;
 			}
 			catch (AggregateException e)
 			{

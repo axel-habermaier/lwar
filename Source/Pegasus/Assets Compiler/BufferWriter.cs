@@ -17,20 +17,25 @@
 		private readonly MemoryStream _buffer = new MemoryStream(1024 * 1024);
 
 		/// <summary>
+		///     The writer that is used to write the binary data.
+		/// </summary>
+		private readonly BinaryWriter _writer;
+
+		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		public BufferWriter()
+		{
+			_writer = new BinaryWriter(_buffer);
+		}
+
+		/// <summary>
 		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		public void Dispose()
 		{
 			_buffer.Dispose();
-		}
-
-		/// <summary>
-		///     Appends the given byte value to the end of the payload.
-		/// </summary>
-		/// <param name="value">The value that should be appended.</param>
-		private void Append(byte value)
-		{
-			_buffer.WriteByte(value);
+			_writer.Dispose();
 		}
 
 		/// <summary>
@@ -39,7 +44,7 @@
 		/// <param name="value">The value that should be written.</param>
 		public void WriteBoolean(bool value)
 		{
-			Append((byte)(value ? 1 : 0));
+			_writer.Write((byte)(value ? 1 : 0));
 		}
 
 		/// <summary>
@@ -48,7 +53,7 @@
 		/// <param name="value">The value that should be written.</param>
 		public void WriteSByte(sbyte value)
 		{
-			Append((byte)value);
+			_writer.Write((byte)value);
 		}
 
 		/// <summary>
@@ -57,7 +62,7 @@
 		/// <param name="value">The value that should be written.</param>
 		public void WriteByte(byte value)
 		{
-			Append(value);
+			_writer.Write(value);
 		}
 
 		/// <summary>
@@ -69,8 +74,7 @@
 			if (PlatformInfo.Endianess != Endianess.Little)
 				value = EndianConverter.Convert(value);
 
-			Append((byte)value);
-			Append((byte)(value >> 8));
+			_writer.Write(value);
 		}
 
 		/// <summary>
@@ -82,8 +86,7 @@
 			if (PlatformInfo.Endianess != Endianess.Little)
 				value = EndianConverter.Convert(value);
 
-			Append((byte)value);
-			Append((byte)(value >> 8));
+			_writer.Write(value);
 		}
 
 		/// <summary>
@@ -104,10 +107,7 @@
 			if (PlatformInfo.Endianess != Endianess.Little)
 				value = EndianConverter.Convert(value);
 
-			Append((byte)value);
-			Append((byte)(value >> 8));
-			Append((byte)(value >> 16));
-			Append((byte)(value >> 24));
+			_writer.Write(value);
 		}
 
 		/// <summary>
@@ -119,10 +119,7 @@
 			if (PlatformInfo.Endianess != Endianess.Little)
 				value = EndianConverter.Convert(value);
 
-			Append((byte)value);
-			Append((byte)(value >> 8));
-			Append((byte)(value >> 16));
-			Append((byte)(value >> 24));
+			_writer.Write(value);
 		}
 
 		/// <summary>
@@ -134,14 +131,7 @@
 			if (PlatformInfo.Endianess != Endianess.Little)
 				value = EndianConverter.Convert(value);
 
-			Append((byte)value);
-			Append((byte)(value >> 8));
-			Append((byte)(value >> 16));
-			Append((byte)(value >> 24));
-			Append((byte)(value >> 32));
-			Append((byte)(value >> 40));
-			Append((byte)(value >> 48));
-			Append((byte)(value >> 56));
+			_writer.Write(value);
 		}
 
 		/// <summary>
@@ -153,14 +143,7 @@
 			if (PlatformInfo.Endianess != Endianess.Little)
 				value = EndianConverter.Convert(value);
 
-			Append((byte)value);
-			Append((byte)(value >> 8));
-			Append((byte)(value >> 16));
-			Append((byte)(value >> 24));
-			Append((byte)(value >> 32));
-			Append((byte)(value >> 40));
-			Append((byte)(value >> 48));
-			Append((byte)(value >> 56));
+			_writer.Write(value);
 		}
 
 		// ReSharper restore InconsistentNaming

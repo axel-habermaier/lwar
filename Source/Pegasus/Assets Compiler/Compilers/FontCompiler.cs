@@ -52,14 +52,12 @@
 		///     Compiles all assets of the compiler's asset source type.
 		/// </summary>
 		/// <param name="assets">The assets that should be compiled.</param>
-		public override bool Compile(IEnumerable<Asset> assets)
+		public override void Compile(IEnumerable<Asset> assets)
 		{
-			var success = base.Compile(assets);
+			base.Compile(assets);
 
-			if (success && _regenerateFontLoader)
+			if (_regenerateFontLoader)
 				GenerateFontLoader(assets.OfType<FontAsset>().ToArray());
-
-			return success;
 		}
 
 		/// <summary>

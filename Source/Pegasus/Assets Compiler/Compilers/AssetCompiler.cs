@@ -28,11 +28,10 @@
 		///     Compiles all assets of the compiler's asset source type.
 		/// </summary>
 		/// <param name="assets">The assets that should be compiled.</param>
-		public virtual bool Compile(IEnumerable<Asset> assets)
+		public virtual void Compile(IEnumerable<Asset> assets)
 		{
 			var tasks = assets.OfType<TAsset>().Select(Compile).ToArray();
 			Task.WaitAll(tasks);
-			return tasks.All(task => task.Result);
 		}
 
 		/// <summary>
@@ -77,7 +76,7 @@
 		///     Compiles the asset.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
-		protected async Task<bool> Compile(TAsset asset)
+		protected Task Compile(TAsset asset)
 		{
 			var action = asset.GetRequiredAction();
 
@@ -85,24 +84,20 @@
 			{
 				case CompilationAction.Skip:
 					Log.Info("Skipping '{0}' (no changes detected).", asset.RelativePath);
-					return true;
+					return Task.FromResult(true);
 				case CompilationAction.Copy:
 					Log.Info("Copying '{0}' to target directory (compilation skipped; no changes detected).", asset.RelativePath);
 					File.Copy(asset.TempPath, asset.TargetPath, true);
-					return true;
+					return Task.FromResult(true);
 				case CompilationAction.Process:
-					return await Task.Factory.StartNew(() =>
+					return Task.Factory.StartNew(() =>
 					{
 						Log.Info("Compiling '{0}'...", asset.RelativePath);
-						bool success;
 
 						using (var writer = new AssetWriter(asset))
-							success = CompileAndLogExceptions(asset, writer.Writer);
+							CompileAndHandleExceptions(asset, writer.Writer);
 
-						if (success)
-							asset.WriteHash();
-
-						return success;
+						asset.WriteHash();
 					}, TaskCreationOptions.LongRunning);
 				default:
 					throw new InvalidOperationException("Unknown action type.");
@@ -116,31 +111,25 @@
 		/// <param name="writer">The writer the compilation output should be appended to.</param>
 		internal void CompileSingle(TAsset asset, BufferWriter writer)
 		{
-			CompileAndLogExceptions(asset, writer);
+			CompileAndHandleExceptions(asset, writer);
 		}
 
 		/// <summary>
-		///     Compiles the asset and logs the exception that might occur during the compilation.
+		///     Compiles the asset and handles any exceptions that might occur during the compilation.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="writer">The writer the compilation output should be appended to.</param>
-		private bool CompileAndLogExceptions(TAsset asset, BufferWriter writer)
+		private void CompileAndHandleExceptions(TAsset asset, BufferWriter writer)
 		{
 			try
 			{
 				Compile(asset, writer);
-				return true;
 			}
-			catch (PegasusException)
+			catch (Exception)
 			{
+				File.Delete(asset.HashPath);
+				throw;
 			}
-			catch (Exception e)
-			{
-				Log.Error("{0}", e.Message);
-			}
-
-			File.Delete(asset.HashPath);
-			return false;
 		}
 
 		/// <summary>

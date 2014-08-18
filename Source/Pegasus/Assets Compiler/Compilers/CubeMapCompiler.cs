@@ -66,8 +66,7 @@
 			var outFile = GetCompressedFilePath(asset);
 			ExternalTool.NvCompress(assembledFile, outFile, asset.CompressedFormat, asset.Mipmaps);
 
-			var ddsBuffer = new BufferReader(File.ReadAllBytes(outFile));
-			var ddsImage = new DirectDrawSurface(ddsBuffer);
+			var ddsImage = new DirectDrawSurface(File.ReadAllBytes(outFile));
 			ddsImage.Write(writer);
 		}
 

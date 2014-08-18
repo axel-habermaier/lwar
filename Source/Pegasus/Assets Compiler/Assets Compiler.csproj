@@ -253,9 +253,6 @@
     <Compile Include="..\Pegasus\Platform\Graphics\ShaderType.cs">
       <Link>Pegasus\Graphics\ShaderType.cs</Link>
     </Compile>
-    <Compile Include="..\Pegasus\Platform\Graphics\Surface.cs">
-      <Link>Pegasus\Platform\Graphics\Surface.cs</Link>
-    </Compile>
     <Compile Include="..\Pegasus\Platform\Graphics\SurfaceFormat.cs">
       <Link>Pegasus\Graphics\SurfaceFormat.cs</Link>
     </Compile>
@@ -419,8 +416,6 @@
     <Compile Include="Assets\ShaderAsset.cs" />
     <Compile Include="Assets\Texture2DAssetFactory.cs" />
     <Compile Include="Assets\TextureAsset.cs" />
-    <Compile Include="BufferPointer.cs" />
-    <Compile Include="BufferReader.cs" />
     <Compile Include="BufferWriter.cs" />
     <Compile Include="Compilers\AssetIdentifierListGenerator.cs" />
     <Compile Include="CSharp\CodeElement.cs" />

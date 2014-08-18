@@ -47,7 +47,7 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 		///     Compiles all assets of the compiler's asset source type.
 		/// </summary>
 		/// <param name="assets">The assets that should be compiled.</param>
-		public override bool Compile(IEnumerable<Asset> assets)
+		public override void Compile(IEnumerable<Asset> assets)
 		{
 			if (DetermineAction(assets.OfType<EntityTemplateAsset>()) == CompilationAction.Skip)
 				Log.Info("Skipping entity templates compilation (no changes detected).");
@@ -67,8 +67,6 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 				GenerateClientTemplates(templates);
 				GenerateClientTypeEnumeration(templates);
 			}
-
-			return true;
 		}
 
 		/// <summary>

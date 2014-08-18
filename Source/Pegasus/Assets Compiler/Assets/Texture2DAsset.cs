@@ -14,7 +14,7 @@
 		/// <summary>
 		///     The image data.
 		/// </summary>
-		private BufferPointer _data;
+		private byte[] _data;
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -91,18 +91,9 @@
 					Depth = 1,
 					Size = Description.Width * Description.Height * componentCount,
 					Stride = Description.Width * componentCount,
-					Data = _data.Pointer
+					Data = _data
 				}
 			};
-		}
-
-		/// <summary>
-		///     Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		public override void Dispose()
-		{
-			if (_data != null)
-				_data.Dispose();
 		}
 	}
 }

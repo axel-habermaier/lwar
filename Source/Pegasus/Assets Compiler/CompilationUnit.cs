@@ -118,10 +118,9 @@
 		}
 
 		/// <summary>
-		///     Compiles all assets and returns the names of the assets that have been changed. Returns true to indicate that the
-		///     compilation of all assets has been successful.
+		///     Compiles all assets and returns the names of the assets that have been changed.
 		/// </summary>
-		public bool Compile()
+		public void Compile()
 		{
 			IAssetCompiler[] compilers = null;
 
@@ -130,7 +129,8 @@
 				if (Configuration.XamlFilesOnly)
 				{
 					compilers = new[] { new XamlCompiler() };
-					return compilers[0].Compile(_assets);
+					compilers[0].Compile(_assets);
+					return;
 				}
 
 				compilers = CreateTypeInstances<IAssetCompiler>();
@@ -139,8 +139,6 @@
 					.ToArray();
 
 				Task.WaitAll(tasks);
-				if (!tasks.All(task => task.Result))
-					return false;
 
 				IEnumerable<Asset> assets = _assets;
 				foreach (var compiler in compilers)
@@ -148,13 +146,6 @@
 
 				var assetListGenerator = new AssetIdentifierListGenerator();
 				assetListGenerator.Generate(assets, Configuration.AssetsProject.RootNamespace);
-
-				return true;
-			}
-			catch (Exception e)
-			{
-				Log.Error("{0}", e.Message);
-				return false;
 			}
 			finally
 			{

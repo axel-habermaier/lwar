@@ -42,11 +42,10 @@
 		}
 
 		/// <summary>
-		///     Compiles all assets of the compiler's asset source type. Returns true to indicate that the compilation of all
-		///     assets has been successful.
+		///     Compiles all assets of the compiler's asset source type.
 		/// </summary>
 		/// <param name="assets">The assets that should be compiled.</param>
-		public override bool Compile(IEnumerable<Asset> assets)
+		public override void Compile(IEnumerable<Asset> assets)
 		{
 			try
 			{
@@ -65,20 +64,16 @@
 					using (var project = new EffectsProject { CSharpFiles = csharpFiles })
 					{
 						if (!project.Compile())
-							return false;
+							return;
 					}
 				}
 
-				var success = true;
 				foreach (var asset in _shaderAssets)
-					success &= Compile(asset).Result;
-
-				return success;
+					Compile(asset);
 			}
 			catch (Exception e)
 			{
 				Log.Error("Effect cross-compilation failed: {0}", e.Message);
-				return false;
 			}
 		}
 
@@ -180,34 +175,39 @@
 		/// <param name="writer">The buffer the compilation output should be appended to.</param>
 		protected override void Compile(ShaderAsset asset, BufferWriter writer)
 		{
-			var reader = new BufferReader(File.ReadAllBytes(asset.SourcePath));
-			string profile;
-
-			switch (asset.Type)
+			using (var reader = new BinaryReader(new MemoryStream(File.ReadAllBytes(asset.SourcePath))))
 			{
-				case ShaderType.VertexShader:
-					WriteAssetHeader(writer, (byte)AssetType.VertexShader);
+				string profile;
 
-					var count = reader.ReadByte();
-					writer.WriteByte(count);
+				switch (asset.Type)
+				{
+					case ShaderType.VertexShader:
+						WriteAssetHeader(writer, (byte)AssetType.VertexShader);
 
-					for (var i = 0; i < count * 2; ++i)
-						writer.WriteByte(reader.ReadByte());
+						var count = reader.ReadByte();
+						writer.WriteByte(count);
 
-					profile = "vs_4_0";
-					break;
-				case ShaderType.FragmentShader:
-					WriteAssetHeader(writer, (byte)AssetType.FragmentShader);
-					profile = "ps_4_0";
-					break;
-				default:
-					throw new InvalidOperationException("Unsupported shader type.");
+						for (var i = 0; i < count * 2; ++i)
+							writer.WriteByte(reader.ReadByte());
+
+						profile = "vs_4_0";
+						break;
+					case ShaderType.FragmentShader:
+						WriteAssetHeader(writer, (byte)AssetType.FragmentShader);
+						profile = "ps_4_0";
+						break;
+					default:
+						throw new InvalidOperationException("Unsupported shader type.");
+				}
+
+				var length = reader.ReadInt32();
+				var code = Encoding.UTF8.GetString(reader.ReadBytes(length));
+				CompileGlslShader(writer, code);
+
+				length = reader.ReadInt32();
+				code = Encoding.UTF8.GetString(reader.ReadBytes(length));
+				CompileHlslShader(asset, writer, code, profile);
 			}
-
-			CompileGlslShader(writer, reader.ReadString());
-			CompileHlslShader(asset, writer, reader.ReadString(), profile);
-
-			Assert.That(reader.EndOfBuffer, "Not all shader code has been read.");
 		}
 
 		/// <summary>

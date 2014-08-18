@@ -2,6 +2,8 @@
 {
 	using System;
 	using System.Collections.Generic;
+	using System.IO;
+	using Assets;
 	using Platform.Graphics;
 	using Platform.Logging;
 	using Platform.Memory;
@@ -27,7 +29,7 @@
 		/// <summary>
 		///     The surfaces of the image.
 		/// </summary>
-		private readonly Surface[] _surfaces;
+		private readonly TextureAsset.Surface[] _surfaces;
 
 		/// <summary>
 		///     The DDS file header.
@@ -38,17 +40,15 @@
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="buffer">The buffer that contains the contents of the DDS file.</param>
-		public unsafe DirectDrawSurface(BufferReader buffer)
+		public unsafe DirectDrawSurface(byte[] buffer)
 		{
 			Assert.ArgumentNotNull(buffer);
 
-			if (buffer.BufferSize < sizeof(uint) + sizeof(Header))
-				Log.Die("Invalid DDS file: Header information is incomplete.");
-
-			if (buffer.ReadUInt32() != MagicCode)
+			var reader = new BinaryReader(new MemoryStream(buffer));
+			if (reader.ReadUInt32() != MagicCode)
 				Log.Die("Not a DDS file.");
 
-			_header = new Header(buffer);
+			_header = new Header(reader);
 			if (_header.Size != 124 || _header.PixelFormat.Size != sizeof(PixelFormat))
 				Log.Die("DDS file is corrupt.");
 
@@ -72,7 +72,7 @@
 				faces *= 6;
 
 			_description.SurfaceCount = faces * _header.MipMapCount;
-			_surfaces = new Surface[_description.SurfaceCount];
+			_surfaces = new TextureAsset.Surface[_description.SurfaceCount];
 
 			for (int i = 0, index = 0; i < faces; ++i)
 			{
@@ -85,26 +85,21 @@
 					uint size, stride;
 					GetSurfaceInfo(width, height, _header.Format, out size, out stride);
 
-					_surfaces[index] = new Surface
+					_surfaces[index] = new TextureAsset.Surface
 					{
 						Width = width,
 						Height = height,
 						Depth = depth,
 						Size = size,
 						Stride = stride,
-						Data = buffer.Pointer
+						Data = reader.ReadBytes((int)(depth * size))
 					};
-
-					var surfaceSize = depth * size;
-					buffer.Skip((int)surfaceSize);
 
 					width = Math.Max(width >> 1, 1);
 					height = Math.Max(height >> 1, 1);
 					depth = Math.Max(depth >> 1, 1);
 				}
 			}
-
-			Assert.That(buffer.EndOfBuffer, "Failed to process entire DDS file.");
 		}
 
 		/// <summary>
@@ -118,7 +113,7 @@
 		/// <summary>
 		///     Gets the surfaces of the image.
 		/// </summary>
-		public IEnumerable<Surface> Surfaces
+		public IEnumerable<TextureAsset.Surface> Surfaces
 		{
 			get { return _surfaces; }
 		}
@@ -546,35 +541,35 @@
 			/// <summary>
 			///     Initializes a new instance from the given buffer.
 			/// </summary>
-			/// <param name="buffer">The buffer from which the instance should be initialized.</param>
-			public Header(BufferReader buffer)
+			/// <param name="reader">The buffer from which the instance should be initialized.</param>
+			public Header(BinaryReader reader)
 				: this()
 			{
-				Assert.ArgumentNotNull(buffer);
+				Assert.ArgumentNotNull(reader);
 
-				Size = buffer.ReadUInt32();
-				Flags = (HeaderFlags)buffer.ReadUInt32();
-				Height = buffer.ReadUInt32();
-				Width = buffer.ReadUInt32();
-				buffer.ReadUInt32();
-				Depth = buffer.ReadUInt32();
-				MipMapCount = buffer.ReadUInt32();
+				Size = reader.ReadUInt32();
+				Flags = (HeaderFlags)reader.ReadUInt32();
+				Height = reader.ReadUInt32();
+				Width = reader.ReadUInt32();
+				reader.ReadUInt32();
+				Depth = reader.ReadUInt32();
+				MipMapCount = reader.ReadUInt32();
 
 				for (var i = 0; i < 11; ++i)
-					buffer.ReadUInt32();
+					reader.ReadUInt32();
 
-				PixelFormat = new PixelFormat(buffer);
-				SurfaceFlags = (SurfaceFlags)buffer.ReadUInt32();
-				CubeMapFlags = (CubemapFlags)buffer.ReadUInt32();
+				PixelFormat = new PixelFormat(reader);
+				SurfaceFlags = (SurfaceFlags)reader.ReadUInt32();
+				CubeMapFlags = (CubemapFlags)reader.ReadUInt32();
 
 				for (var i = 0; i < 3; ++i)
-					buffer.ReadUInt32();
+					reader.ReadUInt32();
 
-				Format = (Format)buffer.ReadUInt32();
-				ResourceDimension = (ResourceDimension)buffer.ReadUInt32();
-				MiscFlags = (ResourceOptionFlags)buffer.ReadUInt32();
-				ArraySize = buffer.ReadUInt32();
-				buffer.ReadUInt32();
+				Format = (Format)reader.ReadUInt32();
+				ResourceDimension = (ResourceDimension)reader.ReadUInt32();
+				MiscFlags = (ResourceOptionFlags)reader.ReadUInt32();
+				ArraySize = reader.ReadUInt32();
+				reader.ReadUInt32();
 			}
 
 			/// <summary>
@@ -663,20 +658,20 @@
 			/// <summary>
 			///     Initializes a new instance from the given buffer.
 			/// </summary>
-			/// <param name="buffer">The buffer from which the instance should be initialized.</param>
-			public PixelFormat(BufferReader buffer)
+			/// <param name="reader">The buffer from which the instance should be initialized.</param>
+			public PixelFormat(BinaryReader reader)
 				: this()
 			{
-				Assert.ArgumentNotNull(buffer);
+				Assert.ArgumentNotNull(reader);
 
-				Size = buffer.ReadUInt32();
-				Flags = (PixelFormatFlags)buffer.ReadUInt32();
-				FourCC = buffer.ReadUInt32();
-				RgbBitCount = buffer.ReadUInt32();
-				RBitMask = buffer.ReadUInt32();
-				GBitMask = buffer.ReadUInt32();
-				BBitMask = buffer.ReadUInt32();
-				ABitMask = buffer.ReadUInt32();
+				Size = reader.ReadUInt32();
+				Flags = (PixelFormatFlags)reader.ReadUInt32();
+				FourCC = reader.ReadUInt32();
+				RgbBitCount = reader.ReadUInt32();
+				RBitMask = reader.ReadUInt32();
+				GBitMask = reader.ReadUInt32();
+				BBitMask = reader.ReadUInt32();
+				ABitMask = reader.ReadUInt32();
 			}
 
 			/// <summary>

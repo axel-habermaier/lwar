@@ -13,7 +13,7 @@
 		/// <summary>
 		///     The image data.
 		/// </summary>
-		private readonly BufferPointer[] _data = new BufferPointer[6];
+		private readonly byte[][] _data = new byte[6][];
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -81,20 +81,9 @@
 		}
 
 		/// <summary>
-		///     Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		public override void Dispose()
-		{
-			foreach (var data in _data.Where(data => data != null))
-				data.Dispose();
-
-			base.Dispose();
-		}
-
-		/// <summary>
 		///     Loads and converts the image data.
 		/// </summary>
-		private unsafe void LoadCubemapSurfaces()
+		private void LoadCubemapSurfaces()
 		{
 			var faces = ExtractFaces();
 
@@ -117,7 +106,7 @@
 					Depth = 1,
 					Size = Description.Width * Description.Height * componentCount,
 					Stride = Description.Width * componentCount,
-					Data = _data[i].Pointer
+					Data = _data[i]
 				};
 			}
 		}
