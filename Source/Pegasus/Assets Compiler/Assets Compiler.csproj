@@ -57,12 +57,9 @@
     <Prefer32Bit>true</Prefer32Bit>
     <WarningLevel>4</WarningLevel>
     <Optimize>False</Optimize>
-    <CustomCommands>
+     <CustomCommands>
       <CustomCommands>
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/Pegasus/Assets/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/Pegasus/User Interface/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/Lwar/Assets/Lwar Assets.csproj&quot;" workingdir="$(TargetDir)" />
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/Lwar/User Interface/Lwar UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
+        <Command type="AfterBuild" command="cp &quot;$(TargetDir)/pgc.exe&quot; &quot;$(TargetDir)/pgc_copy.exe&quot;" workingdir="$(TargetDir)" />        
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -76,13 +73,9 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
-    <WarningLevel>4</WarningLevel>
-    <CustomCommands>
+    <WarningLevel>4</WarningLevel><CustomCommands>
       <CustomCommands>
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/Pegasus/Assets/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/Pegasus/User Interface/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/Lwar/Assets/Lwar Assets.csproj&quot;" workingdir="$(TargetDir)" />
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/Lwar/User Interface/Lwar UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
+        <Command type="AfterBuild" command="cp &quot;$(TargetDir)/pgc.exe&quot; &quot;$(TargetDir)/pgc_copy.exe&quot;" workingdir="$(TargetDir)" />        
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -145,13 +138,9 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
-    <Optimize>false</Optimize>
-    <CustomCommands>
+    <Optimize>false</Optimize><CustomCommands>
       <CustomCommands>
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/Pegasus/Assets/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/Pegasus/User Interface/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/Lwar/Assets/Lwar Assets.csproj&quot;" workingdir="$(TargetDir)" />
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/Lwar/User Interface/Lwar UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
+        <Command type="AfterBuild" command="cp &quot;$(TargetDir)/pgc.exe&quot; &quot;$(TargetDir)/pgc_copy.exe&quot;" workingdir="$(TargetDir)" />        
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -164,13 +153,9 @@
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <WarningLevel>4</WarningLevel>
-    <CustomCommands>
+    <WarningLevel>4</WarningLevel><CustomCommands>
       <CustomCommands>
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/Pegasus/Assets/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/Pegasus/User Interface/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/Lwar/Assets/Lwar Assets.csproj&quot;" workingdir="$(TargetDir)" />
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc.exe&quot; clean &quot;$(SolutionDir)/Lwar/User Interface/Lwar UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
+        <Command type="AfterBuild" command="cp &quot;$(TargetDir)/pgc.exe&quot; &quot;$(TargetDir)/pgc_copy.exe&quot;" workingdir="$(TargetDir)" />        
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>

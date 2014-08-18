@@ -134,6 +134,8 @@
     <CustomCommands>
       <CustomCommands>
         <Command type="AfterBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(ProjectDir)/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc_copy.exe&quot; clean &quot;$(SolutionDir)/Pegasus/Assets/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc_copy.exe&quot; clean &quot;$(SolutionDir)/Pegasus/User Interface/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -152,6 +154,8 @@
     <CustomCommands>
       <CustomCommands>
         <Command type="AfterBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(ProjectDir)/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc_copy.exe&quot; clean &quot;$(SolutionDir)/Pegasus/Assets/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc_copy.exe&quot; clean &quot;$(SolutionDir)/Pegasus/User Interface/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -169,6 +173,8 @@
     <CustomCommands>
       <CustomCommands>
         <Command type="AfterBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(ProjectDir)/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc_copy.exe&quot; clean &quot;$(SolutionDir)/Pegasus/Assets/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc_copy.exe&quot; clean &quot;$(SolutionDir)/Pegasus/User Interface/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -186,6 +192,8 @@
     <CustomCommands>
       <CustomCommands>
         <Command type="AfterBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(ProjectDir)/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc_copy.exe&quot; clean &quot;$(SolutionDir)/Pegasus/Assets/Pegasus Assets.csproj&quot;" workingdir="$(TargetDir)" />
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc_copy.exe&quot; clean &quot;$(SolutionDir)/Pegasus/User Interface/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>

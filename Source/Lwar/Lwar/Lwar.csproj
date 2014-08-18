@@ -59,6 +59,7 @@
     <CustomCommands>
       <CustomCommands>
         <Command type="BeforeBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(SolutionDir)/Lwar/User Interface/Lwar UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
+        
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -76,6 +77,7 @@
     <CustomCommands>
       <CustomCommands>
         <Command type="BeforeBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(SolutionDir)/Lwar/User Interface/Lwar UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
+        
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -145,6 +147,7 @@
     <CustomCommands>
       <CustomCommands>
         <Command type="BeforeBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(SolutionDir)/Lwar/User Interface/Lwar UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
+        
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -161,6 +164,7 @@
     <CustomCommands>
       <CustomCommands>
         <Command type="BeforeBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(SolutionDir)/Lwar/User Interface/Lwar UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
+        
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>

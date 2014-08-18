@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets", "Assets", "{E8E7A13F-DCB1-4A21-8490-48212FF64CA1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets Compiler", "Pegasus\Assets Compiler\Assets Compiler.csproj", "{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lwar Assets", "Lwar\Assets\Lwar Assets.csproj", "{1F608B12-403C-4639-947A-B559E8EF121C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pegasus Assets", "Pegasus\Assets\Pegasus Assets.csproj", "{8FACAC14-48D0-45B8-BB39-F926835C850E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assets Compiler", "Pegasus\Assets Compiler\Assets Compiler.csproj", "{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{E9496A5E-3F93-4E70-91FE-2FCBF0942B01}"
 	ProjectSection(SolutionItems) = preProject
