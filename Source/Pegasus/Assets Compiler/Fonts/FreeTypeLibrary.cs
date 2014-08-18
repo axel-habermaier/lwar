@@ -32,16 +32,12 @@
 		///     Creates a new font instance.
 		/// </summary>
 		/// <param name="fileName">The path to the font file.</param>
-		/// <param name="size">The size (in pixels) of the characters.</param>
-		/// <param name="bold">Indicates whether the font weight should be bold.</param>
-		/// <param name="italic">Indicates whether the font should be italic.</param>
-		/// <param name="renderMode">Indicates whether anti-aliasing should be used when rendering the glyphs.</param>
-		public Font CreateFont(string fileName, int size, bool bold, bool italic, RenderMode renderMode)
+		public IntPtr CreateFont(string fileName)
 		{
 			var font = IntPtr.Zero;
 			FreeType.Invoke(() => FreeType.NewFace(_library, fileName, 0, out font));
 
-			return new Font(font, size, bold, italic, renderMode);
+			return font;
 		}
 	}
 }

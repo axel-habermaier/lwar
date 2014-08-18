@@ -7,7 +7,6 @@
 	using Assets;
 	using Compilers;
 	using Platform.Logging;
-	using Platform.Memory;
 
 	/// <summary>
 	///     Represents a font as a bitmap, containing all glyphs of a given font.
@@ -131,7 +130,7 @@
 		/// <param name="character">The character the glyph are should be returned for.</param>
 		public Rectangle GetGlyphArea(char character)
 		{
-			var glyph = _glyphAreas.SingleOrDefault(g => g.Glyph.Character == character);
+			var glyph = _glyphAreas.FirstOrDefault(g => g.Glyph.Character == character);
 			if (glyph == null)
 				Log.Die("The font map does not contain a glyph for character '{0}'.", character);
 

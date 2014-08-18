@@ -17,6 +17,19 @@
 		where TAsset : Asset
 	{
 		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		protected AssetCompiler()
+		{
+			SupportsMultithreading = true;
+		}
+
+		/// <summary>
+		///     Gets or sets a value indicating whether the asset compiler supported multi-threaded compilation.
+		/// </summary>
+		protected bool SupportsMultithreading { get; set; }
+
+		/// <summary>
 		///     Gets the additional assets created by the compiler.
 		/// </summary>
 		public virtual IEnumerable<Asset> AdditionalAssets
@@ -30,8 +43,16 @@
 		/// <param name="assets">The assets that should be compiled.</param>
 		public virtual void Compile(IEnumerable<Asset> assets)
 		{
-			var tasks = assets.OfType<TAsset>().Select(Compile).ToArray();
-			Task.WaitAll(tasks);
+			if (SupportsMultithreading)
+			{
+				var tasks = assets.OfType<TAsset>().Select(Compile).ToArray();
+				Task.WaitAll(tasks);
+			}
+			else
+			{
+				foreach (var asset in assets.OfType<TAsset>())
+					Compile(asset).Wait();
+			}
 		}
 
 		/// <summary>
@@ -133,7 +154,7 @@
 			}
 			catch (Exception e)
 			{
-				Log.Error("Compiled of '{0}' failed: {1}", asset.RelativePath, e.Message);
+				Log.Error("Compiling of '{0}' failed: {1}", asset.RelativePath, e.Message);
 				File.Delete(asset.HashPath);
 				throw;
 			}

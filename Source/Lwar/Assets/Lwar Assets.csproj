@@ -283,6 +283,9 @@
     <Compile Include="Textures\CompilationSettings.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Fonts\Elliptica 16.font" />
+    <None Include="Fonts\Moonhouse 24.font" />
+    <None Include="Fonts\Moonhouse 80.font" />
     <None Include="Fonts\Liberation Mono 11.font" />
     <None Include="packages.config" />
   </ItemGroup>

@@ -220,8 +220,8 @@
 		{
 			var index = (int)glyph;
 
-			// Print a '□' for all characters that are not supported by the font; the font processor guarantees 
-			// that the glyph for '□' is at index 0
+			// Print the invalid character for all characters that are not supported by the font; the font processor guarantees 
+			// that the glyph for the invalid character is at index 0
 			if (index < 0 || index >= _glyphs.Length || _glyphs[index].IsInvalid)
 				return _glyphs[0];
 

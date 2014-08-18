@@ -302,7 +302,7 @@
 		public void Draw(RectangleD rectangle, Texture2D texture, Color color, RectangleF? texCoords = null)
 		{
 			var area = new RectangleF((float)rectangle.Left, (float)rectangle.Top, (float)rectangle.Width, (float)rectangle.Height);
-			Draw(area, texture, color,texCoords);
+			Draw(area, texture, color, texCoords);
 		}
 
 		/// <summary>
@@ -452,6 +452,18 @@
 				var end = current + circle.Position;
 				DrawLine(start, end, color, width);
 			}
+		}
+
+		/// <summary>
+		///     Draws a line.
+		/// </summary>
+		/// <param name="start">The start of the line.</param>
+		/// <param name="end">The end of the line.</param>
+		/// <param name="color">The color of the line.</param>
+		/// <param name="width">The width of the line.</param>
+		public void DrawLine(Vector2d start, Vector2d end, Color color, double width)
+		{
+			DrawLine(new Vector2((float)start.X, (float)start.Y), new Vector2((float)end.X, (float)end.Y), color, (int)Math.Round(width));
 		}
 
 		/// <summary>

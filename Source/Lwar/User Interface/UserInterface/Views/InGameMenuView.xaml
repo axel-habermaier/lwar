@@ -11,14 +11,17 @@
 			 input:Keyboard.HandlesAllInput="true"
 			 input:Mouse.HandlesAllInput="true"
 			 Focusable="true"
-			 Background="#AF252525">
+			 TextOptions.TextRenderingMode="ClearType"
+			 FontFamily="Moonhouse"
+			 Background="#AA000000">
 	<UserControl.InputBindings>
 		<input:KeyBinding Key="Escape" Method="ContinueImplicit" TriggerOnRepeat="false"></input:KeyBinding>
 	</UserControl.InputBindings>
 	<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding IsTopLevel, Converter={converters:BooleanToVisibilityConverter}}">>
-		<Button Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center" Click="{Binding Continue}">Continue</Button>
-		<Button Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center" Click="{Binding Options}">Options</Button>
-		<Button Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center" Click="{Binding Leave}">Leave</Button>
-		<Button Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center" Click="{Binding Exit}">Exit</Button>
+		<TextBlock Foreground="White" Margin="0,0,0,10" FontSize="80" HorizontalAlignment="Center">Paused</TextBlock>
+		<Button FontSize="24" Margin="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Click="{Binding Continue}">Continue</Button>
+		<Button FontSize="24" Margin="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Click="{Binding Options}">Options</Button>
+		<Button FontSize="24" Margin="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Click="{Binding Leave}">Leave</Button>
+		<Button FontSize="24" Margin="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Click="{Binding Exit}">Exit</Button>
 	</StackPanel>
 </UserControl>

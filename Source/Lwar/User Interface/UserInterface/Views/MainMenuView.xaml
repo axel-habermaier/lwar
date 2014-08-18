@@ -4,11 +4,13 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:converters="clr-namespace:Pegasus.Framework.UserInterface.Converters;assembly=PegasusUI"
 			 mc:Ignorable="d"
+			 FontFamily="Moonhouse"
+			 TextOptions.TextRenderingMode="ClearType"
 			 HorizontalAlignment="Center" VerticalAlignment="Center">
 	<StackPanel Visibility="{Binding IsTopLevel, Converter={converters:BooleanToVisibilityConverter}}">>
-		<TextBlock Foreground="White" Margin="0,0,0,10">Welcome to Lwar!</TextBlock>
-		<Button Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center" Click="{Binding PlaySingle}">Single Player</Button>
-		<Button Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center" Click="{Binding Options}">Options</Button>
-		<Button Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center" Click="{Binding Exit}">Exit</Button>
+		<TextBlock Foreground="White" Margin="0,0,0,10" FontSize="80" HorizontalAlignment="Center">lwar</TextBlock>
+		<Button FontSize="24" Margin="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Click="{Binding PlaySingle}">Single Player</Button>
+		<Button FontSize="24" Margin="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Click="{Binding Options}">Options</Button>
+		<Button FontSize="24" Margin="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Click="{Binding Exit}">Exit</Button>
 	</StackPanel>
 </UserControl>

@@ -269,6 +269,8 @@
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.Border" Inherits="Pegasus.Framework.UserInterface.Controls.Decorator">
+		<Property Type="Pegasus.Platform.Graphics.Color" Name="BorderBrush"/>
+		<Property Type="Pegasus.Framework.UserInterface.Thickness" Name="BorderThickness"/>
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.RenderOutputPanel" Inherits="Pegasus.Framework.UserInterface.Controls.Decorator">

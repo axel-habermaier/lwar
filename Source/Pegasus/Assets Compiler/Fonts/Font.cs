@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Linq;
 	using System.Runtime.InteropServices;
 	using Platform.Logging;
 
@@ -33,22 +34,25 @@
 		/// <param name="bold">Indicates whether the font weight should be bold.</param>
 		/// <param name="italic">Indicates whether the font should be italic.</param>
 		/// <param name="renderMode">Indicates whether anti-aliasing should be used when rendering the glyphs.</param>
-		public Font(IntPtr font, int size, bool bold, bool italic, RenderMode renderMode)
+		/// <param name="characters">The characters that the font should contain.</param>
+		/// <param name="invalidChar">The character that should be used to representing missing glyphs.</param>
+		public Font(IntPtr font, int size, bool bold, bool italic, RenderMode renderMode, IEnumerable<char> characters, char invalidChar)
 		{
 			Assert.ArgumentNotNull(font);
 			Assert.InRange(renderMode);
+			Assert.ArgumentNotNull(characters);
 
 			_fontPtr = font;
 			_font = (FreeType.Face)Marshal.PtrToStructure(font, typeof(FreeType.Face));
 
 			FreeType.Invoke(() => FreeType.SetPixelSize(_fontPtr, 0, (uint)size));
 
-			// Add the printable ASCII-glyphs
-			for (var character = (char)0; character < 256; ++character)
-				AddGlyph(renderMode, character);
+			// Add the glyph that is used to show non-printable or non-supported characters; must be the first glyph
+			AddGlyph(renderMode, invalidChar);
 
-			// Add the 'box' glyph that is used to show non-printable or non-supported characters
-			AddGlyph(renderMode, '□');
+			// Add the printable ASCII-glyphs
+			foreach (var character in characters)
+				AddGlyph(renderMode, character);
 		}
 
 		/// <summary>

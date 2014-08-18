@@ -4,3 +4,5 @@ Size = 11
 Aliased = true
 Italic = false
 Bold = false
+Characters = 0-256
+InvalidChar = □

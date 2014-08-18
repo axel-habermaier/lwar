@@ -6,9 +6,6 @@
 			 xmlns:converters="clr-namespace:Pegasus.Framework.UserInterface.Converters;assembly=PegasusUI"
 			 xmlns:userInterfaceViews="clr-namespace:Lwar.UserInterface.Views"
 			 mc:Ignorable="d"
-			 FontFamily="Liberation Mono" 
-             FontSize="11"
-             TextOptions.TextRenderingMode="Aliased"
 			 d:DataContext="{d:DesignInstance Type={x:Type userInterfaceViews:ScoreboardViewModel}, IsDesignTimeCreatable=True}"
 			 Visibility="{Binding IsVisible, Converter={converters:BooleanToVisibilityConverter}}"
 			 IsHitTestVisible="False">
@@ -17,10 +14,10 @@
 			  AutoGenerateColumns="False"
 			  HorizontalAlignment="Center"
 			  VerticalAlignment="Center"
-			  Background="#66666666">
+			  Background="#5F00588B">
 		<DataGrid.ColumnHeaderStyle>
 			<Style TargetType="DataGridColumnHeader">
-				<Setter Property="Background" Value="#99999999" />
+				<Setter Property="Background" Value="#FF055674" />
 				<Setter Property="Margin" Value="0,0,0,5" />
 				<Setter Property="Template">
 					<Setter.Value>
@@ -34,7 +31,7 @@
 			</Style>
 		</DataGrid.ColumnHeaderStyle>
 		<DataGrid.Columns>
-			<DataGridTemplateColumn MinWidth="70" Header="Player">
+			<DataGridTemplateColumn MinWidth="250" Header="Player">
 				<DataGridTemplateColumn.CellTemplate>
 					<DataTemplate>
 						<TextBlock Margin="2" Text="{Binding Name}" />
@@ -44,14 +41,14 @@
 			<DataGridTemplateColumn Width="40" Header="Kills">
 				<DataGridTemplateColumn.CellTemplate>
 					<DataTemplate>
-						<TextBlock Margin="2" Text="{Binding Kills}" HorizontalAlignment="Right" />
+						<TextBlock Margin="2" Text="{Binding Kills}" HorizontalAlignment="Center" />
 					</DataTemplate>
 				</DataGridTemplateColumn.CellTemplate>
 			</DataGridTemplateColumn>
-			<DataGridTemplateColumn Width="45" Header="Deaths">
+			<DataGridTemplateColumn Width="55" Header="Deaths">
 				<DataGridTemplateColumn.CellTemplate>
 					<DataTemplate>
-						<TextBlock Margin="2" Text="{Binding Deaths}" HorizontalAlignment="Right" />
+						<TextBlock Margin="2" Text="{Binding Deaths}" HorizontalAlignment="Center" />
 					</DataTemplate>
 				</DataGridTemplateColumn.CellTemplate>
 			</DataGridTemplateColumn>

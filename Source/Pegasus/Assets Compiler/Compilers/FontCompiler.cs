@@ -26,18 +26,52 @@
 		/// </summary>
 		private readonly ConfigurationFileParser _parser = new ConfigurationFileParser(new Dictionary<string, Func<string, object>>
 		{
-			{ "file", s => s },
-			{ "family", s => s },
-			{ "size", s => Int32.Parse(s) },
-			{ "aliased", s => Boolean.Parse(s) },
-			{ "bold", s => Boolean.Parse(s) },
-			{ "italic", s => Boolean.Parse(s) },
+			{ "File", s => s },
+			{ "Family", s => s },
+			{ "Size", s => Int32.Parse(s) },
+			{ "Aliased", s => Boolean.Parse(s) },
+			{ "Bold", s => Boolean.Parse(s) },
+			{ "Italic", s => Boolean.Parse(s) },
+			{ "Characters", ParseCharacterRanges },
+			{ "InvalidChar", s => s[0] }
 		});
 
 		/// <summary>
 		///     A value indicating whether the font loader must be regenerated.
 		/// </summary>
 		private bool _regenerateFontLoader;
+
+		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		public FontCompiler()
+		{
+			SupportsMultithreading = false;
+		}
+
+		/// <summary>
+		///     Parses the character range.
+		/// </summary>
+		/// <param name="range">The range that should be parsed.</param>
+		private static IEnumerable<char> ParseCharacterRanges(string range)
+		{
+			Assert.ArgumentNotNullOrWhitespace(range);
+
+			var ranges = range.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+			foreach (var r in ranges)
+			{
+				var pair = r.Split(new[] { "-" }, StringSplitOptions.RemoveEmptyEntries);
+				Assert.That(pair.Length == 2, "Invalid character range '{0}'.", range);
+
+				var begin = 0;
+				var end = 0;
+				if (!Int32.TryParse(pair[0], out begin) || !Int32.TryParse(pair[1], out end))
+					Log.Die("Invalid character range '{0}'.", range);
+
+				for (var i = begin; i <= end; ++i)
+					yield return (char)i;
+			}
+		}
 
 		/// <summary>
 		///     Gets the path of the temporary font map file.
@@ -73,22 +107,25 @@
 			// Read the font configuration
 			var configuration = _parser.Parse(asset.SourcePath);
 
-			var fontFile = Path.Combine(asset.SourceDirectory, (string)configuration["file"]);
-			var size = (int)configuration["size"];
-			var antialiased = !(bool)configuration["aliased"];
+			var fontFile = Path.Combine(asset.SourceDirectory, (string)configuration["File"]);
+			var size = (int)configuration["Size"];
+			var antialiased = !(bool)configuration["Aliased"];
 			var renderMode = antialiased ? RenderMode.Antialiased : RenderMode.Aliased;
-			var bold = (bool)configuration["bold"];
-			var italic = (bool)configuration["italic"];
+			var bold = (bool)configuration["Bold"];
+			var italic = (bool)configuration["Italic"];
+			var characters = (IEnumerable<char>)configuration["Characters"];
+			var invalidChar = (char)configuration["InvalidChar"];
 
 			Assert.That(!bold, "Bold fonts are currently not supported.");
 			Assert.That(!italic, "Italic fonts are currently not supported.");
 
 			// Verify that the font file actually exists
 			if (!File.Exists(fontFile))
-				Log.Die("Unable to locate '{0}'.", configuration["file"]);
+				Log.Die("Unable to locate '{0}'.", configuration["File"]);
 
 			// Initialize the font data structures
-			using (var font = _freeType.CreateFont(fontFile, size, bold, italic, renderMode))
+			var fontPtr = _freeType.CreateFont(fontFile);
+			using (var font = new Font(fontPtr, size, bold, italic, renderMode, characters, invalidChar))
 			using (var fontMap = new FontMap(font, GetFontMapPath(asset)))
 			{
 				// Write the font map
@@ -100,11 +137,16 @@
 				// Write the glyph metadata
 				writer.WriteUInt16((ushort)font.Glyphs.Count());
 
+				var isFirst = true;
 				foreach (var glyph in font.Glyphs)
 				{
-					// Glyphs are identified by their character ASCII id, except for '□', which must lie at index 0
-					if (glyph.Character == '□')
+					// Glyphs are identified by their character ASCII id, except for the invalid character
+					// that is guaranteed to by the first glyph, which must lie at index 0
+					if (isFirst)
+					{
 						writer.WriteByte(0);
+						isFirst = false;
+					}
 					else
 						writer.WriteByte((byte)glyph.Character);
 

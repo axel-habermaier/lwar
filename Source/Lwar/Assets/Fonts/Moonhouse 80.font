@@ -1,0 +1,8 @@
+﻿File = moonhouse.ttf 
+Family = Moonhouse
+Size = 80
+Aliased = false
+Italic = false
+Bold = false 
+Characters = 48-57;65-90;97-122;44-46
+InvalidChar = ?
