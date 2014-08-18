@@ -2,6 +2,7 @@
 {
 	using System;
 	using Scripting.Parsing;
+	using Scripting.Parsing.BasicParsers;
 
 	/// <summary>
 	///     Parses the Xaml data binding markup extension syntax.
@@ -18,7 +19,7 @@
 		/// </summary>
 		public DataBindingParser()
 		{
-			var ws = ~WhiteSpaces;
+			var ws = ~new WhiteSpacesParser();
 			var comma = ~(Character(',') + ws);
 			var openBrace = ~(Character('{') + ws);
 			var closeBrace = ~(Character('}') + ws);

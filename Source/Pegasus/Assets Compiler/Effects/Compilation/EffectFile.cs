@@ -78,8 +78,6 @@
 		/// <param name="shader">The shader method that should be compiled.</param>
 		private void CompileShaderCode(EffectClass effect, ShaderMethod shader)
 		{
-			var content = new byte[2 * 1024 * 1024];
-
 			ShaderAsset asset = null;
 			if (shader.Type == ShaderType.FragmentShader)
 				asset = new FragmentShaderAsset(effect.FullName, shader.Name);
@@ -89,7 +87,7 @@
 				Log.Die("Unsupported shader type.");
 
 			using (asset)
-			using (var buffer = BufferWriter.Create(content))
+			using (var buffer = new BufferWriter())
 			{
 				if (shader.Type == ShaderType.VertexShader)
 				{
@@ -111,8 +109,7 @@
 				hlslCompiler.Compile(effect, shader, codeWriter, Resolver);
 				buffer.WriteString(codeWriter.ToString());
 
-				var fileContent = content.Take(buffer.Count).ToArray();
-				File.WriteAllBytes(asset.SourcePath, fileContent);
+				File.WriteAllBytes(asset.SourcePath, buffer.ToArray());
 			}
 		}
 	}

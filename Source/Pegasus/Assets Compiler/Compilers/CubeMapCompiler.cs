@@ -8,7 +8,6 @@
 	using Pegasus.Assets;
 	using Platform;
 	using Platform.Logging;
-	using Platform.Memory;
 
 	/// <summary>
 	///     Compiles cubemap textures.
@@ -20,16 +19,16 @@
 		///     Compiles the asset.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
-		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
-		protected override void Compile(CubeMapAsset asset, BufferWriter buffer)
+		/// <param name="writer">The writer the compilation output should be appended to.</param>
+		protected override void Compile(CubeMapAsset asset, BufferWriter writer)
 		{
 			asset.Load();
-			AssetHeader.Write(buffer, (byte)AssetType.CubeMap);
+			WriteAssetHeader(writer, (byte)AssetType.CubeMap);
 
 			if (asset.Uncompressed)
-				asset.Write(buffer);
+				asset.Write(writer);
 			else
-				CompileCompressed(asset, buffer);
+				CompileCompressed(asset, writer);
 		}
 
 		/// <summary>
@@ -49,8 +48,8 @@
 		///     Compiles a cube map that should be compressed.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
-		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
-		private static void CompileCompressed(CubeMapAsset asset, BufferWriter buffer)
+		/// <param name="writer">The writer the compilation output should be appended to.</param>
+		private static void CompileCompressed(CubeMapAsset asset, BufferWriter writer)
 		{
 			if (!asset.IsPowerOfTwo())
 				Log.Die("All texture dimensions must be power-of-two.");
@@ -67,11 +66,9 @@
 			var outFile = GetCompressedFilePath(asset);
 			ExternalTool.NvCompress(assembledFile, outFile, asset.CompressedFormat, asset.Mipmaps);
 
-			using (var ddsBuffer = BufferReader.Create(File.ReadAllBytes(outFile)))
-			{
-				var ddsImage = new DirectDrawSurface(ddsBuffer);
-				ddsImage.Write(buffer);
-			}
+			var ddsBuffer = new BufferReader(File.ReadAllBytes(outFile));
+			var ddsImage = new DirectDrawSurface(ddsBuffer);
+			ddsImage.Write(writer);
 		}
 
 		/// <summary>

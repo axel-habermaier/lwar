@@ -1,7 +1,6 @@
 ﻿namespace Pegasus.AssetsCompiler.Assets
 {
 	using System;
-	using Pegasus.Assets;
 	using Platform.Graphics;
 
 	/// <summary>

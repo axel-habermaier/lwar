@@ -8,8 +8,6 @@
 	using Compilers;
 	using Platform.Logging;
 	using Platform.Memory;
-	using Rectangle = Math.Rectangle;
-	using Size = Math.Size;
 
 	/// <summary>
 	///     Represents a font as a bitmap, containing all glyphs of a given font.
@@ -118,13 +116,13 @@
 		}
 
 		/// <summary>
-		///     Processes the font map and appends it to the given buffer.
+		///     Processes the font map and appends it to the given writer.
 		/// </summary>
-		/// <param name="buffer"></param>
-		public void Compile(BufferWriter buffer)
+		/// <param name="writer">The writer that should be used to write the font map.</param>
+		public void Compile(BufferWriter writer)
 		{
 			using (var compiler = new Texture2DCompiler())
-				compiler.CompileSingle(this, buffer);
+				compiler.CompileSingle(this, writer);
 		}
 
 		/// <summary>

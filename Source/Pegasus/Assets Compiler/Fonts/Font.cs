@@ -4,12 +4,11 @@
 	using System.Collections.Generic;
 	using System.Runtime.InteropServices;
 	using Platform.Logging;
-	using Platform.Memory;
 
 	/// <summary>
 	///     Represents a typeface in a given style.
 	/// </summary>
-	internal class Font : DisposableObject
+	internal class Font : IDisposable
 	{
 		/// <summary>
 		///     The native freetype font instance.
@@ -93,6 +92,16 @@
 		}
 
 		/// <summary>
+		///     Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		public void Dispose()
+		{
+			FreeType.Invoke(() => FreeType.DisposeFace(_fontPtr));
+			foreach (var glyph in _glyphs)
+				glyph.Dispose();
+		}
+
+		/// <summary>
 		///     Adds the glyph for the given character.
 		/// </summary>
 		/// <param name="character">The character whose corresponding glyph should be added.</param>
@@ -127,15 +136,6 @@
 			var kerning = new FreeType.Vector();
 			FreeType.Invoke(() => FreeType.GetKerning(_fontPtr, left.Index, right.Index, 0, out kerning));
 			return (int)kerning.x / 64;
-		}
-
-		/// <summary>
-		///     Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		protected override void OnDisposing()
-		{
-			FreeType.Invoke(() => FreeType.DisposeFace(_fontPtr));
-			_glyphs.SafeDisposeAll();
 		}
 	}
 }

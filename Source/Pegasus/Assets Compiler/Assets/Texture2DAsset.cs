@@ -99,9 +99,10 @@
 		/// <summary>
 		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
-		protected override void OnDisposing()
+		public override void Dispose()
 		{
-			_data.SafeDispose();
+			if (_data != null)
+				_data.Dispose();
 		}
 	}
 }

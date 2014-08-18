@@ -7,17 +7,25 @@
 	using Assets.Attributes;
 	using Compilers;
 	using Platform.Logging;
-	using Platform.Memory;
 
 	/// <summary>
 	///     Represents a compilation unit that compiles all assets into a binary format.
 	/// </summary>
-	public class CompilationUnit : DisposableObject
+	public class CompilationUnit : IDisposable
 	{
 		/// <summary>
 		///     The list of assets that are compiled by the compilation unit.
 		/// </summary>
 		private readonly List<Asset> _assets = new List<Asset>();
+
+		/// <summary>
+		///     Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		public void Dispose()
+		{
+			foreach (var asset in _assets)
+				asset.Dispose();
+		}
 
 		/// <summary>
 		///     Loads all assets that should be compiled.
@@ -98,21 +106,14 @@
 				if (group.Count() > 1)
 				{
 					Log.Warn("Ignoring asset '{0}': Compilation settings are ambiguous: One of {1}.", group.Key,
-							 String.Join(", ", group.Select(a => a.GetType().Name)));
+						String.Join(", ", group.Select(a => a.GetType().Name)));
 
-					group.SafeDisposeEnumerable();
+					foreach (var item in group)
+						item.Dispose();
 				}
 				else
 					yield return group.First();
 			}
-		}
-
-		/// <summary>
-		///     Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		protected override void OnDisposing()
-		{
-			_assets.SafeDisposeAll();
 		}
 
 		/// <summary>
@@ -127,7 +128,7 @@
 			{
 				if (Configuration.XamlFilesOnly)
 				{
-					compilers = new [] { new XamlCompiler() };
+					compilers = new[] { new XamlCompiler() };
 					return compilers[0].Compile(_assets);
 				}
 
@@ -156,7 +157,8 @@
 			}
 			finally
 			{
-				compilers.SafeDisposeAll();
+				foreach (var compiler in compilers)
+					compiler.Dispose();
 			}
 		}
 
@@ -172,10 +174,10 @@
 			{
 				if (Configuration.XamlFilesOnly)
 				{
-					compilers = new [] { new XamlCompiler() };
+					compilers = new[] { new XamlCompiler() };
 					compilers[0].Clean(_assets);
 					return;
-				} 
+				}
 
 				compilers = CreateTypeInstances<IAssetCompiler>();
 				foreach (var compiler in compilers)
@@ -186,7 +188,8 @@
 			}
 			finally
 			{
-				compilers.SafeDisposeAll();
+				foreach (var compiler in compilers)
+					compiler.Dispose();
 			}
 		}
 	}

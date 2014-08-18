@@ -31,7 +31,7 @@
 		///     Disposes all objects contained in the collection if the collection is not null.
 		/// </summary>
 		/// <param name="collection">The collection that should be disposed.</param>
-		//[DebuggerHidden]
+		[DebuggerHidden]
 		public static void SafeDisposeAll<T>(this ObservableCollection<T> collection)
 			where T : IDisposable
 		{

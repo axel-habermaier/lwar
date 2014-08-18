@@ -22,7 +22,7 @@
 		/// <summary>
 		///     Indicates whether the platform is a big or little endian architecture.
 		/// </summary>
-		public const EndianessType Endianess = 
+		public static readonly EndianessType Endianess = 
 #if BigEndian
 			EndianessType.Big;
 #else
@@ -62,9 +62,11 @@
 		/// <summary>
 		///     Gets the type of graphics API that is used for rendering.
 		/// </summary>
-		public static GraphicsApi GraphicsApi
-		{
-			get { return NativeLibrary.GraphicsApi; }
-		}
+		public static readonly GraphicsApi GraphicsApi =
+#if Direct3D11
+			GraphicsApi.Direct3D11;
+#else
+			GraphicsApi.OpenGL3;
+#endif
 	}
 }

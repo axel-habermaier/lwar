@@ -1,12 +1,11 @@
 ﻿namespace Pegasus.AssetsCompiler.Fonts
 {
 	using System;
-	using Platform.Memory;
 
 	/// <summary>
 	///     Represents a freetype library object.
 	/// </summary>
-	internal class FreeTypeLibrary : DisposableObject
+	internal class FreeTypeLibrary : IDisposable
 	{
 		/// <summary>
 		///     The native freetype library object.
@@ -19,6 +18,14 @@
 		public FreeTypeLibrary()
 		{
 			FreeType.Invoke(() => FreeType.Initialize(out _library));
+		}
+
+		/// <summary>
+		///     Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		public void Dispose()
+		{
+			FreeType.Invoke(() => FreeType.DisposeLibrary(_library));
 		}
 
 		/// <summary>
@@ -35,14 +42,6 @@
 			FreeType.Invoke(() => FreeType.NewFace(_library, fileName, 0, out font));
 
 			return new Font(font, size, bold, italic, renderMode);
-		}
-
-		/// <summary>
-		///     Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		protected override void OnDisposing()
-		{
-			FreeType.Invoke(() => FreeType.DisposeLibrary(_library));
 		}
 	}
 }

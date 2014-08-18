@@ -2,9 +2,8 @@
 {
 	using System;
 	using System.Drawing;
-	using Pegasus.Assets;
+	using System.Linq;
 	using Platform.Graphics;
-	using Platform.Memory;
 
 	/// <summary>
 	///     Represents a cube map asset that requires compilation.
@@ -84,10 +83,12 @@
 		/// <summary>
 		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
-		protected override void OnDisposing()
+		public override void Dispose()
 		{
-			_data.SafeDisposeAll();
-			base.OnDisposing();
+			foreach (var data in _data.Where(data => data != null))
+				data.Dispose();
+
+			base.Dispose();
 		}
 
 		/// <summary>
@@ -96,9 +97,12 @@
 		private unsafe void LoadCubemapSurfaces()
 		{
 			var faces = ExtractFaces();
+
 			for (var i = 0; i < 6; ++i)
 				_data[i] = GetBitmapData(faces[i]);
-			faces.SafeDisposeAll();
+
+			foreach (var face in faces)
+				face.Dispose();
 
 			uint componentCount;
 			ToSurfaceFormat(Bitmap.PixelFormat, out componentCount);

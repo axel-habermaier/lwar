@@ -10,21 +10,6 @@
 	internal static class AssetHeader
 	{
 		/// <summary>
-		///     Writes the asset file header into the given buffer.
-		/// </summary>
-		/// <param name="buffer">The buffer the asset file header should be written to.</param>
-		/// <param name="assetType">The type of the asset that will subsequently be written into the buffer.</param>
-		public static void Write(BufferWriter buffer, byte assetType)
-		{
-			Assert.ArgumentNotNull(buffer);
-
-			buffer.WriteByte((byte)'p');
-			buffer.WriteByte((byte)'g');
-			buffer.WriteUInt16(PlatformInfo.AssetFileVersion);
-			buffer.WriteByte(assetType);
-		}
-
-		/// <summary>
 		///     Reads and validates the asset file header in the given buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the asset file header should be read from.</param>

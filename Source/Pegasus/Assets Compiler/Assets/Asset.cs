@@ -3,14 +3,12 @@
 	using System;
 	using System.IO;
 	using Compilers;
-	using Pegasus.Assets;
 	using Platform;
-	using Platform.Memory;
 
 	/// <summary>
 	///     Represents a source asset that requires compilation.
 	/// </summary>
-	public abstract class Asset : DisposableObject
+	public abstract class Asset : IDisposable
 	{
 		/// <summary>
 		///     The source directory of the asset.
@@ -37,8 +35,6 @@
 		{
 			Assert.ArgumentNotNullOrWhitespace(relativePath);
 			Assert.ArgumentNotNullOrWhitespace(sourceDirectory);
-
-			SetDescription(relativePath);
 
 			_sourceDirectory = sourceDirectory;
 			RelativePath = relativePath;
@@ -173,7 +169,7 @@
 		/// <summary>
 		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
-		protected override void OnDisposing()
+		public virtual void Dispose()
 		{
 			// Default implementation
 		}

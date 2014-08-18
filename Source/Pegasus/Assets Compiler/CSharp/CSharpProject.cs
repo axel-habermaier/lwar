@@ -10,13 +10,12 @@
 	using ICSharpCode.NRefactory.CSharp.Resolver;
 	using ICSharpCode.NRefactory.TypeSystem;
 	using Platform.Logging;
-	using Platform.Memory;
 
 	/// <summary>
 	///     Represents a NRefactory C# project.
 	/// </summary>
 	/// <typeparam name="TFileElement">The type of the file elements that are compiled by the project.</typeparam>
-	internal abstract class CSharpProject<TFileElement> : DisposableObject, IErrorReporter
+	internal abstract class CSharpProject<TFileElement> : IErrorReporter, IDisposable
 		where TFileElement : CodeElement
 	{
 		/// <summary>
@@ -43,6 +42,13 @@
 		///     Gets or sets the path to the C# files that are loaded into the project.
 		/// </summary>
 		public IEnumerable<CSharpFile> CSharpFiles { get; set; }
+
+		/// <summary>
+		///     Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		public virtual void Dispose()
+		{
+		}
 
 		/// <summary>
 		///     Outputs a compilation message.
@@ -151,13 +157,6 @@
 
 			foreach (var error in errors)
 				Report(LogType.Error, file, error.Message, error.Region.Begin, error.Region.End);
-		}
-
-		/// <summary>
-		///     Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		protected override void OnDisposing()
-		{
 		}
 	}
 }

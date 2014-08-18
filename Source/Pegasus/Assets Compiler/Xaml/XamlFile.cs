@@ -6,7 +6,6 @@
 	using System.Linq;
 	using System.Text.RegularExpressions;
 	using System.Xml.Linq;
-	using Platform;
 	using Platform.Logging;
 	using Scripting.Parsing;
 
@@ -680,10 +679,7 @@
 
 				var dataBinding = parser.Parse(binding);
 				if (dataBinding.Status != ReplyStatus.Success)
-				{
-					using (var text = TextString.Create(dataBinding.Errors.ErrorMessage))
-						Log.Die("{0}", text);
-				}
+					Log.Die("{0}", dataBinding.Errors.ErrorMessage);
 
 				IXamlType xamlType;
 				if (!TryGetClrType(bindingElement.Name.Namespace + split[0], out xamlType))

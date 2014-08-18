@@ -2,7 +2,6 @@
 {
 	using System;
 	using System.Diagnostics;
-	using Framework;
 
 	/// <summary>
 	///     Provides functions to log fatal errors, errors, warnings, informational messages, and debug-time only

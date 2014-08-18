@@ -4,7 +4,6 @@
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Text;
-	using Platform;
 
 	/// <summary>
 	///     Writes code with a C-like syntax to an in-memory buffer.

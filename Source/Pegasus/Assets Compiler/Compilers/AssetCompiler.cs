@@ -5,15 +5,14 @@
 	using System.IO;
 	using System.Linq;
 	using Assets;
-	using Framework;
+	using Platform;
 	using Platform.Logging;
-	using Platform.Memory;
 
 	/// <summary>
 	///     Represents a compiler that compiles source assets into a binary format that the runtime can load more efficiently.
 	/// </summary>
 	/// <typeparam name="TAsset">The type of the asset that is compiled</typeparam>
-	public abstract class AssetCompiler<TAsset> : DisposableObject, IAssetCompiler
+	public abstract class AssetCompiler<TAsset> : IAssetCompiler
 		where TAsset : Asset
 	{
 		/// <summary>
@@ -53,6 +52,28 @@
 		}
 
 		/// <summary>
+		///     Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		public virtual void Dispose()
+		{
+		}
+
+		/// <summary>
+		///     Writes the asset file header into the given buffer.
+		/// </summary>
+		/// <param name="writer">The writer the asset file header should be written to.</param>
+		/// <param name="assetType">The type of the asset that will subsequently be written into the buffer.</param>
+		protected static void WriteAssetHeader(BufferWriter writer, byte assetType)
+		{
+			Assert.ArgumentNotNull(writer);
+
+			writer.WriteByte((byte)'p');
+			writer.WriteByte((byte)'g');
+			writer.WriteUInt16(PlatformInfo.AssetFileVersion);
+			writer.WriteByte(assetType);
+		}
+
+		/// <summary>
 		///     Compiles the asset.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
@@ -86,25 +107,25 @@
 		}
 
 		/// <summary>
-		///     Compiles the asset, appending the compiled output to the given buffer.
+		///     Compiles the asset, appending the compiled output to the given writer.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
-		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
-		internal void CompileSingle(TAsset asset, BufferWriter buffer)
+		/// <param name="writer">The writer the compilation output should be appended to.</param>
+		internal void CompileSingle(TAsset asset, BufferWriter writer)
 		{
-			CompileAndLogExceptions(asset, buffer);
+			CompileAndLogExceptions(asset, writer);
 		}
 
 		/// <summary>
 		///     Compiles the asset and logs the exception that might occur during the compilation.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
-		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
-		private bool CompileAndLogExceptions(TAsset asset, BufferWriter buffer)
+		/// <param name="writer">The writer the compilation output should be appended to.</param>
+		private bool CompileAndLogExceptions(TAsset asset, BufferWriter writer)
 		{
 			try
 			{
-				Compile(asset, buffer);
+				Compile(asset, writer);
 				return true;
 			}
 			catch (PegasusException)
@@ -123,8 +144,8 @@
 		///     Compiles the asset.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
-		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
-		protected virtual void Compile(TAsset asset, BufferWriter buffer)
+		/// <param name="writer">The writer the compilation output should be appended to.</param>
+		protected virtual void Compile(TAsset asset, BufferWriter writer)
 		{
 		}
 
@@ -133,13 +154,6 @@
 		/// </summary>
 		/// <param name="asset">The asset that should be cleaned.</param>
 		protected virtual void Clean(TAsset asset)
-		{
-		}
-
-		/// <summary>
-		///     Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		protected override void OnDisposing()
 		{
 		}
 	}

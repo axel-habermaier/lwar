@@ -8,9 +8,7 @@
 	using CSharp;
 	using Fonts;
 	using Pegasus.Assets;
-	using Platform;
 	using Platform.Logging;
-	using Platform.Memory;
 
 	/// <summary>
 	///     Compiles texture-based fonts.
@@ -68,10 +66,10 @@
 		///     Compiles the asset.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
-		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
-		protected override void Compile(FontAsset asset, BufferWriter buffer)
+		/// <param name="writer">The writer the compilation output should be appended to.</param>
+		protected override void Compile(FontAsset asset, BufferWriter writer)
 		{
-			AssetHeader.Write(buffer, (byte)AssetType.Font);
+			WriteAssetHeader(writer, (byte)AssetType.Font);
 			_regenerateFontLoader = true;
 
 			// Read the font configuration
@@ -96,39 +94,39 @@
 			using (var fontMap = new FontMap(font, GetFontMapPath(asset)))
 			{
 				// Write the font map
-				fontMap.Compile(buffer);
+				fontMap.Compile(writer);
 
 				// Write the font metadata
-				buffer.WriteUInt16(font.LineHeight);
+				writer.WriteUInt16(font.LineHeight);
 
 				// Write the glyph metadata
-				buffer.WriteUInt16((ushort)font.Glyphs.Count());
+				writer.WriteUInt16((ushort)font.Glyphs.Count());
 
 				foreach (var glyph in font.Glyphs)
 				{
 					// Glyphs are identified by their character ASCII id, except for '□', which must lie at index 0
 					if (glyph.Character == '□')
-						buffer.WriteByte(0);
+						writer.WriteByte(0);
 					else
-						buffer.WriteByte((byte)glyph.Character);
+						writer.WriteByte((byte)glyph.Character);
 
 					// Write the font map texture coordinates in pixels
 					var area = fontMap.GetGlyphArea(glyph.Character);
-					buffer.WriteInt16((short)area.Left);
-					buffer.WriteInt16((short)area.Top);
-					buffer.WriteUInt16((ushort)area.Width);
-					buffer.WriteUInt16((ushort)area.Height);
+					writer.WriteInt16((short)area.Left);
+					writer.WriteInt16((short)area.Top);
+					writer.WriteUInt16((ushort)area.Width);
+					writer.WriteUInt16((ushort)area.Height);
 
 					// Write the glyph offsets
-					buffer.WriteInt16((short)glyph.OffsetX);
-					buffer.WriteInt16((short)(font.Baseline - glyph.OffsetY));
-					buffer.WriteInt16((short)glyph.AdvanceX);
+					writer.WriteInt16((short)glyph.OffsetX);
+					writer.WriteInt16((short)(font.Baseline - glyph.OffsetY));
+					writer.WriteInt16((short)glyph.AdvanceX);
 				}
 
 				// Write the kerning information, if any
 				if (!font.HasKerning)
 				{
-					buffer.WriteUInt16(0);
+					writer.WriteUInt16(0);
 					return;
 				}
 
@@ -139,13 +137,13 @@
 							 select new { Left = left, Right = right, Offset = offset }).ToArray();
 
 				Assert.That(pairs.Length < UInt16.MaxValue, "Too many kerning pairs.");
-				buffer.WriteUInt16((ushort)pairs.Length);
+				writer.WriteUInt16((ushort)pairs.Length);
 
 				foreach (var pair in pairs)
 				{
-					buffer.WriteUInt16(pair.Left.Character);
-					buffer.WriteUInt16(pair.Right.Character);
-					buffer.WriteInt16((short)pair.Offset);
+					writer.WriteUInt16(pair.Left.Character);
+					writer.WriteUInt16(pair.Right.Character);
+					writer.WriteInt16((short)pair.Offset);
 				}
 			}
 		}
@@ -162,9 +160,9 @@
 		/// <summary>
 		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
-		protected override void OnDisposing()
+		public override void Dispose()
 		{
-			_freeType.SafeDispose();
+			_freeType.Dispose();
 		}
 
 		/// <summary>
@@ -256,14 +254,14 @@
 											var asset = assets.Single(a => a.SourcePath == sourceFile);
 
 											writer.AppendLine("if (bold == {0} && italic == {1} && aliased == {2})",
-															  ((bool)font["bold"]).ToString().ToLower(),
-															  ((bool)font["italic"]).ToString().ToLower(),
-															  ((bool)font["aliased"]).ToString().ToLower());
+												((bool)font["bold"]).ToString().ToLower(),
+												((bool)font["italic"]).ToString().ToLower(),
+												((bool)font["aliased"]).ToString().ToLower());
 											writer.IncreaseIndent();
 											writer.AppendLine("font = {0}.{1}.{2};",
-															  Configuration.AssetsProject.RootNamespace,
-															  Path.GetDirectoryName(asset.RelativePath).Replace("/", "."),
-															  asset.FileNameWithoutExtension.Replace(" ", ""));
+												Configuration.AssetsProject.RootNamespace,
+												Path.GetDirectoryName(asset.RelativePath).Replace("/", "."),
+												asset.FileNameWithoutExtension.Replace(" ", ""));
 											writer.DecreaseIndent();
 										}
 										writer.AppendLine("break;");

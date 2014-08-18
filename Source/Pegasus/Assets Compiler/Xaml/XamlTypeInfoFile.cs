@@ -6,7 +6,6 @@
 	using System.Linq;
 	using System.Xml;
 	using System.Xml.Linq;
-	using Platform;
 	using Platform.Logging;
 
 	/// <summary>

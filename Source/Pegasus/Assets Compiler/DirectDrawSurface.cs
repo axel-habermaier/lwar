@@ -126,28 +126,28 @@
 		/// <summary>
 		///     Serializes the DDS image into the given buffer.
 		/// </summary>
-		/// <param name="buffer">The buffer the DDS image should be serialized into.</param>
-		internal unsafe void Write(BufferWriter buffer)
+		/// <param name="writer">The writer the DDS image should be serialized into.</param>
+		internal unsafe void Write(BufferWriter writer)
 		{
-			buffer.WriteUInt32(Description.Width);
-			buffer.WriteUInt32(Description.Height);
-			buffer.WriteUInt32(Description.Depth);
-			buffer.WriteUInt32(Description.ArraySize);
-			buffer.WriteInt32((int)Description.Type);
-			buffer.WriteInt32((int)Description.Format);
-			buffer.WriteUInt32(Description.Mipmaps);
-			buffer.WriteUInt32(Description.SurfaceCount);
+			writer.WriteUInt32(Description.Width);
+			writer.WriteUInt32(Description.Height);
+			writer.WriteUInt32(Description.Depth);
+			writer.WriteUInt32(Description.ArraySize);
+			writer.WriteInt32((int)Description.Type);
+			writer.WriteInt32((int)Description.Format);
+			writer.WriteUInt32(Description.Mipmaps);
+			writer.WriteUInt32(Description.SurfaceCount);
 
 			foreach (var surface in Surfaces)
 			{
-				buffer.WriteUInt32(surface.Width);
-				buffer.WriteUInt32(surface.Height);
-				buffer.WriteUInt32(surface.Depth);
-				buffer.WriteUInt32(surface.Size);
-				buffer.WriteUInt32(surface.Stride);
+				writer.WriteUInt32(surface.Width);
+				writer.WriteUInt32(surface.Height);
+				writer.WriteUInt32(surface.Depth);
+				writer.WriteUInt32(surface.Size);
+				writer.WriteUInt32(surface.Stride);
 
 				for (var i = 0; i < surface.Size * surface.Depth; ++i)
-					buffer.WriteByte(surface.Data[i]);
+					writer.WriteByte(surface.Data[i]);
 			}
 		}
 

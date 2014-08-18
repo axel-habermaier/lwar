@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-namespace Pegasus.Platform
+namespace Pegasus
 {
 	using System;
 

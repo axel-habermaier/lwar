@@ -6,12 +6,11 @@
 	using System.Linq;
 	using Assets;
 	using CSharp;
-	using Platform.Memory;
 
 	/// <summary>
 	///     Generates a C# class for an effect.
 	/// </summary>
-	internal class CSharpCodeGenerator : DisposableObject
+	internal class CSharpCodeGenerator : IDisposable
 	{
 		/// <summary>
 		///     The name of the context variable of the Effect base class.
@@ -80,6 +79,14 @@
 					   from constant in buffer.Constants
 					   select constant;
 			}
+		}
+
+		/// <summary>
+		///     Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		public void Dispose()
+		{
+			File.WriteAllText(Configuration.CSharpEffectFile, _writer.ToString());
 		}
 
 		/// <summary>
@@ -190,18 +197,18 @@
 				foreach (var technique in _effect.Techniques)
 				{
 					_writer.AppendLine("{0} = {1}.CreateTechnique({2}, {3}, {4}, {5});", technique.Name, ContextVariableName,
-									   _bindMethodName, _unbindMethodName,
-									   ShaderAsset.GetAssetIdentifier(_effect.Namespace.Replace(".", "/"), _effect.Name + "/" + technique.VertexShader.Name)
-												  .Replace("/", "."),
-									   ShaderAsset.GetAssetIdentifier(_effect.Namespace.Replace(".", "/"), _effect.Name + "/" + technique.FragmentShader.Name)
-												  .Replace("/", "."));
+						_bindMethodName, _unbindMethodName,
+						ShaderAsset.GetAssetIdentifier(_effect.Namespace.Replace(".", "/"), _effect.Name + "/" + technique.VertexShader.Name)
+								   .Replace("/", "."),
+						ShaderAsset.GetAssetIdentifier(_effect.Namespace.Replace(".", "/"), _effect.Name + "/" + technique.FragmentShader.Name)
+								   .Replace("/", "."));
 				}
 
 				foreach (var buffer in ConstantBuffers)
 				{
 					_writer.NewLine();
 					_writer.AppendLine("{0} = {2}.CreateConstantBuffer({1}.Size, {1}.Slot);", GetFieldName(buffer.Name),
-									   GetStructName(buffer), ContextVariableName);
+						GetStructName(buffer), ContextVariableName);
 					_writer.AppendLine("{0}.SetName(\"used by {1}\");", GetFieldName(buffer.Name), _effect.FullName);
 				}
 			});
@@ -293,7 +300,7 @@
 						_writer.NewLine();
 						_writer.AppendLine("{0} = false;", GetDirtyFlagName(buffer.Name));
 						_writer.AppendLine("{2}.Update({0}, &_{1}data);", GetFieldName(buffer.Name),
-										   Configuration.ReservedIdentifierPrefix, ContextVariableName);
+							Configuration.ReservedIdentifierPrefix, ContextVariableName);
 					});
 					_writer.NewLine();
 				}
@@ -419,14 +426,6 @@
 				default:
 					throw new NotSupportedException("Unsupported data type.");
 			}
-		}
-
-		/// <summary>
-		///     Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		protected override void OnDisposing()
-		{
-			File.WriteAllText(Configuration.CSharpEffectFile, _writer.ToString());
 		}
 
 		/// <summary>

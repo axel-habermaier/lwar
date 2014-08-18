@@ -6,7 +6,6 @@
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
 	using Platform.Logging;
-	using Platform.Memory;
 
 	/// <summary>
 	///     Represents a C# project with effect declarations that have to be cross-compiled.
@@ -57,9 +56,9 @@
 		/// <summary>
 		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
-		protected override void OnDisposing()
+		public override void Dispose()
 		{
-			_generator.SafeDispose();
+			_generator.Dispose();
 		}
 	}
 }

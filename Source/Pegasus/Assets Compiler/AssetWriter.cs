@@ -3,24 +3,13 @@
 	using System;
 	using System.IO;
 	using Assets;
-	using Platform.Memory;
 
 	/// <summary>
 	///     Writes a compiled asset file. The endianess of the compiled file always matches the endianess of the target
 	///     platform, assuming that the compiler is always running on a little endian platform.
 	/// </summary>
-	internal sealed class AssetWriter : DisposableObject
+	internal sealed class AssetWriter : IDisposable
 	{
-		/// <summary>
-		///     The maximum asset size in megabytes.
-		/// </summary>
-		private const int MaxAssetSize = 128;
-
-		/// <summary>
-		///     The buffer that stores the asset's data.
-		/// </summary>
-		private readonly byte[] _buffer = new byte[MaxAssetSize * 1024 * 1024];
-
 		/// <summary>
 		///     The target path of the compiled asset.
 		/// </summary>
@@ -41,7 +30,7 @@
 
 			_tempPath = asset.TempPath;
 			_targetPath = asset.TargetPath;
-			Writer = BufferWriter.Create(_buffer);
+			Writer = new BufferWriter();
 		}
 
 		/// <summary>
@@ -52,15 +41,12 @@
 		/// <summary>
 		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
-		protected override void OnDisposing()
+		public void Dispose()
 		{
-			using (var stream = new FileStream(_tempPath, FileMode.Create))
-				stream.Write(_buffer, 0, Writer.Count);
+			File.WriteAllBytes(_tempPath, Writer.ToArray());
+			File.WriteAllBytes(_targetPath, Writer.ToArray());
 
-			using (var stream = new FileStream(_targetPath, FileMode.Create))
-				stream.Write(_buffer, 0, Writer.Count);
-
-			Writer.SafeDispose();
+			Writer.Dispose();
 		}
 	}
 }

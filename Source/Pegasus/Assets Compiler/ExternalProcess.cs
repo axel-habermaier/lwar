@@ -11,7 +11,7 @@
 	/// <summary>
 	///     Represents external process.
 	/// </summary>
-	public class ExternalProcess : DisposableObject
+	public class ExternalProcess : IDisposable
 	{
 		/// <summary>
 		///     The external process.
@@ -135,9 +135,9 @@
 		/// <summary>
 		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
-		protected override void OnDisposing()
+		public void Dispose()
 		{
-			_process.SafeDispose();
+			_process.Dispose();
 		}
 	}
 }

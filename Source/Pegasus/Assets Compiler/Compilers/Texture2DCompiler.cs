@@ -4,7 +4,6 @@
 	using System.IO;
 	using Assets;
 	using Pegasus.Assets;
-	using Platform;
 	using Platform.Logging;
 	using Platform.Memory;
 
@@ -18,16 +17,16 @@
 		///     Compiles the asset.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
-		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
-		protected override void Compile(Texture2DAsset asset, BufferWriter buffer)
+		/// <param name="writer">The writer the compilation output should be appended to.</param>
+		protected override void Compile(Texture2DAsset asset, BufferWriter writer)
 		{
 			asset.Load();
-			AssetHeader.Write(buffer, (byte)AssetType.Texture2D);
+			WriteAssetHeader(writer, (byte)AssetType.Texture2D);
 
 			if (asset.Uncompressed)
-				asset.Write(buffer);
+				asset.Write(writer);
 			else
-				CompileCompressed(asset, buffer);
+				CompileCompressed(asset, writer);
 		}
 
 		/// <summary>
@@ -43,7 +42,7 @@
 		///     Compiles a texture that should be compressed.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
-		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
+		/// <param name="buffer">The writer the compilation output should be appended to.</param>
 		private static void CompileCompressed(Texture2DAsset asset, BufferWriter buffer)
 		{
 			if (!asset.IsPowerOfTwo())
@@ -52,11 +51,9 @@
 			var outFile = GetAssembledFilePath(asset);
 			ExternalTool.NvCompress(asset.SourcePath, outFile, asset.CompressedFormat, asset.Mipmaps);
 
-			using (var ddsBuffer = BufferReader.Create(File.ReadAllBytes(outFile)))
-			{
+			var ddsBuffer = new BufferReader(File.ReadAllBytes(outFile));
 				var ddsImage = new DirectDrawSurface(ddsBuffer);
 				ddsImage.Write(buffer);
-			}
 		}
 
 		/// <summary>

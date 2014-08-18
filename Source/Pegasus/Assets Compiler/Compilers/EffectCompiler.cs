@@ -11,10 +11,8 @@
 	using Effects;
 	using Effects.Compilation;
 	using Pegasus.Assets;
-	using Platform;
 	using Platform.Graphics;
 	using Platform.Logging;
-	using Platform.Memory;
 
 	/// <summary>
 	///     Compiles effects written in C#.
@@ -103,16 +101,18 @@
 			}
 			finally
 			{
-				shaderAssets.SafeDisposeAll();
+				foreach (var asset in shaderAssets)
+					asset.Dispose();
 			}
 		}
 
 		/// <summary>
 		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
-		protected override void OnDisposing()
+		public override void Dispose()
 		{
-			_shaderAssets.SafeDisposeAll();
+			foreach (var asset in _shaderAssets)
+				asset.Dispose();
 		}
 
 		/// <summary>
@@ -177,39 +177,37 @@
 		///     Compiles the asset.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
-		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
-		protected override void Compile(ShaderAsset asset, BufferWriter buffer)
+		/// <param name="writer">The buffer the compilation output should be appended to.</param>
+		protected override void Compile(ShaderAsset asset, BufferWriter writer)
 		{
-			using (var reader = BufferReader.Create(File.ReadAllBytes(asset.SourcePath)))
+			var reader = new BufferReader(File.ReadAllBytes(asset.SourcePath));
+			string profile;
+
+			switch (asset.Type)
 			{
-				string profile;
+				case ShaderType.VertexShader:
+					WriteAssetHeader(writer, (byte)AssetType.VertexShader);
 
-				switch (asset.Type)
-				{
-					case ShaderType.VertexShader:
-						AssetHeader.Write(buffer, (byte)AssetType.VertexShader);
+					var count = reader.ReadByte();
+					writer.WriteByte(count);
 
-						var count = reader.ReadByte();
-						buffer.WriteByte(count);
+					for (var i = 0; i < count * 2; ++i)
+						writer.WriteByte(reader.ReadByte());
 
-						for (var i = 0; i < count * 2; ++i)
-							buffer.WriteByte(reader.ReadByte());
-
-						profile = "vs_4_0";
-						break;
-					case ShaderType.FragmentShader:
-						AssetHeader.Write(buffer, (byte)AssetType.FragmentShader);
-						profile = "ps_4_0";
-						break;
-					default:
-						throw new InvalidOperationException("Unsupported shader type.");
-				}
-
-				CompileGlslShader(buffer, reader.ReadString());
-				CompileHlslShader(asset, buffer, reader.ReadString(), profile);
-
-				Assert.That(reader.EndOfBuffer, "Not all shader code has been read.");
+					profile = "vs_4_0";
+					break;
+				case ShaderType.FragmentShader:
+					WriteAssetHeader(writer, (byte)AssetType.FragmentShader);
+					profile = "ps_4_0";
+					break;
+				default:
+					throw new InvalidOperationException("Unsupported shader type.");
 			}
+
+			CompileGlslShader(writer, reader.ReadString());
+			CompileHlslShader(asset, writer, reader.ReadString(), profile);
+
+			Assert.That(reader.EndOfBuffer, "Not all shader code has been read.");
 		}
 
 		/// <summary>
@@ -225,27 +223,27 @@
 		/// <summary>
 		///     Writes the generated GLSL shader code to the buffer.
 		/// </summary>
-		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
+		/// <param name="writer">The buffer the compilation output should be appended to.</param>
 		/// <param name="source">The GLSL shader source code.</param>
-		private static void CompileGlslShader(BufferWriter buffer, string source)
+		private static void CompileGlslShader(BufferWriter writer, string source)
 		{
 			var shader = "#version 330\n#extension GL_ARB_shading_language_420pack : enable\n" +
 						 "#extension GL_ARB_separate_shader_objects : enable\n" + source;
 
 			var code = Encoding.UTF8.GetBytes(shader);
-			buffer.WriteInt32(code.Length + 1);
-			buffer.Copy(code);
-			buffer.WriteByte(0);
+			writer.WriteInt32(code.Length + 1);
+			writer.Copy(code);
+			writer.WriteByte(0);
 		}
 
 		/// <summary>
 		///     Compiles the HLSL shader of the given profile and writes the generated code into the buffer.
 		/// </summary>
 		/// <param name="asset">The asset that contains the shader source code.</param>
-		/// <param name="buffer">The buffer the compilation output should be appended to.</param>
+		/// <param name="writer">The buffer the compilation output should be appended to.</param>
 		/// <param name="source">The HLSL shader source code.</param>
 		/// <param name="profile">The profile that should be used to compile the shader.</param>
-		private static void CompileHlslShader(Asset asset, BufferWriter buffer, string source, string profile)
+		private static void CompileHlslShader(Asset asset, BufferWriter writer, string source, string profile)
 		{
 			if (!Configuration.CompileHlsl)
 				return;
@@ -256,7 +254,7 @@
 			var byteCode = GetCompiledHlslShaderPath(asset);
 			ExternalTool.Fxc(hlslFile, byteCode, profile);
 
-			buffer.Copy(File.ReadAllBytes(byteCode));
+			writer.Copy(File.ReadAllBytes(byteCode));
 		}
 
 		/// <summary>

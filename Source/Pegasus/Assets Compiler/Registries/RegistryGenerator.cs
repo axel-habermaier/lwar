@@ -48,7 +48,7 @@
 		/// </summary>
 		public void Dispose()
 		{
-			_project.SafeDispose();
+			_project.Dispose();
 		}
 
 		/// <summary>

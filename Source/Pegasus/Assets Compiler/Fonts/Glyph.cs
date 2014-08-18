@@ -4,12 +4,11 @@
 	using System.Drawing;
 	using System.Drawing.Imaging;
 	using Platform.Logging;
-	using Platform.Memory;
 
 	/// <summary>
 	///     Represents a single character of a font face.
 	/// </summary>
-	internal class Glyph : DisposableObject
+	internal class Glyph : IDisposable
 	{
 		/// <summary>
 		///     Creates the bitmap for the glyph.
@@ -90,6 +89,14 @@
 		public Size Size { get; private set; }
 
 		/// <summary>
+		///     Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		public void Dispose()
+		{
+			Bitmap.Dispose();
+		}
+
+		/// <summary>
 		///     Gets an aliased bitmap from the given glyph bitmap.
 		/// </summary>
 		/// <param name="glyph">The glyph the should be copied to a bitmap.</param>
@@ -146,14 +153,6 @@
 			}
 
 			return bitmap;
-		}
-
-		/// <summary>
-		///     Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		protected override void OnDisposing()
-		{
-			Bitmap.SafeDispose();
 		}
 	}
 }

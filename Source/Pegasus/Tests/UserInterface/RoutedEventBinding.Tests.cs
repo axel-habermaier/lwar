@@ -3,10 +3,10 @@
 	using System;
 	using FluentAssertions;
 	using NUnit.Framework;
+	using Pegasus;
 	using Pegasus.Framework.UserInterface;
 	using Pegasus.Framework.UserInterface.Controls;
 	using Pegasus.Framework.UserInterface.Input;
-	using Pegasus.Platform;
 
 	[TestFixture]
 	public class RoutedEventBindingTests
@@ -94,17 +94,6 @@
 		}
 
 		[Test]
-		public void Binding_NotAttachedToRoot()
-		{
-			var button = new Button { DataContext = this };
-			button.CreateEventBinding(Button.ClickEvent, "OnEventParameters");
-
-			button.RaiseEvent(Button.ClickEvent, RoutedEventArgs.Default);
-			_parameterMethodInvoked.Should().BeFalse();
-			_parameterlessMethodInvoked.Should().BeFalse();
-		}
-
-		[Test]
 		public void Binding_BecomesAttachedToRoot()
 		{
 			var button = new Button { DataContext = this };
@@ -124,10 +113,21 @@
 		[Test]
 		public void Binding_NoLongerAttachedToRoot()
 		{
-			var button = new Button { DataContext = this, IsAttachedToRoot = true};
+			var button = new Button { DataContext = this, IsAttachedToRoot = true };
 			button.CreateEventBinding(Button.ClickEvent, "OnEventParameters");
 
 			button.IsAttachedToRoot = false;
+
+			button.RaiseEvent(Button.ClickEvent, RoutedEventArgs.Default);
+			_parameterMethodInvoked.Should().BeFalse();
+			_parameterlessMethodInvoked.Should().BeFalse();
+		}
+
+		[Test]
+		public void Binding_NotAttachedToRoot()
+		{
+			var button = new Button { DataContext = this };
+			button.CreateEventBinding(Button.ClickEvent, "OnEventParameters");
 
 			button.RaiseEvent(Button.ClickEvent, RoutedEventArgs.Default);
 			_parameterMethodInvoked.Should().BeFalse();

@@ -210,6 +210,7 @@
     <Compile Include="..\Assets\Fonts\FontLoader.cs">
       <Link>Assets\FontLoader.cs</Link>
     </Compile>
+    <Compile Include="Assert.Framework.cs" />
     <Compile Include="Assets\AssetLoaders\CubeMapAssetLoader.cs" />
     <Compile Include="Assets\AssetLoaders\AssetLoader.cs" />
     <Compile Include="Assets\AssetLoaders\FontAssetLoader.cs" />
@@ -344,7 +345,7 @@
     <Compile Include="Platform\Logging\LogExtensions.cs" />
     <Compile Include="Platform\Network\ProtocolMismatchException.cs" />
     <Compile Include="Platform\Network\ServerFullException.cs" />
-    <Compile Include="Platform\ResharperAttributes.cs" />
+    <Compile Include="ResharperAttributes.cs" />
     <Compile Include="Platform\Memory\ArrayPool.cs" />
     <Compile Include="Framework\Bootstrapper.cs" />
     <Compile Include="Framework\UserInterface\Controls\WindowMode.cs" />
@@ -397,7 +398,7 @@
     <Compile Include="Math\Vector3.cs" />
     <Compile Include="Platform\Memory\ObjectPool.cs" />
     <Compile Include="Platform\AppFile.cs" />
-    <Compile Include="Framework\PegasusException.cs" />
+    <Compile Include="PegasusException.cs" />
     <Compile Include="Platform\Graphics\CubeMapView.cs" />
     <Compile Include="Platform\Graphics\Effect.cs" />
     <Compile Include="Platform\Graphics\EffectContext.cs" />
@@ -487,6 +488,7 @@
     <Compile Include="Scripting\Parsing\Combinators\SizeParser.cs" />
     <Compile Include="Scripting\Parsing\Combinators\Vector2IParser.cs" />
     <Compile Include="Scripting\Parsing\Combinators\Vector2Parser.cs" />
+    <Compile Include="Scripting\Parsing\Parser.DefaultParsers.cs" />
     <Compile Include="Scripting\SystemOnlyAttribute.cs" />
     <Compile Include="Scripting\TypeRegistry.cs" />
     <Compile Include="Scripting\Validators\WindowPositionAttribute.cs" />
