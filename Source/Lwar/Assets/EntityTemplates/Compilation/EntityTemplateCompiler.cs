@@ -55,7 +55,7 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 			{
 				Log.Info("Compiling entity templates...");
 
-				foreach (var asset in assets)
+				foreach (var asset in assets.OfType<EntityTemplateAsset>())
 					Hash.Compute(asset.SourcePath).WriteTo(asset.HashPath);
 
 				var templates = GetTemplates(GetClassNames(assets.OfType<EntityTemplateAsset>()))

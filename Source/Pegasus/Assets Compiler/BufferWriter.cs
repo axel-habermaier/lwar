@@ -185,6 +185,7 @@
 		/// </summary>
 		public byte[] ToArray()
 		{
+			_writer.Flush();
 			return _buffer.ToArray();
 		}
 	}

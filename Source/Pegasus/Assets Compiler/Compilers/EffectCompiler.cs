@@ -6,6 +6,7 @@
 	using System.Linq;
 	using System.Reflection;
 	using System.Text;
+	using System.Threading.Tasks;
 	using Assets;
 	using CSharp;
 	using Effects;
@@ -64,12 +65,12 @@
 					using (var project = new EffectsProject { CSharpFiles = csharpFiles })
 					{
 						if (!project.Compile())
-							return;
+							throw new InvalidOperationException("Effect project compilation failed.");
 					}
 				}
 
-				foreach (var asset in _shaderAssets)
-					Compile(asset);
+				var tasks = _shaderAssets.Select(Compile).ToArray();
+				Task.WaitAll(tasks);
 			}
 			catch (Exception e)
 			{

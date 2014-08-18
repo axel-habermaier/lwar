@@ -85,11 +85,7 @@
 			}
 			catch (AggregateException e)
 			{
-				foreach (var exception in e.InnerExceptions)
-					Log.Error("{0}", exception.Message);
-
-				Log.Error("{0}", e.StackTrace);
-				Log.Info(Environment.NewLine);
+				LogAggregateException(e);
 				return -1;
 			}
 			catch (PegasusException)
@@ -110,6 +106,29 @@
 
 				return -1;
 			}
+		}
+
+		/// <summary>
+		///     Logs the given aggregate exception.
+		/// </summary>
+		/// <param name="exception">The exception that should be logged.</param>
+		private static void LogAggregateException(AggregateException exception)
+		{
+			foreach (var innerException in exception.InnerExceptions)
+			{
+				var innerAggregateException = innerException as AggregateException;
+				if (innerAggregateException != null)
+					LogAggregateException(innerAggregateException);
+				else
+				{
+					Log.Error("{0}", String.IsNullOrWhiteSpace(innerException.Message) ? "Unknown error" : innerException.Message);
+					Log.Error("{0}", innerException.StackTrace);
+				}
+
+				Log.Error("----");
+			}
+
+			Log.Error("{0}", exception.StackTrace);
 		}
 
 		/// <summary>

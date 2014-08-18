@@ -125,8 +125,9 @@
 			{
 				Compile(asset, writer);
 			}
-			catch (Exception)
+			catch (Exception e)
 			{
+				Log.Error("Compiled of '{0}' failed: {1}", asset.RelativePath, e.Message);
 				File.Delete(asset.HashPath);
 				throw;
 			}

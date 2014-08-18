@@ -2,9 +2,7 @@
 {
 	using System;
 	using System.Drawing;
-	using Pegasus.Assets;
 	using Platform.Graphics;
-	using Platform.Memory;
 
 	/// <summary>
 	///     Represents a 2D texture that requires compilation.
