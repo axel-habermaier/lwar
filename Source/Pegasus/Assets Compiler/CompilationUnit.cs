@@ -3,6 +3,7 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Threading.Tasks;
 	using Assets;
 	using Assets.Attributes;
 	using Compilers;
@@ -133,22 +134,22 @@
 				}
 
 				compilers = CreateTypeInstances<IAssetCompiler>();
-				var success = true;
+				var tasks = compilers
+					.Select(compiler => Task.Factory.StartNew(() => compiler.Compile(_assets), TaskCreationOptions.LongRunning))
+					.ToArray();
 
+				Task.WaitAll(tasks);
+				if (!tasks.All(task => task.Result))
+					return false;
+
+				IEnumerable<Asset> assets = _assets;
 				foreach (var compiler in compilers)
-					success &= compiler.Compile(_assets);
+					assets = assets.Union(compiler.AdditionalAssets);
 
-				if (success)
-				{
-					IEnumerable<Asset> assets = _assets;
-					foreach (var compiler in compilers)
-						assets = assets.Union(compiler.AdditionalAssets);
+				var assetListGenerator = new AssetIdentifierListGenerator();
+				assetListGenerator.Generate(assets, Configuration.AssetsProject.RootNamespace);
 
-					var assetListGenerator = new AssetIdentifierListGenerator();
-					assetListGenerator.Generate(assets, Configuration.AssetsProject.RootNamespace);
-				}
-
-				return success;
+				return true;
 			}
 			catch (Exception e)
 			{

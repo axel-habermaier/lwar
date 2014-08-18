@@ -3,7 +3,6 @@
 	using System;
 	using System.Diagnostics;
 	using System.Globalization;
-	using System.Threading;
 	using System.Threading.Tasks;
 	using Platform;
 	using Platform.Logging;
@@ -21,8 +20,8 @@
 		public static int Main(string[] args)
 		{
 			TaskScheduler.UnobservedTaskException += (o, e) => { throw e.Exception.InnerException; };
-			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-			Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+			CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+			CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
 
 			var watch = new Stopwatch();
 			watch.Start();

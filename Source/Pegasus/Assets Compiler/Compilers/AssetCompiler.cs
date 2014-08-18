@@ -4,6 +4,7 @@
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;
+	using System.Threading.Tasks;
 	using Assets;
 	using Platform;
 	using Platform.Logging;
@@ -29,10 +30,9 @@
 		/// <param name="assets">The assets that should be compiled.</param>
 		public virtual bool Compile(IEnumerable<Asset> assets)
 		{
-			var success = true;
-			foreach (var asset in assets.OfType<TAsset>())
-				success &= Compile(asset);
-			return success;
+			var tasks = assets.OfType<TAsset>().Select(Compile).ToArray();
+			Task.WaitAll(tasks);
+			return tasks.All(task => task.Result);
 		}
 
 		/// <summary>
@@ -77,7 +77,7 @@
 		///     Compiles the asset.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
-		protected bool Compile(TAsset asset)
+		protected async Task<bool> Compile(TAsset asset)
 		{
 			var action = asset.GetRequiredAction();
 
@@ -91,16 +91,19 @@
 					File.Copy(asset.TempPath, asset.TargetPath, true);
 					return true;
 				case CompilationAction.Process:
-					Log.Info("Compiling '{0}'...", asset.RelativePath);
-					bool success;
+					return await Task.Factory.StartNew(() =>
+					{
+						Log.Info("Compiling '{0}'...", asset.RelativePath);
+						bool success;
 
-					using (var writer = new AssetWriter(asset))
-						success = CompileAndLogExceptions(asset, writer.Writer);
+						using (var writer = new AssetWriter(asset))
+							success = CompileAndLogExceptions(asset, writer.Writer);
 
-					if (success)
-						asset.WriteHash();
+						if (success)
+							asset.WriteHash();
 
-					return success;
+						return success;
+					}, TaskCreationOptions.LongRunning);
 				default:
 					throw new InvalidOperationException("Unknown action type.");
 			}

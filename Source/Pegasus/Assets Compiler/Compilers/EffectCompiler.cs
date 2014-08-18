@@ -71,7 +71,7 @@
 
 				var success = true;
 				foreach (var asset in _shaderAssets)
-					success &= Compile(asset);
+					success &= Compile(asset).Result;
 
 				return success;
 			}
