@@ -47,7 +47,7 @@ void player_input(Player *p,
     //p->rot   = turn_right  - turn_left;
 
 	Vec aim = { aim_x, aim_y };
-	if (len(aim) >= 42)
+	if (len(aim) >= 24)
 		p->aim = aim;
 
     int _f[NUM_SLOTS] = { fire1, fire2, fire3, fire4 };
