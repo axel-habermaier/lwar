@@ -1,0 +1,266 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug Direct3D11</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1F608B12-403C-4639-947A-B559E8EF121C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Lwar.Assets</RootNamespace>
+    <AssemblyName>Lwar Assets</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>Svn</SccProjectName>
+    <SccLocalPath>Svn</SccLocalPath>
+    <SccAuxPath>Svn</SccAuxPath>
+    <SccProvider>SubversionScc</SccProvider>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Direct3D11|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>False</Optimize>
+    <OutputPath>..\..\..\Binaries x86\Debug Direct3D11\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Direct3D11|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>True</Optimize>
+    <OutputPath>..\..\..\Binaries x86\Release Direct3D11\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Direct3D11|x64' ">
+    <DebugSymbols>True</DebugSymbols>
+    <OutputPath>..\..\..\Binaries x64\Debug Direct3D11\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>False</Optimize>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Direct3D11|x64' ">
+    <OutputPath>..\..\..\Binaries x64\Release Direct3D11\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Optimize>True</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug OpenGL3|x86'">
+    <DebugSymbols>True</DebugSymbols>
+    <OutputPath>..\..\..\Binaries x86\Debug OpenGL3\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>False</Optimize>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug OpenGL3|x64'">
+    <DebugSymbols>True</DebugSymbols>
+    <OutputPath>..\..\..\Binaries x64\Debug OpenGL3\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>False</Optimize>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|x86'">
+    <OutputPath>..\..\..\Binaries x86\Release OpenGL3\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Optimize>True</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|x64'">
+    <OutputPath>..\..\..\Binaries x64\Release OpenGL3\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Optimize>True</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|x86'">
+    <DebugSymbols>True</DebugSymbols>
+    <OutputPath>..\..\..\Binaries x86\Debug OpenGL3\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>False</Optimize>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(ProjectDir)/Lwar Assets.csproj&quot;" workingdir="$(TargetDir)" />
+      </CustomCommands>
+    </CustomCommands>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|x64'">
+    <DebugSymbols>True</DebugSymbols>
+    <OutputPath>..\..\..\Binaries x64\Debug OpenGL3\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>False</Optimize>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(ProjectDir)/Lwar Assets.csproj&quot;" workingdir="$(TargetDir)" />
+      </CustomCommands>
+    </CustomCommands>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|x86'">
+    <OutputPath>..\..\..\Binaries x86\Release OpenGL3\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Optimize>True</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(ProjectDir)/Lwar Assets.csproj&quot;" workingdir="$(TargetDir)" />
+      </CustomCommands>
+    </CustomCommands>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|x64'">
+    <OutputPath>..\..\..\Binaries x64\Release OpenGL3\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Optimize>True</Optimize>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="AfterBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(ProjectDir)/Lwar Assets.csproj&quot;" workingdir="$(TargetDir)" />
+      </CustomCommands>
+    </CustomCommands>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="ICSharpCode.NRefactory">
+      <HintPath>..\..\..\Dependencies\ICSharpCode.NRefactory.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.NRefactory.CSharp">
+      <HintPath>..\..\..\Dependencies\ICSharpCode.NRefactory.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\..\..\Dependencies\Mono.Cecil.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Textures\Bullet.png" />
+    <Content Include="Textures\BulletGlow.png" />
+    <Content Include="Textures\Crosshair.png" />
+    <Content Include="Textures\Explosion.png" />
+    <Content Include="Textures\Heat.png" />
+    <Content Include="Textures\Jupiter.Cubemap.png" />
+    <Content Include="Textures\Mars.Cubemap.png" />
+    <Content Include="Textures\Moon.Cubemap.png" />
+    <Content Include="Textures\Parallax.png" />
+    <Content Include="Textures\Phaser.png" />
+    <Content Include="Textures\PhaserGlow.png" />
+    <Content Include="Textures\Earth.Cubemap.png" />
+    <Content Include="Textures\Rocket.png" />
+    <Content Include="Textures\Shields.Cubemap.png" />
+    <Content Include="Textures\Ship.png" />
+    <Content Include="Textures\Space.Cubemap.png" />
+    <Content Include="Textures\Sun.Cubemap.png" />
+    <Content Include="Textures\SunHeat.Cubemap.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Effects\Blur.Effect.cs" />
+    <Compile Include="Effects\Parallax.Effect.cs" />
+    <Compile Include="Effects\SimpleVertex.Effect.cs" />
+    <Compile Include="Effects\Skybox.Effect.cs" />
+    <Compile Include="Effects\Sphere.Effect.cs" />
+    <Compile Include="Effects\Sprite.Effect.cs" />
+    <Compile Include="Effects\Sun.Effect.cs" />
+    <Compile Include="Effects\TexturedQuad.Effect.cs" />
+    <Compile Include="EntityTemplates\Compilation\EntityTemplateAsset.cs" />
+    <Compile Include="EntityTemplates\Compilation\EntityTemplateAssetFactory.cs" />
+    <Compile Include="EntityTemplates\Compilation\EntityTemplateCompiler.cs" />
+    <Compile Include="EntityTemplates\Ships.Templates.cs" />
+    <Compile Include="EntityTemplates\Suns.Templates.cs" />
+    <Compile Include="EntityTemplates\Planets.Templates.cs" />
+    <Compile Include="EntityTemplates\Weapons.Templates.cs" />
+    <Compile Include="EntityTemplates\Compilation\EntityTemplate.cs" />
+    <Compile Include="Textures\CompilationSettings.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Fonts\Liberation Mono 11.font" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="AfterBuild">
+    <Exec Command="&quot;$(TargetDir)pgc.exe&quot; compile &quot;$(ProjectPath)&quot;" WorkingDirectory="$(TargetDir)" Condition="'$(OS)' == 'Windows_NT'" />
+  </Target>
+  <Target Name="Clean">
+    <Exec Command="&quot;$(TargetDir)pgc.exe&quot; clean &quot;$(ProjectPath)&quot;" WorkingDirectory="$(TargetDir)" Condition="'$(OS)' == 'Windows_NT'" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\Pegasus\Assets Compiler\Assets Compiler.csproj">
+      <Project>{3FAF28EF-649E-4BFB-9912-41EA68F4C0D7}</Project>
+      <Name>Assets Compiler</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

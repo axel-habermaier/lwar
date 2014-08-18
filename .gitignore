@@ -1,61 +1,37 @@
+Binaries x64
+Binaries x86
+Build
+ipch
+obj
+bin
+temp
+TestResults
+packages
+.svn
+*.suo
+*.opensdf
+.directory
+*.generated.cs
+*.md.pc
+*.userprefs
 *.csproj~
 *.sdf
 *.user
-/Binaries
-/Build
-/ipch
-/.svn
-*.suo
-/Source/*.suo
-/Source/Server/obj
-/Source/Other/Desktop Launcher/obj
-*.opensdf
-autoexec.cfg
-Lwar.log
-.directory
-Source/Lwar/obj
-Source/Assets/Assets Compiler/obj
-Source/Assets/Assets Compiler/bin
-Source/Pegasus/obj
-*.generated.cs
-Source/Other/Platform/obj
-Source/Other/Platform/Platform.md.pc
-Source/Server/Server.md.pc
-LwarMono.userprefs
-Source/Assets/Lwar Assets/obj
-Source/Assets/Lwar Assets/bin
-Source/Assets/Lwar Assets/temp
-Source/Assets/Lwar Assets/Binaries
-Source/Assets/Pegasus Assets/obj
-Source/Assets/Pegasus Assets/bin
-Source/Assets/Pegasus Assets/temp
-Source/Assets/Pegasus Assets/Binaries
-Source/User Interface/Pegasus UI/obj
-Source/User Interface/Pegasus UI/bin
-Source/User Interface/Lwar UI/obj
-Source/User Interface/Lwar UI/bin
-Binaries x64
-Binaries x86
-log.txt
-Source/Assets/Lwar Assets/AssetIdentifiers.cs
-Source/Assets/Lwar Assets/Effects/Effects.cs
-Source/Assets/Pegasus Assets/AssetIdentifiers.cs
-Source/Assets/Pegasus Assets/Effects/Effects.cs
-Source/Lwar/Gameplay/Entities/EntityType.cs
-Source/Lwar/Gameplay/Entities/EntityTemplates.cs
-Source/Server/templates.c
-Source/Server/entity.h
-Lwar.sln.ide
 *.psess
 *.vsp
 *.vspx
-Source/TestResults
-Source/Other/Tests/bin
-Source/Other/Tests/obj
-Source/Assets/Lwar Assets/Fonts/FontLoader.cs
-Source/Assets/Pegasus Assets/Fonts/FontLoader.cs
 *.ipch
-/Source/User Interface/Lwar UI/UserInterface.cs
-/Source/User Interface/Pegasus UI/UserInterface.cs
 *.nvuser
-/Source/Other/WinRT Launcher/obj
+*.sln.ide
+Source/Pegasus/Assets/AssetIdentifiers.cs
+Source/Pegasus/Assets/Effects/Effects.cs
+Source/Pegasus/Assets/Fonts/FontLoader.cs
+Source/Pegasus/User Interface/UserInterface.cs
+Source/Lwar/Assets/AssetIdentifiers.cs
+Source/Lwar/Assets/Effects/Effects.cs
+Source/Lwar/Assets/Fonts/FontLoader.cs
+Source/Lwar/User Interface/UserInterface.cs
+Source/Lwar/Lwar/Gameplay/Entities/EntityType.cs
+Source/Lwar/Lwar/Gameplay/Entities/EntityTemplates.cs
+Source/Lwar/Server/templates.c
+Source/Lwar/Server/entity.h

@@ -1,0 +1,696 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug Direct3D11</Configuration>
+    <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Pegasus</RootNamespace>
+    <AssemblyName>Pegasus</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Direct3D11|x86'">
+    <DebugSymbols>True</DebugSymbols>
+    <OutputPath>..\..\..\Binaries x86\Debug Direct3D11\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;Direct3D11; Windows</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>False</Optimize>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Direct3D11|x86'">
+    <OutputPath>..\..\..\Binaries x86\Release Direct3D11\</OutputPath>
+    <DefineConstants>TRACE;Direct3D11; Windows</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Optimize>True</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug OpenGL3|x86'">
+    <DebugSymbols>True</DebugSymbols>
+    <OutputPath>..\..\..\Binaries x86\Debug OpenGL3\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;OpenGL3; Windows</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>False</Optimize>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|x86'">
+    <OutputPath>..\..\..\Binaries x86\Release OpenGL3\</OutputPath>
+    <DefineConstants>TRACE;OpenGL3; Windows</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Optimize>True</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|x86'">
+    <DebugSymbols>True</DebugSymbols>
+    <OutputPath>..\..\..\Binaries x86\Debug OpenGL3\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;OpenGL3; Linux</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>False</Optimize>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="BeforeBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(SolutionDir)/Pegasus/Pegasus UI/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
+      </CustomCommands>
+    </CustomCommands>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|x86'">
+    <OutputPath>..\..\..\Binaries x86\Release OpenGL3\</OutputPath>
+    <DefineConstants>TRACE;OpenGL3; Linux</DefineConstants>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Optimize>True</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="BeforeBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(SolutionDir)/Pegasus/Pegasus UI/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
+      </CustomCommands>
+    </CustomCommands>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Direct3D11|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\..\Binaries x64\Debug Direct3D11\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;Direct3D11; Windows</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
+    <WarningsAsErrors>
+    </WarningsAsErrors>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Direct3D11|x64'">
+    <OutputPath>..\..\..\Binaries x64\Release Direct3D11\</OutputPath>
+    <DefineConstants>TRACE;Direct3D11; Windows</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug OpenGL3|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\..\Binaries x64\Debug OpenGL3\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;OpenGL3; Windows</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|x64'">
+    <OutputPath>..\..\..\Binaries x64\Release OpenGL3\</OutputPath>
+    <DefineConstants>TRACE;OpenGL3; Windows</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\..\Binaries x64\Debug OpenGL3\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;OpenGL3; Linux</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="BeforeBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(SolutionDir)/Pegasus/Pegasus UI/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
+      </CustomCommands>
+    </CustomCommands>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|x64'">
+    <OutputPath>..\..\..\Binaries x64\Release OpenGL3\</OutputPath>
+    <DefineConstants>TRACE;OpenGL3; Linux</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <WarningLevel>4</WarningLevel>
+    <CustomCommands>
+      <CustomCommands>
+        <Command type="BeforeBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(SolutionDir)/Pegasus/Pegasus UI/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
+      </CustomCommands>
+    </CustomCommands>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\Assets\AssetIdentifiers.cs">
+      <Link>Assets\AssetIdentifiers.cs</Link>
+    </Compile>
+    <Compile Include="..\Assets\Effects\Effects.cs">
+      <Link>Assets\Effects.cs</Link>
+    </Compile>
+    <Compile Include="..\Assets\Fonts\FontLoader.cs">
+      <Link>Assets\FontLoader.cs</Link>
+    </Compile>
+    <Compile Include="Assets\AssetLoaders\CubeMapAssetLoader.cs" />
+    <Compile Include="Assets\AssetLoaders\AssetLoader.cs" />
+    <Compile Include="Assets\AssetLoaders\FontAssetLoader.cs" />
+    <Compile Include="Assets\AssetLoaders\FragmentShaderAssetLoader.cs" />
+    <Compile Include="Assets\AssetLoaders\ShaderAssetLoader.cs" />
+    <Compile Include="Assets\AssetLoaders\Texture2DAssetLoader.cs" />
+    <Compile Include="Assets\AssetLoaders\TextureAssetLoader.cs" />
+    <Compile Include="Assets\AssetLoaders\VertexShaderAssetLoader.cs" />
+    <Compile Include="Assets\AssetType.cs" />
+    <Compile Include="Framework\CustomCollection.cs" />
+    <Compile Include="Framework\CollectionChangedAction.cs" />
+    <Compile Include="Framework\CollectionChangedEventArgs.cs" />
+    <Compile Include="Framework\CollectionChangedHandler.cs" />
+    <Compile Include="Framework\Enumerator.cs" />
+    <Compile Include="Framework\INotifyCollectionChanged.cs" />
+    <Compile Include="Framework\DisposableNotifyPropertyChanged.cs" />
+    <Compile Include="Framework\PooledNotifyPropertyChanged.cs" />
+    <Compile Include="Framework\NotifyPropertyChanged.cs" />
+    <Compile Include="Framework\ObservableCollection.cs" />
+    <Compile Include="Framework\PropertyChangedHandler.cs" />
+    <Compile Include="Framework\UserInterface\BindingMode.cs" />
+    <Compile Include="Framework\UserInterface\Controls\Dock.cs" />
+    <Compile Include="Framework\UserInterface\Controls\DockPanel.cs" />
+    <Compile Include="Framework\UserInterface\Controls\ScrollViewer.cs" />
+    <Compile Include="Framework\UserInterface\Controls\TextBox.cs" />
+    <Compile Include="Framework\UserInterface\Controls\TextChangedEventArgs.cs" />
+    <Compile Include="Framework\UserInterface\Converters\LogTypeToColorConverter.cs" />
+    <Compile Include="Framework\UserInterface\Input\Caret.cs" />
+    <Compile Include="Framework\UserInterface\Controls\ColumnDefinition.cs" />
+    <Compile Include="Framework\UserInterface\Controls\DataGrid.cs" />
+    <Compile Include="Framework\UserInterface\Controls\DataGridColumnHeader.cs" />
+    <Compile Include="Framework\UserInterface\Controls\DataGridTemplateColumn.cs" />
+    <Compile Include="Framework\UserInterface\Controls\DataTemplate.cs" />
+    <Compile Include="Framework\UserInterface\Controls\ItemsControl.cs" />
+    <Compile Include="Framework\UserInterface\Controls\ITextInputControl.cs" />
+    <Compile Include="Framework\UserInterface\Input\ConfigurableBinding.cs" />
+    <Compile Include="Framework\UserInterface\Input\ConfigurableInput.cs" />
+    <Compile Include="Framework\UserInterface\Input\Cursor.cs" />
+    <Compile Include="Framework\UserInterface\Input\InputBinding.cs" />
+    <Compile Include="Framework\UserInterface\Input\InputBindingCollection.cs" />
+    <Compile Include="Framework\UserInterface\Input\KeyBinding.cs" />
+    <Compile Include="Framework\UserInterface\Input\KeyModifiers.cs" />
+    <Compile Include="Framework\UserInterface\Input\MouseButtonEventArgs.cs" />
+    <Compile Include="Framework\UserInterface\Input\MouseWheelBinding.cs" />
+    <Compile Include="Framework\UserInterface\Input\MouseWheelDirection.cs" />
+    <Compile Include="Framework\UserInterface\Input\MouseWheelEventArgs.cs" />
+    <Compile Include="Framework\UserInterface\Input\ScanCodeBinding.cs" />
+    <Compile Include="Framework\UserInterface\Input\TextInputEventArgs.cs" />
+    <Compile Include="Framework\UserInterface\Input\TriggerMode.cs" />
+    <Compile Include="Framework\UserInterface\IScrollAware.cs" />
+    <Compile Include="Framework\UserInterface\IScrollController.cs" />
+    <Compile Include="Framework\UserInterface\IScrollHandler.cs" />
+    <Compile Include="Framework\UserInterface\MessageBox.cs" />
+    <Compile Include="Framework\UserInterface\RoutedEventBinding.cs" />
+    <Compile Include="Framework\UserInterface\ViewModels\AppWindowViewModel.cs" />
+    <Compile Include="Framework\UserInterface\ViewModels\ConsolePromptViewModel.cs" />
+    <Compile Include="Framework\UserInterface\ViewModels\ConsoleViewModel.cs" />
+    <Compile Include="Framework\UserInterface\Controls\Decorator.cs" />
+    <Compile Include="Framework\UserInterface\Views\AppWindow.cs" />
+    <Compile Include="Framework\UserInterface\Controls\Grid.cs" />
+    <Compile Include="Framework\UserInterface\Converters\BooleanToStringConverter.cs" />
+    <Compile Include="Framework\UserInterface\Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="Framework\UserInterface\Converters\ByteToStringConverter.cs" />
+    <Compile Include="Framework\UserInterface\Converters\CharToStringConverter.cs" />
+    <Compile Include="Framework\UserInterface\Converters\DoubleToStringConverter.cs" />
+    <Compile Include="Framework\UserInterface\Converters\FrameTimeToStringConverter.cs" />
+    <Compile Include="Framework\UserInterface\Converters\Int16ToStringConverter.cs" />
+    <Compile Include="Framework\UserInterface\Converters\Int32ToStringConverter.cs" />
+    <Compile Include="Framework\UserInterface\Converters\Int64ToStringConverter.cs" />
+    <Compile Include="Framework\UserInterface\Converters\IValueConverter`2.cs" />
+    <Compile Include="Framework\UserInterface\Converters\IValueConverter.cs" />
+    <Compile Include="Framework\UserInterface\Controls\AreaPanel.cs" />
+    <Compile Include="Framework\UserInterface\Controls\RenderOutputPanel.cs" />
+    <Compile Include="Framework\UserInterface\Controls\RowDefinition.cs" />
+    <Compile Include="Framework\UserInterface\Converters\SByteToStringConverter.cs" />
+    <Compile Include="Framework\UserInterface\Converters\SingleToStringConverter.cs" />
+    <Compile Include="Framework\UserInterface\Converters\UInt16ToStringConverter.cs" />
+    <Compile Include="Framework\UserInterface\Converters\UInt32ToStringConverter.cs" />
+    <Compile Include="Framework\UserInterface\Converters\UInt64ToStringConverter.cs" />
+    <Compile Include="Framework\UserInterface\Converters\ValueConverter.cs" />
+    <Compile Include="Framework\UserInterface\RootUIElement.cs" />
+    <Compile Include="Framework\UserInterface\Controls\Window.cs" />
+    <Compile Include="Framework\UserInterface\LayoutInfo.cs" />
+    <Compile Include="Framework\UserInterface\RoutedEventStorage`1.cs" />
+    <Compile Include="Framework\UserInterface\RoutedEventStorage.cs" />
+    <Compile Include="Framework\UserInterface\RoutedEventStore.cs" />
+    <Compile Include="Framework\UserInterface\TextAlignment.cs" />
+    <Compile Include="Framework\UserInterface\TextLayout.cs" />
+    <Compile Include="Framework\UserInterface\TextWrapping.cs" />
+    <Compile Include="Framework\UserInterface\UIElement.cs" />
+    <Compile Include="Framework\UserInterface\UIElement.Properties.cs" />
+    <Compile Include="Framework\UserInterface\RoutedEvent`1.cs" />
+    <Compile Include="Framework\UserInterface\RoutedEvent.cs" />
+    <Compile Include="Framework\UserInterface\RoutedEventArgs.cs" />
+    <Compile Include="Framework\UserInterface\RoutedEventHandler.cs" />
+    <Compile Include="Framework\UserInterface\RoutingStrategy.cs" />
+    <Compile Include="Framework\UserInterface\SparseObjectStorage.cs" />
+    <Compile Include="Framework\UserInterface\Binding.cs" />
+    <Compile Include="Framework\UserInterface\Controls\Border.cs" />
+    <Compile Include="Framework\UserInterface\Controls\Canvas.cs" />
+    <Compile Include="Framework\UserInterface\Controls\ContentPresenter.cs" />
+    <Compile Include="Framework\UserInterface\Controls\ControlTemplate.cs" />
+    <Compile Include="Framework\UserInterface\Controls\TextBlock.cs" />
+    <Compile Include="Framework\UserInterface\Controls\Orientation.cs" />
+    <Compile Include="Framework\UserInterface\Controls\StackPanel.cs" />
+    <Compile Include="Framework\UserInterface\Controls\UserControl.cs" />
+    <Compile Include="Framework\UserInterface\IFontLoader.cs" />
+    <Compile Include="Framework\UserInterface\HorizontalAlignment.cs" />
+    <Compile Include="Framework\UserInterface\ResourceKeyChangedHandler.cs" />
+    <Compile Include="Framework\UserInterface\TemplateBinding.cs" />
+    <Compile Include="Framework\UserInterface\TextOptions.cs" />
+    <Compile Include="Framework\UserInterface\TextRenderingMode.cs" />
+    <Compile Include="Framework\UserInterface\Thickness.cs" />
+    <Compile Include="Framework\UserInterface\VerticalAlignment.cs" />
+    <Compile Include="Framework\UserInterface\ViewModels\MessageBoxViewModel.cs" />
+    <Compile Include="Framework\UserInterface\ViewModels\StackedViewModel.cs" />
+    <Compile Include="Framework\UserInterface\Views\ConsoleView.cs" />
+    <Compile Include="Framework\UserInterface\Visibility.cs" />
+    <Compile Include="Math\LineSegment.cs" />
+    <Compile Include="Assets\AssetHashCollision.cs" />
+    <Compile Include="Assets\AssetHeader.cs" />
+    <Compile Include="Platform\FileSystem.cs" />
+    <Compile Include="Platform\Graphics\ShaderProgram.cs" />
+    <Compile Include="Platform\FileSystemException.cs" />
+    <Compile Include="Platform\Network\ConnectionDroppedException.cs" />
+    <Compile Include="Platform\Network\IPAddress.cs" />
+    <Compile Include="Platform\Network\IPEndPoint.cs" />
+    <Compile Include="Platform\Network\NetworkException.cs" />
+    <Compile Include="Assets\AssetIdentifier.cs" />
+    <Compile Include="Platform\Graphics\SyncedQuery.cs" />
+    <Compile Include="Framework\UserInterface\Input\CharacterEnteredEventArgs.cs" />
+    <Compile Include="Platform\Logging\LogExtensions.cs" />
+    <Compile Include="Platform\Network\ProtocolMismatchException.cs" />
+    <Compile Include="Platform\Network\ServerFullException.cs" />
+    <Compile Include="Platform\ResharperAttributes.cs" />
+    <Compile Include="Platform\Memory\ArrayPool.cs" />
+    <Compile Include="Framework\Bootstrapper.cs" />
+    <Compile Include="Framework\UserInterface\Controls\WindowMode.cs" />
+    <Compile Include="Platform\StepTimer.cs" />
+    <Compile Include="Processes\AsyncAction.cs" />
+    <Compile Include="Processes\AsyncFunc.cs" />
+    <Compile Include="Processes\Awaiter.cs" />
+    <Compile Include="Processes\Awaiter`1.cs" />
+    <Compile Include="Processes\DelayOperation.cs" />
+    <Compile Include="Processes\DelegateOperation.cs" />
+    <Compile Include="Processes\IAsyncOperation.cs" />
+    <Compile Include="Processes\IAsyncOperation`1.cs" />
+    <Compile Include="Processes\IProcess.cs" />
+    <Compile Include="Processes\IProcess`1.cs" />
+    <Compile Include="Processes\IResumableProcess.cs" />
+    <Compile Include="Processes\Process.cs" />
+    <Compile Include="Processes\ProcessContext.cs" />
+    <Compile Include="Processes\ProcessScheduler.cs" />
+    <Compile Include="Processes\Process`1.cs" />
+    <Compile Include="Processes\TaskOperation.cs" />
+    <Compile Include="Processes\TaskOperation`1.cs" />
+    <Compile Include="Rendering\DynamicVertexBuffer.cs" />
+    <Compile Include="Framework\UserInterface\DataBinding.cs" />
+    <Compile Include="Framework\UserInterface\Controls\Button.cs" />
+    <Compile Include="Framework\UserInterface\Controls\ContentControl.cs" />
+    <Compile Include="Framework\UserInterface\Controls\Control.cs" />
+    <Compile Include="Framework\UserInterface\DependencyPropertyChangedEventArgs.cs" />
+    <Compile Include="Framework\UserInterface\Controls\Panel.cs" />
+    <Compile Include="Framework\UserInterface\Trigger`1.cs" />
+    <Compile Include="Framework\ISealable.cs" />
+    <Compile Include="Framework\UserInterface\ReflectionHelper.cs" />
+    <Compile Include="Framework\UserInterface\ResourceBinding.cs" />
+    <Compile Include="Framework\UserInterface\ResourceDictionary.cs" />
+    <Compile Include="Framework\UserInterface\Setter`1.cs" />
+    <Compile Include="Framework\UserInterface\DependencyProperty`1.cs" />
+    <Compile Include="Framework\UserInterface\DependencyPropertyValue`1.cs" />
+    <Compile Include="Framework\UserInterface\DependencyObject.cs" />
+    <Compile Include="Framework\UserInterface\DependencyProperty.cs" />
+    <Compile Include="Framework\UserInterface\DependencyPropertyStore.cs" />
+    <Compile Include="Framework\UserInterface\DependencyPropertyValue.cs" />
+    <Compile Include="Framework\INotifyPropertyChanged.cs" />
+    <Compile Include="Framework\UserInterface\PropertyDelegates.cs" />
+    <Compile Include="Framework\UserInterface\SealableCollection.cs" />
+    <Compile Include="Framework\UserInterface\Setter.cs" />
+    <Compile Include="Framework\UserInterface\Style.cs" />
+    <Compile Include="Platform\TextString.cs" />
+    <Compile Include="Framework\UserInterface\Trigger.cs" />
+    <Compile Include="Framework\UserInterface\UIElement.Events.cs" />
+    <Compile Include="Framework\UserInterface\UIElementCollection.cs" />
+    <Compile Include="Math\Vector3.cs" />
+    <Compile Include="Platform\Memory\ObjectPool.cs" />
+    <Compile Include="Platform\AppFile.cs" />
+    <Compile Include="Framework\PegasusException.cs" />
+    <Compile Include="Platform\Graphics\CubeMapView.cs" />
+    <Compile Include="Platform\Graphics\Effect.cs" />
+    <Compile Include="Platform\Graphics\EffectContext.cs" />
+    <Compile Include="Platform\Graphics\EffectTechnique.cs" />
+    <Compile Include="Platform\Graphics\Shader.cs" />
+    <Compile Include="Platform\Graphics\ShaderInput.cs" />
+    <Compile Include="Platform\Graphics\Texture2DView.cs" />
+    <Compile Include="Platform\Memory\BufferPointer.cs" />
+    <Compile Include="Platform\Memory\Endianess.cs" />
+    <Compile Include="Platform\Graphics\CubeMap.cs" />
+    <Compile Include="Platform\Graphics\Surface.cs" />
+    <Compile Include="Platform\Graphics\Texture.cs" />
+    <Compile Include="Platform\Graphics\TextureDescription.cs" />
+    <Compile Include="Platform\Graphics\TextureFlags.cs" />
+    <Compile Include="Platform\Graphics\TextureType.cs" />
+    <Compile Include="Platform\Logging\LogEntry.cs" />
+    <Compile Include="Platform\Logging\LogFile.cs" />
+    <Compile Include="Platform\Logging\LogType.cs" />
+    <Compile Include="Platform\Clock.cs" />
+    <Compile Include="Platform\Timer.cs" />
+    <Compile Include="Rendering\Camera3D.cs" />
+    <Compile Include="Rendering\Camera2D.cs" />
+    <Compile Include="Rendering\FullscreenQuad.cs" />
+    <Compile Include="Rendering\Model.cs" />
+    <Compile Include="Rendering\RenderOutput.cs" />
+    <Compile Include="Rendering\VertexPositionNormal.cs" />
+    <Compile Include="Rendering\DebugCamera.cs" />
+    <Compile Include="Rendering\VertexPositionNormalTexture.cs" />
+    <Compile Include="Math\Circle.cs">
+      <DependentUpon>Circle.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Math\Size.cs">
+      <DependentUpon>Size.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Math\Fixed.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Fixed.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Math\Rectangle.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Rectangle.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Math\Vector2.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Vector2.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Platform\Network\UdpSocket.cs" />
+    <Compile Include="Platform\Memory\BufferReader.cs" />
+    <Compile Include="Platform\Memory\BufferWriter.cs" />
+    <Compile Include="Platform\Graphics\Query.cs" />
+    <Compile Include="Platform\Graphics\QueryType.cs" />
+    <Compile Include="Platform\Graphics\TimestampDisjointQuery.cs" />
+    <Compile Include="Platform\Graphics\TimestampQuery.cs" />
+    <Compile Include="Platform\NativeLibrary.cs" />
+    <Compile Include="Platform\Memory\Pool.cs" />
+    <Compile Include="Platform\Memory\PooledObject.cs" />
+    <Compile Include="Platform\Graphics\BufferType.cs" />
+    <Compile Include="Platform\Graphics\ShaderType.cs" />
+    <Compile Include="Rendering\Camera.cs" />
+    <Compile Include="Scripting\CommandAttribute.cs" />
+    <Compile Include="Scripting\CommandParameter.cs" />
+    <Compile Include="Scripting\Commands.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Commands.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Scripting\CommandRegistry.cs" />
+    <Compile Include="Scripting\Cvars.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Cvars.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Scripting\ICommands.cs">
+    </Compile>
+    <Compile Include="Scripting\ICvars.cs">
+    </Compile>
+    <Compile Include="Scripting\ConfigurationFile.cs" />
+    <Compile Include="Scripting\ConfigurationLine.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\ConfigurableInputParser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\SizeParser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\Vector2IParser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\Vector2Parser.cs" />
+    <Compile Include="Scripting\SystemOnlyAttribute.cs" />
+    <Compile Include="Scripting\TypeRegistry.cs" />
+    <Compile Include="Scripting\Validators\WindowPositionAttribute.cs" />
+    <Compile Include="Scripting\Validators\FileNameAttribute.cs" />
+    <Compile Include="Scripting\Help.cs" />
+    <Compile Include="Scripting\Instruction.cs" />
+    <Compile Include="Scripting\Validators\MaximumLengthAttribute.cs" />
+    <Compile Include="Scripting\Validators\NotEmptyAttribute.cs" />
+    <Compile Include="Scripting\Validators\RangeAttribute.cs" />
+    <Compile Include="Scripting\CvarAttribute.cs" />
+    <Compile Include="Scripting\CommandLineParser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\BooleanParser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\IPAddressParser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\IPEndPointParser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\OptionalParser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\Pipe4Parser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\Pipe3Parser.cs" />
+    <Compile Include="Scripting\PersistentAttribute.cs" />
+    <Compile Include="Scripting\Binding.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\InputTriggerParser.cs" />
+    <Compile Include="Platform\Graphics\Color.cs" />
+    <Compile Include="Scripting\Command`0.cs" />
+    <Compile Include="Scripting\Command`1.cs" />
+    <Compile Include="Scripting\Command`3.cs" />
+    <Compile Include="Scripting\Command`2.cs" />
+    <Compile Include="Scripting\Cvar.cs" />
+    <Compile Include="Scripting\CvarRegistry.cs" />
+    <Compile Include="Scripting\ICommand.cs" />
+    <Compile Include="Scripting\ICvar.cs" />
+    <Compile Include="Platform\Memory\DisposableExtensions.cs" />
+    <Compile Include="Framework\UserInterface\Input\BinaryInputTriggerType.cs" />
+    <Compile Include="Framework\UserInterface\Input\BinaryInputTrigger.cs" />
+    <Compile Include="Framework\UserInterface\Input\ConfigurableTrigger.cs" />
+    <Compile Include="Framework\UserInterface\Input\KeyTrigger.cs" />
+    <Compile Include="Framework\UserInterface\Input\KeyTriggerType.cs" />
+    <Compile Include="Framework\UserInterface\Input\InputExtensions.cs" />
+    <Compile Include="Framework\UserInterface\Input\InputTrigger.cs" />
+    <Compile Include="Framework\UserInterface\Input\LogicalInput.cs" />
+    <Compile Include="Framework\UserInterface\Input\MouseTrigger.cs" />
+    <Compile Include="Framework\UserInterface\Input\MouseTriggerType.cs" />
+    <Compile Include="Framework\UserInterface\Input\ScanCodeKeyTrigger.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\AttemptParser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\CharacterParser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\EnumerationLiteralParser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\SkipStringParser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\DescriptionParser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\QuotedStringParser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\ReferenceParser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\StringParser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\EndOfInputParser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\DigitParser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\LetterParser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\WhiteSpaces1Parser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\WhiteSpacesParser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\AlternativesParser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\ApplyParser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\BetweenParser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\SeparatedBy1Parser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\SeparatedByParser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\Pipe2Parser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\Many1Parser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\ManyParser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\SequenceSecondParser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\SequenceFirstParser.cs" />
+    <Compile Include="Scripting\Parsing\Combinators\SkipParser.cs" />
+    <Compile Include="Scripting\Parsing\CombinedParser.cs" />
+    <Compile Include="Scripting\Parsing\ErrorType.cs" />
+    <Compile Include="Scripting\Parsing\ErrorMessage.cs" />
+    <Compile Include="Scripting\Parsing\ErrorMessageList.cs" />
+    <Compile Include="Scripting\Parsing\InputStream.cs" />
+    <Compile Include="Scripting\Parsing\InputStreamState.cs" />
+    <Compile Include="Scripting\Parsing\None.cs" />
+    <Compile Include="Scripting\Parsing\Parser.cs" />
+    <Compile Include="Scripting\Parsing\Reply.cs" />
+    <Compile Include="Scripting\Parsing\ReplyStatus.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\Float32Parser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\Float64Parser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\Int64Parser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\UInt64Parser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\Int8Parser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\UInt8Parser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\Int16Parser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\UInt16Parser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\UInt32Parser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\Int32Parser.cs" />
+    <Compile Include="Scripting\Parsing\BasicParsers\NumberParser.cs" />
+    <Compile Include="Scripting\InstructionParser.cs" />
+    <Compile Include="Framework\UserInterface\Input\InputState.cs" />
+    <Compile Include="Scripting\Bindings.cs" />
+    <Compile Include="Framework\UserInterface\Input\Keyboard.cs" />
+    <Compile Include="Framework\UserInterface\Input\LogicalInputDevice.cs" />
+    <Compile Include="Framework\UserInterface\Input\Mouse.cs" />
+    <Compile Include="Scripting\Interpreter.cs" />
+    <Compile Include="Platform\Memory\NativeMemoryExtensions.cs" />
+    <Compile Include="Math\MathUtils.cs" />
+    <Compile Include="Math\Matrix.cs" />
+    <Compile Include="Platform\Graphics\MapMode.cs" />
+    <Compile Include="Platform\Graphics\RenderTarget.cs" />
+    <Compile Include="Platform\Graphics\SwapChain.cs" />
+    <Compile Include="Framework\UserInterface\Input\KeyEventArgs.cs" />
+    <Compile Include="Framework\UserInterface\Input\MouseEventArgs.cs" />
+    <Compile Include="Platform\Memory\EndianConverter.cs" />
+    <Compile Include="Platform\Memory\Interop.cs" />
+    <Compile Include="Platform\PlatformType.cs" />
+    <Compile Include="Platform\PlatformInfo.cs" />
+    <Compile Include="Rendering\Quad.cs" />
+    <Compile Include="Rendering\SpriteBatch.cs" />
+    <Compile Include="Framework\UserInterface\TextLine.cs" />
+    <Compile Include="Framework\UserInterface\TextSequence.cs" />
+    <Compile Include="Framework\UserInterface\TextToken.cs" />
+    <Compile Include="Framework\UserInterface\TextTokenStream.cs" />
+    <Compile Include="Framework\UserInterface\TextTokenType.cs" />
+    <Compile Include="Math\Vector4.cs" />
+    <Compile Include="Framework\UserInterface\NativeWindow.cs" />
+    <Compile Include="Assert.cs" />
+    <Compile Include="Framework\Application.cs" />
+    <Compile Include="Platform\Memory\DisposableObject.cs" />
+    <Compile Include="Platform\Graphics\BlendOption.cs" />
+    <Compile Include="Platform\Graphics\BlendOperation.cs" />
+    <Compile Include="Platform\Graphics\BlendState.cs" />
+    <Compile Include="Platform\Graphics\Buffer.cs" />
+    <Compile Include="Platform\Graphics\ColorWriteChannels.cs" />
+    <Compile Include="Platform\Graphics\Comparison.cs" />
+    <Compile Include="Platform\Graphics\ConstantBuffer.cs" />
+    <Compile Include="Platform\Graphics\IndexBuffer.cs" />
+    <Compile Include="Platform\Graphics\FragmentShader.cs" />
+    <Compile Include="Platform\Graphics\DepthStencilState.cs" />
+    <Compile Include="Platform\Graphics\IndexSize.cs" />
+    <Compile Include="Platform\Graphics\Texture2D.cs" />
+    <Compile Include="Platform\Graphics\VertexInputBinding.cs" />
+    <Compile Include="Platform\Graphics\DataSemantics.cs" />
+    <Compile Include="Platform\Graphics\VertexInputLayout.cs" />
+    <Compile Include="Platform\Graphics\PipelineState.cs" />
+    <Compile Include="Platform\Graphics\PrimitiveType.cs" />
+    <Compile Include="Platform\Graphics\RasterizerState.cs" />
+    <Compile Include="Platform\Graphics\ResourceUsage.cs" />
+    <Compile Include="Platform\Graphics\CullMode.cs" />
+    <Compile Include="Platform\Graphics\FillMode.cs" />
+    <Compile Include="Platform\Graphics\SamplerState.cs" />
+    <Compile Include="Platform\Graphics\StencilOperation.cs" />
+    <Compile Include="Platform\Graphics\StencilOperationDescription.cs" />
+    <Compile Include="Platform\Graphics\SurfaceFormat.cs" />
+    <Compile Include="Platform\Graphics\TextureAddressMode.cs" />
+    <Compile Include="Platform\Graphics\GraphicsApi.cs" />
+    <Compile Include="Platform\Graphics\GraphicsDevice.cs" />
+    <Compile Include="Platform\Graphics\GraphicsObject.cs" />
+    <Compile Include="Platform\Graphics\TextureFilter.cs" />
+    <Compile Include="Platform\Graphics\VertexDataFormat.cs" />
+    <Compile Include="Platform\Graphics\VertexBuffer.cs" />
+    <Compile Include="Rendering\VertexPositionColorTexture.cs" />
+    <Compile Include="Platform\Graphics\VertexShader.cs" />
+    <Compile Include="Platform\Logging\Log.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Assets\AssetsManager.cs" />
+    <Compile Include="Framework\UserInterface\Input\Key.cs" />
+    <Compile Include="Framework\UserInterface\Input\MouseButton.cs" />
+    <Compile Include="Platform\Graphics\Font.cs" />
+    <Compile Include="Framework\UserInterface\ViewModels\DebugOverlayViewModel.cs" />
+    <Compile Include="Scripting\UpdateMode.cs" />
+    <Compile Include="Scripting\Validators\ValidatorAttribute.cs" />
+    <Compile Include="Scripting\Validators\WindowSizeAttribute.cs" />
+    <Compile Include="..\User Interface\UserInterface.cs">
+      <Link>Framework\UserInterface\UserInterface.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Math\Circle.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Circle.cs</LastGenOutput>
+    </None>
+    <None Include="Math\Size.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Size.cs</LastGenOutput>
+    </None>
+    <None Include="Math\Fixed.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Fixed.cs</LastGenOutput>
+    </None>
+    <None Include="Math\Rectangle.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Rectangle.cs</LastGenOutput>
+    </None>
+    <None Include="Math\Vector2.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Vector2.cs</LastGenOutput>
+    </None>
+    <None Include="Scripting\Commands.tt">
+      <DependentUpon>ICommands.cs</DependentUpon>
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Commands.cs</LastGenOutput>
+    </None>
+    <None Include="Scripting\Cvars.tt">
+      <DependentUpon>ICvars.cs</DependentUpon>
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Cvars.cs</LastGenOutput>
+    </None>
+    <None Include="Scripting\RegistryGenerator.tt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
