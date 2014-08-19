@@ -121,7 +121,7 @@
 		}
 
 		/// <summary>
-		/// Gets the name of the assets project.
+		///     Gets the name of the assets project.
 		/// </summary>
 		public string Name { get; private set; }
 
@@ -176,8 +176,8 @@
 				return;
 
 			var newFile = new XElement(Namespace + "Compile",
-									   new XAttribute("Include", file.Replace("/", "\\")),
-									   new XElement(Namespace + "DependentUpon", Path.GetFileName(parentFile)));
+				new XAttribute("Include", file.Replace("/", "\\")),
+				new XElement(Namespace + "DependentUpon", Path.GetFileName(parentFile)));
 
 			parentFileElement.AddAfterSelf(newFile);
 			_document.Save(_projectFileName);

@@ -6,7 +6,6 @@
 	using Assets;
 	using Platform.Graphics;
 	using Platform.Logging;
-	using Platform.Memory;
 
 	/// <summary>
 	///     Implements a subset of the DX10 DDS file specification based on the sample provided by Microsoft at

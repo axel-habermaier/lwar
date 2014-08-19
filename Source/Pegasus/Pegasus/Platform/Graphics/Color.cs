@@ -62,9 +62,9 @@
 		/// <param name="argb">A packed unsigned integer containing all four color components.</param>
 		public Color(uint argb)
 			: this(ToFloat((byte)((argb >> 16) & 255)),
-				   ToFloat((byte)((argb >> 8) & 255)),
-				   ToFloat((byte)(argb & 255)),
-				   ToFloat((byte)((argb >> 24) & 255)))
+				ToFloat((byte)((argb >> 8) & 255)),
+				ToFloat((byte)(argb & 255)),
+				ToFloat((byte)((argb >> 24) & 255)))
 		{
 		}
 

@@ -227,9 +227,9 @@
 			foreach (var cvar in _registry.Cvars)
 			{
 				_writer.Append("{1} = new Cvar<{0}>(\"{2}\", {3}, \"{4}\", {5}, {6}, {7}",
-							   cvar.Type, GetPropertyName(cvar), GetRuntimeName(cvar.Name), cvar.DefaultValue,
-							   GetSummaryText(cvar.Documentation), cvar.UpdateMode, cvar.Persistent.ToString().ToLower(),
-							   cvar.SystemOnly.ToString().ToLower());
+					cvar.Type, GetPropertyName(cvar), GetRuntimeName(cvar.Name), cvar.DefaultValue,
+					GetSummaryText(cvar.Documentation), cvar.UpdateMode, cvar.Persistent.ToString().ToLower(),
+					cvar.SystemOnly.ToString().ToLower());
 
 				AppendValidators(cvar.Validators);
 				_writer.AppendLine(");");
@@ -241,9 +241,9 @@
 			foreach (var command in _registry.Commands)
 			{
 				_writer.Append("{1} = new Command{0}(\"{2}\", \"{3}\", {4}",
-							   GetTypeArguments(command), GetPropertyName(command),
-							   GetRuntimeName(command.Name), GetSummaryText(command.Documentation),
-							   command.SystemOnly.ToString().ToLower());
+					GetTypeArguments(command), GetPropertyName(command),
+					GetRuntimeName(command.Name), GetSummaryText(command.Documentation),
+					command.SystemOnly.ToString().ToLower());
 
 				GenerateCommandParameters(command);
 				_writer.AppendLine(");");
@@ -285,7 +285,7 @@
 				foreach (var command in _importedRegistry.Commands)
 				{
 					_writer.AppendLine("{2} = CommandRegistry.Resolve{1}(\"{0}\");", GetRuntimeName(command.Name), GetTypeArguments(command),
-									   GetPropertyName(command));
+						GetPropertyName(command));
 				}
 			});
 		}
@@ -322,11 +322,11 @@
 			_writer.AppendSeparated(command.Parameters, () => _writer.AppendLine(","), parameter =>
 			{
 				_writer.Append("new CommandParameter(\"{0}\", typeof({1}), {2}, {3}, \"{4}\"",
-							   parameter.Name,
-							   parameter.Type,
-							   parameter.HasDefaultValue.ToString().ToLower(),
-							   parameter.HasDefaultValue ? parameter.DefaultValue : String.Format("default({0})", parameter.Type),
-							   GetParameterTag(command.Documentation, parameter.Name));
+					parameter.Name,
+					parameter.Type,
+					parameter.HasDefaultValue.ToString().ToLower(),
+					parameter.HasDefaultValue ? parameter.DefaultValue : String.Format("default({0})", parameter.Type),
+					GetParameterTag(command.Documentation, parameter.Name));
 
 				AppendValidators(parameter.Validators);
 				_writer.Append(")");

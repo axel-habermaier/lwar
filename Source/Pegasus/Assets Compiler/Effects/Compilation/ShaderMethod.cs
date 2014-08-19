@@ -147,7 +147,7 @@
 
 			if (isVertexShader && isFragmentShader)
 				Error(_method.Attributes.First(), "Unexpected declaration of both '{0}' and '{1}'.",
-					  typeof(VertexShaderAttribute).FullName, typeof(FragmentShaderAttribute).FullName);
+					typeof(VertexShaderAttribute).FullName, typeof(FragmentShaderAttribute).FullName);
 
 			// Check whether the method returns void
 			if (_method.ResolveType(Resolver).FullName != typeof(void).FullName)

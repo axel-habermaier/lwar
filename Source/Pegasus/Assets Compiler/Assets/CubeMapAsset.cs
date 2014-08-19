@@ -2,7 +2,6 @@
 {
 	using System;
 	using System.Drawing;
-	using System.Linq;
 	using Platform.Graphics;
 
 	/// <summary>

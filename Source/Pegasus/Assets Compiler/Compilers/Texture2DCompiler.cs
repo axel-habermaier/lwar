@@ -5,7 +5,6 @@
 	using Assets;
 	using Pegasus.Assets;
 	using Platform.Logging;
-	using Platform.Memory;
 	using BinaryWriter = AssetsCompiler.BinaryWriter;
 
 	/// <summary>

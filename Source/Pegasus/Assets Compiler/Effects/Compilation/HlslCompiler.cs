@@ -67,7 +67,7 @@
 		protected override void GenerateConstantBuffer(ConstantBuffer constantBuffer)
 		{
 			Writer.Append("cbuffer {2}{0} : register(b{1})", constantBuffer.Name, constantBuffer.Slot,
-						  Configuration.ReservedInternalIdentifierPrefix);
+				Configuration.ReservedInternalIdentifierPrefix);
 			Writer.AppendBlockStatement(() =>
 			{
 				foreach (var constant in constantBuffer.Constants)

@@ -57,8 +57,8 @@
 			}
 
 			using (var nvcompress = new ExternalProcess(NvCompressPath,
-														@"-dds10 -silent {3} -{0} -premula ""{1}"" ""{2}""",
-														compressionFormat, input, output, mipmaps ? String.Empty : "-nomips"))
+				@"-dds10 -silent {3} -{0} -premula ""{1}"" ""{2}""",
+				compressionFormat, input, output, mipmaps ? String.Empty : "-nomips"))
 			{
 				var logEntries = nvcompress.Run();
 
@@ -75,8 +75,8 @@
 		public static void NvAssemble(string[] paths, string output)
 		{
 			using (var nvassemble = new ExternalProcess(NvAssemblePath,
-														@"-cube ""{0}"" ""{1}"" ""{2}"" ""{3}"" ""{4}"" ""{5}"" -o ""{6}""",
-														paths[0], paths[1], paths[2], paths[3], paths[4], paths[5], output))
+				@"-cube ""{0}"" ""{1}"" ""{2}"" ""{3}"" ""{4}"" ""{5}"" -o ""{6}""",
+				paths[0], paths[1], paths[2], paths[3], paths[4], paths[5], output))
 			{
 				var logEntries = nvassemble.Run();
 
@@ -100,8 +100,8 @@
 #endif
 
 			using (var fxc = new ExternalProcess("fxc",
-												 @"/nologo {3} /E Main /Ges /T {0} /Fo ""{1}"" ""{2}""",
-												 profile, output, input, optimization))
+				@"/nologo {3} /E Main /Ges /T {0} /Fo ""{1}"" ""{2}""",
+				profile, output, input, optimization))
 			{
 				var logEntries = fxc.Run();
 

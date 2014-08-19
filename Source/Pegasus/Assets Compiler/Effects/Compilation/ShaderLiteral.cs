@@ -136,7 +136,7 @@
 			// Check whether the literal is initialized with a compile-time constant
 			if (!_variable.Initializer.IsNull && !HasConstantValue)
 				Error(_variable.Initializer, "Shader literal '{0}' must be initialized with a non-null compile-time constant value.",
-					  Name);
+					Name);
 		}
 	}
 }

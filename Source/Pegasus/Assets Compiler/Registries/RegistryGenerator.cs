@@ -6,7 +6,6 @@
 	using System.Linq;
 	using System.Threading;
 	using CSharp;
-	using Platform.Memory;
 
 	/// <summary>
 	///     Generates a C# class from a registry specification interface.

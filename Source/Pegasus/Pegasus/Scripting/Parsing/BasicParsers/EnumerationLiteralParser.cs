@@ -23,7 +23,7 @@
 		/// </summary>
 		private readonly Parser<string> _literalParser =
 			new StringParser(c => Char.IsLetter(c) || c == '_', c => Char.IsLetterOrDigit(c) || c == '_',
-							 string.Format("'{0}' enumeration literal", typeof(TResult).Name));
+				string.Format("'{0}' enumeration literal", typeof(TResult).Name));
 
 		/// <summary>
 		///     Initializes a new instance, parsing the enumeration provided as the TResult parameter.

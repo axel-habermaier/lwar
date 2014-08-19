@@ -12,14 +12,14 @@
 	internal class XamlClass : XamlType
 	{
 		/// <summary>
-		///     The properties defined by the class.
-		/// </summary>
-		private readonly XamlProperty[] _properties;
-
-		/// <summary>
 		///     The events defined by the class.
 		/// </summary>
 		private readonly XamlEvent[] _events;
+
+		/// <summary>
+		///     The properties defined by the class.
+		/// </summary>
+		private readonly XamlProperty[] _properties;
 
 		/// <summary>
 		///     Initializes a new instances.

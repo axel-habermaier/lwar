@@ -49,8 +49,6 @@
 			Commands.Bind(Key.Escape.WentDown(), "exit");
 			Commands.Bind(Key.F10.WentDown(), "toggle show_debug_overlay");
 
-			//Window.LayoutRoot.Children.Add(new UserControl1());
-
 			_viewModelRoot.Child = new MainMenuViewModel();
 			_viewModelRoot.Activate();
 		}

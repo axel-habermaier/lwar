@@ -105,7 +105,7 @@
 				var currentAssets = assets.Where(asset => !asset.Name.Contains("/")).ToArray();
 				foreach (var asset in currentAssets)
 					writer.AppendLine("public static AssetIdentifier<{0}> {1} {{ get; private set; }}",
-									  asset.IdentifierType, EscapeName(asset.Asset.IdentifierName));
+						asset.IdentifierType, EscapeName(asset.Asset.IdentifierName));
 
 				var groups = assets.Where(asset => asset.Name.Contains("/")).GroupBy(asset => asset.Name.Split('/')[0]).ToArray();
 				if (groups.Length > 0 && currentAssets.Length > 0)
@@ -128,9 +128,9 @@
 					{
 						foreach (var asset in currentAssets)
 							writer.AppendLine("{0} = new AssetIdentifier<{1}>({5}, \"{2}.{3}{4}\");",
-											  EscapeName(asset.Asset.IdentifierName), asset.IdentifierType,
-											  asset.Asset.RelativePathWithoutExtension, Configuration.AssetsProject.Name,
-											  PlatformInfo.AssetExtension, asset.Asset.AssetType);
+								EscapeName(asset.Asset.IdentifierName), asset.IdentifierType,
+								asset.Asset.RelativePathWithoutExtension, Configuration.AssetsProject.Name,
+								PlatformInfo.AssetExtension, asset.Asset.AssetType);
 					});
 				}
 			};

@@ -143,7 +143,7 @@
 						else
 						{
 							_writer.AppendLine("{0}.Set{1}({2}, {3});", child.Attribute("Type").Value,
-											   child.Attribute("Property").Value, parentName, value);
+								child.Attribute("Property").Value, parentName, value);
 						}
 						break;
 					case "Invoke":
@@ -238,7 +238,7 @@
 				{
 					var parentName = element.Parent.Attribute("Name").Value;
 					_writer.AppendLine("{0}.CreateTemplateBinding(templatedControl, {1}, {2});",
-									   parentName, element.Attribute("SourceProperty").Value, element.Attribute("TargetProperty").Value);
+						parentName, element.Attribute("SourceProperty").Value, element.Attribute("TargetProperty").Value);
 					break;
 				}
 				case "StaticResource":
@@ -246,7 +246,7 @@
 				{
 					var parentName = element.Parent.Attribute("Name").Value;
 					_writer.AppendLine("{0}.CreateResourceBinding(\"{1}\", {2});",
-									   parentName, element.Attribute("ResourceKey").Value, element.Attribute("TargetProperty").Value);
+						parentName, element.Attribute("ResourceKey").Value, element.Attribute("TargetProperty").Value);
 					break;
 				}
 				default:
@@ -265,7 +265,7 @@
 			var parent = element.Parent.Attribute("Name").Value;
 
 			_writer.AppendLine("{0}.{3}.{1}({2});", parent, element.Attribute("Method").Value,
-							   String.Join(", ", parameters), element.Attribute("TargetProperty").Value);
+				String.Join(", ", parameters), element.Attribute("TargetProperty").Value);
 			_writer.NewLine();
 		}
 

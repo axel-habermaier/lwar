@@ -86,7 +86,7 @@
 
 			foreach (var group in groups)
 				group.First().File.Report(LogType.Fatal, group.First().Element,
-										  "Type information for type '{0}' has been specified more than once.", group.Key);
+					"Type information for type '{0}' has been specified more than once.", group.Key);
 		}
 
 		/// <summary>

@@ -6,7 +6,6 @@
 	using System.Diagnostics;
 	using System.Threading.Tasks;
 	using Platform.Logging;
-	using Platform.Memory;
 
 	/// <summary>
 	///     Represents external process.
@@ -53,6 +52,14 @@
 
 			_process.OutputDataReceived += (o, e) => LogMessage(LogType.Info, e.Data);
 			_process.ErrorDataReceived += (o, e) => LogMessage(LogType.Error, e.Data);
+		}
+
+		/// <summary>
+		///     Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		public void Dispose()
+		{
+			_process.Dispose();
 		}
 
 		/// <summary>
@@ -130,14 +137,6 @@
 			{
 				_running = false;
 			}
-		}
-
-		/// <summary>
-		///     Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		public void Dispose()
-		{
-			_process.Dispose();
 		}
 	}
 }

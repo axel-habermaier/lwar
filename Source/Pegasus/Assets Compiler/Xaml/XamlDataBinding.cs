@@ -1,7 +1,7 @@
-using System;
-
 namespace Pegasus.AssetsCompiler.Xaml
 {
+	using System;
+
 	/// <summary>
 	///     Stores the parsed information of a Xaml data binding.
 	/// </summary>

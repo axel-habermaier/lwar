@@ -1,7 +1,6 @@
 ﻿namespace Pegasus
 {
 	using System;
-	using Platform;
 
 	/// <summary>
 	///     Represents a fatal error that causes the execution of the application to be aborted.

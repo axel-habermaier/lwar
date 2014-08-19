@@ -10,7 +10,6 @@
 	using ICSharpCode.NRefactory.CSharp.Resolver;
 	using Platform.Graphics;
 	using Platform.Logging;
-	using Platform.Memory;
 	using BinaryWriter = AssetsCompiler.BinaryWriter;
 
 	/// <summary>

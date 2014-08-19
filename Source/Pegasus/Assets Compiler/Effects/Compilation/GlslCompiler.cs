@@ -47,7 +47,7 @@
 		protected override void GenerateConstantBuffer(ConstantBuffer constantBuffer)
 		{
 			Writer.AppendLine("layout(std140, binding = {0}) uniform {2}{1}", constantBuffer.Slot, constantBuffer.Name,
-							  Configuration.ReservedInternalIdentifierPrefix);
+				Configuration.ReservedInternalIdentifierPrefix);
 			Writer.AppendBlockStatement(() =>
 			{
 				foreach (var constant in constantBuffer.Constants)
@@ -73,7 +73,7 @@
 		{
 			foreach (var input in inputs)
 				Writer.AppendLine("layout(location = {0}) in {1} {2};", (int)input.Semantics, ToShaderType(input.Type),
-								  Escape(input.Name));
+					Escape(input.Name));
 		}
 
 		/// <summary>
@@ -121,7 +121,7 @@
 			{
 				foreach (var input in Shader.Inputs)
 					Writer.AppendLine("{0} {1}{2} = {3};", ToShaderType(input.Type),
-									  Configuration.ReservedInternalIdentifierPrefix, input.Name, Escape(input.Name));
+						Configuration.ReservedInternalIdentifierPrefix, input.Name, Escape(input.Name));
 
 				Writer.NewLine();
 				Shader.MethodBody.AcceptVisitor(this);

@@ -28,20 +28,20 @@
 		public ShaderType Type { get; private set; }
 
 		/// <summary>
-		///     Gets the name of the asset identifier.
-		/// </summary>
-		public static string GetAssetIdentifier(string relativeDirectory, string fileName)
-		{
-			return Path.Combine(relativeDirectory.Replace("Effects", ""), "Shaders", fileName.Replace(".", "/")).Replace("\\", "/");
-		}
-
-		/// <summary>
 		///     Gets the name that should be used for the asset identifier. If null is returned, no asset identifier is generated
 		///     for this asset instance.
 		/// </summary>
 		public override string IdentifierName
 		{
 			get { return Path.GetFileNameWithoutExtension(FileNameWithoutExtension.Replace(".", "/")); }
+		}
+
+		/// <summary>
+		///     Gets the name of the asset identifier.
+		/// </summary>
+		public static string GetAssetIdentifier(string relativeDirectory, string fileName)
+		{
+			return Path.Combine(relativeDirectory.Replace("Effects", ""), "Shaders", fileName.Replace(".", "/")).Replace("\\", "/");
 		}
 
 		/// <summary>
