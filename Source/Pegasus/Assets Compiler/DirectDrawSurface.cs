@@ -122,7 +122,7 @@
 		///     Serializes the DDS image into the given buffer.
 		/// </summary>
 		/// <param name="writer">The writer the DDS image should be serialized into.</param>
-		internal unsafe void Write(BufferWriter writer)
+		internal unsafe void Write(BinaryWriter writer)
 		{
 			writer.WriteUInt32(Description.Width);
 			writer.WriteUInt32(Description.Height);

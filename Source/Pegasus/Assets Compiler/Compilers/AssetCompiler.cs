@@ -8,6 +8,7 @@
 	using Assets;
 	using Platform;
 	using Platform.Logging;
+	using BinaryWriter = AssetsCompiler.BinaryWriter;
 
 	/// <summary>
 	///     Represents a compiler that compiles source assets into a binary format that the runtime can load more efficiently.
@@ -83,7 +84,7 @@
 		/// </summary>
 		/// <param name="writer">The writer the asset file header should be written to.</param>
 		/// <param name="assetType">The type of the asset that will subsequently be written into the buffer.</param>
-		protected static void WriteAssetHeader(BufferWriter writer, byte assetType)
+		protected static void WriteAssetHeader(BinaryWriter writer, byte assetType)
 		{
 			Assert.ArgumentNotNull(writer);
 
@@ -136,7 +137,7 @@
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="writer">The writer the compilation output should be appended to.</param>
-		internal void CompileSingle(TAsset asset, BufferWriter writer)
+		internal void CompileSingle(TAsset asset, BinaryWriter writer)
 		{
 			CompileAndHandleExceptions(asset, writer);
 		}
@@ -146,7 +147,7 @@
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="writer">The writer the compilation output should be appended to.</param>
-		private void CompileAndHandleExceptions(TAsset asset, BufferWriter writer)
+		private void CompileAndHandleExceptions(TAsset asset, BinaryWriter writer)
 		{
 			try
 			{
@@ -165,7 +166,7 @@
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="writer">The writer the compilation output should be appended to.</param>
-		protected virtual void Compile(TAsset asset, BufferWriter writer)
+		protected virtual void Compile(TAsset asset, BinaryWriter writer)
 		{
 		}
 

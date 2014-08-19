@@ -14,20 +14,28 @@
 			 Foreground="White">
 	<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
 		<TextBlock Style="{StaticResource HeaderStyle}">Options</TextBlock>
-		<StackPanel Orientation="Horizontal">
-			<TextBlock Margin="0,2,15,0">Player Name:</TextBlock>
-			<TextBox Width="250" MaxLength="{Binding MaxPlayerNameLength}" Text="{Binding PlayerName}" />
-		</StackPanel>
-		<TextBlock Margin="0,10,0,10" Foreground="Red" TextWrapping="NoWrap"
-				   Visibility="{Binding PlayerNameLengthExceeded, Converter={converters:BooleanToVisibilityConverter}}">
-			The player name exceeds the maximum allowed length.
-		</TextBlock>
-		<TextBlock Margin="0,10,0,10" Foreground="Red" TextWrapping="NoWrap"
-				   Visibility="{Binding PlayerNameMissing, Converter={converters:BooleanToVisibilityConverter}}">
-			You must enter a player name.
-		</TextBlock>
+		<Grid Margin="5" VerticalAlignment="Top">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="Auto" />
+			</Grid.ColumnDefinitions>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
+			<TextBlock Margin="0,4,15,0" Grid.Row="0" Grid.Column="0">Player Name:</TextBlock>
+			<TextBox HorizontalAlignment="Left" Width="380" MaxLength="{Binding MaxPlayerNameLength}" Text="{Binding PlayerName}" Grid.Row="0" Grid.Column="1" />
+			<TextBlock Margin="0,10,0,10" Foreground="Red" TextWrapping="Wrap"
+				   Grid.Row="1" Grid.Column="1"
+				   Visibility="{Binding PlayerNameLengthExceeded, Converter={converters:BooleanToVisibilityConverter}}"
+				   Text="The player name exceeds the maximum allowed length."/>
+			<TextBlock Margin="0,10,0,10" Foreground="Red" TextWrapping="Wrap"
+				   Grid.Row="1" Grid.Column="1"
+				   Visibility="{Binding PlayerNameMissing, Converter={converters:BooleanToVisibilityConverter}}"
+				   Text="You must enter a player name."/>
+		</Grid>	
 		<StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
-			<Button Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center" Click="{Binding Ok}">Ok</Button>
+			<Button Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center" Click="{Binding Ok}">OK</Button>
 			<Button Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center" Click="{Binding Cancel}">Cancel</Button>
 		</StackPanel>
 	</StackPanel>

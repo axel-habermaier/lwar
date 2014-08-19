@@ -14,6 +14,7 @@
 	using Pegasus.Assets;
 	using Platform.Graphics;
 	using Platform.Logging;
+	using BinaryWriter = AssetsCompiler.BinaryWriter;
 
 	/// <summary>
 	///     Compiles effects written in C#.
@@ -173,7 +174,7 @@
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="writer">The buffer the compilation output should be appended to.</param>
-		protected override void Compile(ShaderAsset asset, BufferWriter writer)
+		protected override void Compile(ShaderAsset asset, BinaryWriter writer)
 		{
 			using (var reader = new BinaryReader(new MemoryStream(File.ReadAllBytes(asset.SourcePath))))
 			{
@@ -225,7 +226,7 @@
 		/// </summary>
 		/// <param name="writer">The buffer the compilation output should be appended to.</param>
 		/// <param name="source">The GLSL shader source code.</param>
-		private static void CompileGlslShader(BufferWriter writer, string source)
+		private static void CompileGlslShader(BinaryWriter writer, string source)
 		{
 			var shader = "#version 330\n#extension GL_ARB_shading_language_420pack : enable\n" +
 						 "#extension GL_ARB_separate_shader_objects : enable\n" + source;
@@ -243,7 +244,7 @@
 		/// <param name="writer">The buffer the compilation output should be appended to.</param>
 		/// <param name="source">The HLSL shader source code.</param>
 		/// <param name="profile">The profile that should be used to compile the shader.</param>
-		private static void CompileHlslShader(Asset asset, BufferWriter writer, string source, string profile)
+		private static void CompileHlslShader(Asset asset, BinaryWriter writer, string source, string profile)
 		{
 			if (!Configuration.CompileHlsl)
 				return;

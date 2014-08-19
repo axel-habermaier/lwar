@@ -33,7 +33,6 @@
 				<TextBlock Grid.Row="0" Grid.Column="0" Margin="0,4,0,0">Say:</TextBlock>
 				<TextBox x:Name="MessageInput" 
 					     Width="600"
-						 Style="{StaticResource TextBoxStyle}"
 						 MaxLength="{Binding MaxMessageLength}"
 						 Text="{Binding Message}" Grid.Row="0"
 						 Grid.Column="1"

@@ -57,9 +57,9 @@
     <Prefer32Bit>true</Prefer32Bit>
     <WarningLevel>4</WarningLevel>
     <Optimize>False</Optimize>
-     <CustomCommands>
+    <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="cp &quot;$(TargetDir)/pgc.exe&quot; &quot;$(TargetDir)/pgc_copy.exe&quot;" workingdir="$(TargetDir)" />        
+        <Command type="AfterBuild" command="cp &quot;$(TargetDir)/pgc.exe&quot; &quot;$(TargetDir)/pgc_copy.exe&quot;" workingdir="$(TargetDir)" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -73,9 +73,10 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>true</Prefer32Bit>
-    <WarningLevel>4</WarningLevel><CustomCommands>
+    <WarningLevel>4</WarningLevel>
+    <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="cp &quot;$(TargetDir)/pgc.exe&quot; &quot;$(TargetDir)/pgc_copy.exe&quot;" workingdir="$(TargetDir)" />        
+        <Command type="AfterBuild" command="cp &quot;$(TargetDir)/pgc.exe&quot; &quot;$(TargetDir)/pgc_copy.exe&quot;" workingdir="$(TargetDir)" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -138,9 +139,10 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
-    <Optimize>false</Optimize><CustomCommands>
+    <Optimize>false</Optimize>
+    <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="cp &quot;$(TargetDir)/pgc.exe&quot; &quot;$(TargetDir)/pgc_copy.exe&quot;" workingdir="$(TargetDir)" />        
+        <Command type="AfterBuild" command="cp &quot;$(TargetDir)/pgc.exe&quot; &quot;$(TargetDir)/pgc_copy.exe&quot;" workingdir="$(TargetDir)" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -153,9 +155,10 @@
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <WarningLevel>4</WarningLevel><CustomCommands>
+    <WarningLevel>4</WarningLevel>
+    <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="cp &quot;$(TargetDir)/pgc.exe&quot; &quot;$(TargetDir)/pgc_copy.exe&quot;" workingdir="$(TargetDir)" />        
+        <Command type="AfterBuild" command="cp &quot;$(TargetDir)/pgc.exe&quot; &quot;$(TargetDir)/pgc_copy.exe&quot;" workingdir="$(TargetDir)" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -401,7 +404,7 @@
     <Compile Include="Assets\ShaderAsset.cs" />
     <Compile Include="Assets\Texture2DAssetFactory.cs" />
     <Compile Include="Assets\TextureAsset.cs" />
-    <Compile Include="BufferWriter.cs" />
+    <Compile Include="BinaryWriter.cs" />
     <Compile Include="Compilers\AssetIdentifierListGenerator.cs" />
     <Compile Include="CSharp\CodeElement.cs" />
     <Compile Include="CSharp\CSharpFile.cs" />

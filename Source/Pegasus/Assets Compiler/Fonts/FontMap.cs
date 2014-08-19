@@ -118,7 +118,7 @@
 		///     Processes the font map and appends it to the given writer.
 		/// </summary>
 		/// <param name="writer">The writer that should be used to write the font map.</param>
-		public void Compile(BufferWriter writer)
+		public void Compile(BinaryWriter writer)
 		{
 			using (var compiler = new Texture2DCompiler())
 				compiler.CompileSingle(this, writer);

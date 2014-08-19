@@ -31,13 +31,13 @@
 
 			_tempPath = asset.TempPath;
 			_targetPath = asset.TargetPath;
-			Writer = new BufferWriter();
+			Writer = new BinaryWriter();
 		}
 
 		/// <summary>
 		///     Gets the writer that can be used to write the asset data.
 		/// </summary>
-		public BufferWriter Writer { get; private set; }
+		public BinaryWriter Writer { get; private set; }
 
 		/// <summary>
 		///     Disposes the object, releasing all managed and unmanaged resources.

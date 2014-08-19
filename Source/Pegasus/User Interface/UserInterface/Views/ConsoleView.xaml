@@ -29,6 +29,11 @@
 		<input:MouseWheelBinding Method="ScrollDown" Direction="Down"></input:MouseWheelBinding>
 		<input:MouseWheelBinding Method="ScrollUp" Direction="Up"></input:MouseWheelBinding>
 	</UserControl.InputBindings>
+	<UserControl.Resources>
+		<Style TargetType="TextBox">
+			<!-- Overwrites any defined style for text boxes -->
+		</Style>
+	</UserControl.Resources>
 	<Border Background="#EE222222" x:Name="LayoutRoot" VerticalAlignment="Top">
 		<DockPanel Margin="5">
 			<DockPanel DockPanel.Dock="Bottom">

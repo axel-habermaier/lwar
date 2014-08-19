@@ -9,7 +9,7 @@
 	/// <summary>
 	///     Writes binary data to a memory stream using a little endian encoding.
 	/// </summary>
-	public class BufferWriter : IDisposable
+	public class BinaryWriter : IDisposable
 	{
 		/// <summary>
 		///     The buffer the data is written to.
@@ -19,14 +19,14 @@
 		/// <summary>
 		///     The writer that is used to write the binary data.
 		/// </summary>
-		private readonly BinaryWriter _writer;
+		private readonly System.IO.BinaryWriter _writer;
 
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		public BufferWriter()
+		public BinaryWriter()
 		{
-			_writer = new BinaryWriter(_buffer);
+			_writer = new System.IO.BinaryWriter(_buffer);
 		}
 
 		/// <summary>

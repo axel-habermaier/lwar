@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-	<Style x:Key="TextBoxStyle" TargetType="TextBox">
+	<Style TargetType="TextBox">
 		<Setter Property="Background" Value="#5FA1DDFF"/>
 		<Setter Property="BorderThickness" Value="1"/>
 		<Setter Property="BorderBrush" Value="#FF055674"/>

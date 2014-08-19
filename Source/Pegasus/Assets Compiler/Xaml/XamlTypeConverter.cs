@@ -31,7 +31,7 @@
 			{ "ulong", s => s },
 			{ "Pegasus.Framework.UserInterface.Thickness", s => String.Format("new Pegasus.Framework.UserInterface.Thickness({0})", s) },
 			{ "Pegasus.Platform.Graphics.Color", ConvertColor },
-			{ "Pegasus.Platform.Graphics.Color?", ConvertColor },
+			{ "Pegasus.Platform.Graphics.Color?", ConvertNullableColor },
 			{ "System.Type", s => String.Format("typeof({0})", s) },
 			{ "Pegasus.AssetCompiler.Xaml.XamlLiteral", s => s },
 			{ "Pegasus.Framework.UserInterface.Input.KeyModifiers", ConvertKeyModifiers },
@@ -82,6 +82,18 @@
 		{
 			var modifiers = value.Split(new[] { "+" }, StringSplitOptions.RemoveEmptyEntries);
 			return String.Join(" | ", modifiers.Select(m => "Pegasus.Framework.UserInterface.Input.KeyModifiers." + m));
+		}
+
+		/// <summary>
+		///     Converts a nullable color value.
+		/// </summary>
+		/// <param name="value">The color that should be converted.</param>
+		private static string ConvertNullableColor(string value)
+		{
+			if (value == "{x:Null}")
+				return "null";
+
+			return ConvertColor(value);
 		}
 
 		/// <summary>

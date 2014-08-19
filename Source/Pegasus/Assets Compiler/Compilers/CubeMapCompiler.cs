@@ -8,6 +8,7 @@
 	using Pegasus.Assets;
 	using Platform;
 	using Platform.Logging;
+	using BinaryWriter = AssetsCompiler.BinaryWriter;
 
 	/// <summary>
 	///     Compiles cubemap textures.
@@ -20,7 +21,7 @@
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="writer">The writer the compilation output should be appended to.</param>
-		protected override void Compile(CubeMapAsset asset, BufferWriter writer)
+		protected override void Compile(CubeMapAsset asset, BinaryWriter writer)
 		{
 			asset.Load();
 			WriteAssetHeader(writer, (byte)AssetType.CubeMap);
@@ -49,7 +50,7 @@
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="writer">The writer the compilation output should be appended to.</param>
-		private static void CompileCompressed(CubeMapAsset asset, BufferWriter writer)
+		private static void CompileCompressed(CubeMapAsset asset, BinaryWriter writer)
 		{
 			if (!asset.IsPowerOfTwo())
 				Log.Die("All texture dimensions must be power-of-two.");

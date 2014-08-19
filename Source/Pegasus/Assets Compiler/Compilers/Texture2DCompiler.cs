@@ -6,6 +6,7 @@
 	using Pegasus.Assets;
 	using Platform.Logging;
 	using Platform.Memory;
+	using BinaryWriter = AssetsCompiler.BinaryWriter;
 
 	/// <summary>
 	///     Compiles 2D textures.
@@ -18,7 +19,7 @@
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="writer">The writer the compilation output should be appended to.</param>
-		protected override void Compile(Texture2DAsset asset, BufferWriter writer)
+		protected override void Compile(Texture2DAsset asset, BinaryWriter writer)
 		{
 			asset.Load();
 			WriteAssetHeader(writer, (byte)AssetType.Texture2D);
@@ -43,7 +44,7 @@
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="buffer">The writer the compilation output should be appended to.</param>
-		private static void CompileCompressed(Texture2DAsset asset, BufferWriter buffer)
+		private static void CompileCompressed(Texture2DAsset asset, BinaryWriter buffer)
 		{
 			if (!asset.IsPowerOfTwo())
 				Log.Die("All texture dimensions must be power-of-two.");

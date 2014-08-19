@@ -11,6 +11,7 @@
 	using Platform.Graphics;
 	using Platform.Logging;
 	using Platform.Memory;
+	using BinaryWriter = AssetsCompiler.BinaryWriter;
 
 	/// <summary>
 	///     Represents a C# source code file that possibly contains one or more effect declarations.
@@ -87,7 +88,7 @@
 				Log.Die("Unsupported shader type.");
 
 			using (asset)
-			using (var buffer = new BufferWriter())
+			using (var buffer = new BinaryWriter())
 			{
 				if (shader.Type == ShaderType.VertexShader)
 				{

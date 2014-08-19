@@ -9,6 +9,7 @@
 	using Fonts;
 	using Pegasus.Assets;
 	using Platform.Logging;
+	using BinaryWriter = AssetsCompiler.BinaryWriter;
 
 	/// <summary>
 	///     Compiles texture-based fonts.
@@ -99,7 +100,7 @@
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="writer">The writer the compilation output should be appended to.</param>
-		protected override void Compile(FontAsset asset, BufferWriter writer)
+		protected override void Compile(FontAsset asset, BinaryWriter writer)
 		{
 			WriteAssetHeader(writer, (byte)AssetType.Font);
 			_regenerateFontLoader = true;
