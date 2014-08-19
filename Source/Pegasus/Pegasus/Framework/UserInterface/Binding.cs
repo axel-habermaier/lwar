@@ -24,11 +24,6 @@
 		protected DependencyProperty<T> _targetProperty;
 
 		/// <summary>
-		///     Gets a value indicating whether the binding has already been bound to a dependency property.
-		/// </summary>
-		internal bool IsBound { get; private set; }
-
-		/// <summary>
 		///     Gets or sets a value indicating whether the binding is currently active.
 		/// </summary>
 		internal bool Active
@@ -42,23 +37,16 @@
 				_active = value;
 
 				if (_active)
-					OnActivated();
+					Activate();
 				else
-					OnDeactivated();
+					Deactivate();
 			}
 		}
 
 		/// <summary>
 		///     Invoked when the binding has been activated.
 		/// </summary>
-		protected abstract void OnActivated();
-
-		/// <summary>
-		///     Invoked when the binding has been deactivated.
-		/// </summary>
-		protected virtual void OnDeactivated()
-		{
-		}
+		protected abstract void Activate();
 
 		/// <summary>
 		///     Initializes the binding.
@@ -69,14 +57,9 @@
 		{
 			Assert.ArgumentNotNull(targetObject);
 			Assert.ArgumentNotNull(targetProperty);
-			Assert.That(!IsBound, "The binding has already been bound to a dependency property.");
 
 			_targetObject = targetObject;
 			_targetProperty = targetProperty;
-
-			Initialize();
-
-			IsBound = true;
 		}
 
 		/// <summary>
@@ -84,11 +67,6 @@
 		///     returned to indicate that the binding was removed.
 		/// </summary>
 		/// <param name="overwrittenByLocalValue">Indicates whether the binding is removed because it was overriden by a local value.</param>
-		internal abstract bool Remove(bool overwrittenByLocalValue = false);
-
-		/// <summary>
-		///     Initializes the binding.
-		/// </summary>
-		protected abstract void Initialize();
+		internal abstract bool Deactivate(bool overwrittenByLocalValue = false);
 	}
 }

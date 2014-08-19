@@ -56,9 +56,6 @@
 			_element = element;
 			_routedEvent = routedEvent;
 			_methodName = method;
-
-			element.AddHandler(routedEvent, OnEventRaised);
-			element.AddChangedHandler(UIElement.DataContextProperty, OnDataContextChanged);
 		}
 
 		/// <summary>
@@ -75,26 +72,29 @@
 				_active = value;
 
 				if (_active)
-					OnActivated();
+					Activate();
 				else
-					OnDeactivated();
+					Deactivate();
 			}
 		}
 
 		/// <summary>
 		///     Invoked when the binding has been activated.
 		/// </summary>
-		private void OnActivated()
+		private void Activate()
 		{
 			InitializeBinding(_element.DataContext);
+			_element.AddHandler(_routedEvent, OnEventRaised);
+			_element.AddChangedHandler(UIElement.DataContextProperty, OnDataContextChanged);
 		}
 
 		/// <summary>
 		///     Invoked when the binding has been deactivated.
 		/// </summary>
-		private void OnDeactivated()
+		private void Deactivate()
 		{
 			_element.RemoveHandler(_routedEvent, OnEventRaised);
+			_element.RemoveChangedHandler(UIElement.DataContextProperty, OnDataContextChanged);
 		}
 
 		/// <summary>

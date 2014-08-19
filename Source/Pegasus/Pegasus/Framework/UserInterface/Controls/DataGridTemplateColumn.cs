@@ -103,10 +103,19 @@ namespace Pegasus.Framework.UserInterface.Controls
 		/// <summary>
 		///     Creates the column header at the given column index.
 		/// </summary>
+		/// <param name="style">The style that should be applied to the header.</param>
 		/// <param name="columnIndex">The zero-based index of the column.</param>
-		internal UIElement CreateColumnHeader(int columnIndex)
+		internal UIElement CreateColumnHeader(Style style, int columnIndex)
 		{
+			var headerElement = Header as UIElement;
+			if (headerElement != null)
+			{
+				headerElement.ChangeLogicalParent(null);
+				headerElement.VisualParent = null;
+			}
+
 			_columnHeader = _columnHeader ?? new DataGridColumnHeader();
+			_columnHeader.Style = style;
 			_columnHeader.Content = Header;
 
 			Grid.SetColumn(_columnHeader, columnIndex);

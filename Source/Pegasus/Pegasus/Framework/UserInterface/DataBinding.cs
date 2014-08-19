@@ -164,23 +164,7 @@
 		/// <summary>
 		///     Invoked when the binding has been activated.
 		/// </summary>
-		protected override void OnActivated()
-		{
-			_memberAccess1.SourceObject = SourceObject;
-		}
-
-		/// <summary>
-		///     Invoked when the binding has been deactivated.
-		/// </summary>
-		protected override void OnDeactivated()
-		{
-			_memberAccess1.SourceObject = null;
-		}
-
-		/// <summary>
-		///     Initializes the binding.
-		/// </summary>
-		protected override void Initialize()
+		protected override void Activate()
 		{
 			Assert.ArgumentSatisfies(!_targetProperty.IsDataBindingProhibited, "Data binding is not allowed on the target property.");
 
@@ -195,6 +179,8 @@
 			_memberAccess1.SetAccessTypes(_memberAccessCount == 1, _bindingMode);
 			_memberAccess2.SetAccessTypes(_memberAccessCount == 2, _bindingMode);
 			_memberAccess3.SetAccessTypes(_memberAccessCount == 3, _bindingMode);
+
+			_memberAccess1.SourceObject = SourceObject;
 		}
 
 		/// <summary>
@@ -202,7 +188,7 @@
 		///     returned to indicate that the binding was removed.
 		/// </summary>
 		/// <param name="overwrittenByLocalValue">Indicates whether the binding is removed because it was overriden by a local value.</param>
-		internal override bool Remove(bool overwrittenByLocalValue = false)
+		internal override bool Deactivate(bool overwrittenByLocalValue = false)
 		{
 			if (overwrittenByLocalValue && _bindingMode != BindingMode.OneWay)
 				return false;

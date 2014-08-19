@@ -179,7 +179,7 @@
 		[Test]
 		public void TemplateBinding_SetValue()
 		{
-			var button = new Button { Margin = _thickness1, Template = _template1 };
+			var button = new Button { IsAttachedToRoot = true, Margin = _thickness1, Template = _template1 };
 			button.GetVisualChild(0).Margin.Should().Be(_thickness1);
 		}
 

@@ -36,18 +36,12 @@
 		/// <summary>
 		///     Invoked when the binding has been activated.
 		/// </summary>
-		protected override void OnActivated()
-		{
-			SetResource();
-		}
-
-		/// <summary>
-		///     Initializes the binding.
-		/// </summary>
-		protected override void Initialize()
+		protected override void Activate()
 		{
 			Assert.OfType<UIElement>(_targetObject);
+
 			TargetObject.ResourcesInvalidated += SetResource;
+			SetResource();
 		}
 
 		/// <summary>
@@ -55,7 +49,7 @@
 		///     returned to indicate that the binding was removed.
 		/// </summary>
 		/// <param name="overwrittenByLocalValue">Indicates whether the binding is removed because it was overriden by a local value.</param>
-		internal override bool Remove(bool overwrittenByLocalValue = false)
+		internal override bool Deactivate(bool overwrittenByLocalValue = false)
 		{
 			TargetObject.ResourcesInvalidated -= SetResource;
 			return true;

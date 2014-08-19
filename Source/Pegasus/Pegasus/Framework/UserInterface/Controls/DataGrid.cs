@@ -139,8 +139,7 @@
 			var index = 0;
 			foreach (var column in Columns)
 			{
-				var header = column.CreateColumnHeader(index++);
-				header.Style = ColumnHeaderStyle;
+				var header = column.CreateColumnHeader(ColumnHeaderStyle, index++);
 				ItemsHost.Add(header);
 			}
 		}

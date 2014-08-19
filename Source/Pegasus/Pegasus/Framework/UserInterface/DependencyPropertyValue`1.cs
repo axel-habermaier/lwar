@@ -86,7 +86,7 @@
 		/// <param name="value">The value that should be set.</param>
 		public void SetLocalValue(T value)
 		{
-			if (_binding != null && _binding.Remove(overwrittenByLocalValue: true))
+			if (_binding != null && _binding.Deactivate(overwrittenByLocalValue: true))
 			{
 				_sources &= ~ValueSources.Binding;
 				_binding = null;
@@ -213,7 +213,7 @@
 			Assert.ArgumentNotNull(binding);
 
 			if (_binding != null)
-				_binding.Remove();
+				_binding.Deactivate();
 
 			_binding = binding;
 			_sources |= ValueSources.Binding;

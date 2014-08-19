@@ -118,6 +118,7 @@
 		public void Clear()
 		{
 			LogEntries.Clear();
+			ScrollToBottom();
 		}
 
 		/// <summary>

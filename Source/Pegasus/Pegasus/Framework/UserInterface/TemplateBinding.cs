@@ -37,28 +37,12 @@
 		}
 
 		/// <summary>
-		///     Initializes the binding.
-		/// </summary>
-		protected override void Initialize()
-		{
-			_targetObject.SetBoundValue(_targetProperty, _sourceObject.GetValue(_sourceProperty));
-		}
-
-		/// <summary>
 		///     Invoked when the binding has been activated.
 		/// </summary>
-		protected override void OnActivated()
+		protected override void Activate()
 		{
 			_sourceObject.AddChangedHandler(_sourceProperty, OnPropertyChanged);
 			_targetObject.SetBoundValue(_targetProperty, _sourceObject.GetValue(_sourceProperty));
-		}
-
-		/// <summary>
-		///     Invoked when the binding has been deactivated.
-		/// </summary>
-		protected override void OnDeactivated()
-		{
-			_sourceObject.RemoveChangedHandler(_sourceProperty, OnPropertyChanged);
 		}
 
 		/// <summary>
@@ -66,7 +50,7 @@
 		///     returned to indicate that the binding was removed.
 		/// </summary>
 		/// <param name="overwrittenByLocalValue">Indicates whether the binding is removed because it was overriden by a local value.</param>
-		internal override bool Remove(bool overwrittenByLocalValue = false)
+		internal override bool Deactivate(bool overwrittenByLocalValue = false)
 		{
 			_sourceObject.RemoveChangedHandler(_sourceProperty, OnPropertyChanged);
 			return true;
