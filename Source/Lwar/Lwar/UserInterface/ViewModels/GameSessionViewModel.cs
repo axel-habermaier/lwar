@@ -53,6 +53,7 @@
 			_gameSession = gameSession;
 			EventMessages = _gameSession.EventMessages.Messages;
 			Scoreboard = new ScoreboardViewModel(_gameSession);
+			Respawn = new RespawnViewModel(_gameSession);
 			Chat = new ChatViewModel();
 			View = new GameSessionView();
 
@@ -60,6 +61,11 @@
 			_gameSession.NetworkSession.Send(SelectionMessage.Create(_gameSession.LocalPlayer,
 				EntityType.Ship, EntityType.Gun, EntityType.Phaser, EntityType.Phaser, EntityType.Phaser));
 		}
+
+		/// <summary>
+		///     Gets the view model of the respawn view.
+		/// </summary>
+		public RespawnViewModel Respawn { get; private set; }
 
 		/// <summary>
 		///     Gets a value indicating whether the 3D scene should be rendered using the global app resolution.
@@ -189,6 +195,7 @@
 		{
 			_gameSession.SafeDispose();
 			Scoreboard.SafeDispose();
+			Respawn.SafeDispose();
 			Cvars.WindowModeChanged -= WindowModeChanged;
 
 			Log.Info("The game session has ended.");
@@ -201,9 +208,10 @@
 		{
 			try
 			{
-				// Let the game session and scoreboard update their states
+				// Let the game session and the child view models update their states
 				_gameSession.Update(Child is InGameMenuViewModel);
 				Scoreboard.Update();
+				Respawn.Update();
 
 				// Check if we're lagging or waiting for the server
 				IsLagging = _gameSession.NetworkSession.IsLagging;

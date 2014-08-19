@@ -1,0 +1,24 @@
+﻿<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:converters="clr-namespace:Pegasus.Framework.UserInterface.Converters;assembly=PegasusUI"
+	mc:Ignorable="d"
+	x:Class="Lwar.UserInterface.Views.RespawnView"
+	x:Name="UserControl"
+	VerticalAlignment="Stretch"
+	HorizontalAlignment="Stretch"
+	Background="#44000000"
+	IsHitTestVisible="false"
+	Visibility="{Binding IsVisible, Converter={converters:BooleanToVisibilityConverter}}"
+	d:DesignWidth="640" d:DesignHeight="480">
+	<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,400">
+		<TextBlock Style="{StaticResource HeaderStyle}">You're dead!</TextBlock>
+		<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+			<TextBlock Text="Press "/>
+			<TextBlock Text="{Binding RespawnInput}"/>
+			<TextBlock Text=" to respawn..."/>
+		</StackPanel>
+	</StackPanel>
+</UserControl>

@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="Lwar.UserInterface.Views.WaitingView"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:input="clr-namespace:Pegasus.Framework.UserInterface.Input;assembly=PegasusUI"
+			 xmlns:converters="clr-namespace:Pegasus.Framework.UserInterface.Converters;assembly=PegasusUI"
+			 mc:Ignorable="d"
+			 HorizontalAlignment="Stretch"
+			 VerticalAlignment="Stretch"
+			 input:Keyboard.HandlesAllInput="true"
+			 input:Mouse.HandlesAllInput="true"
+			 Focusable="true"
+			 Background="#AA000000"
+			 Visibility="{Binding IsLagging, Converter={converters:BooleanToVisibilityConverter}}"
+			 d:DesignHeight="300" d:DesignWidth="300">
+	<Border Background="#5F00588B" Padding="10" BorderThickness="1" BorderBrush="#FF055674" HorizontalAlignment="Center" VerticalAlignment="Center">
+		<StackPanel Orientation="Horizontal">
+			<TextBlock Text="Waiting for server (" />
+			<TextBlock Text="{Binding WaitForServerTimeout}" />
+			<TextBlock Text=" seconds left)..." />
+		</StackPanel>
+	</Border>
+</UserControl>

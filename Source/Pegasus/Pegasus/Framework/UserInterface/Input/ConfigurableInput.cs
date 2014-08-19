@@ -99,13 +99,13 @@ namespace Pegasus.Framework.UserInterface.Input
 				Builder.Append("Mouse." + MouseButton.Value);
 
 			if ((Modifiers & KeyModifiers.Alt) == KeyModifiers.Alt)
-				Builder.Append("Alt");
+				Builder.Append("+Alt");
 
 			if ((Modifiers & KeyModifiers.Shift) == KeyModifiers.Shift)
-				Builder.Append("Shift");
+				Builder.Append("+Shift");
 
 			if ((Modifiers & KeyModifiers.Control) == KeyModifiers.Control)
-				Builder.Append("Control");
+				Builder.Append("+Control");
 
 			Builder.Append("]");
 			return Builder.ToString();

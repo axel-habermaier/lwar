@@ -59,7 +59,6 @@
     <CustomCommands>
       <CustomCommands>
         <Command type="BeforeBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(SolutionDir)/Lwar/User Interface/Lwar UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
-        
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -77,7 +76,6 @@
     <CustomCommands>
       <CustomCommands>
         <Command type="BeforeBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(SolutionDir)/Lwar/User Interface/Lwar UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
-        
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -147,7 +145,6 @@
     <CustomCommands>
       <CustomCommands>
         <Command type="BeforeBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(SolutionDir)/Lwar/User Interface/Lwar UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
-        
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -164,7 +161,6 @@
     <CustomCommands>
       <CustomCommands>
         <Command type="BeforeBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(SolutionDir)/Lwar/User Interface/Lwar UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
-        
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -238,6 +234,7 @@
     <Compile Include="Rendering\Renderers\ExplosionRenderer.cs" />
     <Compile Include="Rendering\Renderers\ShieldRenderer.cs" />
     <Compile Include="UserInterface\ViewModels\OptionsMenuViewModel.cs" />
+    <Compile Include="UserInterface\ViewModels\RespawnViewModel.cs" />
     <Compile Include="UserInterface\ViewModels\ScoreboardViewModel.cs" />
     <Compile Include="Rendering\Renderers\StarfieldRenderer.cs" />
     <Compile Include="Rendering\Renderers\RocketRenderer.cs" />
@@ -316,6 +313,7 @@
     <Compile Include="UserInterface\Views\ChatView.cs" />
     <Compile Include="UserInterface\Views\ShipOverlayPanel.cs" />
     <Compile Include="UserInterface\Views\ShipOverlayView.cs" />
+    <Compile Include="UserInterface\Views\WaitingView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
