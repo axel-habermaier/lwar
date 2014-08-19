@@ -193,6 +193,17 @@ pgVoid pgReleaseMouseCore(pgWindow* window)
     PG_UNUSED(window);
 }
 
+pgVoid pgClipCursor(pgWindow* window, pgBool clip)
+{
+	if (clip)
+	{
+		unsigned int mask = ButtonPressMask | ButtonReleaseMask | PointerMotionMask | FocusChangeMask | EnterWindowMask | LeaveWindowMask;
+		XGrabPointer(x11.display, window->handle, False, mask, GrabModeAsync, GrabModeAsync, window->handle, 0, CurrentTime);
+	}
+	else
+		XUngrabPointer(x11.display, CurrentTime);
+}
+
 pgVoid pgGetMousePositionCore(pgWindow* window, pgInt32* x, pgInt32* y)
 {
 	Window root, child;
@@ -253,14 +264,6 @@ static pgVoid pgSetFullscreen(pgWindow* window, pgBool fullscreen)
 		
 	XSendEvent(x11.display, DefaultRootWindow(x11.display), False, SubstructureRedirectMask | SubstructureNotifyMask, &event);
 	XFlush(x11.display);
-
-	if (fullscreen)
-	{
-		unsigned int mask = ButtonPressMask | ButtonReleaseMask | PointerMotionMask | FocusChangeMask | EnterWindowMask | LeaveWindowMask;
-		XGrabPointer(x11.display, window->handle, False, mask, GrabModeAsync, GrabModeAsync, window->handle, 0, CurrentTime);
-    }
-	else
-		XUngrabPointer(x11.display, CurrentTime);
 }
 
 static void CreateHiddenCursor(pgWindow* window)

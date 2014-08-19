@@ -8,7 +8,7 @@
 			 mc:Ignorable="d"
 			 Visibility="{Binding IsVisible, Converter={converters:BooleanToVisibilityConverter}}"
 			 Foreground="White"
-			 FontFamily="Elliptica"
+			 FontFamily="Liberation Sans"
 			 FontSize="16"
 			 HorizontalAlignment="Stretch"
 			 VerticalAlignment="Stretch"
@@ -30,7 +30,7 @@
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
 				</Grid.RowDefinitions>
-				<TextBlock Grid.Row="0" Grid.Column="0" Margin="0,6,0,0">Say:</TextBlock>
+				<TextBlock Grid.Row="0" Grid.Column="0" Margin="0,4,0,0">Say:</TextBlock>
 				<TextBox x:Name="MessageInput" 
 					     Width="600"
 						 Style="{StaticResource TextBoxStyle}"

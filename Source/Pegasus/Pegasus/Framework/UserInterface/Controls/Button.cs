@@ -9,6 +9,25 @@
 	public class Button : ContentControl
 	{
 		/// <summary>
+		///     The default template that defines the visual appearance of a button.
+		/// </summary>
+		private static readonly ControlTemplate DefaultTemplate = control =>
+		{
+			var border = new Border();
+			border.CreateTemplateBinding(control, BorderBrushProperty, Border.BorderBrushProperty);
+			border.CreateTemplateBinding(control, BorderThicknessProperty, Border.BorderThicknessProperty);
+			border.CreateTemplateBinding(control, PaddingProperty, Border.PaddingProperty);
+
+			var presenter = new ContentPresenter();
+			presenter.CreateTemplateBinding(control, ContentProperty, ContentPresenter.ContentProperty);
+			presenter.CreateTemplateBinding(control, HorizontalContentAlignmentProperty, HorizontalAlignmentProperty);
+			presenter.CreateTemplateBinding(control, VerticalContentAlignmentProperty, VerticalAlignmentProperty);
+
+			border.Child = presenter;
+			return border;
+		};
+
+		/// <summary>
 		///     Raised when the button has been clicked.
 		/// </summary>
 		public static readonly RoutedEvent<RoutedEventArgs> ClickEvent = new RoutedEvent<RoutedEventArgs>(RoutingStrategy.Bubble);
@@ -19,6 +38,14 @@
 		static Button()
 		{
 			MouseUpEvent.Raised += OnMouseUp;
+		}
+
+		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		public Button()
+		{
+			SetStyleValue(TemplateProperty, DefaultTemplate);
 		}
 
 		/// <summary>

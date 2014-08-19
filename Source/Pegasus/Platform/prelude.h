@@ -276,6 +276,7 @@ pgVoid pgChangeToWindowedModeCore(pgWindow* window);
 
 pgVoid pgCaptureMouseCore(pgWindow* window);
 pgVoid pgReleaseMouseCore(pgWindow* window);
+pgVoid pgClipCursor(pgWindow* window, pgBool clip);
 
 pgVoid pgConstrainWindowPlacement(pgWindowPlacement* placement);
 pgRectangle pgGetDesktopArea();

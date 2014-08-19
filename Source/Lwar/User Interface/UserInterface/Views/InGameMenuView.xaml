@@ -11,8 +11,6 @@
 			 input:Keyboard.HandlesAllInput="true"
 			 input:Mouse.HandlesAllInput="true"
 			 Focusable="true"
-			 TextOptions.TextRenderingMode="ClearType"
-			 FontFamily="Moonhouse"
 			 Background="#AA000000">
 	<UserControl.InputBindings>
 		<input:KeyBinding Key="Escape" Method="ContinueImplicit" TriggerOnRepeat="false"></input:KeyBinding>

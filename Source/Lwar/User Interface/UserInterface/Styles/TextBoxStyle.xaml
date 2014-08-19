@@ -5,6 +5,6 @@
 		<Setter Property="Background" Value="#5FA1DDFF"/>
 		<Setter Property="BorderThickness" Value="1"/>
 		<Setter Property="BorderBrush" Value="#FF055674"/>
-		<Setter Property="Padding" Value="4,6,4,4"/>
+		<Setter Property="Padding" Value="4"/>
 	</Style>
 </ResourceDictionary>

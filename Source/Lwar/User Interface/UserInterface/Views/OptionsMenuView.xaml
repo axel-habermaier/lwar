@@ -8,7 +8,7 @@
 			 input:Keyboard.HandlesAllInput="true"
 			 input:Mouse.HandlesAllInput="true"
 			 mc:Ignorable="d"
-			 FontFamily="Elliptica"
+			 FontFamily="Liberation Sans"
 			 FontSize="16"
 			 TextOptions.TextRenderingMode="ClearType"
 			 Foreground="White">

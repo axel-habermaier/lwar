@@ -475,23 +475,23 @@
 		/// <param name="width">The width of the line.</param>
 		public void DrawLine(Vector2 start, Vector2 end, Color color, int width)
 		{
-			Assert.ArgumentInRange(width, 1, Int32.MaxValue);
+			Assert.ArgumentSatisfies(width >= 0, "Invalid width.");
 			Assert.That(start != end, "Start and end must differ from each other.");
 
-			// We first define a default quad to draw a line that goes from left to right with a length of 1 and the given width
-			// (the "unit line"). Therefore, the rectangle's width is 1 and its height is the given width.
-			// The top edge of the rectangle is offset by half the width, so that the center of the rectangle lies on the
-			// start point of the line.
-			var rectangle = new RectangleF(0, -width / 2.0f, 1, width);
+			if (width == 0)
+				return;
+
+			// We first define a default quad to draw a line that goes from left to right. The center of the 
+			// rectangle lies on the start point of the line.
+			var length = (end - start).Length;
+			var rectangle = new RectangleF(0, -width / 2.0f, length, width);
 			var quad = new Quad(rectangle, color);
 
-			// The scale factor is simply the magnitude of the direction vector, whereas the rotation is computed relative to
-			// the unit vector in X direction.
-			var scale = (end - start).Length;
+			// The rotation is computed relative to the unit vector in X direction.
 			var rotation = MathUtils.ComputeAngle(start, end, new Vector2(1, 0));
 
 			// Construct the transformation matrix and draw the transformed quad
-			var transformMatrix = Matrix.CreateScale(scale, 1, 1) * Matrix.CreateRotationZ(-rotation) *
+			var transformMatrix = Matrix.CreateRotationZ(-rotation) *
 								  Matrix.CreateTranslation(start.X, start.Y + width / 2.0f, 0);
 
 			Quad.Transform(ref quad, ref transformMatrix);

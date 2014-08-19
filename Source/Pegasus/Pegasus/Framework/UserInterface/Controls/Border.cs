@@ -114,10 +114,11 @@
 			var area = VisualArea;
 			var thickness = BorderThickness;
 
+			// Make sure there is no overdraw at the corners
 			spriteBatch.DrawLine(area.TopLeft, area.TopRight, color, thickness.Top);
-			spriteBatch.DrawLine(area.TopLeft, area.BottomLeft, color, thickness.Left);
-			spriteBatch.DrawLine(area.TopRight, area.BottomRight, color, thickness.Right);
-			spriteBatch.DrawLine(area.BottomLeft, area.BottomRight, color, thickness.Bottom);
+			spriteBatch.DrawLine(area.BottomLeft + new Vector2d(1, -1), area.TopLeft + new Vector2d(1, 1), color, thickness.Left);
+			spriteBatch.DrawLine(area.TopRight + new Vector2d(0, 1), area.BottomRight - new Vector2d(0, 1), color, thickness.Right);
+			spriteBatch.DrawLine(area.BottomLeft - new Vector2d(0, 1), area.BottomRight - new Vector2d(0, 1), color, thickness.Bottom);
 		}
 	}
 }

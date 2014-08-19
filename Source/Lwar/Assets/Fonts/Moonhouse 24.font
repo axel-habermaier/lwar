@@ -4,5 +4,5 @@ Size = 24
 Aliased = false
 Italic = false
 Bold = false 
-Characters = 48-57;65-90;97-122;44-46
+Characters = 65-90;97-122
 InvalidChar = ?

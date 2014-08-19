@@ -3,6 +3,7 @@
 	using System;
 	using Math;
 	using Platform.Graphics;
+	using Platform.Logging;
 	using Rendering;
 
 	/// <summary>
@@ -196,7 +197,7 @@
 
 			var x = (int)Math.Round(VisualOffset.X);
 			var y = (int)Math.Round(VisualOffset.Y);
-
+			
 			++spriteBatch.Layer;
 			_textLayout.Draw(spriteBatch, new Vector2i(x, y), Foreground);
 			--spriteBatch.Layer;

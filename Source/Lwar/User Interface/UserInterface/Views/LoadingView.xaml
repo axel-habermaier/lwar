@@ -10,7 +10,7 @@
 	VerticalAlignment="Stretch"
 	Background="Black"
 	Focusable="true"
-	FontFamily="Elliptica"
+	FontFamily="Liberation Sans"
 	FontSize="16"
 	d:DesignHeight="300" 
 	d:DesignWidth="500">

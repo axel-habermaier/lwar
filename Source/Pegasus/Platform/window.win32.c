@@ -150,14 +150,7 @@ pgVoid pgChangeToFullscreenModeCore(pgWindow* window)
 			pgWin32Error("Failed to change fullscreen window style.");
 	}
 	else if (!ShowWindow(window->hwnd, SW_SHOWMAXIMIZED))
-		pgWin32Error("Failed to maximize fullscreen window.");
-
-	RECT rect;
-	if (!GetWindowRect(window->hwnd, &rect))
-		pgWin32Error("Failed to get window position.");
-
-	if (!ClipCursor(&rect))
-		pgWin32Error("Failed to clip cursor to window bounds.");
+		pgWin32Error("Failed to maximize fullscreen window.");	
 }
 
 pgVoid pgChangeToWindowedModeCore(pgWindow* window)
@@ -170,9 +163,6 @@ pgVoid pgChangeToWindowedModeCore(pgWindow* window)
 
 	if (!ShowWindow(window->hwnd, SW_RESTORE))
 		pgWin32Error("Failed to get window into normal mode.");
-
-	if (!ClipCursor(NULL))
-		pgWin32Error("Failed to release cursor.");
 }
 
 pgVoid pgSetWindowTitleCore(pgWindow* window, pgString title)
@@ -189,6 +179,24 @@ pgVoid pgCaptureMouseCore(pgWindow* window)
 pgVoid pgReleaseMouseCore(pgWindow* window)
 {
 	PG_UNUSED(window);
+}
+
+pgVoid pgClipCursor(pgWindow* window, pgBool clip)
+{
+	if (clip)
+	{
+		RECT rect;
+		if (!GetWindowRect(window->hwnd, &rect))
+			pgWin32Error("Failed to get window position.");
+		
+		if (!ClipCursor(&rect))
+			pgWin32Error("Failed to clip cursor to window bounds.");
+	}
+	else
+	{
+		if (!ClipCursor(NULL))
+			pgWin32Error("Failed to release cursor.");
+	}
 }
 
 pgVoid pgGetMousePositionCore(pgWindow* window, pgInt32* x, pgInt32* y)

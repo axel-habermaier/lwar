@@ -156,7 +156,7 @@
 				--lineIndex;
 
 			// The caret position is relative to the line 'origin'
-			var lineY = lineIndex * (_arranged.Font.LineHeight + _arranged.LineSpacing);
+			var lineY = lineIndex * _arranged.Font.LineHeight + Math.Max(0, lineIndex - 1) * _arranged.LineSpacing;
 			var result = new Vector2i(0, lineY);
 
 			// Calculate the caret's offset from the line's left edge

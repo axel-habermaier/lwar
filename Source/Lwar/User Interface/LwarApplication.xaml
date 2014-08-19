@@ -9,6 +9,7 @@
 				<ResourceDictionary Source="UserInterface/Styles/HeaderStyle.xaml"/>
 				<ResourceDictionary Source="UserInterface/Styles/OverlayStyle.xaml"/>
 				<ResourceDictionary Source="UserInterface/Styles/TextBoxStyle.xaml"/>
+				<ResourceDictionary Source="UserInterface/Styles/MessageBoxStyle.xaml"/>
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
     </Application.Resources>

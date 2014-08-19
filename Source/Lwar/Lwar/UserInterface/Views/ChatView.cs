@@ -2,6 +2,7 @@
 {
 	using System;
 	using Pegasus.Framework.UserInterface;
+	using Pegasus.Framework.UserInterface.Input;
 	using Pegasus.Math;
 
 	partial class ChatView
@@ -12,6 +13,7 @@
 		partial void OnLoaded()
 		{
 			AddChangedHandler(VisibilityProperty, OnVisibleChanged);
+			Cursor.SetCursor(this, Cursor.Arrow);
 		}
 
 		/// <summary>

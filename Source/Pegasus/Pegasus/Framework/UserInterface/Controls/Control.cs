@@ -20,6 +20,18 @@
 		public static readonly DependencyProperty<Thickness> PaddingProperty = new DependencyProperty<Thickness>(affectsMeasure: true);
 
 		/// <summary>
+		///     The horizontal content of a control's content.
+		/// </summary>
+		public static readonly DependencyProperty<HorizontalAlignment> HorizontalContentAlignmentProperty =
+			new DependencyProperty<HorizontalAlignment>(defaultValue: HorizontalAlignment.Center, affectsArrange: true);
+
+		/// <summary>
+		///     The vertical content of a control's content.
+		/// </summary>
+		public static readonly DependencyProperty<VerticalAlignment> VerticalContentAlignmentProperty =
+			new DependencyProperty<VerticalAlignment>(defaultValue: VerticalAlignment.Center, affectsArrange: true);
+
+		/// <summary>
 		///     The border thickness of the control.
 		/// </summary>
 		public static readonly DependencyProperty<Thickness> BorderThicknessProperty =
@@ -58,6 +70,26 @@
 		{
 			get { return GetValue(PaddingProperty); }
 			set { SetValue(PaddingProperty, value); }
+		}
+
+		/// <summary>
+		///     Gets or sets the horizontal alignment of the control's content, provided that the control's template uses
+		///     the control's horizontal content alignment as a parameter.
+		/// </summary>
+		public HorizontalAlignment HorizontalContentAlignment
+		{
+			get { return GetValue(HorizontalContentAlignmentProperty); }
+			set { SetValue(HorizontalContentAlignmentProperty, value); }
+		}
+
+		/// <summary>
+		///     Gets or sets the vertical alignment of the control's content, provided that the control's template uses
+		///     the control's vertical content alignment as a parameter.
+		/// </summary>
+		public VerticalAlignment VerticalContentAlignment
+		{
+			get { return GetValue(VerticalContentAlignmentProperty); }
+			set { SetValue(VerticalContentAlignmentProperty, value); }
 		}
 
 		/// <summary>

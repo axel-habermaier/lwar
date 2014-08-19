@@ -7,7 +7,7 @@
 			 xmlns:converters="clr-namespace:Pegasus.Framework.UserInterface.Converters;assembly=PegasusUI"
 			 xmlns:userInterface="clr-namespace:Lwar.UserInterface.Views"
 			 mc:Ignorable="d"
-			 FontFamily="Elliptica"
+			 FontFamily="Liberation Sans"
 			 FontSize="16"
 			 d:DesignHeight="600"
 			 d:DesignWidth="800"
@@ -41,13 +41,16 @@
 			<userInterface:ScoreboardView DataContext="{Binding Scoreboard}" />
 			<userInterface:ChatView DataContext="{Binding Chat}" />
 
-			<Border Background="#AF252525" Visibility="{Binding IsLagging, Converter={converters:BooleanToVisibilityConverter}}"
+			<Border Background="#AA000000" 
+					Visibility="{Binding IsLagging, Converter={converters:BooleanToVisibilityConverter}}"
 					IsHitTestVisible="False">
-				<StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-					<TextBlock Text="Waiting for server (" />
-					<TextBlock Text="{Binding WaitForServerTimeout}" />
-					<TextBlock Text=" seconds left)..." />
-				</StackPanel>
+				<Border Background="#5F00588B" Padding="10" BorderThickness="1" BorderBrush="#FF055674" HorizontalAlignment="Center" VerticalAlignment="Center">
+					<StackPanel Orientation="Horizontal">
+						<TextBlock Text="Waiting for server (" />
+						<TextBlock Text="{Binding WaitForServerTimeout}" />
+						<TextBlock Text=" seconds left)..." />
+					</StackPanel>
+				</Border>
 			</Border>
 
 		</controls:AreaPanel>

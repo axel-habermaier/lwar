@@ -29,10 +29,10 @@
 		<input:MouseWheelBinding Method="ScrollDown" Direction="Down"></input:MouseWheelBinding>
 		<input:MouseWheelBinding Method="ScrollUp" Direction="Up"></input:MouseWheelBinding>
 	</UserControl.InputBindings>
-	<Border Background="#EE333333" x:Name="LayoutRoot" VerticalAlignment="Top">
+	<Border Background="#EE222222" x:Name="LayoutRoot" VerticalAlignment="Top">
 		<DockPanel Margin="5">
 			<DockPanel DockPanel.Dock="Bottom">
-				<TextBlock Margin="0,2,0,0" DockPanel.Dock="Left" Text="{Binding Prompt.Token}"></TextBlock>
+				<TextBlock DockPanel.Dock="Left" Text="{Binding Prompt.Token}"></TextBlock>
 				<TextBox 
 					DataContext="{Binding Prompt}"
 					MaxLength="{Binding MaxLength}"

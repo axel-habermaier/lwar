@@ -156,48 +156,49 @@
 
 			using (GraphicsDevice = new GraphicsDevice())
 			using (Assets = new AssetsManager(GraphicsDevice, asyncLoading: false))
-			using (_appWindowViewModel = new AppWindowViewModel(consoleViewModel))
 			{
 				RegisterFontLoader(new FontLoader(Assets));
 				Cursor.LoadCursors(Assets);
-				Commands.Help();
 
-				// Let the application initialize itself
-				Initialize();
-
-				while (_running)
+				using (_appWindowViewModel = new AppWindowViewModel(consoleViewModel))
 				{
-					var cpuStartTime = Clock.SystemTime;
+					Initialize();
+					Commands.Help();
 
-					// Update
-					_root.HandleInput();
-					Update();
+					while (_running)
+					{
+						var cpuStartTime = Clock.SystemTime;
 
-					_appWindowViewModel.Update();
-					_root.UpdateLayout();
+						// Update
+						_root.HandleInput();
+						Update();
 
-					DebugOverlay.CpuUpdateTime = (Clock.SystemTime - cpuStartTime) * 1000;
+						_appWindowViewModel.Update();
+						_root.UpdateLayout();
 
-					// Draw the current frame
-					GraphicsDevice.BeginFrame();
+						DebugOverlay.CpuUpdateTime = (Clock.SystemTime - cpuStartTime) * 1000;
 
-					cpuStartTime = Clock.SystemTime;
+						// Draw the current frame
+						GraphicsDevice.BeginFrame();
 
-					_root.Draw();
+						cpuStartTime = Clock.SystemTime;
 
-					DebugOverlay.GpuFrameTime = GraphicsDevice.FrameTime;
-					DebugOverlay.CpuRenderTime = (Clock.SystemTime - cpuStartTime) * 1000;
+						_root.Draw();
 
-					// End the frame and present the contents of all windows' backbuffers.
-					GraphicsDevice.EndFrame();
-					_root.Present();
+						DebugOverlay.GpuFrameTime = GraphicsDevice.FrameTime;
+						DebugOverlay.CpuRenderTime = (Clock.SystemTime - cpuStartTime) * 1000;
 
-					if (!_root.HasFocusedWindows)
-						Thread.Sleep(50);
+						// End the frame and present the contents of all windows' backbuffers.
+						GraphicsDevice.EndFrame();
+						_root.Present();
+
+						if (!_root.HasFocusedWindows)
+							Thread.Sleep(50);
+					}
+
+					// The game loop has been exited; time to clean up
+					Dispose();
 				}
-
-				// The game loop has been exited; time to clean up
-				Dispose();
 			}
 
 			Current = null;

@@ -11,7 +11,7 @@
 			 FontSize="11"
 			 TextOptions.TextRenderingMode="Aliased"
 			 Foreground="White" 
-			 Background="#66333333"
+			 Background="#AA000000"
 			 d:DataContext="{d:DesignInstance Type={x:Type views:DebugOverlayViewModel}, IsDesignTimeCreatable=True}"
 			 HorizontalAlignment="Left"
 			 VerticalAlignment="Bottom"

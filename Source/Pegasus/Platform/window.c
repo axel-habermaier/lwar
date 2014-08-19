@@ -34,7 +34,10 @@ pgWindow* pgOpenWindow(pgString title, pgWindowPlacement placement, pgWindowCall
 	pgOpenWindowCore(window, title);
 
 	if (window->placement.mode == PG_WINDOW_FULLSCREEN)
+	{
 		pgChangeToFullscreenModeCore(window);
+		pgClipCursor(window, PG_TRUE);
+	}
 
 	pgGetWindowPlacement(window, &window->placement);
 	return window;
@@ -73,6 +76,7 @@ pgVoid pgProcessWindowEvents(pgWindow* window)
 			// if we're not focused; of course, if a key is not released while the window is out of focus and focused again,
 			// the key state might be wrong; but this seems to be more acceptable than the alternative
 			pgReleaseButtonsAndKeys(window);
+			pgClipCursor(window, PG_FALSE);
 			break;
 
 		case PG_MESSAGE_GAINED_FOCUS:
@@ -80,6 +84,7 @@ pgVoid pgProcessWindowEvents(pgWindow* window)
 
 			// We sometimes do not get the lost focus event, so make sure we're now releasing all pressed buttons and keys
 			pgReleaseButtonsAndKeys(window);
+			pgClipCursor(window, window->placement.mode == PG_WINDOW_FULLSCREEN);
 			break;
 
 		/* Activate the window on all input-related events to ensure that we haven't missed the focused event */
@@ -156,8 +161,12 @@ pgVoid pgProcessWindowEvents(pgWindow* window)
 	height = window->placement.height;
 	pgGetWindowPlacement(window, &window->placement);
 
-	if (window->swapChain != NULL && (width != window->placement.width || height != window->placement.height))
-		pgResizeSwapChain(window->swapChain, window->placement.width, window->placement.height);
+	if (width != window->placement.width || height != window->placement.height)
+	{
+		pgClipCursor(window, window->focused && window->placement.mode == PG_WINDOW_FULLSCREEN);
+		if (window->swapChain != NULL)
+			pgResizeSwapChain(window->swapChain, window->placement.width, window->placement.height);
+	}
 }
 
 pgBool pgIsWindowFocused(pgWindow* window)
@@ -200,6 +209,7 @@ pgVoid pgChangeToFullscreenMode(pgWindow* window)
 	PG_ASSERT(window->placement.mode != PG_WINDOW_FULLSCREEN, "Window is already in fullscreen mode.");
 
 	pgChangeToFullscreenModeCore(window);
+	pgClipCursor(window, PG_TRUE);
 
 	window->placement.mode = PG_WINDOW_FULLSCREEN;
 	pgGetWindowPlacement(window, &window->placement);
@@ -214,6 +224,7 @@ pgVoid pgChangeToWindowedMode(pgWindow* window)
 	PG_ASSERT(window->placement.mode == PG_WINDOW_FULLSCREEN, "Window is already in windowed mode.");
 
 	pgChangeToWindowedModeCore(window);
+	pgClipCursor(window, PG_FALSE);
 
 	window->placement.mode = PG_WINDOW_NORMAL;
 	pgGetWindowPlacement(window, &window->placement);

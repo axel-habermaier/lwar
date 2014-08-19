@@ -7,6 +7,7 @@
 	using Controls;
 	using Math;
 	using Platform;
+	using Platform.Logging;
 	using Platform.Memory;
 	using Rendering;
 
@@ -213,7 +214,7 @@
 				UnsetIsMouseOver(_hoveredElement, args);
 
 			_hoveredElement = hoveredElement;
-
+			
 			if (_hoveredElement != null)
 				SetIsMouseOver(args);
 		}
@@ -347,7 +348,7 @@
 			// Check if the hovered element or any of its parents override the default cursor
 			Cursor cursor = null;
 			var element = Window.HitTest(new Vector2d(Position.X, Position.Y), boundsTestOnly: true);
-
+			
 			while (element != null)
 			{
 				cursor = element.GetValue(Cursor.CursorProperty);

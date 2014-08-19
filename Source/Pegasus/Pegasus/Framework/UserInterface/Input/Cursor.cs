@@ -85,7 +85,7 @@ namespace Pegasus.Framework.UserInterface.Input
 		///     Gets the cursor that is displayed when the mouse hovers the UI element or any of its children.
 		/// </summary>
 		/// <param name="element">The UI element the cursor should be returned for.</param>
-		public Cursor GetCursor(UIElement element)
+		public static Cursor GetCursor(UIElement element)
 		{
 			Assert.ArgumentNotNull(element);
 			return element.GetValue(CursorProperty);
@@ -96,7 +96,7 @@ namespace Pegasus.Framework.UserInterface.Input
 		/// </summary>
 		/// <param name="element">The UI element the cursor should be set for.</param>
 		/// <param name="cursor">The cursor that should be displayed when the mouse hovers the UI element or any of its children.</param>
-		public void SetCursor(UIElement element, Cursor cursor)
+		public static void SetCursor(UIElement element, Cursor cursor)
 		{
 			Assert.ArgumentNotNull(element);
 			Assert.ArgumentNotNull(cursor);
@@ -128,6 +128,7 @@ namespace Pegasus.Framework.UserInterface.Input
 			Assert.ArgumentInRange(HotSpot.Y, 0, Texture.Height);
 
 			position = position - HotSpot;
+			spriteBatch.Layer = Int32.MaxValue;
 			spriteBatch.Draw(Texture, new Vector2(position.X, position.Y), Color);
 		}
 	}

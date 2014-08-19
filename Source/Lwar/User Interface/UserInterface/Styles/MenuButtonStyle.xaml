@@ -4,18 +4,15 @@
 	<Style TargetType="Button" x:Key="MenuButtonStyle">
         <Setter Property="Foreground" Value="White" />
 		<Setter Property="HorizontalAlignment" Value="Center"/>
+		<Setter Property="HorizontalContentAlignment" Value="Center"/>
+		<Setter Property="VerticalContentAlignment" Value="Bottom"/>
 		<Setter Property="Width" Value="220"/>
 		<Setter Property="FontFamily" Value="Moonhouse"/>
 		<Setter Property="FontSize" Value="24"/>
 		<Setter Property="Margin" Value="3"/>
-	    <Setter Property="Template">
-            <Setter.Value>
-                <ControlTemplate TargetType="Button">
-					<Border Background="#5F00588B" BorderBrush="#FF055674" BorderThickness="1">
-						<ContentPresenter Margin="10,5,10,5" Content="{TemplateBinding Content}" VerticalAlignment="Center" HorizontalAlignment="Center" />
-					</Border>
-                </ControlTemplate>
-            </Setter.Value>
-        </Setter>
+		<Setter Property="Padding" Value="6"/>
+		<Setter Property="Background" Value="#5F00588B"/>
+		<Setter Property="BorderBrush" Value="#FF055674"/>
+		<Setter Property="BorderThickness" Value="1"/>
     </Style> 
 </ResourceDictionary>

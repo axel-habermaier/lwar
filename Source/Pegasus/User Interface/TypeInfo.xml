@@ -182,6 +182,8 @@
 		<Property Type="Pegasus.Platform.Graphics.Color?" Name="BorderBrush"/>
 		<Property Type="Pegasus.Framework.UserInterface.Thickness" Name="BorderThickness"/>
 		<Property Type="Pegasus.Framework.UserInterface.Thickness" Name="Padding"/>
+		<Property Type="Pegasus.Framework.UserInterface.HorizontalAlignment" Name="HorizontalContentAlignment" />
+		<Property Type="Pegasus.Framework.UserInterface.VerticalAlignment" Name="VerticalContentAlignment" />
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.TextBlock" Inherits="Pegasus.Framework.UserInterface.UIElement">
@@ -275,6 +277,8 @@
 		<Property Type="Pegasus.Platform.Graphics.Color?" Name="BorderBrush"/>
 		<Property Type="Pegasus.Framework.UserInterface.Thickness" Name="BorderThickness"/>
 		<Property Type="Pegasus.Framework.UserInterface.Thickness" Name="Padding"/>
+		<Property Type="Pegasus.Framework.UserInterface.HorizontalAlignment" Name="HorizontalContentAlignment" />
+		<Property Type="Pegasus.Framework.UserInterface.VerticalAlignment" Name="VerticalContentAlignment" />
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.RenderOutputPanel" Inherits="Pegasus.Framework.UserInterface.Controls.Decorator">

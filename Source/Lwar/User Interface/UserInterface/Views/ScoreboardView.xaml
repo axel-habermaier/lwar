@@ -6,24 +6,24 @@
 			 xmlns:converters="clr-namespace:Pegasus.Framework.UserInterface.Converters;assembly=PegasusUI"
 			 xmlns:userInterfaceViews="clr-namespace:Lwar.UserInterface.Views"
 			 mc:Ignorable="d"
+			 Foreground="White"
+			 FontFamily="Liberation Sans"
+			 FontSize="16"
+			 Background="#5F00588B"
+			 HorizontalAlignment="Center"
+			 VerticalAlignment="Center"
 			 d:DataContext="{d:DesignInstance Type={x:Type userInterfaceViews:ScoreboardViewModel}, IsDesignTimeCreatable=True}"
 			 Visibility="{Binding IsVisible, Converter={converters:BooleanToVisibilityConverter}}"
 			 IsHitTestVisible="False">
-	
-	<DataGrid ItemsSource="{Binding Players}"
-			  AutoGenerateColumns="False"
-			  HorizontalAlignment="Center"
-			  VerticalAlignment="Center"
-			  Background="#5F00588B">
+	<DataGrid ItemsSource="{Binding Players}" AutoGenerateColumns="False" Margin="5">
 		<DataGrid.ColumnHeaderStyle>
 			<Style TargetType="DataGridColumnHeader">
-				<Setter Property="Background" Value="#FF055674" />
-				<Setter Property="Margin" Value="0,0,0,5" />
+				<Setter Property="Margin" Value="0,0,0,3" />
 				<Setter Property="Template">
 					<Setter.Value>
 						<ControlTemplate TargetType="DataGridColumnHeader">
-							<Border Background="{TemplateBinding Background}">
-								<ContentPresenter Margin="2" Content="{TemplateBinding Content}" />
+							<Border BorderThickness="0,0,0,1" BorderBrush="#FF055674">
+								<ContentPresenter Margin="2,2,2,4" Content="{TemplateBinding Content}" />
 							</Border>
 						</ControlTemplate>
 					</Setter.Value>
@@ -31,24 +31,30 @@
 			</Style>
 		</DataGrid.ColumnHeaderStyle>
 		<DataGrid.Columns>
-			<DataGridTemplateColumn MinWidth="250" Header="Player">
+			<DataGridTemplateColumn MinWidth="200" Header="Player">
 				<DataGridTemplateColumn.CellTemplate>
 					<DataTemplate>
 						<TextBlock Margin="2" Text="{Binding Name}" />
 					</DataTemplate>
 				</DataGridTemplateColumn.CellTemplate>
 			</DataGridTemplateColumn>
-			<DataGridTemplateColumn Width="40" Header="Kills">
+			<DataGridTemplateColumn Width="60">
+				<DataGridTemplateColumn.Header>
+					<TextBlock Text="Kills" HorizontalAlignment="Right"/>
+				</DataGridTemplateColumn.Header>
 				<DataGridTemplateColumn.CellTemplate>
 					<DataTemplate>
-						<TextBlock Margin="2" Text="{Binding Kills}" HorizontalAlignment="Center" />
+						<TextBlock Margin="2" Text="{Binding Kills}" HorizontalAlignment="Right" />
 					</DataTemplate>
 				</DataGridTemplateColumn.CellTemplate>
 			</DataGridTemplateColumn>
-			<DataGridTemplateColumn Width="55" Header="Deaths">
+			<DataGridTemplateColumn Width="70">
+				<DataGridTemplateColumn.Header>
+					<TextBlock Text="Deaths" HorizontalAlignment="Right"/>
+				</DataGridTemplateColumn.Header>
 				<DataGridTemplateColumn.CellTemplate>
 					<DataTemplate>
-						<TextBlock Margin="2" Text="{Binding Deaths}" HorizontalAlignment="Center" />
+						<TextBlock Margin="2" Text="{Binding Deaths}" HorizontalAlignment="Right" />
 					</DataTemplate>
 				</DataGridTemplateColumn.CellTemplate>
 			</DataGridTemplateColumn>
