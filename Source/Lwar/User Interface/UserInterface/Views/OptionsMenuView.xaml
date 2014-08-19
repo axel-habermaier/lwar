@@ -13,7 +13,7 @@
 			 TextOptions.TextRenderingMode="ClearType"
 			 Foreground="White">
 	<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-		<TextBlock FontFamily="Moonhouse" Foreground="White" Margin="0,0,0,10" FontSize="80" HorizontalAlignment="Center">Options</TextBlock>
+		<TextBlock Style="{StaticResource HeaderStyle}">Options</TextBlock>
 		<StackPanel Orientation="Horizontal">
 			<TextBlock Margin="0,2,15,0">Player Name:</TextBlock>
 			<TextBox Width="250" MaxLength="{Binding MaxPlayerNameLength}" Text="{Binding PlayerName}" />

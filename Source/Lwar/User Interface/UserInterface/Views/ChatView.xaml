@@ -8,6 +8,8 @@
 			 mc:Ignorable="d"
 			 Visibility="{Binding IsVisible, Converter={converters:BooleanToVisibilityConverter}}"
 			 Foreground="White"
+			 FontFamily="Elliptica"
+			 FontSize="16"
 			 HorizontalAlignment="Stretch"
 			 VerticalAlignment="Stretch"
 			 input:Keyboard.HandlesAllInput="true"
@@ -18,27 +20,31 @@
 		<input:KeyBinding Key="Escape" Method="Cancel" />
 	</UserControl.InputBindings>
 	<StackPanel Height="200" VerticalAlignment="Bottom" HorizontalAlignment="Center">
-		<Border Background="#20FFFFFF">
+		<Border Style="{StaticResource OverlayBorderStyle}">
 			<Grid Margin="5" VerticalAlignment="Top">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="40" />
-					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="600" />
 				</Grid.ColumnDefinitions>
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
 				</Grid.RowDefinitions>
-				<TextBlock Grid.Row="0" Grid.Column="0" Margin="0,2,0,0">Say:</TextBlock>
+				<TextBlock Grid.Row="0" Grid.Column="0" Margin="0,6,0,0">Say:</TextBlock>
 				<TextBox x:Name="MessageInput" 
-						 Width="600" 
+					     Width="600"
+						 Style="{StaticResource TextBoxStyle}"
 						 MaxLength="{Binding MaxMessageLength}"
 						 Text="{Binding Message}" Grid.Row="0"
 						 Grid.Column="1"
 						 HorizontalAlignment="Stretch" />
-				<TextBlock Margin="0,10,0,0" Foreground="Red" Grid.Row="1" Grid.Column="1" TextWrapping="NoWrap"
-						   Visibility="{Binding LengthExceeded, Converter={converters:BooleanToVisibilityConverter}}">
-					The message exceeds the maximum allowed length of a chat message and cannot be sent.
-				</TextBlock>
+				<TextBlock Margin="0,10,0,0" 
+						   Foreground="Red" 
+						   Grid.Row="1" 
+						   Grid.Column="1" 
+						   TextWrapping="Wrap"
+						   Visibility="{Binding LengthExceeded, Converter={converters:BooleanToVisibilityConverter}}"
+						   Text="The message exceeds the maximum allowed length of a chat message and cannot be sent."/>
 			</Grid>
 		</Border>
 	</StackPanel>

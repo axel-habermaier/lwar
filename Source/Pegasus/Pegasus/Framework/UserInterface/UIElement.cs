@@ -858,10 +858,18 @@
 			for (var i = 0; i < count; ++i)
 			{
 				var child = GetVisualChild(i);
-				child.UpdateVisualOffsets(VisualOffset);
+				child.UpdateVisualOffsets(VisualOffset + GetAdditionalChildrenOffset());
 			}
 
 			IsVisualOffsetDirty = false;
+		}
+
+		/// <summary>
+		///     Gets the additional offset that should be applied to the visual offset of the UI element's children.
+		/// </summary>
+		protected virtual Vector2d GetAdditionalChildrenOffset()
+		{
+			return Vector2d.Zero;
 		}
 
 		/// <summary>

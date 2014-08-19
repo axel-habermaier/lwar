@@ -7,9 +7,14 @@
 			 mc:Ignorable="d"
 			 x:Class="Pegasus.Framework.UserInterface.Views.DebugOverlayView"
 			 x:Name="UserControl"
-			 Foreground="White" Background="#66333333"
+			 FontFamily="Liberation Mono"
+			 FontSize="11"
+			 TextOptions.TextRenderingMode="Aliased"
+			 Foreground="White" 
+			 Background="#66333333"
 			 d:DataContext="{d:DesignInstance Type={x:Type views:DebugOverlayViewModel}, IsDesignTimeCreatable=True}"
-			 HorizontalAlignment="Left" VerticalAlignment="Bottom"
+			 HorizontalAlignment="Left"
+			 VerticalAlignment="Bottom"
 			 Visibility="{Binding IsVisible, Converter={converters:BooleanToVisibilityConverter}}"
 			 Panel.ZIndex="2147483646">
 	

@@ -6,13 +6,13 @@
 				 xmlns:views="clr-namespace:Pegasus.Framework.UserInterface.Views"
 				 xmlns:input="clr-namespace:Pegasus.Framework.UserInterface.Input"
 				 mc:Ignorable="d"
-				 FontFamily="Liberation Mono"
-				 FontSize="11"
 				 Fullscreen="{Binding Fullscreen}"
 				 Position="{Binding Position, Mode=OneWayToSource}"
 				 Size="{Binding Size, Mode=OneWayToSource}"
 				 WindowMode="{Binding WindowMode, Mode=OneWayToSource}"
-				 TextOptions.TextRenderingMode="Aliased" Background="Black" Title="Pegasus">
+				 TextOptions.TextRenderingMode="ClearType" 
+				 Background="Black" 
+				 Title="Pegasus">
 	<Window.InputBindings>
 		<input:KeyBinding Key="Return" Modifiers="Alt" Method="ToggleFullscreen" Preview="true" />
 	</Window.InputBindings>

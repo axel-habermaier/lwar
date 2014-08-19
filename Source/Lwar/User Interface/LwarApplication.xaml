@@ -5,6 +5,10 @@
 			<ResourceDictionary.MergedDictionaries>
 				<ResourceDictionary Source="UserInterface/Styles/ButtonStyle.xaml"/>
 				<ResourceDictionary Source="UserInterface/Styles/CheckBoxStyle.xaml"/>
+				<ResourceDictionary Source="UserInterface/Styles/MenuButtonStyle.xaml"/>
+				<ResourceDictionary Source="UserInterface/Styles/HeaderStyle.xaml"/>
+				<ResourceDictionary Source="UserInterface/Styles/OverlayStyle.xaml"/>
+				<ResourceDictionary Source="UserInterface/Styles/TextBoxStyle.xaml"/>
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
     </Application.Resources>

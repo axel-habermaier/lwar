@@ -179,6 +179,9 @@
 	<Class Name="Pegasus.Framework.UserInterface.Controls.Control" Inherits="Pegasus.Framework.UserInterface.UIElement">
 		<Property Type="Pegasus.Platform.Graphics.Color" Name="Foreground" />
 		<Property Type="Pegasus.Framework.UserInterface.Controls.ControlTemplate" Name="Template" />
+		<Property Type="Pegasus.Platform.Graphics.Color?" Name="BorderBrush"/>
+		<Property Type="Pegasus.Framework.UserInterface.Thickness" Name="BorderThickness"/>
+		<Property Type="Pegasus.Framework.UserInterface.Thickness" Name="Padding"/>
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.TextBlock" Inherits="Pegasus.Framework.UserInterface.UIElement">
@@ -269,8 +272,9 @@
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.Border" Inherits="Pegasus.Framework.UserInterface.Controls.Decorator">
-		<Property Type="Pegasus.Platform.Graphics.Color" Name="BorderBrush"/>
+		<Property Type="Pegasus.Platform.Graphics.Color?" Name="BorderBrush"/>
 		<Property Type="Pegasus.Framework.UserInterface.Thickness" Name="BorderThickness"/>
+		<Property Type="Pegasus.Framework.UserInterface.Thickness" Name="Padding"/>
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.RenderOutputPanel" Inherits="Pegasus.Framework.UserInterface.Controls.Decorator">

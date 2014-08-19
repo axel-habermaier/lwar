@@ -10,6 +10,22 @@
 	public class Control : UIElement
 	{
 		/// <summary>
+		///     The border color of the control.
+		/// </summary>
+		public static readonly DependencyProperty<Color?> BorderBrushProperty = new DependencyProperty<Color?>();
+
+		/// <summary>
+		///     The padding inside a control.
+		/// </summary>
+		public static readonly DependencyProperty<Thickness> PaddingProperty = new DependencyProperty<Thickness>(affectsMeasure: true);
+
+		/// <summary>
+		///     The border thickness of the control.
+		/// </summary>
+		public static readonly DependencyProperty<Thickness> BorderThicknessProperty =
+			new DependencyProperty<Thickness>(defaultValue: new Thickness(1), affectsMeasure: true);
+
+		/// <summary>
 		///     The template that defines the control's appearance.
 		/// </summary>
 		public static readonly DependencyProperty<ControlTemplate> TemplateProperty =
@@ -32,6 +48,36 @@
 		static Control()
 		{
 			TemplateProperty.Changed += OnTemplateChanged;
+		}
+
+		/// <summary>
+		///     Gets or sets the padding inside the control, provided that the control's template uses the control's padding as a
+		///     parameter.
+		/// </summary>
+		public Thickness Padding
+		{
+			get { return GetValue(PaddingProperty); }
+			set { SetValue(PaddingProperty, value); }
+		}
+
+		/// <summary>
+		///     Gets or sets the border color of the control, provided that the control's template uses the control's border brush as a
+		///     parameter.
+		/// </summary>
+		public Color? BorderBrush
+		{
+			get { return GetValue(BorderBrushProperty); }
+			set { SetValue(BorderBrushProperty, value); }
+		}
+
+		/// <summary>
+		///     Gets or sets the border thickness of the control, provided that the control's template uses the control's border
+		///     thickness as a parameter.
+		/// </summary>
+		public Thickness BorderThickness
+		{
+			get { return GetValue(BorderThicknessProperty); }
+			set { SetValue(BorderThicknessProperty, value); }
 		}
 
 		/// <summary>

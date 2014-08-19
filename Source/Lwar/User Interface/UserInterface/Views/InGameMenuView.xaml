@@ -17,11 +17,11 @@
 	<UserControl.InputBindings>
 		<input:KeyBinding Key="Escape" Method="ContinueImplicit" TriggerOnRepeat="false"></input:KeyBinding>
 	</UserControl.InputBindings>
-	<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding IsTopLevel, Converter={converters:BooleanToVisibilityConverter}}">>
-		<TextBlock Foreground="White" Margin="0,0,0,10" FontSize="80" HorizontalAlignment="Center">Paused</TextBlock>
-		<Button FontSize="24" Margin="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Click="{Binding Continue}">Continue</Button>
-		<Button FontSize="24" Margin="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Click="{Binding Options}">Options</Button>
-		<Button FontSize="24" Margin="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Click="{Binding Leave}">Leave</Button>
-		<Button FontSize="24" Margin="3" HorizontalAlignment="Stretch" VerticalAlignment="Center" Click="{Binding Exit}">Exit</Button>
+	<StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding IsTopLevel, Converter={converters:BooleanToVisibilityConverter}}">
+		<TextBlock Style="{StaticResource HeaderStyle}">Paused</TextBlock>
+		<Button Style="{StaticResource MenuButtonStyle}" Click="{Binding Continue}">Continue</Button>
+		<Button Style="{StaticResource MenuButtonStyle}" Click="{Binding Options}">Options</Button>
+		<Button Style="{StaticResource MenuButtonStyle}" Click="{Binding Leave}">Leave</Button>
+		<Button Style="{StaticResource MenuButtonStyle}" Click="{Binding Exit}">Exit</Button>
 	</StackPanel>
 </UserControl>

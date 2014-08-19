@@ -10,22 +10,22 @@
 	VerticalAlignment="Stretch"
 	Background="Black"
 	Focusable="true"
-	d:DesignHeight="300" d:DesignWidth="300">
+	FontFamily="Elliptica"
+	FontSize="16"
+	d:DesignHeight="300" 
+	d:DesignWidth="500">
 	<UserControl.InputBindings>
 		<input:KeyBinding Key="Escape" Method="Abort"></input:KeyBinding>
 	</UserControl.InputBindings>
-	<StackPanel Orientation="Horizontal"
-				HorizontalAlignment="Center"
-				VerticalAlignment="Center"
-				IsHitTestVisible="False">
-
-		<TextBlock Text="Connecting to " />
-		<TextBlock Text="{Binding ServerEndPoint}" />
-		<TextBlock Text=" (" />
-		<TextBlock Text="{Binding ElapsedTime}" />
-		<TextBlock Text=" seconds)" />
-		<TextBlock Text="..." />
-		
-
+	<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" IsHitTestVisible="False">
+		<TextBlock Style="{StaticResource HeaderStyle}">Loading</TextBlock>
+		<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+			<TextBlock Text="Connecting to " />
+			<TextBlock Text="{Binding ServerEndPoint}" />
+			<TextBlock Text=" (" />
+			<TextBlock Text="{Binding ElapsedTime}" />
+			<TextBlock Text=" seconds)" />
+			<TextBlock Text="..." />
+		</StackPanel>
 	</StackPanel>
 </UserControl>

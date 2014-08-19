@@ -16,10 +16,14 @@
 		/// </summary>
 		private static readonly ControlTemplate DefaultTemplate = control =>
 		{
-			var textBlock = new TextBlock { Margin = new Thickness(2) };
+			var textBlock = new TextBlock();
 			textBlock.CreateTemplateBinding(control, TextProperty, TextBlock.TextProperty);
 
-			return textBlock;
+			var border = new Border { Child = textBlock };
+			border.CreateTemplateBinding(control, BorderBrushProperty, Border.BorderBrushProperty);
+			border.CreateTemplateBinding(control, BorderThicknessProperty, Border.BorderThicknessProperty);
+			border.CreateTemplateBinding(control, PaddingProperty, Border.PaddingProperty);
+			return border;
 		};
 
 		/// <summary>
