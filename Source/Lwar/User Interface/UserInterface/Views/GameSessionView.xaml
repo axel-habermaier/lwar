@@ -31,10 +31,10 @@
 		<controls:AreaPanel x:Name="LayoutRoot">
 
 			<userInterface:RespawnView DataContext="{Binding Respawn}" />
+			<userInterface:WaitingView/>
 			<userInterface:EventListView/>
 			<userInterface:ScoreboardView DataContext="{Binding Scoreboard}" />
 			<userInterface:ChatView DataContext="{Binding Chat}" />
-			<userInterface:WaitingView/>
 
 		</controls:AreaPanel>
 	</controls:RenderOutputPanel>

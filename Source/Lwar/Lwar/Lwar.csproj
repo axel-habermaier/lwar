@@ -313,7 +313,6 @@
     <Compile Include="UserInterface\Views\ChatView.cs" />
     <Compile Include="UserInterface\Views\ShipOverlayPanel.cs" />
     <Compile Include="UserInterface\Views\ShipOverlayView.cs" />
-    <Compile Include="UserInterface\Views\WaitingView.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
