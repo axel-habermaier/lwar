@@ -13,8 +13,6 @@ Client
 	- Ship/Weapon selection
 	- Minimap
 	- Menus
-		* Main menu
-		* In-Game menu
 		* Server browser
 		* Configuration (graphics settings, input settings, ...)
 		* Menu transitions
