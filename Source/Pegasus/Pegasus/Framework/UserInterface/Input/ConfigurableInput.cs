@@ -82,11 +82,8 @@ namespace Pegasus.Framework.UserInterface.Input
 		}
 
 		/// <summary>
-		///     Returns the fully qualified type name of this instance.
+		///     Returns a string representation of the configurable input.
 		/// </summary>
-		/// <returns>
-		///     A <see cref="T:System.String" /> containing a fully qualified type name.
-		/// </returns>
 		public override string ToString()
 		{
 			Builder.Clear();

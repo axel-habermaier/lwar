@@ -59,7 +59,7 @@
 		public void LogicalParentOfTemplate()
 		{
 			var button = new Button { Template = _template1 };
-			var control = new UserControl { Content = button };
+			var control = new UserControl { IsAttachedToRoot = true, Content = button };
 
 			button.LogicalParent.Should().Be(control);
 		}
@@ -69,8 +69,8 @@
 		{
 			var text = new TextBlock();
 			var button = new Button { Content = text, Template = _template1 };
-			var control1 = new UserControl { Content = button };
-			var control2 = new UserControl();
+			var control1 = new UserControl { IsAttachedToRoot = true, Content = button };
+			var control2 = new UserControl { IsAttachedToRoot = true };
 
 			button.LogicalParent.Should().Be(control1);
 			text.LogicalParent.Should().Be(button);
@@ -91,7 +91,7 @@
 		{
 			var text = new TextBlock();
 			var button = new Button { Content = text, Template = _template1 };
-			var control = new UserControl { Content = button };
+			var control = new UserControl { IsAttachedToRoot = true, Content = button };
 
 			button.LogicalParent.Should().Be(control);
 			text.LogicalParent.Should().Be(button);
@@ -102,7 +102,18 @@
 		{
 			var text = new TextBlock();
 			var button = new Button { Template = _template1, Content = text };
-			var control = new UserControl { Content = button };
+			var control = new UserControl { IsAttachedToRoot = true, Content = button };
+
+			button.LogicalParent.Should().Be(control);
+			text.LogicalParent.Should().Be(button);
+		}
+
+		[Test]
+		public void LogicalParentOfTextContent_SetTemplateBeforeContentThenAttachToRoot()
+		{
+			var text = new TextBlock();
+			var button = new Button { Template = _template1, Content = text };
+			var control = new UserControl { Content = button, IsAttachedToRoot = true };
 
 			button.LogicalParent.Should().Be(control);
 			text.LogicalParent.Should().Be(button);
@@ -111,7 +122,7 @@
 		[Test]
 		public void SetTemplateByStyle_StyleSetByResourceBinding()
 		{
-			var control = new UserControl() { IsAttachedToRoot = true };
+			var control = new UserControl { IsAttachedToRoot = true };
 			var style = new Style();
 			style.Setters.Add(new Setter<ControlTemplate>(Control.TemplateProperty, _template1));
 			control.Resources.Add("MyStyle", style);
@@ -135,7 +146,7 @@
 		[Test]
 		public void SetTemplateByStyle_StyleSetImplicitly()
 		{
-			var control = new UserControl() { IsAttachedToRoot = true };
+			var control = new UserControl { IsAttachedToRoot = true };
 			var style = new Style();
 			style.Setters.Add(new Setter<ControlTemplate>(Control.TemplateProperty, _template1));
 			control.Resources.Add(typeof(Button), style);
@@ -148,7 +159,7 @@
 		[Test]
 		public void TemplateBinding_ChangeValue()
 		{
-			var button = new Button { Margin = _thickness1, Template = _template1 };
+			var button = new Button { IsAttachedToRoot = true, Margin = _thickness1, Template = _template1 };
 			_presenter1.Margin.Should().Be(_thickness1);
 
 			button.Margin = _thickness2;
@@ -169,13 +180,13 @@
 		public void TemplateBinding_SetValue()
 		{
 			var button = new Button { Margin = _thickness1, Template = _template1 };
-			((ContentPresenter)button.GetVisualChild(0)).Margin.Should().Be(_thickness1);
+			button.GetVisualChild(0).Margin.Should().Be(_thickness1);
 		}
 
 		[Test]
 		public void UnsetBinding()
 		{
-			var button = new Button { Template = _template1, Margin = _thickness1 };
+			var button = new Button { IsAttachedToRoot = true, Template = _template1, Margin = _thickness1 };
 
 			_presenter1.Margin.Should().Be(_thickness1);
 

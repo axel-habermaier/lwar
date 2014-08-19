@@ -41,7 +41,6 @@
 		/// </summary>
 		protected override void Initialize()
 		{
-			_sourceObject.AddChangedHandler(_sourceProperty, OnPropertyChanged);
 			_targetObject.SetBoundValue(_targetProperty, _sourceObject.GetValue(_sourceProperty));
 		}
 
@@ -50,7 +49,16 @@
 		/// </summary>
 		protected override void OnActivated()
 		{
-			// Template bindings are always active
+			_sourceObject.AddChangedHandler(_sourceProperty, OnPropertyChanged);
+			_targetObject.SetBoundValue(_targetProperty, _sourceObject.GetValue(_sourceProperty));
+		}
+
+		/// <summary>
+		///     Invoked when the binding has been deactivated.
+		/// </summary>
+		protected override void OnDeactivated()
+		{
+			_sourceObject.RemoveChangedHandler(_sourceProperty, OnPropertyChanged);
 		}
 
 		/// <summary>

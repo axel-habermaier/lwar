@@ -18,7 +18,16 @@
 		{
 			_stackPanel = new StackPanel { IsAttachedToRoot = true };
 			_textBlock = new TextBlock();
-			_button = new Button { Content = _textBlock };
+			_button = new Button
+			{
+				Content = _textBlock,
+				Template = control =>
+				{
+					var presenter = new ContentPresenter();
+					presenter.CreateTemplateBinding(control, ContentControl.ContentProperty, ContentPresenter.ContentProperty);
+					return presenter;
+				}
+			};
 			_stackPanel.Add(new Border());
 			_stackPanel.Add(_button);
 			_stackPanel.Add(new Border());
