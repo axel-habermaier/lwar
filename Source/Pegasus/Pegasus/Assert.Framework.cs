@@ -47,19 +47,5 @@
 			if (obj.IsDisposed)
 				throw new PegasusException(obj.GetType().FullName);
 		}
-
-		/// <summary>
-		///     Throws a PegasusException if the given object has already been returned to the pool.
-		/// </summary>
-		/// <param name="obj">The object that should be checked.</param>
-		[Conditional("DEBUG"), DebuggerHidden]
-		public static void NotPooled<T>(T obj)
-			where T : PooledObject<T>, new()
-		{
-			ArgumentNotNull(obj);
-
-			if (obj.IsAvailable)
-				throw new PegasusException(obj.GetType().FullName);
-		}
 	}
 }

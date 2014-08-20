@@ -22,9 +22,7 @@
 			AssetName = assetName;
 			HashCode = assetName.GetHashCode();
 
-#if DEBUG
 			AssetHashCollision.Validate(AssetName, HashCode);
-#endif
 		}
 
 		/// <summary>

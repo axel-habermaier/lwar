@@ -60,20 +60,6 @@
 		}
 
 		/// <summary>
-		///     Disposes all objects contained in the enumerable if the enumerable is not null.
-		/// </summary>
-		/// <param name="enumerable">The enumerable that should be disposed.</param>
-		[DebuggerHidden]
-		public static void SafeDisposeEnumerable(this IEnumerable<IDisposable> enumerable)
-		{
-			if (enumerable == null)
-				return;
-
-			foreach (var obj in enumerable)
-				obj.SafeDispose();
-		}
-
-		/// <summary>
 		///     Disposes the object if it is not null.
 		/// </summary>
 		/// <param name="obj">The object that should be disposed.</param>
@@ -105,8 +91,8 @@
 		/// <typeparam name="T">The type of the pooled object.</typeparam>
 		/// <param name="obj">The object that should be returned.</param>
 		[DebuggerHidden]
-		public static void SafeDispose<T>(this PooledObject<T> obj)
-			where T : PooledObject<T>, new()
+		public static void SafeDispose<T>(this OldPooledObject<T> obj)
+			where T : OldPooledObject<T>, new()
 		{
 			if (obj != null && !obj.IsAvailable)
 				((IDisposable)obj).Dispose();

@@ -26,11 +26,6 @@
 		private readonly bool _asyncLoading;
 
 		/// <summary>
-		///     The buffer reader that is used to read the assets.
-		/// </summary>
-		private readonly BufferReader _bufferReader = new BufferReader();
-
-		/// <summary>
 		///     The graphics device that is used to load the assets.
 		/// </summary>
 		private readonly GraphicsDevice _graphicsDevice;
@@ -60,11 +55,11 @@
 		/// </summary>
 		static AssetsManager()
 		{
-			RegisterAssetLoader(new FontAssetLoader());
-			RegisterAssetLoader(new Texture2DAssetLoader());
-			RegisterAssetLoader(new CubeMapAssetLoader());
-			RegisterAssetLoader(new FragmentShaderAssetLoader());
-			RegisterAssetLoader(new VertexShaderAssetLoader());
+			RegisterAssetLoader(new AssetLoaders.FontLoader());
+			RegisterAssetLoader(new Texture2DLoader());
+			RegisterAssetLoader(new CubeMapLoader());
+			RegisterAssetLoader(new FragmentShaderLoader());
+			RegisterAssetLoader(new VertexShaderLoader());
 		}
 
 		/// <summary>
@@ -246,10 +241,11 @@
 			{
 				Log.Info("Loading {0} {1}...", Loaders[info.Type].AssetTypeName, GetAssetDisplayName(info));
 
-				using (_bufferReader.ReadFrom(FileSystem.ReadAllBytes(info.Path)))
+				using (var reader = ObjectPools.BufferReaders.Allocate())
 				{
-					AssetHeader.Validate(_bufferReader, info.Type);
-					Loaders[info.Type].Load(_bufferReader, info.Asset, info.Path);
+					reader.Object.ReadFrom(FileSystem.ReadAllBytes(info.Path));
+					AssetHeader.Validate(reader.Object, info.Type);
+					Loaders[info.Type].Load(reader.Object, info.Asset, info.Path);
 				}
 			}
 			catch (Exception e)

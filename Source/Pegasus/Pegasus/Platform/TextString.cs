@@ -10,12 +10,18 @@
 	/// <summary>
 	///     Represents a text that may optionally contain color specifiers.
 	/// </summary>
-	public class TextString : PooledObject<TextString>
+	public struct TextString : IDisposable
 	{
 		/// <summary>
 		///     The marker that introduces a color specifier.
 		/// </summary>
 		private const char ColorMarker = '\\';
+
+		/// <summary>
+		///     Pools list of color ranges.
+		/// </summary>
+		private static readonly ObjectPool<List<ColorRange>> ColorRangePool =
+			new ObjectPool<List<ColorRange>>(() => new List<ColorRange>(2), l => { }, l => l.Clear(), hasGlobalLifetime: true);
 
 		/// <summary>
 		///     Maps characters to colors. The character plus the color marker comprise a color specifier. For instance, 'w'
@@ -41,12 +47,29 @@
 		/// <summary>
 		///     The color ranges defined by the text.
 		/// </summary>
-		private readonly List<ColorRange> _colorRanges = new List<ColorRange>(2);
+		private readonly PooledObject<List<ColorRange>> _colorRanges;
 
 		/// <summary>
 		///     The text with the color specifiers removed.
 		/// </summary>
-		private readonly StringBuilder _text = new StringBuilder();
+		private readonly PooledObject<StringBuilder> _text;
+
+		/// <summary>
+		///     Creates a new text instance.
+		/// </summary>
+		/// <param name="textString">
+		///     The string, possibly containing color specifiers, that is the source for the text.
+		/// </param>
+		public TextString(string textString)
+			: this()
+		{
+			Assert.ArgumentNotNull(textString);
+
+			_text = ObjectPools.StringBuilders.Allocate();
+			_colorRanges = ColorRangePool.Allocate();
+			SourceString = textString;
+			ProcessSourceText();
+		}
 
 		/// <summary>
 		///     Gets the source string that might contain color specifiers.
@@ -54,15 +77,27 @@
 		public string SourceString { get; private set; }
 
 		/// <summary>
+		///     Gets the text, excluding all color specifiers.
+		/// </summary>
+		private StringBuilder Text
+		{
+			get { return _text.Object; }
+		}
+
+		/// <summary>
+		///     Gets the color ranges contained in the text.
+		/// </summary>
+		private List<ColorRange> ColorRanges
+		{
+			get { return _colorRanges.Object; }
+		}
+
+		/// <summary>
 		///     Gets the length of the text, excluding all color specifiers.
 		/// </summary>
 		public int Length
 		{
-			get
-			{
-				Assert.NotPooled(this);
-				return _text.Length;
-			}
+			get { return Text.Length; }
 		}
 
 		/// <summary>
@@ -70,11 +105,7 @@
 		/// </summary>
 		public int SourceLength
 		{
-			get
-			{
-				Assert.NotPooled(this);
-				return SourceString.Length;
-			}
+			get { return SourceString.Length; }
 		}
 
 		/// <summary>
@@ -85,10 +116,9 @@
 		{
 			get
 			{
-				Assert.NotPooled(this);
-				Assert.InRange(index, 0, _text.Length - 1);
+				Assert.InRange(index, 0, Text.Length - 1);
 
-				return _text[index];
+				return Text[index];
 			}
 		}
 
@@ -99,10 +129,8 @@
 		{
 			get
 			{
-				Assert.NotPooled(this);
-
-				for (var i = 0; i < _text.Length; ++i)
-					if (!Char.IsWhiteSpace(_text[i]))
+				for (var i = 0; i < Text.Length; ++i)
+					if (!Char.IsWhiteSpace(Text[i]))
 						return false;
 
 				return true;
@@ -110,21 +138,12 @@
 		}
 
 		/// <summary>
-		///     Creates a new text instance.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
-		/// <param name="textString">
-		///     The string, possibly containing color specifiers, that is the source for the text.
-		/// </param>
-		public static TextString Create(string textString)
+		public void Dispose()
 		{
-			Assert.ArgumentNotNull(textString);
-
-			var text = GetInstance();
-			text.SourceString = textString;
-			text._text.Clear();
-			text._colorRanges.Clear();
-			text.ProcessSourceText();
-			return text;
+			_text.SafeDispose();
+			_colorRanges.SafeDispose();
 		}
 
 		/// <summary>
@@ -139,18 +158,18 @@
 
 				if (TryMatch(SourceString, i, out color))
 				{
-					colorRange.End = _text.Length;
-					_colorRanges.Add(colorRange);
+					colorRange.End = Text.Length;
+					ColorRanges.Add(colorRange);
 
-					colorRange = new ColorRange(color.Color, _text.Length);
+					colorRange = new ColorRange(color.Color, Text.Length);
 					i += color.Specifier.Length - 1;
 				}
 				else
-					_text.Append(SourceString[i]);
+					Text.Append(SourceString[i]);
 			}
 
-			colorRange.End = _text.Length;
-			_colorRanges.Add(colorRange);
+			colorRange.End = Text.Length;
+			ColorRanges.Add(colorRange);
 		}
 
 		/// <summary>
@@ -200,7 +219,6 @@
 		/// <param name="sourceIndex">The source index that should be mapped.</param>
 		internal int MapToText(int sourceIndex)
 		{
-			Assert.NotPooled(this);
 			Assert.ArgumentInRange(sourceIndex, 0, SourceString.Length);
 
 			if (sourceIndex == SourceString.Length)
@@ -227,7 +245,6 @@
 		/// <param name="logicalIndex">The index that should be mapped.</param>
 		internal int MapToSource(int logicalIndex)
 		{
-			Assert.NotPooled(this);
 			Assert.ArgumentInRange(logicalIndex, 0, Length);
 
 			if (logicalIndex == Length)
@@ -260,9 +277,7 @@
 		/// <param name="color">The returned color.</param>
 		internal void GetColor(int index, out Color? color)
 		{
-			Assert.NotPooled(this);
-
-			foreach (var range in _colorRanges)
+			foreach (var range in ColorRanges)
 			{
 				if (range.Begin <= index && range.End > index)
 				{
@@ -321,7 +336,7 @@
 		/// </summary>
 		public override string ToString()
 		{
-			return _text.ToString();
+			return Text.ToString();
 		}
 
 		/// <summary>

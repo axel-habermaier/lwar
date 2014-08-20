@@ -8,22 +8,15 @@ namespace Pegasus.Assets.AssetLoaders
 	/// <summary>
 	///     Loads font assets.
 	/// </summary>
-	public class FontAssetLoader : AssetLoader
+	public class FontLoader : AssetLoader
 	{
 		/// <summary>
-		///     Gets the type of the asset supported by the loader.
+		///     Initializes a new instance.
 		/// </summary>
-		public override byte AssetType
+		public FontLoader()
 		{
-			get { return (byte)Assets.AssetType.Font; }
-		}
-
-		/// <summary>
-		///     Gets the name of the asset type supported by the loader.
-		/// </summary>
-		public override string AssetTypeName
-		{
-			get { return "Font"; }
+			AssetType = (byte)Assets.AssetType.Font;
+			AssetTypeName = "Font";
 		}
 
 		/// <summary>
@@ -51,7 +44,7 @@ namespace Pegasus.Assets.AssetLoaders
 
 			// Load the font map
 			AssetHeader.Validate(buffer, (byte)Assets.AssetType.Texture2D);
-			TextureAssetLoader.Load(buffer, font.Texture, assetName);
+			TextureLoader.Load(buffer, font.Texture, assetName);
 
 			// Load the font metadata
 			var lineHeight = buffer.ReadUInt16();
@@ -77,8 +70,8 @@ namespace Pegasus.Assets.AssetLoaders
 				var textureBottom = y / (float)font.Texture.Height;
 
 				glyphs[index].TextureArea = new RectangleF(textureLeft, textureTop,
-														   textureRight - textureLeft,
-														   textureBottom - textureTop);
+					textureRight - textureLeft,
+					textureBottom - textureTop);
 
 				// Read the glyph offsets
 				glyphs[index].Area.Left = buffer.ReadInt16();

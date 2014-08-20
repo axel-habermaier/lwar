@@ -6,7 +6,7 @@
 	/// <summary>
 	///     Represents an event message. Valid fields depend on the type of the events.
 	/// </summary>
-	public class EventMessage : PooledObject<EventMessage>
+	public class EventMessage : OldPooledObject<EventMessage>
 	{
 		/// <summary>
 		///     The creation time of the message.

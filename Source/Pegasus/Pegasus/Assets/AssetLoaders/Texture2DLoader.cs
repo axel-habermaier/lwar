@@ -6,22 +6,15 @@
 	/// <summary>
 	///     Loads 2-dimensional textures.
 	/// </summary>
-	public class Texture2DAssetLoader : TextureAssetLoader
+	public class Texture2DLoader : TextureLoader
 	{
 		/// <summary>
-		///     Gets the type of the asset supported by the loader.
+		///     Initializes a new instance.
 		/// </summary>
-		public override byte AssetType
+		public Texture2DLoader()
 		{
-			get { return (byte)Assets.AssetType.Texture2D; }
-		}
-
-		/// <summary>
-		///     Gets the name of the asset type supported by the loader.
-		/// </summary>
-		public override string AssetTypeName
-		{
-			get { return "2D Texture"; }
+			AssetType = (byte)Assets.AssetType.Texture2D;
+			AssetTypeName = "2D Texture";
 		}
 
 		/// <summary>

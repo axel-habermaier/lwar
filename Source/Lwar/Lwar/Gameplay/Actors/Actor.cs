@@ -9,7 +9,7 @@
 	/// <summary>
 	///     The base class of all actors.
 	/// </summary>
-	public abstract class Actor<TActor> : PooledObject<TActor>, IActor
+	public abstract class Actor<TActor> : OldPooledObject<TActor>, IActor
 		where TActor : Actor<TActor>, new()
 	{
 		/// <summary>

@@ -7,22 +7,15 @@ namespace Pegasus.Assets.AssetLoaders
 	/// <summary>
 	///     Loads fragment shader assets.
 	/// </summary>
-	public class FragmentShaderAssetLoader : ShaderAssetLoader
+	public class FragmentShaderLoader : ShaderLoader
 	{
 		/// <summary>
-		///     Gets the type of the asset supported by the loader.
+		///     Initializes a new instance.
 		/// </summary>
-		public override byte AssetType
+		public FragmentShaderLoader()
 		{
-			get { return (byte)Assets.AssetType.FragmentShader; }
-		}
-
-		/// <summary>
-		///     Gets the name of the asset type supported by the loader.
-		/// </summary>
-		public override string AssetTypeName
-		{
-			get { return "Fragment Shader"; }
+			AssetType = (byte)Assets.AssetType.FragmentShader;
+			AssetTypeName = "Fragment Shader";
 		}
 
 		/// <summary>

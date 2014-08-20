@@ -11,10 +11,7 @@
 	/// </summary>
 	internal class Help : DisposableObject
 	{
-		/// <summary>
-		///     A cached string builder instance that is used to build up the help texts.
-		/// </summary>
-		private readonly StringBuilder _builder = new StringBuilder();
+
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -36,7 +33,6 @@
 			ICommand command;
 
 			name = name.Trim();
-			_builder.Clear();
 
 			if (String.IsNullOrWhiteSpace(name))
 				PrintHelp();
@@ -53,19 +49,23 @@
 		/// </summary>
 		private void PrintHelp()
 		{
-			_builder.Append("\nUse the console to set and view cvars and to invoke commands.\n");
-			_builder.Append("Cvars:\n");
-			_builder.Append("   Type '<cvar-name>' to view the current value of the cvar.\n");
-			_builder.Append("   Type '<cvar-name> <value>' to set a cvar to a new value.\n");
-			_builder.Append("   Type 'help <cvar-name>' to view a description of the usage and purpose of the cvar.\n");
-			_builder.Append("   Type 'list_cvars' to list all available cvars.\n");
-			_builder.Append("Commands:\n");
-			_builder.Append("   Type '<command-name> <value1> <value2> ...' to invoke the command with parameters value1, value2, ... " +
-							"Optional parameters can be omitted at the end of the command invocation.\n");
-			_builder.Append("   Type 'help <command-name>' to view a description of the usage and purpose of the command.\n");
-			_builder.Append("   Type 'list_commands' to list all available commands.\n");
+			using (var pooledBuilder = ObjectPools.StringBuilders.Allocate())
+			{
+				var builder = pooledBuilder.Object;
+				builder.Append("\nUse the console to set and view cvars and to invoke commands.\n");
+				builder.Append("Cvars:\n");
+				builder.Append("   Type '<cvar-name>' to view the current value of the cvar.\n");
+				builder.Append("   Type '<cvar-name> <value>' to set a cvar to a new value.\n");
+				builder.Append("   Type 'help <cvar-name>' to view a description of the usage and purpose of the cvar.\n");
+				builder.Append("   Type 'list_cvars' to list all available cvars.\n");
+				builder.Append("Commands:\n");
+				builder.Append("   Type '<command-name> <value1> <value2> ...' to invoke the command with parameters value1, value2, ... " +
+								"Optional parameters can be omitted at the end of the command invocation.\n");
+				builder.Append("   Type 'help <command-name>' to view a description of the usage and purpose of the command.\n");
+				builder.Append("   Type 'list_commands' to list all available commands.\n");
 
-			Log.Info(_builder.ToString());
+				Log.Info(builder.ToString());
+			}
 		}
 
 		/// <summary>
@@ -74,24 +74,28 @@
 		/// <param name="cvar">The cvar the help should be printed for.</param>
 		private void PrintCvarHelp(ICvar cvar)
 		{
-			_builder.AppendFormat("\nCvar:          {0}\n", cvar.Name);
-			_builder.AppendFormat("Description:   {0}\n", cvar.Description);
-			_builder.AppendFormat("Type:          {0} (e.g., {1}, ...)\n", TypeRegistry.GetDescription(cvar.ValueType),
-								  String.Join(", ", TypeRegistry.GetExamples(cvar.ValueType)));
-			_builder.AppendFormat("Default Value: {0}\\\0\n", TypeRegistry.ToString(cvar.DefaultValue));
-			_builder.AppendFormat("Current Value: {0}\\\0\n", TypeRegistry.ToString(cvar.Value));
+			using (var pooledBuilder = ObjectPools.StringBuilders.Allocate())
+			{
+				var builder = pooledBuilder.Object;
+				builder.AppendFormat("\nCvar:          {0}\n", cvar.Name);
+				builder.AppendFormat("Description:   {0}\n", cvar.Description);
+				builder.AppendFormat("Type:          {0} (e.g., {1}, ...)\n", TypeRegistry.GetDescription(cvar.ValueType),
+					String.Join(", ", TypeRegistry.GetExamples(cvar.ValueType)));
+				builder.AppendFormat("Default Value: {0}\\\0\n", TypeRegistry.ToString(cvar.DefaultValue));
+				builder.AppendFormat("Current Value: {0}\\\0\n", TypeRegistry.ToString(cvar.Value));
 
-			if (cvar.UpdateMode != UpdateMode.Immediate && cvar.HasDeferredValue)
-				_builder.AppendFormat("Pending Value: {0}\\\0\n", TypeRegistry.ToString(cvar.DeferredValue));
+				if (cvar.UpdateMode != UpdateMode.Immediate && cvar.HasDeferredValue)
+					builder.AppendFormat("Pending Value: {0}\\\0\n", TypeRegistry.ToString(cvar.DeferredValue));
 
-			if (cvar.Validators.Any())
-				_builder.AppendFormat("Remarks:       {0}\n", String.Join("; ", cvar.Validators.Select(v => v.Description)));
+				if (cvar.Validators.Any())
+					builder.AppendFormat("Remarks:       {0}\n", String.Join("; ", cvar.Validators.Select(v => v.Description)));
 
-			_builder.AppendFormat("Update Mode:   {0}\n", cvar.UpdateMode.ToDisplayString());
-			_builder.AppendFormat("Persistent:    {0}\n", cvar.Persistent ? "yes" : "no");
-			_builder.AppendFormat("User Access:   {0}\n", cvar.SystemOnly ? "read" : "read/write");
+				builder.AppendFormat("Update Mode:   {0}\n", cvar.UpdateMode.ToDisplayString());
+				builder.AppendFormat("Persistent:    {0}\n", cvar.Persistent ? "yes" : "no");
+				builder.AppendFormat("User Access:   {0}\n", cvar.SystemOnly ? "read" : "read/write");
 
-			Log.Info(_builder.ToString());
+				Log.Info(builder.ToString());
+			}
 		}
 
 		/// <summary>
@@ -100,35 +104,39 @@
 		/// <param name="command">The command the help should be printed for.</param>
 		private void PrintCommandHelp(ICommand command)
 		{
-			_builder.AppendFormat("\nCommand:     {0}\n", command.Name);
-			_builder.AppendFormat("Description: {0}\n", command.Description);
-			_builder.AppendFormat("Invocation:  {0}", command.SystemOnly ? "application only" : "user or application");
-
-			if (command.Parameters.Any())
-				_builder.Append("\n\nParameters:\n");
-
-			var first = true;
-			foreach (var parameter in command.Parameters)
+			using (var pooledBuilder = ObjectPools.StringBuilders.Allocate())
 			{
-				if (first)
-					first = false;
-				else
-					_builder.Append("\n\n");
+				var builder = pooledBuilder.Object;
+				builder.AppendFormat("\nCommand:     {0}\n", command.Name);
+				builder.AppendFormat("Description: {0}\n", command.Description);
+				builder.AppendFormat("Invocation:  {0}", command.SystemOnly ? "application only" : "user or application");
 
-				_builder.AppendFormat("    Parameter:     {0}\n", parameter.Name);
-				_builder.AppendFormat("    Description:   {0}\n", parameter.Description);
-				_builder.AppendFormat("    Type:          {0} (e.g., {1}, ...)", TypeRegistry.GetDescription(parameter.Type),
-									  String.Join(", ", TypeRegistry.GetExamples(parameter.Type)));
+				if (command.Parameters.Any())
+					builder.Append("\n\nParameters:\n");
 
-				if (parameter.Validators.Any())
-					_builder.AppendFormat("\n    Remarks:       {0}", String.Join("; ", parameter.Validators.Select(v => v.Description)));
+				var first = true;
+				foreach (var parameter in command.Parameters)
+				{
+					if (first)
+						first = false;
+					else
+						builder.Append("\n\n");
 
-				if (parameter.HasDefaultValue)
-					_builder.AppendFormat("\n    Default Value: {0}", TypeRegistry.ToString(parameter.DefaultValue));
+					builder.AppendFormat("    Parameter:     {0}\n", parameter.Name);
+					builder.AppendFormat("    Description:   {0}\n", parameter.Description);
+					builder.AppendFormat("    Type:          {0} (e.g., {1}, ...)", TypeRegistry.GetDescription(parameter.Type),
+						String.Join(", ", TypeRegistry.GetExamples(parameter.Type)));
+
+					if (parameter.Validators.Any())
+						builder.AppendFormat("\n    Remarks:       {0}", String.Join("; ", parameter.Validators.Select(v => v.Description)));
+
+					if (parameter.HasDefaultValue)
+						builder.AppendFormat("\n    Default Value: {0}", TypeRegistry.ToString(parameter.DefaultValue));
+				}
+
+				builder.Append("\n");
+				Log.Info(builder.ToString());
 			}
-
-			_builder.Append("\n");
-			Log.Info(_builder.ToString());
 		}
 
 		/// <summary>

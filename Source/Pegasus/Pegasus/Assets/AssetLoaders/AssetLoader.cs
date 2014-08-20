@@ -12,12 +12,12 @@
 		/// <summary>
 		///     Gets the type of the asset supported by the loader.
 		/// </summary>
-		public abstract byte AssetType { get; }
+		public byte AssetType { get; protected set; }
 
 		/// <summary>
 		///     Gets the name of the asset type supported by the loader.
 		/// </summary>
-		public abstract string AssetTypeName { get; }
+		public string AssetTypeName { get; protected set; }
 
 		/// <summary>
 		///     Loads the asset data into the given asset.

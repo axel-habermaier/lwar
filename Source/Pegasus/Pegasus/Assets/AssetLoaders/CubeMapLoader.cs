@@ -6,22 +6,15 @@
 	/// <summary>
 	///     Loads cube maps.
 	/// </summary>
-	public class CubeMapAssetLoader : TextureAssetLoader
+	public class CubeMapLoader : TextureLoader
 	{
 		/// <summary>
-		///     Gets the type of the asset supported by the loader.
+		///     Initializes a new instance.
 		/// </summary>
-		public override byte AssetType
+		public CubeMapLoader()
 		{
-			get { return (byte)Assets.AssetType.CubeMap; }
-		}
-
-		/// <summary>
-		///     Gets the name of the asset type supported by the loader.
-		/// </summary>
-		public override string AssetTypeName
-		{
-			get { return "Cube Map"; }
+			AssetType = (byte)Assets.AssetType.CubeMap;
+			AssetTypeName = "Cube Map";
 		}
 
 		/// <summary>

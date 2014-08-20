@@ -8,7 +8,7 @@
 	/// <summary>
 	///     Represents a player.
 	/// </summary>
-	public class Player : PooledNotifyPropertyChanged<Player>, IGenerationalIdentity
+	public class Player : OldPooledNotifyPropertyChanged<Player>, IGenerationalIdentity
 	{
 		/// <summary>
 		///     The number of deaths.

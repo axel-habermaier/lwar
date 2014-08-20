@@ -74,29 +74,31 @@
 		/// </summary>
 		private void OnListBindings()
 		{
-			var builder = new StringBuilder();
-			var bindingGroups = (from binding in _bindings
-								 group binding by binding.Command
-								 into bindingGroup
-								 orderby bindingGroup.Key
-								 select new { Command = bindingGroup.Key, Bindings = bindingGroup.ToArray() }).ToArray();
-
-			foreach (var group in bindingGroups)
+			using (var builder = ObjectPools.StringBuilders.Allocate())
 			{
-				builder.AppendFormat("\n'\\yellow{0}\\\0'", group.Command);
+				var bindingGroups = (from binding in _bindings
+									 group binding by binding.Command
+									 into bindingGroup
+									 orderby bindingGroup.Key
+									 select new { Command = bindingGroup.Key, Bindings = bindingGroup.ToArray() }).ToArray();
 
-				foreach (var binding in group.Bindings)
-					builder.AppendFormat("\n   on {0}", TypeRegistry.ToString(binding.Input.Trigger));
+				foreach (var group in bindingGroups)
+				{
+					builder.Object.AppendFormat("\n'\\yellow{0}\\\0'", group.Command);
+
+					foreach (var binding in group.Bindings)
+						builder.Object.AppendFormat("\n   on {0}", TypeRegistry.ToString(binding.Input.Trigger));
+				}
+
+				if (bindingGroups.Length == 0)
+				{
+					Log.Warn("There are no registered bindings.");
+					return;
+				}
+
+				builder.Object.Append("\n");
+				Log.Info("{0}", builder.Object);
 			}
-
-			if (bindingGroups.Length == 0)
-			{
-				Log.Warn("There are no registered bindings.");
-				return;
-			}
-
-			builder.Append("\n");
-			Log.Info("{0}", builder);
 		}
 
 		/// <summary>

@@ -21,11 +21,6 @@
 		private readonly byte[] _buffer = new byte[Specification.MaxPacketSize];
 
 		/// <summary>
-		///     The buffer reader that is used to read the discovery messages.
-		/// </summary>
-		private readonly BufferReader _bufferReader = new BufferReader();
-
-		/// <summary>
 		///     The list of known servers that have been discovered.
 		/// </summary>
 		private readonly List<ServerInfo> _knownServers = new List<ServerInfo>();
@@ -99,8 +94,11 @@
 				int size;
 				while (_multicastSocket.TryReceive(_buffer, out _serverEndPoint, out size))
 				{
-					using (_bufferReader.ReadFrom(_buffer, 0, size, Endianess.Big))
-						HandleDiscoveryMessage(new DiscoveryMessage(_bufferReader));
+					using (var reader = ObjectPools.BufferReaders.Allocate())
+					{
+						reader.Object.ReadFrom(_buffer, 0, size, Endianess.Big);
+						HandleDiscoveryMessage(new DiscoveryMessage(reader.Object));
+					}
 				}
 			}
 			catch (NetworkException e)

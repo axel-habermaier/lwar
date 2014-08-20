@@ -7,7 +7,7 @@ namespace Pegasus.Assets.AssetLoaders
 	/// <summary>
 	///     Loads texture assets.
 	/// </summary>
-	public abstract class TextureAssetLoader : AssetLoader
+	public abstract class TextureLoader : AssetLoader
 	{
 		/// <summary>
 		///     Loads the asset data into the given asset.

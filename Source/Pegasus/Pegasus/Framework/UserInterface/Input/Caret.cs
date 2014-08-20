@@ -89,7 +89,7 @@
 				Position = 0;
 			}
 
-			return TextString.Create(_textControl.Text);
+			return new TextString(_textControl.Text);
 		}
 
 		/// <summary>
@@ -221,7 +221,7 @@
 				var sourceString = text.SourceString.Remove(removalIndex, 1);
 				SetText(sourceString);
 
-				using (var updatedText = TextString.Create(sourceString))
+				using (var updatedText = new TextString(sourceString))
 				{
 					// Due to the deletion, more characters might now be visible and we have to adjust the caret position accordingly. To do that,
 					// we calculate the new text position for the removed index and use the delta to adjust the caret

@@ -6,6 +6,7 @@
 	using System.Threading.Tasks;
 	using Platform;
 	using Platform.Logging;
+	using Platform.Memory;
 	using Scripting;
 	using UserInterface;
 	using UserInterface.ViewModels;
@@ -73,6 +74,10 @@
 
 					logFile.WriteToFile(force: true);
 					NativeLibrary.ShowMessageBox(appName + " Fatal Error", message);
+				}
+				finally
+				{
+					ObjectPools.Dispose();
 				}
 			}
 		}

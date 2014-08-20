@@ -8,7 +8,7 @@
 	/// <summary>
 	///     Wraps a byte buffer, providing methods for reading fundamental data types from the buffer.
 	/// </summary>
-	public class BufferReader : IDisposable
+	public class BufferReader
 	{
 		/// <summary>
 		///     The buffer from which the data is read.
@@ -69,24 +69,14 @@
 		}
 
 		/// <summary>
-		///     Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		public void Dispose()
-		{
-			_pointer.SafeDispose();
-			_pointer = new BufferPointer();
-			_buffer = new ArraySegment<byte>();
-		}
-
-		/// <summary>
 		///     Reads from the given buffer. The valid data of the buffer can be found within the
 		///     range [0, buffer.Length).
 		/// </summary>
 		/// <param name="buffer">The buffer from which the data should be read.</param>
 		/// <param name="endianess">Specifies the endianess of the buffer.</param>
-		public BufferReader ReadFrom(byte[] buffer, Endianess endianess = Endianess.Little)
+		public void ReadFrom(byte[] buffer, Endianess endianess = Endianess.Little)
 		{
-			return ReadFrom(new ArraySegment<byte>(buffer, 0, buffer.Length), endianess);
+			ReadFrom(new ArraySegment<byte>(buffer, 0, buffer.Length), endianess);
 		}
 
 		/// <summary>
@@ -97,9 +87,9 @@
 		/// <param name="offset">The offset to the first valid byte in the buffer.</param>
 		/// <param name="length">The length of the buffer in bytes.</param>
 		/// <param name="endianess">Specifies the endianess of the buffer.</param>
-		public BufferReader ReadFrom(byte[] buffer, int offset, int length, Endianess endianess = Endianess.Little)
+		public void ReadFrom(byte[] buffer, int offset, int length, Endianess endianess = Endianess.Little)
 		{
-			return ReadFrom(new ArraySegment<byte>(buffer, offset, length), endianess);
+			ReadFrom(new ArraySegment<byte>(buffer, offset, length), endianess);
 		}
 
 		/// <summary>
@@ -108,7 +98,7 @@
 		/// </summary>
 		/// <param name="buffer">The buffer from which the data should be read.</param>
 		/// <param name="endianess">Specifies the endianess of the buffer.</param>
-		public BufferReader ReadFrom(ArraySegment<byte> buffer, Endianess endianess = Endianess.Little)
+		public void ReadFrom(ArraySegment<byte> buffer, Endianess endianess = Endianess.Little)
 		{
 			Assert.ArgumentNotNull(buffer.Array);
 			Assert.That(_buffer.Array == null, "The buffer reader is still used to read from another buffer.");
@@ -116,8 +106,6 @@
 			_endianess = endianess;
 			_buffer = buffer;
 			Reset();
-
-			return this;
 		}
 
 		/// <summary>
@@ -126,6 +114,16 @@
 		public void Reset()
 		{
 			_readPosition = _buffer.Offset;
+		}
+
+		/// <summary>
+		///     Frees all resources acquired by the buffer reader.
+		/// </summary>
+		public void Free()
+		{
+			_pointer.SafeDispose();
+			_pointer = new BufferPointer();
+			_buffer = new ArraySegment<byte>();
 		}
 
 		/// <summary>
@@ -155,6 +153,7 @@
 		[DebuggerHidden]
 		private void ValidateCanRead(int size)
 		{
+			Assert.NotNull(_buffer.Array, "No buffer has been set for reading.");
 			if (!CanRead(size))
 				throw new IndexOutOfRangeException("Attempted to read past the end of the buffer.");
 		}

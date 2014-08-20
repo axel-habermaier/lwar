@@ -38,7 +38,6 @@
 		/// <returns></returns>
 		public static TextToken Next(TextString text, int offset)
 		{
-			Assert.ArgumentNotNull(text);
 			Assert.ArgumentSatisfies(offset >= 0, "Out of bounds.");
 
 			if (offset >= text.Length)

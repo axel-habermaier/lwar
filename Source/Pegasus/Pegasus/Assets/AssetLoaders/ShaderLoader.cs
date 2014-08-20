@@ -9,7 +9,7 @@ namespace Pegasus.Assets.AssetLoaders
 	/// <summary>
 	///     Loads shader assets.
 	/// </summary>
-	public abstract class ShaderAssetLoader : AssetLoader
+	public abstract class ShaderLoader : AssetLoader
 	{
 		/// <summary>
 		///     Extracts the graphics API-dependent shader code from the buffer.

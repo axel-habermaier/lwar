@@ -2,7 +2,6 @@
 {
 	using System;
 	using System.Collections.Generic;
-	using System.Text;
 	using Memory;
 
 	/// <summary>
@@ -14,11 +13,6 @@
 		///     The number of log messages that must be queued before the messages are written to the file system.
 		/// </summary>
 		private const int BatchSize = 250;
-
-		/// <summary>
-		///     A cached string builder instance used when writing queued log entries.
-		/// </summary>
-		private readonly StringBuilder _builder = new StringBuilder(1024);
 
 		/// <summary>
 		///     The file the log is written to.
@@ -84,21 +78,23 @@
 		/// </summary>
 		private string GenerateLogEntryString()
 		{
-			_builder.Clear();
-
-			foreach (var entry in _logEntries)
+			using (var pooledBuilder = ObjectPools.StringBuilders.Allocate())
 			{
-				_builder.Append("[");
-				_builder.Append(entry.LogType.ToDisplayString());
-				_builder.Append("]   ");
-				_builder.Append(entry.Time.ToString("F4").PadLeft(9));
+				var builder = pooledBuilder.Object;
+				foreach (var entry in _logEntries)
+				{
+					builder.Append("[");
+					builder.Append(entry.LogType.ToDisplayString());
+					builder.Append("]   ");
+					builder.Append(entry.Time.ToString("F4").PadLeft(9));
 
-				_builder.Append("   ");
-				TextString.Write(_builder, entry.Message);
-				_builder.Append("\n");
+					builder.Append("   ");
+					TextString.Write(builder, entry.Message);
+					builder.Append("\n");
+				}
+
+				return builder.ToString();
 			}
-
-			return _builder.ToString();
 		}
 
 		/// <summary>

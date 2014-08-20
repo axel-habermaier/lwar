@@ -71,7 +71,7 @@
 		{
 			Assert.ArgumentNotNull(textString);
 
-			using (var text = TextString.Create(textString))
+			using (var text = new TextString(textString))
 				return MeasureWidth(text, 0, text.Length);
 		}
 
@@ -81,7 +81,6 @@
 		/// <param name="text">The text whose width should be computed.</param>
 		public int MeasureWidth(TextString text)
 		{
-			Assert.ArgumentNotNull(text);
 			return MeasureWidth(text, 0, text.Length);
 		}
 
@@ -95,7 +94,7 @@
 		{
 			Assert.ArgumentNotNull(textString);
 
-			using (var text = TextString.Create(textString))
+			using (var text = new TextString(textString))
 				return MeasureWidth(text, start, end);
 		}
 
@@ -107,7 +106,6 @@
 		/// <param name="end">The index of the first character that is not measured.</param>
 		public int MeasureWidth(TextString text, int start, int end)
 		{
-			Assert.ArgumentNotNull(text);
 			Assert.ArgumentSatisfies(start >= 0, "Out of bounds.");
 			Assert.ArgumentSatisfies(end <= text.Length, "Out of bounds.");
 			Assert.That(start <= end, "Start must be less than or equal to end.");
@@ -158,7 +156,6 @@
 		/// </param>
 		internal Rectangle GetGlyphArea(TextString text, int start, int index, ref Vector2i offset)
 		{
-			Assert.ArgumentNotNull(text);
 			Assert.ArgumentSatisfies(start >= 0, "Out of bounds.");
 			Assert.ArgumentSatisfies(start < text.Length, "Out of bounds.");
 			Assert.ArgumentSatisfies(index >= 0, "Out of bounds.");
@@ -189,7 +186,6 @@
 		/// <param name="quad">Returns the created quad.</param>
 		internal bool CreateGlyphQuad(TextString text, int index, ref Rectangle area, Color color, out Quad quad)
 		{
-			Assert.ArgumentNotNull(text);
 			Assert.ArgumentSatisfies(index < text.Length, "Out of bounds.");
 
 			// Spaces and new lines are invisible, so don't bother drawing them

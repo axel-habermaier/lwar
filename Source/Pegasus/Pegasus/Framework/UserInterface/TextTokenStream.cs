@@ -45,7 +45,6 @@
 			: this()
 		{
 			Assert.ArgumentNotNull(font);
-			Assert.ArgumentNotNull(text);
 			Assert.ArgumentSatisfies(maxLineWidth > 0, "Line width too small.");
 
 			_font = font;

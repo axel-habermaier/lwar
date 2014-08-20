@@ -393,7 +393,7 @@
 		/// <param name="position">The position of the text's top left corner.</param>
 		public void DrawText(Font font, string text, Color color, Vector2i position)
 		{
-			using (var textString = TextString.Create(text))
+			using (var textString = new TextString(text))
 				DrawText(font, textString, color, position);
 		}
 
@@ -407,7 +407,6 @@
 		public void DrawText(Font font, TextString text, Color color, Vector2i position)
 		{
 			Assert.ArgumentNotNull(font);
-			Assert.ArgumentNotNull(text);
 
 			if (text.IsWhitespaceOnly)
 				return;

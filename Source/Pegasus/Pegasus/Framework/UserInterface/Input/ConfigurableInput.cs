@@ -1,18 +1,13 @@
 namespace Pegasus.Framework.UserInterface.Input
 {
 	using System;
-	using System.Text;
+	using Platform.Memory;
 
 	/// <summary>
 	///     Represents a configurable input.
 	/// </summary>
 	public struct ConfigurableInput
 	{
-		/// <summary>
-		///     A cached string builder instance.
-		/// </summary>
-		private static readonly StringBuilder Builder = new StringBuilder();
-
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
@@ -86,26 +81,30 @@ namespace Pegasus.Framework.UserInterface.Input
 		/// </summary>
 		public override string ToString()
 		{
-			Builder.Clear();
-			Builder.Append("[");
+			using (var pooledBuilder = ObjectPools.StringBuilders.Allocate())
+			{
+				var builder = pooledBuilder.Object;
+				builder.Clear();
+				builder.Append("[");
 
-			if (Key != null)
-				Builder.Append("Key." + Key.Value);
+				if (Key != null)
+					builder.Append("Key." + Key.Value);
 
-			if (MouseButton != null)
-				Builder.Append("Mouse." + MouseButton.Value);
+				if (MouseButton != null)
+					builder.Append("Mouse." + MouseButton.Value);
 
-			if ((Modifiers & KeyModifiers.Alt) == KeyModifiers.Alt)
-				Builder.Append("+Alt");
+				if ((Modifiers & KeyModifiers.Alt) == KeyModifiers.Alt)
+					builder.Append("+Alt");
 
-			if ((Modifiers & KeyModifiers.Shift) == KeyModifiers.Shift)
-				Builder.Append("+Shift");
+				if ((Modifiers & KeyModifiers.Shift) == KeyModifiers.Shift)
+					builder.Append("+Shift");
 
-			if ((Modifiers & KeyModifiers.Control) == KeyModifiers.Control)
-				Builder.Append("+Control");
+				if ((Modifiers & KeyModifiers.Control) == KeyModifiers.Control)
+					builder.Append("+Control");
 
-			Builder.Append("]");
-			return Builder.ToString();
+				builder.Append("]");
+				return builder.ToString();
+			}
 		}
 	}
 }

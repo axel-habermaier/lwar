@@ -222,7 +222,7 @@
 			{
 				_numQuads = 0;
 
-				using (var text = TextString.Create(_arranged.Text))
+				using (var text = new TextString(_arranged.Text))
 				{
 					// Ensure that the quads list does not have to be resized by setting its capacity to the number of
 					// characters; however, this wastes some space as not all characters generate quads
@@ -260,7 +260,7 @@
 			var line = TextLine.Create();
 
 			// Initialize the token stream and get the first token
-			using (var text = TextString.Create(layoutInfo.Text))
+			using (var text = new TextString(layoutInfo.Text))
 			{
 				if (_characterAreas == null || text.Length > _characterAreas.Length)
 					_characterAreas = new Rectangle[text.Length];

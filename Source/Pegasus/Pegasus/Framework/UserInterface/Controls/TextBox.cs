@@ -240,7 +240,7 @@
 		/// </summary>
 		private int GetBeginningOfNextWord()
 		{
-			using (var text = TextString.Create(Text))
+			using (var text = new TextString(Text))
 			{
 				var encounteredWhitespace = false;
 				for (var i = _caret.Position; i < text.Length; ++i)
@@ -260,7 +260,7 @@
 		/// </summary>
 		private int GetBeginningOfPreviousWord()
 		{
-			using (var text = TextString.Create(Text))
+			using (var text = new TextString(Text))
 			{
 				var encounteredNonWhitespace = false;
 				for (var i = _caret.Position; i > 0; --i)
