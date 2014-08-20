@@ -1,4 +1,4 @@
-﻿namespace Lwar
+﻿namespace Lwar.Gameplay
 {
 	using System;
 	using System.Collections.Generic;

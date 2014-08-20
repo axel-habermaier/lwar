@@ -14,6 +14,11 @@
 	public sealed class PlayerList : DisposableObject, IEnumerable<Player>
 	{
 		/// <summary>
+		///     The game session  the player list belongs to.
+		/// </summary>
+		private readonly GameSession _gameSession;
+
+		/// <summary>
 		///     Maps generational identifiers to player instances.
 		/// </summary>
 		private readonly IdentifierMap<Player> _playerMap = new IdentifierMap<Player>();
@@ -22,11 +27,6 @@
 		///     The list of active players.
 		/// </summary>
 		private readonly DeferredList<Player> _players = new DeferredList<Player>(false);
-
-		/// <summary>
-		///     The game session  the player list belongs to.
-		/// </summary>
-		private GameSession _gameSession;
 
 		/// <summary>
 		///     Initializes a new instance.

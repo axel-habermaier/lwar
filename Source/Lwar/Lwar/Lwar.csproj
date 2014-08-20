@@ -260,7 +260,7 @@
     <Compile Include="Gameplay\Entities\Bullet.cs" />
     <Compile Include="Rendering\CameraManager.cs" />
     <Compile Include="Gameplay\IdentifierMap.cs" />
-    <Compile Include="DeferredList.cs" />
+    <Compile Include="Gameplay\DeferredList.cs" />
     <Compile Include="Gameplay\Entities\EntityType.cs" />
     <Compile Include="Gameplay\GameSession.cs" />
     <Compile Include="Gameplay\Identifier.cs" />
