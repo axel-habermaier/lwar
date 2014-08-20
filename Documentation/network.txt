@@ -42,7 +42,7 @@ Network-related constants
 	Server Player Id:				      0				The default player that represents the server
 	Angle Scale Factor				    100				Angles sent over the network are scaled by this factor
 	Max Packet Size: 				    512 bytes 		Including the packet and message headers
-	Packet Header Size:			 	     12 bytes	    
+	Packet Header Size:			 	      8 bytes	    
 	Reliable Message Header Size:	      5 bytes	    
 	Unreliable Message Header Size:	      5 byte	    
 	Max Player Name Length: 	 	     32 bytes 		

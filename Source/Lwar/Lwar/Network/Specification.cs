@@ -33,7 +33,7 @@
 		/// <summary>
 		///     The size of the packet header in bytes.
 		/// </summary>
-		public const int HeaderSize = 12;
+		public const int HeaderSize = 8;
 
 		/// <summary>
 		///     The maximum allowed number of concurrently active players.
