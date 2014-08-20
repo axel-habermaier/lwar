@@ -26,6 +26,11 @@
 		private readonly bool _asyncLoading;
 
 		/// <summary>
+		///     The buffer reader that is used to read the assets.
+		/// </summary>
+		private readonly BufferReader _bufferReader = new BufferReader();
+
+		/// <summary>
 		///     The graphics device that is used to load the assets.
 		/// </summary>
 		private readonly GraphicsDevice _graphicsDevice;
@@ -235,16 +240,16 @@
 		///     Loads the asset corresponding to the asset info object.
 		/// </summary>
 		/// <param name="info">The info object of the asset that should be loaded.</param>
-		private static void Load(AssetInfo info)
+		private void Load(AssetInfo info)
 		{
 			try
 			{
 				Log.Info("Loading {0} {1}...", Loaders[info.Type].AssetTypeName, GetAssetDisplayName(info));
 
-				using (var buffer = BufferReader.Create(FileSystem.ReadAllBytes(info.Path)))
+				using (_bufferReader.ReadFrom(FileSystem.ReadAllBytes(info.Path)))
 				{
-					AssetHeader.Validate(buffer, info.Type);
-					Loaders[info.Type].Load(buffer, info.Asset, info.Path);
+					AssetHeader.Validate(_bufferReader, info.Type);
+					Loaders[info.Type].Load(_bufferReader, info.Asset, info.Path);
 				}
 			}
 			catch (Exception e)

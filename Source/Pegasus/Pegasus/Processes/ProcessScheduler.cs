@@ -34,7 +34,7 @@
 			var process = new Process();
 			try
 			{
-				process.SetDescription(String.Format("{0}:{1}", path, line));
+				process.SetDescription("{0}:{1}", path, line);
 				process.Run(asyncAction);
 				_added.Add(process);
 				return process;
@@ -61,7 +61,7 @@
 			var process = new Process<TResult>();
 			try
 			{
-				process.SetDescription(String.Format("{0}:{1}", path, line));
+				process.SetDescription("{0}:{1}", path, line);
 				process.Run(asyncFunc);
 				_added.Add(process);
 				return process;

@@ -37,6 +37,11 @@
 		private readonly byte[] _buffer = new byte[Specification.MaxPacketSize];
 
 		/// <summary>
+		///     The buffer reader that is used to read the incoming messages.
+		/// </summary>
+		private readonly BufferReader _bufferReader = new BufferReader();
+
+		/// <summary>
 		///     The Udp socket that is used for the communication with the server.
 		/// </summary>
 		private readonly UdpSocket _socket;
@@ -153,10 +158,10 @@
 
 				while (_socket.TryReceive(_buffer, out sender, out receivedBytes))
 				{
-					using (var reader = BufferReader.Create(_buffer, 0, receivedBytes, Endianess.Big))
+					using (_bufferReader.ReadFrom(_buffer, 0, receivedBytes, Endianess.Big))
 					{
 						if (sender == ServerEndPoint)
-							HandlePacket(reader, messageQueue, deliveryManager);
+							HandlePacket(_bufferReader, messageQueue, deliveryManager);
 						else
 						{
 							Log.Warn("Received a packet from {0}, but expecting packets from {1} only. Packet was ignored.",

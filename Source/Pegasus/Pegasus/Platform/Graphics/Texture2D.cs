@@ -132,7 +132,7 @@
 			};
 
 			var buffer = new byte[] { 255, 255, 255, 255 };
-			using (var pointer = BufferPointer.Create(buffer))
+			using (var pointer = new BufferPointer(buffer))
 			{
 				var surfaces = new[]
 				{

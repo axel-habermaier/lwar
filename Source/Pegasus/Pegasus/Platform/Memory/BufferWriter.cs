@@ -8,7 +8,7 @@
 	/// <summary>
 	///     Wraps a byte buffer, providing methods for writing fundamental data types to the buffer.
 	/// </summary>
-	public class BufferWriter : PooledObject<BufferWriter>
+	public class BufferWriter : IDisposable
 	{
 		/// <summary>
 		///     The buffer to which the data is written.
@@ -34,39 +34,50 @@
 		}
 
 		/// <summary>
-		///     Creates a new instance. Data is therefore written to the buffer within the range [0, buffer.Length).
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
-		/// <param name="buffer">The buffer to which the data should be written.</param>
-		/// <param name="endianess">Specifies the endianess of the buffer.</param>
-		public static BufferWriter Create(byte[] buffer, Endianess endianess = Endianess.Little)
+		public void Dispose()
 		{
-			return Create(buffer, 0, buffer.Length, endianess);
+			_buffer = new ArraySegment<byte>();
 		}
 
 		/// <summary>
-		///     Creates a new instance. Data is therefore written to the buffer within the range [offset, offset + length).
+		///     Writes to the given buffer. Data is written to the buffer within the range [0, buffer.Length).
+		/// </summary>
+		/// <param name="buffer">The buffer to which the data should be written.</param>
+		/// <param name="endianess">Specifies the endianess of the buffer.</param>
+		public BufferWriter WriteTo(byte[] buffer, Endianess endianess = Endianess.Little)
+		{
+			return WriteTo(buffer, 0, buffer.Length, endianess);
+		}
+
+		/// <summary>
+		///     Writes to the given buffer. Data is written to the buffer within the range [offset, offset + length).
 		/// </summary>
 		/// <param name="buffer">The buffer to which the data should be written.</param>
 		/// <param name="offset"> The offset to the first byte of the buffer that should be written.</param>
 		/// <param name="length">The length of the buffer in bytes.</param>
 		/// <param name="endianess">Specifies the endianess of the buffer.</param>
-		public static BufferWriter Create(byte[] buffer, int offset, int length, Endianess endianess = Endianess.Little)
+		public BufferWriter WriteTo(byte[] buffer, int offset, int length, Endianess endianess = Endianess.Little)
 		{
-			return Create(new ArraySegment<byte>(buffer, offset, length), endianess);
+			return WriteTo(new ArraySegment<byte>(buffer, offset, length), endianess);
 		}
 
 		/// <summary>
-		///     Creates a new instance. Data is therefore written to the buffer within the range [offset, offset + length).
+		///     Writes to the given buffer. Data is written to the buffer within the range [offset, offset + length).
 		/// </summary>
 		/// <param name="buffer">The buffer to which the data should be written.</param>
 		/// <param name="endianess">Specifies the endianess of the buffer.</param>
-		public static BufferWriter Create(ArraySegment<byte> buffer, Endianess endianess = Endianess.Little)
+		public BufferWriter WriteTo(ArraySegment<byte> buffer, Endianess endianess = Endianess.Little)
 		{
-			var writer = GetInstance();
-			writer._endianess = endianess;
-			writer._buffer = buffer;
-			writer.Reset();
-			return writer;
+			Assert.ArgumentNotNull(buffer.Array);
+			Assert.That(_buffer.Array == null, "The buffer writer is still used to write to another buffer.");
+
+			_endianess = endianess;
+			_buffer = buffer;
+			Reset();
+
+			return this;
 		}
 
 		/// <summary>

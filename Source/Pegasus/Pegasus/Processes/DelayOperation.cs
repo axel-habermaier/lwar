@@ -50,7 +50,7 @@
 			var operation = GetInstance();
 			operation._clock = new Clock();
 			operation._time = time;
-			operation.SetDescription(String.Format("Delaying process for {0}ms.", time));
+			operation.SetDescription("Delaying process for {0}ms.", time);
 			operation.IsCompleted = false;
 			return operation;
 		}

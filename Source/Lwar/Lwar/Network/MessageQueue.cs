@@ -18,6 +18,11 @@
 		private static readonly Action<BufferWriter, Message> MessageSerializer = MessageSerialization.Serialize;
 
 		/// <summary>
+		///     The buffer writer that is used to write the messages to a buffer that can be sent over the network.
+		/// </summary>
+		private readonly BufferWriter _bufferWriter = new BufferWriter();
+
+		/// <summary>
 		///     The delivery manager that is used to enforce the message delivery constraints.
 		/// </summary>
 		private readonly DeliveryManager _deliveryManager;
@@ -73,16 +78,16 @@
 			Assert.ArgumentNotNull(buffer);
 			RemoveAckedMessages();
 
-			using (var writer = BufferWriter.Create(buffer, Endianess.Big))
+			using (_bufferWriter.WriteTo(buffer, Endianess.Big))
 			{
-				_deliveryManager.WriteHeader(writer);
+				_deliveryManager.WriteHeader(_bufferWriter);
 
-				AddMessages(_reliableMessages, writer);
-				AddMessages(_unreliableMessages, writer);
+				AddMessages(_reliableMessages, _bufferWriter);
+				AddMessages(_unreliableMessages, _bufferWriter);
 
 				_unreliableMessages.Clear();
 
-				return writer.Count;
+				return _bufferWriter.Count;
 			}
 		}
 

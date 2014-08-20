@@ -186,12 +186,8 @@
 				return;
 
 			// Check if we've exceeded the maximum length
-			if (textBox.MaxLength > 0)
-			{
-				using (var text = TextString.Create(textBox.Text))
-					if (text.Length >= textBox.MaxLength)
-						return;
-			}
+			if (textBox.MaxLength > 0 && textBox.Text.Length >= textBox.MaxLength)
+				return;
 
 			textBox._caret.InsertCharacter(e.Character);
 			e.Handled = true;

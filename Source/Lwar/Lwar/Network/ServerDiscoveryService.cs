@@ -21,9 +21,9 @@
 		private readonly byte[] _buffer = new byte[Specification.MaxPacketSize];
 
 		/// <summary>
-		///     Indicates whether the initialization of the service failed.
+		///     The buffer reader that is used to read the discovery messages.
 		/// </summary>
-		private  bool _isFaulted;
+		private readonly BufferReader _bufferReader = new BufferReader();
 
 		/// <summary>
 		///     The list of known servers that have been discovered.
@@ -34,6 +34,11 @@
 		///     The socket that is used to receive discovery messages.
 		/// </summary>
 		private readonly UdpSocket _multicastSocket = new UdpSocket();
+
+		/// <summary>
+		///     Indicates whether the initialization of the service failed.
+		/// </summary>
+		private bool _isFaulted;
 
 		/// <summary>
 		///     The end point of the server that sent the discovery message.
@@ -94,8 +99,8 @@
 				int size;
 				while (_multicastSocket.TryReceive(_buffer, out _serverEndPoint, out size))
 				{
-					using (var reader = BufferReader.Create(_buffer, 0, size, Endianess.Big))
-						HandleDiscoveryMessage(new DiscoveryMessage(reader));
+					using (_bufferReader.ReadFrom(_buffer, 0, size, Endianess.Big))
+						HandleDiscoveryMessage(new DiscoveryMessage(_bufferReader));
 				}
 			}
 			catch (NetworkException e)

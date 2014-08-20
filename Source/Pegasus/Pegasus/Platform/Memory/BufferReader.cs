@@ -8,7 +8,7 @@
 	/// <summary>
 	///     Wraps a byte buffer, providing methods for reading fundamental data types from the buffer.
 	/// </summary>
-	public class BufferReader : PooledObject<BufferReader>
+	public class BufferReader : IDisposable
 	{
 		/// <summary>
 		///     The buffer from which the data is read.
@@ -61,59 +61,63 @@
 		{
 			get
 			{
-				if (_pointer == null)
-					_pointer = BufferPointer.Create(_buffer.Array, _buffer.Offset, _buffer.Count);
+				if (!_pointer.IsInitialized)
+					_pointer = new BufferPointer(_buffer.Array, _buffer.Offset, _buffer.Count);
 
 				return _pointer.Pointer + _readPosition;
 			}
 		}
 
 		/// <summary>
-		///     Invoked when the pooled instance is returned to the pool.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
-		protected override void OnReturning()
+		public void Dispose()
 		{
 			_pointer.SafeDispose();
-			_pointer = null;
+			_pointer = new BufferPointer();
+			_buffer = new ArraySegment<byte>();
 		}
 
 		/// <summary>
-		///     Creates a new instance. The valid data of the buffer can be found within the
+		///     Reads from the given buffer. The valid data of the buffer can be found within the
 		///     range [0, buffer.Length).
 		/// </summary>
 		/// <param name="buffer">The buffer from which the data should be read.</param>
 		/// <param name="endianess">Specifies the endianess of the buffer.</param>
-		public static BufferReader Create(byte[] buffer, Endianess endianess = Endianess.Little)
+		public BufferReader ReadFrom(byte[] buffer, Endianess endianess = Endianess.Little)
 		{
-			return Create(new ArraySegment<byte>(buffer, 0, buffer.Length), endianess);
+			return ReadFrom(new ArraySegment<byte>(buffer, 0, buffer.Length), endianess);
 		}
 
 		/// <summary>
-		///     Creates a new instance. The valid data of the buffer can be found within the
+		///     Reads from the given buffer. The valid data of the buffer can be found within the
 		///     range [offset, offset + length).
 		/// </summary>
 		/// <param name="buffer">The buffer from which the data should be read.</param>
 		/// <param name="offset">The offset to the first valid byte in the buffer.</param>
 		/// <param name="length">The length of the buffer in bytes.</param>
 		/// <param name="endianess">Specifies the endianess of the buffer.</param>
-		public static BufferReader Create(byte[] buffer, int offset, int length, Endianess endianess = Endianess.Little)
+		public BufferReader ReadFrom(byte[] buffer, int offset, int length, Endianess endianess = Endianess.Little)
 		{
-			return Create(new ArraySegment<byte>(buffer, offset, length), endianess);
+			return ReadFrom(new ArraySegment<byte>(buffer, offset, length), endianess);
 		}
 
 		/// <summary>
-		///     Creates a new instance. The valid data of the buffer can be found within the
+		///     Reads from the given buffer. The valid data of the buffer can be found within the
 		///     range [offset, offset + length).
 		/// </summary>
 		/// <param name="buffer">The buffer from which the data should be read.</param>
 		/// <param name="endianess">Specifies the endianess of the buffer.</param>
-		public static BufferReader Create(ArraySegment<byte> buffer, Endianess endianess = Endianess.Little)
+		public BufferReader ReadFrom(ArraySegment<byte> buffer, Endianess endianess = Endianess.Little)
 		{
-			var reader = GetInstance();
-			reader._endianess = endianess;
-			reader._buffer = buffer;
-			reader.Reset();
-			return reader;
+			Assert.ArgumentNotNull(buffer.Array);
+			Assert.That(_buffer.Array == null, "The buffer reader is still used to read from another buffer.");
+
+			_endianess = endianess;
+			_buffer = buffer;
+			Reset();
+
+			return this;
 		}
 
 		/// <summary>

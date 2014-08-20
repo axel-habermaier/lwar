@@ -6,11 +6,11 @@
 	mc:Ignorable="d"
 	IsHitTestVisible="false"
 	Foreground="White">
-	<StackPanel>
+	<StackPanel Width="100">
 		<StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-			<Border x:Name="Health"  Background="Green" Height="5" Width="50" />
-			<Border x:Name="Damage"  Background="Red" Height="5" Width="50" />
+			<Border x:Name="Health" Background="Green" Height="5" Width="50" />
+			<Border x:Name="Damage" Background="Red" Height="5" Width="50" />
 		</StackPanel>
-		<TextBlock x:Name="PlayerName" Text="Player" HorizontalAlignment="Center" />
+		<TextBlock x:Name="PlayerName" Margin="0,1,0,0" FontSize="12" Text="Player" HorizontalAlignment="Center" TextWrapping="Wrap" />
 	</StackPanel>
 </UserControl>
