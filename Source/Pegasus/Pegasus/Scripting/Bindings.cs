@@ -74,7 +74,8 @@
 		/// </summary>
 		private void OnListBindings()
 		{
-			using (var builder = ObjectPools.StringBuilders.Allocate())
+			StringBuilder builder;
+			using (StringBuilderPool.Allocate(out builder))
 			{
 				var bindingGroups = (from binding in _bindings
 									 group binding by binding.Command
@@ -84,10 +85,10 @@
 
 				foreach (var group in bindingGroups)
 				{
-					builder.Object.AppendFormat("\n'\\yellow{0}\\\0'", group.Command);
+					builder.AppendFormat("\n'\\yellow{0}\\\0'", group.Command);
 
 					foreach (var binding in group.Bindings)
-						builder.Object.AppendFormat("\n   on {0}", TypeRegistry.ToString(binding.Input.Trigger));
+						builder.AppendFormat("\n   on {0}", TypeRegistry.ToString(binding.Input.Trigger));
 				}
 
 				if (bindingGroups.Length == 0)
@@ -96,8 +97,8 @@
 					return;
 				}
 
-				builder.Object.Append("\n");
-				Log.Info("{0}", builder.Object);
+				builder.Append("\n");
+				Log.Info("{0}", builder);
 			}
 		}
 

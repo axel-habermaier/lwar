@@ -24,12 +24,21 @@
 		private readonly DeferredList<Player> _players = new DeferredList<Player>(false);
 
 		/// <summary>
+		///     The game session  the player list belongs to.
+		/// </summary>
+		private GameSession _gameSession;
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		public PlayerList()
+		/// <param name="gameSession">The game session  the player list belongs to.</param>
+		public PlayerList(GameSession gameSession)
 		{
-			ServerPlayer = Player.Create(Specification.ServerPlayerIdentifier, "<Server>");
+			Assert.ArgumentNotNull(gameSession);
+
+			ServerPlayer = Player.Create(gameSession, Specification.ServerPlayerIdentifier, "<Server>");
 			_playerMap.Add(ServerPlayer);
+			_gameSession = gameSession;
 		}
 
 		/// <summary>
@@ -83,7 +92,7 @@
 			Assert.That(_playerMap[playerId] == null, "A player with the same id has already been added.");
 			Assert.That(!isLocalPlayer || LocalPlayer == null, "Cannot change the local player.");
 
-			var player = Player.Create(playerId, name);
+			var player = Player.Create(_gameSession, playerId, name);
 			_players.Add(player);
 			_playerMap.Add(player);
 

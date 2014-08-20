@@ -77,7 +77,7 @@
 				}
 				finally
 				{
-					ObjectPools.Dispose();
+					ObjectPool.DisposeGlobalPools();
 				}
 			}
 		}

@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Linq;
+	using System.Text;
 	using Platform;
 	using Platform.Logging;
 	using Platform.Memory;
@@ -275,13 +276,14 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			using (var builder = ObjectPools.StringBuilders.Allocate())
+			StringBuilder builder;
+			using (StringBuilderPool.Allocate(out builder))
 			{
 				for (var i = 0; i < _numHistory; ++i)
-					builder.Object.Append(_history[i]).Append("\n");
+					builder.Append(_history[i]).Append("\n");
 
 				var file = new AppFile(HistoryFileName);
-				file.Write(builder.Object.ToString(),
+				file.Write(builder.ToString(),
 					e => Log.Error("Failed to persist console history in '{0}/{1}': {2}", FileSystem.UserDirectory, file.FileName, e.Message));
 			}
 		}

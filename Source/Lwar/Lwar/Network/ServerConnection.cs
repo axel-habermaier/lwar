@@ -155,11 +155,8 @@
 				{
 					if (sender == ServerEndPoint)
 					{
-						using (var reader = ObjectPools.BufferReaders.Allocate())
-						{
-							reader.Object.ReadFrom(_buffer, 0, receivedBytes, Endianess.Big);
-							HandlePacket(reader.Object, messageQueue, deliveryManager);
-						}
+						using (var reader = BufferReader.Create(_buffer, 0, receivedBytes, Endianess.Big))
+							HandlePacket(reader, messageQueue, deliveryManager);
 					}
 					else
 					{

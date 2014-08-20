@@ -45,7 +45,20 @@
 			ArgumentNotNull(obj);
 
 			if (obj.IsDisposed)
-				throw new PegasusException(obj.GetType().FullName);
+				throw new PegasusException("The object of type '{0}' has already been disposed.", obj.GetType().FullName);
+		}
+
+		/// <summary>
+		///     Throws a PegasusException if the given object has currently pooled and not in use.
+		/// </summary>
+		/// <param name="obj">The object that should be checked.</param>
+		[Conditional("DEBUG"), DebuggerHidden]
+		public static void NotPooled(PooledObject obj)
+		{
+			ArgumentNotNull(obj);
+
+			if (!obj.IsAvailable)
+				throw new PegasusException("The object of type '{0}' is currently pooled.", obj.GetType().FullName);
 		}
 	}
 }

@@ -1,6 +1,7 @@
 ﻿namespace Lwar.Gameplay.Entities
 {
 	using System;
+	using Pegasus;
 	using Pegasus.Math;
 
 	/// <summary>
@@ -27,10 +28,13 @@
 		/// <summary>
 		///     Creates a new instance.
 		/// </summary>
+		/// <param name="gameSession">The game session the instance should be created for.</param>
 		/// <param name="id">The generational identifier of the shockwave.</param>
-		public static Shockwave Create(Identifier id)
+		public static Shockwave Create(GameSession gameSession, Identifier id)
 		{
-			var shockwave = GetInstance();
+			Assert.ArgumentNotNull(gameSession);
+
+			var shockwave = gameSession.Allocate<Shockwave>();
 			shockwave.Identifier = id;
 			return shockwave;
 		}

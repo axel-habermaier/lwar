@@ -1,6 +1,7 @@
 ﻿namespace Lwar.Gameplay
 {
 	using System;
+	using System.Collections.Generic;
 	using Actors;
 	using Entities;
 	using Network;
@@ -25,6 +26,11 @@
 		private readonly AssetsManager _assets;
 
 		/// <summary>
+		///     The object pools that are used to allocate gameplay objects.
+		/// </summary>
+		private readonly List<ObjectPool> _objectPools = new List<ObjectPool>();
+
+		/// <summary>
 		///     The clock that is used for time measurements.
 		/// </summary>
 		private Clock _clock = new Clock();
@@ -43,7 +49,7 @@
 
 			Actors = new ActorList(this, RenderContext);
 			Entities = new EntityList(this, RenderContext);
-			Players = new PlayerList();
+			Players = new PlayerList(this);
 			RootTransform = new Transformation();
 			EventMessages = new EventMessageList(this);
 		}
@@ -128,6 +134,27 @@
 		///     The input manager that handles the user input for the game session.
 		/// </summary>
 		public InputManager InputManager { get; private set; }
+
+		/// <summary>
+		///     Allocates an instance of the given type in the appropriate object pool.
+		/// </summary>
+		/// <typeparam name="T">The type of the object that should be allocated.</typeparam>
+		public T Allocate<T>()
+			where T : class, IPooledObject, new()
+		{
+			// Not using Linq for performance reasons
+			foreach (var pool in _objectPools)
+			{
+				var typedPool = pool as ObjectPool<T>;
+				if (typedPool != null)
+					return typedPool.Allocate();
+			}
+
+			var newPool = new ObjectPool<T>();
+			_objectPools.Add(newPool);
+
+			return newPool.Allocate();
+		}
 
 		/// <summary>
 		///     Loads the game session and syncs the game state with the server. Returns true to indicate that loading has completed.
@@ -217,13 +244,13 @@
 			Actors.SafeDispose();
 			Entities.SafeDispose();
 			Players.SafeDispose();
-			EventMessages.SafeDispose();
 			CameraManager.SafeDispose();
 			InputManager.SafeDispose();
 			NetworkSession.SafeDispose();
 			RenderContext.SafeDispose();
 
 			_assets.SafeDispose();
+			_objectPools.SafeDisposeAll();
 		}
 	}
 }

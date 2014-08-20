@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Text;
 	using Memory;
 
 	/// <summary>
@@ -78,9 +79,9 @@
 		/// </summary>
 		private string GenerateLogEntryString()
 		{
-			using (var pooledBuilder = ObjectPools.StringBuilders.Allocate())
+			StringBuilder builder;
+			using (StringBuilderPool.Allocate(out builder))
 			{
-				var builder = pooledBuilder.Object;
 				foreach (var entry in _logEntries)
 				{
 					builder.Append("[");

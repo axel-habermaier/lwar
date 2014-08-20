@@ -31,13 +31,15 @@
 		/// <summary>
 		///     Creates a new instance.
 		/// </summary>
+		/// <param name="gameSession">The game session the instance should be created for.</param>
 		/// <param name="id">The generational identifier of the planet.</param>
 		/// <param name="entityTemplate">The template defining the planet's type.</param>
-		public static Planet Create(Identifier id, EntityTemplate entityTemplate)
+		public static Planet Create(GameSession gameSession, Identifier id, EntityTemplate entityTemplate)
 		{
+			Assert.ArgumentNotNull(gameSession);
 			Assert.ArgumentNotNull(entityTemplate);
 
-			var planet = GetInstance();
+			var planet = gameSession.Allocate<Planet>();
 			planet.Identifier = id;
 			planet._rotationSpeed = Random.Next(30, 50) / 200.0f;
 			planet.Template = entityTemplate;

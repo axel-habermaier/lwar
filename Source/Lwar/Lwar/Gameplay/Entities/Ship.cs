@@ -39,7 +39,7 @@
 		/// <param name="impact">The position of the impact.</param>
 		public override void CollidedWith(IEntity other, Vector2 impact)
 		{
-			GameSession.Actors.Add(Shield.Create(this, impact));
+			GameSession.Actors.Add(Shield.Create(GameSession, this, impact));
 		}
 
 		/// <summary>
@@ -48,7 +48,7 @@
 		/// <remarks>This method is not called when the game session is shut down.</remarks>
 		protected override void OnRemoved()
 		{
-			GameSession.Actors.Add(Explosion.Create(Position));
+			GameSession.Actors.Add(Explosion.Create(GameSession, Position));
 
 			if (Player.Ship == this)
 				Player.Ship = null;
@@ -57,13 +57,15 @@
 		/// <summary>
 		///     Creates a new instance.
 		/// </summary>
+		/// <param name="gameSession">The game session the instance should be created for.</param>
 		/// <param name="id">The generational identifier of the ship.</param>
 		/// <param name="player">The player the ship belongs to.</param>
-		public static Ship Create(Identifier id, Player player)
+		public static Ship Create(GameSession gameSession, Identifier id, Player player)
 		{
+			Assert.ArgumentNotNull(gameSession);
 			Assert.ArgumentNotNull(player);
 
-			var ship = GetInstance();
+			var ship = gameSession.Allocate<Ship>();
 			ship.Identifier = id;
 			ship.Player = player;
 			ship.Template = EntityTemplates.Ship;

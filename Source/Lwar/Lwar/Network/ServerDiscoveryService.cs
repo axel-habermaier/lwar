@@ -94,11 +94,8 @@
 				int size;
 				while (_multicastSocket.TryReceive(_buffer, out _serverEndPoint, out size))
 				{
-					using (var reader = ObjectPools.BufferReaders.Allocate())
-					{
-						reader.Object.ReadFrom(_buffer, 0, size, Endianess.Big);
-						HandleDiscoveryMessage(new DiscoveryMessage(reader.Object));
-					}
+					using (var reader = BufferReader.Create(_buffer, 0, size, Endianess.Big))
+						HandleDiscoveryMessage(new DiscoveryMessage(reader));
 				}
 			}
 			catch (NetworkException e)

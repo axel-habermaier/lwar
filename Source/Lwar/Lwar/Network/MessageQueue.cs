@@ -73,17 +73,16 @@
 			Assert.ArgumentNotNull(buffer);
 			RemoveAckedMessages();
 
-			using (var writer = ObjectPools.BufferWriters.Allocate())
+			using (var writer = BufferWriter.Create(buffer, Endianess.Big))
 			{
-				writer.Object.WriteTo(buffer, Endianess.Big);
-				_deliveryManager.WriteHeader(writer.Object);
+				_deliveryManager.WriteHeader(writer);
 
-				AddMessages(_reliableMessages, writer.Object);
-				AddMessages(_unreliableMessages, writer.Object);
+				AddMessages(_reliableMessages, writer);
+				AddMessages(_unreliableMessages, writer);
 
 				_unreliableMessages.Clear();
 
-				return writer.Object.Count;
+				return writer.Count;
 			}
 		}
 

@@ -1,6 +1,7 @@
 ﻿namespace Lwar.Gameplay.Entities
 {
 	using System;
+	using Pegasus;
 
 	/// <summary>
 	///     Represents a phaser.
@@ -10,10 +11,13 @@
 		/// <summary>
 		///     Creates a new instance.
 		/// </summary>
+		/// <param name="gameSession">The game session the instance should be created for.</param>
 		/// <param name="id">The generational identifier of the phaser.</param>
-		public static Phaser Create(Identifier id)
+		public static Phaser Create(GameSession gameSession, Identifier id)
 		{
-			var phaser = GetInstance();
+			Assert.ArgumentNotNull(gameSession);
+
+			var phaser = gameSession.Allocate<Phaser>();
 			phaser.Identifier = id;
 			return phaser;
 		}

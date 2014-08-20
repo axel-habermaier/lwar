@@ -3,6 +3,7 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System.Text;
 	using Framework;
 	using Parsing;
 	using Platform;
@@ -74,11 +75,11 @@
 		/// <summary>
 		///     Prints information about the application.
 		/// </summary>
-		private void OnPrintAppInfo()
+		private static void OnPrintAppInfo()
 		{
-			using (var pooledBuilder = ObjectPools.StringBuilders.Allocate())
+			StringBuilder builder;
+			using (StringBuilderPool.Allocate(out builder))
 			{
-				var builder = pooledBuilder.Object;
 				builder.AppendFormat("\nApplication Name:     {0}\n", Application.Current.Name);
 				builder.AppendFormat("Operating System:     {0}\n", PlatformInfo.Platform);
 				builder.AppendFormat("CPU Architecture:     {0}\n", IntPtr.Size == 8 ? "x64" : "x86");
@@ -183,9 +184,9 @@
 				return;
 			}
 
-			using (var pooledBuilder = ObjectPools.StringBuilders.Allocate())
+			StringBuilder builder;
+			using (StringBuilderPool.Allocate(out builder))
 			{
-				var builder = pooledBuilder.Object;
 				builder.Append("\n");
 
 				foreach (var element in elements)

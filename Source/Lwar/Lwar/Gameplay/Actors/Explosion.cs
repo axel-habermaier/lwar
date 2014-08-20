@@ -1,6 +1,7 @@
 ﻿namespace Lwar.Gameplay.Actors
 {
 	using System;
+	using Pegasus;
 	using Pegasus.Math;
 	using Pegasus.Platform;
 
@@ -55,10 +56,13 @@
 		/// <summary>
 		///     Creates a new instance.
 		/// </summary>
+		/// <param name="gameSession">The game session the instance should be created for.</param>
 		/// <param name="position">The position of the explosion.</param>
-		public static Explosion Create(Vector2 position)
+		public static Explosion Create(GameSession gameSession, Vector2 position)
 		{
-			var explosion = GetInstance();
+			Assert.ArgumentNotNull(gameSession);
+
+			var explosion = gameSession.Allocate<Explosion>();
 			explosion._position = position;
 			explosion._remainingTime = PlayTime;
 			return explosion;

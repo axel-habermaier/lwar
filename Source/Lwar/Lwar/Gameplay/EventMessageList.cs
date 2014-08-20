@@ -7,14 +7,13 @@
 	using Pegasus.Framework;
 	using Pegasus.Platform;
 	using Pegasus.Platform.Logging;
-	using Pegasus.Platform.Memory;
 	using Scripting;
 
 	/// <summary>
 	///     Stores event messages such as 'X killed Y' or received chat messages. Messages are removed from the list
 	///     automatically.
 	/// </summary>
-	public class EventMessageList : DisposableObject
+	public class EventMessageList
 	{
 		/// <summary>
 		///     The maximum number of event messages that can be displayed simultaneously.
@@ -63,11 +62,9 @@
 		{
 			Assert.ArgumentNotNullOrWhitespace(chatMessage);
 
-			var message = EventMessage.Create(EventType.Chat, chatMessage);
+			var message = new EventMessage(EventType.Chat, chatMessage);
 			if (TryGetPlayer(player, out message.Player))
 				Add(message);
-			else
-				message.SafeDispose();
 		}
 
 		/// <summary>
@@ -76,11 +73,9 @@
 		/// <param name="player">The identifier of the player that has joined the session.</param>
 		public void AddJoinMessage(Identifier player)
 		{
-			var message = EventMessage.Create(EventType.Join);
+			var message = new EventMessage(EventType.Join);
 			if (TryGetPlayer(player, out message.Player))
 				Add(message);
-			else
-				message.SafeDispose();
 		}
 
 		/// <summary>
@@ -89,11 +84,9 @@
 		/// <param name="player">The identifier of the player that has left the session.</param>
 		public void AddLeaveMessage(Identifier player)
 		{
-			var message = EventMessage.Create(EventType.Leave);
+			var message = new EventMessage(EventType.Leave);
 			if (TryGetPlayer(player, out message.Player))
 				Add(message);
-			else
-				message.SafeDispose();
 		}
 
 		/// <summary>
@@ -103,11 +96,9 @@
 		/// <param name="reason">The reason for the kick.</param>
 		public void AddKickedMessage(Identifier player, string reason)
 		{
-			var message = EventMessage.Create(EventType.Kicked, reason);
+			var message = new EventMessage(EventType.Kicked, reason);
 			if (TryGetPlayer(player, out message.Player))
 				Add(message);
-			else
-				message.SafeDispose();
 		}
 
 		/// <summary>
@@ -116,11 +107,9 @@
 		/// <param name="player">The identifier of the player that has timed out.</param>
 		public void AddTimeoutMessage(Identifier player)
 		{
-			var message = EventMessage.Create(EventType.Timeout);
+			var message = new EventMessage(EventType.Timeout);
 			if (TryGetPlayer(player, out message.Player))
 				Add(message);
-			else
-				message.SafeDispose();
 		}
 
 		/// <summary>
@@ -138,11 +127,9 @@
 			else
 				type = EventType.Kill;
 
-			var message = EventMessage.Create(type);
+			var message = new EventMessage(type);
 			if (TryGetPlayer(killer, out message.Player) && TryGetPlayer(victim, out message.Vicitim))
 				Add(message);
-			else
-				message.SafeDispose();
 		}
 
 		/// <summary>
@@ -154,16 +141,12 @@
 		{
 			Assert.ArgumentNotNullOrWhitespace(name);
 
-			var message = EventMessage.Create(EventType.Name, name);
+			var message = new EventMessage(EventType.Name, name);
 			if (TryGetPlayer(player, out message.Player))
 			{
 				if (!String.IsNullOrWhiteSpace(message.Player.Name) && message.Player.Name != name)
 					Add(message);
-				else
-					message.SafeDispose();
 			}
-			else
-				message.SafeDispose();
 
 			Assert.That(!String.IsNullOrWhiteSpace(message.Player.Name), "The player's name is unknown.");
 		}
@@ -191,7 +174,6 @@
 		/// </summary>
 		public void Clear()
 		{
-			_messages.SafeDisposeAll();
 			_messages.Clear();
 		}
 
@@ -230,16 +212,7 @@
 		/// <param name="index">The zero-based index of the event message that should be removed.</param>
 		private void RemoveAt(int index)
 		{
-			_messages[index].SafeDispose();
 			_messages.RemoveAt(index);
-		}
-
-		/// <summary>
-		///     Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		protected override void OnDisposing()
-		{
-			_messages.SafeDisposeAll();
 		}
 	}
 }

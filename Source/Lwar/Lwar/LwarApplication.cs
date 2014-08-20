@@ -71,6 +71,8 @@
 		{
 			if (_viewModelRoot.Child is LoadingViewModel || _viewModelRoot.Child is GameSessionViewModel)
 				_viewModelRoot.ReplaceChild(new MainMenuViewModel());
+
+			GC.Collect(2, GCCollectionMode.Forced);
 		}
 
 		/// <summary>

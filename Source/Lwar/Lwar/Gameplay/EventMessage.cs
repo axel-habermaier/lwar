@@ -1,12 +1,11 @@
 ﻿namespace Lwar.Gameplay
 {
 	using System;
-	using Pegasus.Platform.Memory;
 
 	/// <summary>
 	///     Represents an event message. Valid fields depend on the type of the events.
 	/// </summary>
-	public class EventMessage : OldPooledObject<EventMessage>
+	public struct EventMessage
 	{
 		/// <summary>
 		///     The creation time of the message.
@@ -29,6 +28,18 @@
 		public Player Vicitim;
 
 		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		/// <param name="type">The type of the event message.</param>
+		/// <param name="message">The chat message, new player name, or kick reason.</param>
+		public EventMessage(EventType type, string message = null)
+			: this()
+		{
+			Type = type;
+			Message = message;
+		}
+
+		/// <summary>
 		///     The type of the event message.
 		/// </summary>
 		public EventType Type { get; private set; }
@@ -37,19 +48,6 @@
 		///     The display string of the event message.
 		/// </summary>
 		public string DisplayString { get; private set; }
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		/// <param name="type">The type of the event message.</param>
-		/// <param name="message">The chat message, new player name, or kick reason.</param>
-		public static EventMessage Create(EventType type, string message = null)
-		{
-			var eventMessage = GetInstance();
-			eventMessage.Type = type;
-			eventMessage.Message = message;
-			return eventMessage;
-		}
 
 		/// <summary>
 		///     Generates the display string for the event message.

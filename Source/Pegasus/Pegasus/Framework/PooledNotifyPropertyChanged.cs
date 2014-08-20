@@ -3,15 +3,13 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Runtime.CompilerServices;
-	using Platform;
 	using Platform.Memory;
 
 	/// <summary>
 	///     A base class for pooled classes requiring property change notifications.
 	/// </summary>
 	[UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
-	public abstract class OldPooledNotifyPropertyChanged<T> : OldPooledObject<T>, INotifyPropertyChanged
-		where T : OldPooledObject<T>, new()
+	public abstract class PooledNotifyPropertyChanged : PooledObject, INotifyPropertyChanged
 	{
 		/// <summary>
 		///     Raised when a property of the view model has been changed.

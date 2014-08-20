@@ -81,9 +81,7 @@
 		/// <param name="max">The upper bound of the clamped interval.</param>
 		public static double Clamp(double value, double min, double max)
 		{
-			Assert.ArgumentSatisfies(min <= max, "Upper bound is smaller than lower bound.");
-
-			if (value < min)
+			if (value < min || max <= min)
 				return min;
 
 			if (value > max)
@@ -100,9 +98,7 @@
 		/// <param name="max">The upper bound of the clamped interval.</param>
 		public static float Clamp(float value, float min, float max)
 		{
-			Assert.ArgumentSatisfies(min <= max, "Upper bound is smaller than lower bound.");
-
-			if (value < min)
+			if (value < min || max <= min)
 				return min;
 
 			if (value > max)
@@ -119,9 +115,7 @@
 		/// <param name="max">The upper bound of the clamped interval.</param>
 		public static int Clamp(int value, int min, int max)
 		{
-			Assert.ArgumentSatisfies(min <= max, "Upper bound is smaller than lower bound.");
-
-			if (value < min)
+			if (value < min || max <= min)
 				return min;
 
 			if (value > max)
@@ -138,9 +132,7 @@
 		/// <param name="max">The upper bound of the clamped interval.</param>
 		public static Fixed8 Clamp(Fixed8 value, Fixed8 min, Fixed8 max)
 		{
-			Assert.ArgumentSatisfies(min <= max, "Upper bound is smaller than lower bound.");
-
-			if (value < min)
+			if (value < min || max <= min)
 				return min;
 
 			if (value > max)
@@ -157,9 +149,7 @@
 		/// <param name="max">The upper bound of the clamped interval.</param>
 		public static Fixed16 Clamp(Fixed16 value, Fixed16 min, Fixed16 max)
 		{
-			Assert.ArgumentSatisfies(min <= max, "Upper bound is smaller than lower bound.");
-
-			if (value < min)
+			if (value < min || max <= min)
 				return min;
 
 			if (value > max)

@@ -118,37 +118,37 @@
 			switch (type)
 			{
 				case EntityType.Ship:
-					entity = Ship.Create(entityId, player);
+					entity = Ship.Create(_gameSession, entityId, player);
 					break;
 				case EntityType.Earth:
-					entity = Planet.Create(entityId, EntityTemplates.Earth);
+					entity = Planet.Create(_gameSession, entityId, EntityTemplates.Earth);
 					break;
 				case EntityType.Mars:
-					entity = Planet.Create(entityId, EntityTemplates.Mars);
+					entity = Planet.Create(_gameSession, entityId, EntityTemplates.Mars);
 					break;
 				case EntityType.Moon:
-					entity = Planet.Create(entityId, EntityTemplates.Moon);
+					entity = Planet.Create(_gameSession, entityId, EntityTemplates.Moon);
 					break;
 				case EntityType.Jupiter:
-					entity = Planet.Create(entityId, EntityTemplates.Jupiter);
+					entity = Planet.Create(_gameSession, entityId, EntityTemplates.Jupiter);
 					break;
 				case EntityType.Sun:
-					entity = Sun.Create(entityId);
+					entity = Sun.Create(_gameSession, entityId);
 					break;
 				case EntityType.Bullet:
-					entity = Bullet.Create(entityId);
+					entity = Bullet.Create(_gameSession, entityId);
 					break;
 				case EntityType.Rocket:
-					entity = Rocket.Create(entityId);
+					entity = Rocket.Create(_gameSession, entityId);
 					break;
 				case EntityType.Phaser:
-					entity = Phaser.Create(entityId);
+					entity = Phaser.Create(_gameSession, entityId);
 					break;
 				case EntityType.Ray:
-					entity = Ray.Create(entityId);
+					entity = Ray.Create(_gameSession, entityId);
 					break;
 				case EntityType.Shockwave:
-					entity = Shockwave.Create(entityId);
+					entity = Shockwave.Create(_gameSession, entityId);
 					break;
 				default:
 					throw new InvalidOperationException("Unexpected entity type.");

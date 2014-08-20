@@ -1,6 +1,7 @@
 ﻿namespace Lwar.Gameplay.Entities
 {
 	using System;
+	using Pegasus;
 
 	/// <summary>
 	///     Represents a sun.
@@ -10,10 +11,13 @@
 		/// <summary>
 		///     Creates a new instance.
 		/// </summary>
+		/// <param name="gameSession">The game session the instance should be created for.</param>
 		/// <param name="id">The generational identifier of the sun.</param>
-		public static Sun Create(Identifier id)
+		public static Sun Create(GameSession gameSession, Identifier id)
 		{
-			var sun = GetInstance();
+			Assert.ArgumentNotNull(gameSession);
+
+			var sun = gameSession.Allocate<Sun>();
 			sun.Identifier = id;
 			sun.Template = EntityTemplates.Sun;
 			return sun;

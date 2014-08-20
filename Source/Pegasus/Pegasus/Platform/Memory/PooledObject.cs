@@ -1,45 +1,106 @@
-namespace Pegasus.Platform.Memory
+﻿namespace Pegasus.Platform.Memory
 {
 	using System;
+	using System.Diagnostics;
+	using Logging;
 
 	/// <summary>
-	///     Holds a reference to an object allocated from an object pool, returning it to the pool when the instance is disposed.
+	///     An abstract base class for objects whose instances are pooled in order to reduce the pressure on the garbage
+	///     collector. Pooled types should perform all their initialization in the OnReusing() method, which is called whenever
+	///     the instance is reused. Similarly, all cleanup logic that must be run when an instance is returned to the pool
+	///     should be done in the OnReturning method.
 	/// </summary>
-	/// <typeparam name="T">The type of the pooled object.</typeparam>
-	public struct PooledObject<T> : IDisposable
-		where T : class
+	public abstract class PooledObject : IPooledObject, IDisposable
 	{
 		/// <summary>
-		///     The object pool the object should be returned to.
+		///     Gets a value indicating whether the instance is currently available, that is, waiting in the pool to be reused.
 		/// </summary>
-		private readonly ObjectPool<T> _pool;
+		public bool IsAvailable { get; private set; }
+
+		/// <summary>
+		///     The pool the instance should be returned to.
+		/// </summary>
+		private ObjectPool _pool;
+
+#if DEBUG
+		/// <summary>
+		///     A description for the instance in order to make debugging easier.
+		/// </summary>
+		private string _description;
+
+		/// <summary>
+		///     Checks whether the instance has been returned to the pool.
+		/// </summary>
+		~PooledObject()
+		{
+			if (!IsAvailable)
+				Log.Error("A pooled object of type '{0}' was not returned to the pool.\nInstance description: '{1}'",
+					GetType().Name, _description ?? "None");
+		}
+#endif
 
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="obj">The pooled object.</param>
-		/// <param name="pool">The object pool the object should be returned to.</param>
-		public PooledObject(T obj, ObjectPool<T> pool)
-			: this()
+		protected PooledObject()
 		{
-			Assert.ArgumentNotNull(obj);
-			Assert.ArgumentNotNull(pool);
-
-			Object = obj;
-			_pool = pool;
+			IsAvailable = true;
 		}
 
 		/// <summary>
-		///     Gets the pooled object.
+		///     In debug builds, sets a description for the instance in order to make debugging easier.
 		/// </summary>
-		public T Object { get; private set; }
+		/// <param name="description">The description of the instance.</param>
+		/// <param name="arguments">The arguments that should be copied into the description.</param>
+		[Conditional("DEBUG"), StringFormatMethod("description")]
+		public void SetDescription(string description, params object[] arguments)
+		{
+			Assert.ArgumentNotNullOrWhitespace(description);
+
+#if DEBUG
+			_description = String.Format(description, arguments);
+#endif
+		}
 
 		/// <summary>
-		///     Disposes the object, releasing all managed and unmanaged resources.
+		///     Marks the instance as allocated from the given pool.
 		/// </summary>
-		public void Dispose()
+		/// <param name="objectPool">The object pool the instance is allocated from.</param>
+		void IPooledObject.AllocatedFrom(ObjectPool objectPool)
 		{
-			_pool.Free(Object);
+			Assert.ArgumentNotNull(objectPool);
+
+			_pool = objectPool;
+			IsAvailable = false;
+			OnReusing();
+		}
+
+		/// <summary>
+		///     Invoked when the pooled instance is reused and should reset or reinitialize its state.
+		/// </summary>
+		protected virtual void OnReusing()
+		{
+		}
+
+		/// <summary>
+		///     Invoked when the pooled instance is returned to the pool.
+		/// </summary>
+		protected virtual void OnReturning()
+		{
+		}
+
+		/// <summary>
+		///     Returns the instance to the pool.
+		/// </summary>
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+			Assert.That(!IsAvailable, "The instance has already been returned.");
+			Assert.NotNull(_pool, "Unknown object pool.");
+
+			OnReturning();
+			IsAvailable = true;
+			_pool.Free(this);
 		}
 	}
 }

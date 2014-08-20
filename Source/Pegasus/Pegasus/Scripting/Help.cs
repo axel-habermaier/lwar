@@ -47,11 +47,11 @@
 		/// <summary>
 		///     Prints the help for the console system.
 		/// </summary>
-		private void PrintHelp()
+		private static void PrintHelp()
 		{
-			using (var pooledBuilder = ObjectPools.StringBuilders.Allocate())
+			StringBuilder builder;
+			using (StringBuilderPool.Allocate(out builder))
 			{
-				var builder = pooledBuilder.Object;
 				builder.Append("\nUse the console to set and view cvars and to invoke commands.\n");
 				builder.Append("Cvars:\n");
 				builder.Append("   Type '<cvar-name>' to view the current value of the cvar.\n");
@@ -72,11 +72,11 @@
 		///     Prints the help for the given cvar.
 		/// </summary>
 		/// <param name="cvar">The cvar the help should be printed for.</param>
-		private void PrintCvarHelp(ICvar cvar)
+		private static void PrintCvarHelp(ICvar cvar)
 		{
-			using (var pooledBuilder = ObjectPools.StringBuilders.Allocate())
+			StringBuilder builder;
+			using (StringBuilderPool.Allocate(out builder))
 			{
-				var builder = pooledBuilder.Object;
 				builder.AppendFormat("\nCvar:          {0}\n", cvar.Name);
 				builder.AppendFormat("Description:   {0}\n", cvar.Description);
 				builder.AppendFormat("Type:          {0} (e.g., {1}, ...)\n", TypeRegistry.GetDescription(cvar.ValueType),
@@ -102,11 +102,11 @@
 		///     Prints the help for the given command.
 		/// </summary>
 		/// <param name="command">The command the help should be printed for.</param>
-		private void PrintCommandHelp(ICommand command)
+		private static void PrintCommandHelp(ICommand command)
 		{
-			using (var pooledBuilder = ObjectPools.StringBuilders.Allocate())
+			StringBuilder builder;
+			using (StringBuilderPool.Allocate(out builder))
 			{
-				var builder = pooledBuilder.Object;
 				builder.AppendFormat("\nCommand:     {0}\n", command.Name);
 				builder.AppendFormat("Description: {0}\n", command.Description);
 				builder.AppendFormat("Invocation:  {0}", command.SystemOnly ? "application only" : "user or application");

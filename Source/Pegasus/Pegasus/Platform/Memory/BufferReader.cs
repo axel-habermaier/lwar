@@ -8,8 +8,13 @@
 	/// <summary>
 	///     Wraps a byte buffer, providing methods for reading fundamental data types from the buffer.
 	/// </summary>
-	public class BufferReader
+	public class BufferReader : PooledObject
 	{
+		/// <summary>
+		///     The default pool for buffer reader instances.
+		/// </summary>
+		private static readonly ObjectPool<BufferReader> DefaultPool = new ObjectPool<BufferReader>(hasGlobalLifetime: true);
+
 		/// <summary>
 		///     The buffer from which the data is read.
 		/// </summary>
@@ -74,9 +79,9 @@
 		/// </summary>
 		/// <param name="buffer">The buffer from which the data should be read.</param>
 		/// <param name="endianess">Specifies the endianess of the buffer.</param>
-		public void ReadFrom(byte[] buffer, Endianess endianess = Endianess.Little)
+		public static BufferReader Create(byte[] buffer, Endianess endianess = Endianess.Little)
 		{
-			ReadFrom(new ArraySegment<byte>(buffer, 0, buffer.Length), endianess);
+			return Create(new ArraySegment<byte>(buffer, 0, buffer.Length), endianess);
 		}
 
 		/// <summary>
@@ -87,9 +92,9 @@
 		/// <param name="offset">The offset to the first valid byte in the buffer.</param>
 		/// <param name="length">The length of the buffer in bytes.</param>
 		/// <param name="endianess">Specifies the endianess of the buffer.</param>
-		public void ReadFrom(byte[] buffer, int offset, int length, Endianess endianess = Endianess.Little)
+		public static BufferReader Create(byte[] buffer, int offset, int length, Endianess endianess = Endianess.Little)
 		{
-			ReadFrom(new ArraySegment<byte>(buffer, offset, length), endianess);
+			return Create(new ArraySegment<byte>(buffer, offset, length), endianess);
 		}
 
 		/// <summary>
@@ -98,14 +103,16 @@
 		/// </summary>
 		/// <param name="buffer">The buffer from which the data should be read.</param>
 		/// <param name="endianess">Specifies the endianess of the buffer.</param>
-		public void ReadFrom(ArraySegment<byte> buffer, Endianess endianess = Endianess.Little)
+		public static BufferReader Create(ArraySegment<byte> buffer, Endianess endianess = Endianess.Little)
 		{
 			Assert.ArgumentNotNull(buffer.Array);
-			Assert.That(_buffer.Array == null, "The buffer reader is still used to read from another buffer.");
 
-			_endianess = endianess;
-			_buffer = buffer;
-			Reset();
+			var bufferReader = DefaultPool.Allocate();
+			bufferReader._endianess = endianess;
+			bufferReader._buffer = buffer;
+			bufferReader.Reset();
+
+			return bufferReader;
 		}
 
 		/// <summary>
@@ -114,16 +121,6 @@
 		public void Reset()
 		{
 			_readPosition = _buffer.Offset;
-		}
-
-		/// <summary>
-		///     Frees all resources acquired by the buffer reader.
-		/// </summary>
-		public void Free()
-		{
-			_pointer.SafeDispose();
-			_pointer = new BufferPointer();
-			_buffer = new ArraySegment<byte>();
 		}
 
 		/// <summary>
@@ -417,6 +414,16 @@
 				obj = default(T);
 				return false;
 			}
+		}
+
+		/// <summary>
+		///     Invoked when the pooled instance is returned to the pool.
+		/// </summary>
+		protected override void OnReturning()
+		{
+			_pointer.SafeDispose();
+			_pointer = new BufferPointer();
+			_buffer = new ArraySegment<byte>();
 		}
 	}
 }

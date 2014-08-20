@@ -1,6 +1,7 @@
 namespace Pegasus.Framework.UserInterface.Input
 {
 	using System;
+	using System.Text;
 	using Platform.Memory;
 
 	/// <summary>
@@ -81,9 +82,9 @@ namespace Pegasus.Framework.UserInterface.Input
 		/// </summary>
 		public override string ToString()
 		{
-			using (var pooledBuilder = ObjectPools.StringBuilders.Allocate())
+			StringBuilder builder;
+			using (StringBuilderPool.Allocate(out builder))
 			{
-				var builder = pooledBuilder.Object;
 				builder.Clear();
 				builder.Append("[");
 

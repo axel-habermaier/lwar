@@ -5,7 +5,6 @@
 	using Network;
 	using Network.Messages;
 	using Pegasus;
-	using Pegasus.Framework;
 	using Pegasus.Math;
 	using Pegasus.Platform;
 	using Pegasus.Platform.Memory;

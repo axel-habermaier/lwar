@@ -73,6 +73,7 @@
 		{
 			Assert.ArgumentNotNull(element);
 
+			// Not using Linq for performance reasons
 			foreach (var renderer in _renderers)
 			{
 				var typedRenderer = renderer as Renderer<TElement>;
@@ -94,6 +95,7 @@
 		{
 			Assert.ArgumentNotNull(element);
 
+			// Not using Linq for performance reasons
 			foreach (var renderer in _renderers)
 			{
 				var typedRenderer = renderer as Renderer<TElement>;

@@ -62,17 +62,6 @@
 		}
 
 		/// <summary>
-		///     Creates an enumerator that wraps the given enumerator.
-		/// </summary>
-		/// <typeparam name="TWrapped">The type of the items of the wrapped enumerator.</typeparam>
-		/// <param name="enumerator">The enumerator that should be wrapped.</param>
-		public static WrappedEnumerator<TWrapped> FromEnumerator<TWrapped>(Enumerator<TWrapped> enumerator)
-			where TWrapped : T
-		{
-			return new WrappedEnumerator<TWrapped>(enumerator);
-		}
-
-		/// <summary>
 		///     Advances the enumerator to the next item.
 		/// </summary>
 		public bool MoveNext()
@@ -113,58 +102,6 @@
 		public Enumerator<T> GetEnumerator()
 		{
 			return this;
-		}
-
-		/// <summary>
-		///     Wraps another enumerator, optionally casting the enumerated items.
-		/// </summary>
-		/// <typeparam name="TWrapped">The type of the items of the wrapped enumerator.</typeparam>
-		public struct WrappedEnumerator<TWrapped>
-			where TWrapped : T
-		{
-			/// <summary>
-			///     The wrapped enumerator that is enumerated.
-			/// </summary>
-			private Enumerator<TWrapped> _enumerator;
-
-			/// <summary>
-			///     Initializes a new instance.
-			/// </summary>
-			/// <param name="enumerator">The wrapped enumerator that is enumerated.</param>
-			public WrappedEnumerator(Enumerator<TWrapped> enumerator)
-				: this()
-			{
-				_enumerator = enumerator;
-			}
-
-			/// <summary>
-			///     Gets the item at the current position of the enumerator.
-			/// </summary>
-			public TWrapped Current { get; private set; }
-
-			/// <summary>
-			///     Advances the enumerator to the next item.
-			/// </summary>
-			public bool MoveNext()
-			{
-				var hasNext = _enumerator.MoveNext();
-
-				if (hasNext)
-					Current = (TWrapped)_enumerator.Current;
-
-				return hasNext;
-			}
-
-			/// <summary>
-			///     Gets the enumerator that can be used with C#'s foreach loops.
-			/// </summary>
-			/// <remarks>
-			///     This method just returns the enumerator object. It is only required to enable foreach support.
-			/// </remarks>
-			public WrappedEnumerator<TWrapped> GetEnumerator()
-			{
-				return this;
-			}
 		}
 	}
 }

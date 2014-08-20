@@ -88,11 +88,9 @@
 		/// <summary>
 		///     Returns the pooled object to the pool the object if it is not null and has not yet been returned.
 		/// </summary>
-		/// <typeparam name="T">The type of the pooled object.</typeparam>
 		/// <param name="obj">The object that should be returned.</param>
 		[DebuggerHidden]
-		public static void SafeDispose<T>(this OldPooledObject<T> obj)
-			where T : OldPooledObject<T>, new()
+		public static void SafeDispose(this PooledObject obj)
 		{
 			if (obj != null && !obj.IsAvailable)
 				((IDisposable)obj).Dispose();

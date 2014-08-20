@@ -235,17 +235,16 @@
 		///     Loads the asset corresponding to the asset info object.
 		/// </summary>
 		/// <param name="info">The info object of the asset that should be loaded.</param>
-		private void Load(AssetInfo info)
+		private static void Load(AssetInfo info)
 		{
 			try
 			{
 				Log.Info("Loading {0} {1}...", Loaders[info.Type].AssetTypeName, GetAssetDisplayName(info));
 
-				using (var reader = ObjectPools.BufferReaders.Allocate())
+				using (var reader = BufferReader.Create(FileSystem.ReadAllBytes(info.Path)))
 				{
-					reader.Object.ReadFrom(FileSystem.ReadAllBytes(info.Path));
-					AssetHeader.Validate(reader.Object, info.Type);
-					Loaders[info.Type].Load(reader.Object, info.Asset, info.Path);
+					AssetHeader.Validate(reader, info.Type);
+					Loaders[info.Type].Load(reader, info.Asset, info.Path);
 				}
 			}
 			catch (Exception e)

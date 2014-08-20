@@ -1,6 +1,7 @@
 ﻿namespace Lwar.Gameplay.Entities
 {
 	using System;
+	using Pegasus;
 	using Pegasus.Math;
 
 	/// <summary>
@@ -36,10 +37,13 @@
 		/// <summary>
 		///     Creates a new instance.
 		/// </summary>
+		/// <param name="gameSession">The game session the instance should be created for.</param>
 		/// <param name="id">The generational identifier of the ray.</param>
-		public static Ray Create(Identifier id)
+		public static Ray Create(GameSession gameSession, Identifier id)
 		{
-			var ray = GetInstance();
+			Assert.ArgumentNotNull(gameSession);
+
+			var ray = gameSession.Allocate<Ray>();
 			ray.Identifier = id;
 			ray.Template = EntityTemplates.Ray;
 			return ray;

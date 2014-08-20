@@ -73,13 +73,15 @@
 		/// <summary>
 		///     Creates a new instance.
 		/// </summary>
+		/// <param name="gameSession">The game session the instance should be created for.</param>
 		/// <param name="ship">The ship that the shield belongs to.</param>
 		/// <param name="impactPosition">The position where the shield has been hit.</param>
-		public static Shield Create(Ship ship, Vector2 impactPosition)
+		public static Shield Create(GameSession gameSession, Ship ship, Vector2 impactPosition)
 		{
+			Assert.ArgumentNotNull(gameSession);
 			Assert.ArgumentNotNull(ship);
 
-			var shield = GetInstance();
+			var shield = gameSession.Allocate<Shield>();
 			shield.Ship = ship;
 			shield._remainingTime = FadeOutTime;
 			shield.ImpactPosition = impactPosition;

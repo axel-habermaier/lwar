@@ -227,9 +227,9 @@
     <Compile Include="Framework\Enumerator.cs" />
     <Compile Include="Framework\INotifyCollectionChanged.cs" />
     <Compile Include="Framework\DisposableNotifyPropertyChanged.cs" />
-    <Compile Include="Framework\PooledNotifyPropertyChanged.cs" />
     <Compile Include="Framework\NotifyPropertyChanged.cs" />
     <Compile Include="Framework\ObservableCollection.cs" />
+    <Compile Include="Framework\PooledNotifyPropertyChanged.cs" />
     <Compile Include="Framework\PropertyChangedHandler.cs" />
     <Compile Include="Framework\UserInterface\BindingMode.cs" />
     <Compile Include="Framework\UserInterface\Controls\Dock.cs" />
@@ -335,9 +335,10 @@
     <Compile Include="Platform\FileSystem.cs" />
     <Compile Include="Platform\Graphics\ShaderProgram.cs" />
     <Compile Include="Platform\FileSystemException.cs" />
+    <Compile Include="Platform\Memory\IPooledObject.cs" />
+    <Compile Include="Platform\Memory\ObjectPool`1.cs" />
     <Compile Include="Platform\Memory\ObjectPool.cs" />
-    <Compile Include="Platform\Memory\ObjectPools.cs" />
-    <Compile Include="Platform\Memory\PooledObject.cs" />
+    <Compile Include="Platform\Memory\StringBuilderPool.cs" />
     <Compile Include="Platform\Network\ConnectionDroppedException.cs" />
     <Compile Include="Platform\Network\IPAddress.cs" />
     <Compile Include="Platform\Network\IPEndPoint.cs" />
@@ -381,7 +382,6 @@
     <Compile Include="Framework\UserInterface\UIElement.Events.cs" />
     <Compile Include="Framework\UserInterface\UIElementCollection.cs" />
     <Compile Include="Math\Vector3.cs" />
-    <Compile Include="Platform\Memory\OldObjectPool.cs" />
     <Compile Include="Platform\AppFile.cs" />
     <Compile Include="PegasusException.cs" />
     <Compile Include="Platform\Graphics\CubeMapView.cs" />
@@ -445,7 +445,7 @@
     <Compile Include="Platform\Graphics\TimestampDisjointQuery.cs" />
     <Compile Include="Platform\Graphics\TimestampQuery.cs" />
     <Compile Include="Platform\NativeLibrary.cs" />
-    <Compile Include="Platform\Memory\OldPooledObject.cs" />
+    <Compile Include="Platform\Memory\PooledObject.cs" />
     <Compile Include="Platform\Graphics\BufferType.cs" />
     <Compile Include="Platform\Graphics\ShaderType.cs" />
     <Compile Include="Rendering\Camera.cs" />

@@ -8,12 +8,17 @@
 	/// <summary>
 	///     Represents a player.
 	/// </summary>
-	public class Player : OldPooledNotifyPropertyChanged<Player>, IGenerationalIdentity
+	public class Player : PooledNotifyPropertyChanged, IGenerationalIdentity
 	{
 		/// <summary>
 		///     The number of deaths.
 		/// </summary>
 		private int _deaths;
+
+		/// <summary>
+		///     The game session the player belongs to.
+		/// </summary>
+		private GameSession _gameSession;
 
 		/// <summary>
 		///     The number of kills that the player has scored.
@@ -84,13 +89,16 @@
 		/// <summary>
 		///     Creates a new instance.
 		/// </summary>
+		/// <param name="gameSession">The game session the instance should be created for.</param>
 		/// <param name="id">The identifier of the player.</param>
 		/// <param name="name">The name of the player.</param>
-		public static Player Create(Identifier id, string name)
+		public static Player Create(GameSession gameSession, Identifier id, string name)
 		{
+			Assert.ArgumentNotNull(gameSession);
 			Assert.ArgumentNotNullOrWhitespace(name);
 
-			var player = GetInstance();
+			var player = gameSession.Allocate<Player>();
+			player._gameSession = gameSession;
 			player.Identifier = id;
 			player.Ship = null;
 			player.Name = name;

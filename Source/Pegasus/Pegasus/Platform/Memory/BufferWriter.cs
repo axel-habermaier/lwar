@@ -8,8 +8,13 @@
 	/// <summary>
 	///     Wraps a byte buffer, providing methods for writing fundamental data types to the buffer.
 	/// </summary>
-	public class BufferWriter
+	public class BufferWriter : PooledObject
 	{
+		/// <summary>
+		///     The default pool for buffer writer instances.
+		/// </summary>
+		private static readonly ObjectPool<BufferWriter> DefaultPool = new ObjectPool<BufferWriter>(hasGlobalLifetime: true);
+
 		/// <summary>
 		///     The buffer to which the data is written.
 		/// </summary>
@@ -38,9 +43,9 @@
 		/// </summary>
 		/// <param name="buffer">The buffer to which the data should be written.</param>
 		/// <param name="endianess">Specifies the endianess of the buffer.</param>
-		public void WriteTo(byte[] buffer, Endianess endianess = Endianess.Little)
+		public static BufferWriter Create(byte[] buffer, Endianess endianess = Endianess.Little)
 		{
-			WriteTo(buffer, 0, buffer.Length, endianess);
+			return Create(buffer, 0, buffer.Length, endianess);
 		}
 
 		/// <summary>
@@ -50,9 +55,9 @@
 		/// <param name="offset"> The offset to the first byte of the buffer that should be written.</param>
 		/// <param name="length">The length of the buffer in bytes.</param>
 		/// <param name="endianess">Specifies the endianess of the buffer.</param>
-		public void WriteTo(byte[] buffer, int offset, int length, Endianess endianess = Endianess.Little)
+		public static BufferWriter Create(byte[] buffer, int offset, int length, Endianess endianess = Endianess.Little)
 		{
-			WriteTo(new ArraySegment<byte>(buffer, offset, length), endianess);
+			return Create(new ArraySegment<byte>(buffer, offset, length), endianess);
 		}
 
 		/// <summary>
@@ -60,14 +65,16 @@
 		/// </summary>
 		/// <param name="buffer">The buffer to which the data should be written.</param>
 		/// <param name="endianess">Specifies the endianess of the buffer.</param>
-		public void WriteTo(ArraySegment<byte> buffer, Endianess endianess = Endianess.Little)
+		public static BufferWriter Create(ArraySegment<byte> buffer, Endianess endianess = Endianess.Little)
 		{
 			Assert.ArgumentNotNull(buffer.Array);
-			Assert.That(_buffer.Array == null, "The buffer writer is still used to write to another buffer.");
 
-			_endianess = endianess;
-			_buffer = buffer;
-			Reset();
+			var bufferWriter = DefaultPool.Allocate();
+			bufferWriter._endianess = endianess;
+			bufferWriter._buffer = buffer;
+			bufferWriter.Reset();
+
+			return bufferWriter;
 		}
 
 		/// <summary>
@@ -360,9 +367,9 @@
 		}
 
 		/// <summary>
-		///     Frees all resources acquired by the buffer writer.
+		///     Invoked when the pooled instance is returned to the pool.
 		/// </summary>
-		public void Free()
+		protected override void OnReturning()
 		{
 			_buffer = new ArraySegment<byte>();
 		}
