@@ -51,7 +51,7 @@
 		}
 
 		/// <summary>
-		///     Enqueues the reliable message.
+		///     Enqueues the given message.
 		/// </summary>
 		/// <param name="message">The message that should be enqueued.</param>
 		public void Enqueue(ref Message message)

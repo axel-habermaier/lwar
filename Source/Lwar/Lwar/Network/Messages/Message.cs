@@ -39,12 +39,6 @@
 		public uint SequenceNumber;
 
 		/// <summary>
-		///     The timestamp of an unreliable message.
-		/// </summary>
-		[FieldOffset(4)]
-		public uint Timestamp;
-
-		/// <summary>
 		///     The payload of a Connect message.
 		/// </summary>
 		[FieldOffset(StringPayloadOffset)]

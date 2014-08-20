@@ -74,7 +74,7 @@ static bool check_seqno(Client *c, Message *m, size_t seqno) {
     return true;
 }
 
-static void message_handle(Client *c, Address *adr, Message *m, size_t time, size_t seqno) {
+static void message_handle(Client *c, Address *adr, Message *m, size_t seqno) {
     switch(m->type) {
     case MESSAGE_CONNECT:
 		if (m->connect.rev != NETWORK_REVISION) { 
@@ -171,7 +171,7 @@ static void packet_scan(Packet *p) {
         if(check_seqno(c, &m, m.seqno)) {
             if(is_reliable(&m))
                 message_debug(&m, src_fmt(c));
-            message_handle(c, &p->adr, &m, p->time, m.seqno);
+            message_handle(c, &p->adr, &m, m.seqno);
         }
     }
 }

@@ -213,10 +213,6 @@
 				for (var i = 0; i < messages.Count; ++i)
 				{
 					var message = messages[i];
-
-					if (message.Type.IsUnreliable())
-						message.Timestamp = header.Value.Timestamp;
-
 					HandleMessage(ref message, messageQueue);
 				}
 			}

@@ -4,8 +4,8 @@ typedef struct Message Message;
 size_t id_pack(char *out, Id id);
 size_t id_unpack(const char *out, Id *id);
 
-size_t header_pack(char *s, size_t app_id, size_t ack, size_t time);
-size_t header_unpack(const char *s, size_t *app_id, size_t *ack, size_t *time);
+size_t header_pack(char *s, size_t app_id, size_t ack);
+size_t header_unpack(const char *s, size_t *app_id, size_t *ack);
 
 size_t message_pack(char *s, void *p);
 size_t message_unpack(const char *s, void *p);

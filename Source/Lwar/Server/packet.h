@@ -16,7 +16,7 @@ struct Packet {
     size_t  a,b;
 
     /* temp storage for incoming packets */
-    size_t  ack, time;
+    size_t  ack;
 
     /* connection failed */
     bool    io_failed;

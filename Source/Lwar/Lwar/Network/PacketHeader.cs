@@ -14,23 +14,16 @@
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="acknowledgement">The acknowledged sequence number of the packet.</param>
-		/// <param name="timestamp">The timestamp of the unreliable messages contained within the packet.</param>
-		public PacketHeader(uint acknowledgement, uint timestamp)
+		public PacketHeader(uint acknowledgement)
 			: this()
 		{
 			Acknowledgement = acknowledgement;
-			Timestamp = timestamp;
 		}
 
 		/// <summary>
 		///     Gets the acknowledged sequence number of the packet.
 		/// </summary>
 		public uint Acknowledgement { get; private set; }
-
-		/// <summary>
-		///     Gets the timestamp of the unreliable messages contained within the packet.
-		/// </summary>
-		public uint Timestamp { get; private set; }
 
 		/// <summary>
 		///     Initializes a new instance from a buffer.
@@ -52,11 +45,7 @@
 				return null;
 			}
 
-			return new PacketHeader
-			{
-				Acknowledgement = buffer.ReadUInt32(),
-				Timestamp = buffer.ReadUInt32()
-			};
+			return new PacketHeader { Acknowledgement = buffer.ReadUInt32() };
 		}
 
 		/// <summary>
@@ -69,7 +58,6 @@
 
 			buffer.WriteUInt32(Specification.AppIdentifier);
 			buffer.WriteUInt32(Acknowledgement);
-			buffer.WriteUInt32(Timestamp);
 		}
 	}
 }

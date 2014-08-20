@@ -33,10 +33,9 @@ size_t packet_update_n(Packet *p, size_t s) {
 void packet_init(Packet *p, Address *adr, size_t ack, size_t time) {
     memset(p->p, 0, sizeof(p->p));
     p->ack  = ack;
-    p->time = time;
     p->adr  = *adr;
     p->a    = 0;
-    p->b    = header_pack(p->p, APP_ID, p->ack, p->time);
+    p->b    = header_pack(p->p, APP_ID, p->ack);
     p->io_failed = 0;
 }
 
@@ -74,7 +73,7 @@ bool packet_recv(Packet *p) {
     if(p->b == 0) return false; /* EAGAIN */
 
     size_t app_id;
-    p->a = header_unpack(p->p, &app_id, &p->ack, &p->time);
+    p->a = header_unpack(p->p, &app_id, &p->ack);
     if((int32_t)app_id != APP_ID) return false; /* TODO: warn */
     return true;
 }

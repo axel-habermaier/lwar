@@ -12,11 +12,6 @@
 	public class DeliveryManager
 	{
 		/// <summary>
-		///     Determines the current time for the creation of the unreliable message timestamps.
-		/// </summary>
-		private Clock _clock = new Clock();
-
-		/// <summary>
 		///     The sequence number of the last reliable message that has been assigned and acknowledged.
 		/// </summary>
 		private uint _lastAckedSequenceNumber;
@@ -32,22 +27,22 @@
 		private uint _lastAssignedUnreliableSequenceNumber;
 
 		/// <summary>
-		///     Gets the sequence number of the last reliable message that has been received and processed.
+		///     The sequence number of the last reliable message that has been received and processed.
 		/// </summary>
 		private uint _lastReceivedReliableSequenceNumber;
 
 		/// <summary>
-		///     Gets the sequence number of the last unreliable message that has been received and processed.
+		///     The sequence number of the last unreliable message that has been received and processed.
 		/// </summary>
 		private uint _lastReceivedUnreliableSequenceNumber;
 
 		/// <summary>
-		///     Writes the header for a packet.
+		///     Writes the header of a packet.
 		/// </summary>
 		/// <param name="buffer">The buffer the header should be written into.</param>
 		public void WriteHeader(BufferWriter buffer)
 		{
-			var header = new PacketHeader(_lastReceivedReliableSequenceNumber, (uint)_clock.Milliseconds);
+			var header = new PacketHeader(_lastReceivedReliableSequenceNumber);
 			header.Write(buffer);
 		}
 
