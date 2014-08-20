@@ -26,8 +26,8 @@ Message Delivery Guarantees
 	way to figure out whether two reliable messages actually are the same.
 	
 	Unreliable messages, on the other hand, are neither acknowledged nor do the peers care if a message
-	is lost. Unreliable messages are timestamped, allowing the peers to filter out older unreliable messages
-	that are received after newer ones have arrived due to UDP packet reordering.
+	is lost. Unreliable messages also have sequence numbers, allowing the peers to filter out older 
+	unreliable messages	that are received after newer ones have arrived due to UDP packet reordering.
     Hence, both peers must also discard messages that refer to obsolete (and possibly already deleted)
     players or entities.
 
@@ -44,7 +44,7 @@ Network-related constants
 	Max Packet Size: 				    512 bytes 		Including the packet and message headers
 	Packet Header Size:			 	     12 bytes	    
 	Reliable Message Header Size:	      5 bytes	    
-	Unreliable Message Header Size:	      1 byte	    
+	Unreliable Message Header Size:	      5 byte	    
 	Max Player Name Length: 	 	     32 bytes 		
 	Max Chat Message Length: 		    255 bytes 		
 	Max Player Count:				      8 players	    
@@ -68,7 +68,6 @@ Packet Header
 	---------	----------	------------------------------------------------------------------------
 	uint32		appId		The application id
 	uint32		ack			Sequence number of the last reliable message that has been processed
-	uint32		timestamp	Timestamp of the unreliable messages contained in the packet
 	
 Message Types
 	The ids of reliable message types range from 1 to 99, while the ids of unreliable message types
@@ -171,8 +170,7 @@ Messages Payload Data
 		---------	----------	------------------------------------------------------------------------
 		uint32(Id)	entityId	The generational identifier of the entity that is added
 		uint32(Id)	playerId	The generational identifier of the player the entity belongs to
-		uint8		typeId		The identifier of the entity type template; the possible values are
-								determined by the EntityTemplates.fsx code generation script
+		uint8		typeId		The identifier of the entity type template
 		
 	Remove
 		Type		Name 		Description
@@ -220,9 +218,9 @@ Messages Payload Data
 		uint8		num			The number of player stats updates that follow
 		[for i < num, ++i]
 		uint32(Id)  player		The generational identifier of the player whose stats are updated
-		uint16		kills		The player kills
-		uint16		deaths		The player deaths
-		uint16		ping		The player pings
+		uint16		kills		The player's kills
+		uint16		deaths		The player's deaths
+		uint16		ping		The player's ping
 		
 	Update
 		Type		Name 		Description
@@ -366,7 +364,7 @@ Disconnecting from the server
 	the disconnected client.
 
 Client-side prediction
-	A client may predict velocity (or acceleration) of an entity with by linear extrapolation
+	A client may predict velocity (or acceleration) of an entity by linear extrapolation
 	with respect to time. The client may thus assume that the velocity (or acceleration) remains constant
 	as long as no updates are received. Velocity can be computed as the difference of two position measures
 	divided by the time interval, acceleration can similarly be obtained from velocity.
@@ -379,6 +377,8 @@ Automatic server discovery
 Revision History
     Rev.    Date    Author		Changes
     ----  --------  ----------	-------------------------------------------------------------------
+	21	  14-08-20  Axel		Removed timestamp from message header; fixed unreliable message header
+								size; removed reference to EntityTemplates.fsx that no longer exists
 	20    13-08-16  Axel/Gidon	Added sequence number for unreliable messages
 	19	  13-08-14  Axel		Added server discovery
 	18	  13-08-14  Axel/Gidon	Changed reserved entity id
