@@ -15,7 +15,7 @@ enum {
     MAX_QUEUE           = 4096,
     MAX_STRINGS         =  128,
 
-	NETWORK_REVISION    =   20,
+	NETWORK_REVISION    =   21,
 
     NUM_SLOTS           =    4,
 
