@@ -5,7 +5,7 @@
 	/// <summary>
 	///     Represents an event message. Valid fields depend on the type of the events.
 	/// </summary>
-	public struct EventMessage
+	public struct EventMessage : IEquatable<EventMessage>
 	{
 		/// <summary>
 		///     The creation time of the message.
@@ -48,6 +48,35 @@
 		///     The display string of the event message.
 		/// </summary>
 		public string DisplayString { get; private set; }
+
+		/// <summary>
+		///     Indicates whether the current object is equal to another object of the same type.
+		/// </summary>
+		/// <param name="other">An object to compare with this object.</param>
+		public bool Equals(EventMessage other)
+		{
+			return String.Equals(DisplayString, other.DisplayString) && CreationTime == other.CreationTime;
+		}
+
+		/// <summary>
+		///     Indicates whether this instance and a specified object are equal.
+		/// </summary>
+		/// <param name="obj">Another object to compare to. </param>
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(null, obj))
+				return false;
+
+			return obj is EventMessage && Equals((EventMessage)obj);
+		}
+
+		/// <summary>
+		///     Returns the hash code for this instance.
+		/// </summary>
+		public override int GetHashCode()
+		{
+			return (DisplayString != null ? DisplayString.GetHashCode() : 0);
+		}
 
 		/// <summary>
 		///     Generates the display string for the event message.

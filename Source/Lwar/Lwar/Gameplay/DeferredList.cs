@@ -94,7 +94,9 @@
 				}
 			}
 
-			_items.AddRange(_addedItems);
+			foreach (var addedItem in _addedItems)
+				_items.Add(addedItem);
+			
 			_removedItems.SafeDisposeAll();
 
 			_removedItems.Clear();

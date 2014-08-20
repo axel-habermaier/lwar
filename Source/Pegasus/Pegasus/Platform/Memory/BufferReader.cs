@@ -421,7 +421,7 @@
 		/// </summary>
 		protected override void OnReturning()
 		{
-			_pointer.SafeDispose();
+			_pointer.Dispose();
 			_pointer = new BufferPointer();
 			_buffer = new ArraySegment<byte>();
 		}
