@@ -44,6 +44,11 @@
 		private readonly SyncedQuery[] _syncedQueries = new SyncedQuery[3];
 
 		/// <summary>
+		///     A value indicating whether the graphics device can currently be used for drawing.
+		/// </summary>
+		private bool _canDraw;
+
+		/// <summary>
 		///     The current primitive type of the input assembler stage.
 		/// </summary>
 		private PrimitiveType _primitiveType;
@@ -57,11 +62,6 @@
 		///     The index of the synced query that is currently used to synchronize the GPU and the CPU.
 		/// </summary>
 		private int _syncedIndex;
-
-		/// <summary>
-		/// A value indicating whether the graphics device can currently be used for drawing.
-		/// </summary>
-		private bool _canDraw;
 
 		/// <summary>
 		///     The current viewport of the rasterizer stage of the device.

@@ -5,7 +5,6 @@
 	using Math;
 	using Platform;
 	using Platform.Graphics;
-	using Platform.Logging;
 
 	/// <summary>
 	///     Represents a six-degrees-of-freedom debug camera.

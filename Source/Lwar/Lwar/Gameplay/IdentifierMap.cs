@@ -53,7 +53,7 @@
 			Assert.ArgumentNotNull(obj);
 			Assert.That(_map[obj.Identifier.Identity] != null, "The object is not mapped.");
 			Assert.That(_map[obj.Identifier.Identity].Identifier.Generation == obj.Identifier.Generation,
-						"Attempted to unmap an object of a different generation.");
+				"Attempted to unmap an object of a different generation.");
 
 			_map[obj.Identifier.Identity] = null;
 		}

@@ -3,7 +3,6 @@
 	using System;
 	using Messages;
 	using Pegasus;
-	using Pegasus.Platform;
 	using Pegasus.Platform.Memory;
 
 	/// <summary>

@@ -44,7 +44,7 @@
 			Assert.ArgumentNotNull(indices);
 			Assert.ArgumentSatisfies(indices.Length > 0, "The index array must not be empty.");
 			Assert.That(typeof(T) == typeof(uint) || typeof(T) == typeof(ushort),
-						"Unsupported index type '{0}'. Indices must be of type uint or ushort.", typeof(T).FullName);
+				"Unsupported index type '{0}'. Indices must be of type uint or ushort.", typeof(T).FullName);
 
 			return indices.UsePointer(ptr => new IndexBuffer(graphicsDevice, usage, ptr, indices.Size(), GetIndexSize<T>()));
 		}
@@ -63,10 +63,10 @@
 			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentInRange(indexCount, 0, typeof(T) == typeof(uint) ? Int32.MaxValue : UInt16.MaxValue);
 			Assert.That(typeof(T) == typeof(uint) || typeof(T) == typeof(ushort),
-						"Unsupported index type '{0}'. Indices must be of type uint or ushort.", typeof(T).FullName);
+				"Unsupported index type '{0}'. Indices must be of type uint or ushort.", typeof(T).FullName);
 
 			return new IndexBuffer(graphicsDevice, usage, IntPtr.Zero, Marshal.SizeOf(typeof(T)) * indexCount,
-								   GetIndexSize<T>());
+				GetIndexSize<T>());
 		}
 
 		/// <summary>

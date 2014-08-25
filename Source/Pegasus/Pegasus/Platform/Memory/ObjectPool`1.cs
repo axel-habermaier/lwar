@@ -28,9 +28,9 @@
 		private int _allocationCount;
 
 #if DEBUG
-		/// <summary>
-		///     The allocated objects that are tracked in debug builds so that memory leaks can be debugged more easily.
-		/// </summary>
+	/// <summary>
+	///     The allocated objects that are tracked in debug builds so that memory leaks can be debugged more easily.
+	/// </summary>
 		private readonly List<T> _allocatedObjects = new List<T>();
 
 		/// <summary>

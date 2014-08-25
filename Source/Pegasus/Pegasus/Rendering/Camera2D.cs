@@ -50,8 +50,8 @@
 		protected override void UpdateViewMatrixCore()
 		{
 			_view = Matrix.CreateLookAt(new Vector3(Position.X, Position.Y, 0),
-									   new Vector3(Position.X, Position.Y, -1),
-									   new Vector3(0, 1, 0));
+				new Vector3(Position.X, Position.Y, -1),
+				new Vector3(0, 1, 0));
 		}
 	}
 }

@@ -3,7 +3,6 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Runtime.CompilerServices;
-	using Platform;
 
 	/// <summary>
 	///     A base class for classes requiring property change notifications.

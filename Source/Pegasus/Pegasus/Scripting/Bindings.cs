@@ -4,8 +4,8 @@
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Text;
-	using Parsing;
 	using Framework.UserInterface.Input;
+	using Parsing;
 	using Platform.Logging;
 	using Platform.Memory;
 

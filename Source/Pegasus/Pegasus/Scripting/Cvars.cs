@@ -2,13 +2,10 @@
 {
 	using System;
 	using System.Diagnostics;
-	using Pegasus;
-	using Pegasus.Framework.UserInterface.Controls;
-	using Pegasus.Math;
-	using Pegasus.Platform;
-	using Pegasus.Platform.Logging;
-	using Pegasus.Scripting;
-	using Pegasus.Scripting.Validators;
+	using Framework.UserInterface.Controls;
+	using Math;
+	using Platform;
+	using Validators;
 
 	internal static class Cvars
 	{
@@ -239,12 +236,19 @@
 		/// </summary>
 		public static void Initialize()
 		{
-			TimeScaleCvar = new Cvar<double>("time_scale", 1.0, "The scaling factor that is applied to all time-scaling sensitive timing values.", UpdateMode.Immediate, false, false, new RangeAttribute(0.1, 10.0));
-			ResolutionCvar = new Cvar<Size>("resolution", new Size(1024, 768), "The screen resolution used by the application in fullscreen mode.", UpdateMode.Immediate, true, false, new WindowSizeAttribute());
-			WindowSizeCvar = new Cvar<Size>("window_size", new Size(1024, 768), "The size in pixels of the application window in non-fullscreen mode.", UpdateMode.Immediate, true, true, new WindowSizeAttribute());
-			WindowPositionCvar = new Cvar<Vector2i>("window_position", Vector2i.Zero, "The screen position of the application window's top left corner in non-fullscreen mode.", UpdateMode.Immediate, true, true, new WindowPositionAttribute());
-			WindowModeCvar = new Cvar<WindowMode>("window_mode", WindowMode.Fullscreen, "The width of the application's window in non-fullscreen mode.", UpdateMode.Immediate, true, true);
-			ShowDebugOverlayCvar = new Cvar<bool>("show_debug_overlay", PlatformInfo.IsDebug, "Shows or hides the debug overlay.", UpdateMode.Immediate, true, false);
+			TimeScaleCvar = new Cvar<double>("time_scale", 1.0, "The scaling factor that is applied to all time-scaling sensitive timing values.",
+				UpdateMode.Immediate, false, false, new RangeAttribute(0.1, 10.0));
+			ResolutionCvar = new Cvar<Size>("resolution", new Size(1024, 768), "The screen resolution used by the application in fullscreen mode.",
+				UpdateMode.Immediate, true, false, new WindowSizeAttribute());
+			WindowSizeCvar = new Cvar<Size>("window_size", new Size(1024, 768),
+				"The size in pixels of the application window in non-fullscreen mode.", UpdateMode.Immediate, true, true, new WindowSizeAttribute());
+			WindowPositionCvar = new Cvar<Vector2i>("window_position", Vector2i.Zero,
+				"The screen position of the application window's top left corner in non-fullscreen mode.", UpdateMode.Immediate, true, true,
+				new WindowPositionAttribute());
+			WindowModeCvar = new Cvar<WindowMode>("window_mode", WindowMode.Fullscreen,
+				"The width of the application's window in non-fullscreen mode.", UpdateMode.Immediate, true, true);
+			ShowDebugOverlayCvar = new Cvar<bool>("show_debug_overlay", PlatformInfo.IsDebug, "Shows or hides the debug overlay.",
+				UpdateMode.Immediate, true, false);
 
 			CvarRegistry.Register(TimeScaleCvar);
 			CvarRegistry.Register(ResolutionCvar);
@@ -262,4 +266,3 @@
 		}
 	}
 }
-

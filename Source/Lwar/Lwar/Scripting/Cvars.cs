@@ -2,13 +2,11 @@
 {
 	using System;
 	using System.Diagnostics;
-	using Lwar.Network;
+	using Network;
 	using Pegasus;
 	using Pegasus.Framework.UserInterface.Controls;
 	using Pegasus.Framework.UserInterface.Input;
 	using Pegasus.Math;
-	using Pegasus.Platform;
-	using Pegasus.Platform.Logging;
 	using Pegasus.Scripting;
 	using Pegasus.Scripting.Validators;
 
@@ -759,20 +757,35 @@
 		/// </summary>
 		public static void Initialize()
 		{
-			PlayerNameCvar = new Cvar<string>("player_name", "UnnamedPlayer", "The name of the player.", UpdateMode.Immediate, true, false, new NotEmptyAttribute(), new MaximumLengthAttribute(Specification.PlayerNameLength, true));
-			EventMessageDisplayTimeCvar = new Cvar<double>("event_message_display_time", 3, "The display time (in seconds) of event messages such as 'X killed Y', 'X joined the game', etc.", UpdateMode.Immediate, true, false, new RangeAttribute(0.5, 60.0));
-			ChatMessageDisplayTimeCvar = new Cvar<double>("chat_message_display_time", 6, "The display time (in seconds) of chat messages.", UpdateMode.Immediate, true, false, new RangeAttribute(0.5, 60.0));
-			InputShowScoreboardCvar = new Cvar<ConfigurableInput>("input_show_scoreboard", Key.Tab, "When triggered in an active game session, shows the scoreboard.", UpdateMode.Immediate, true, false);
-			InputRespawnCvar = new Cvar<ConfigurableInput>("input_respawn", MouseButton.Left, "When triggered in an active game session, respawns the player after death.", UpdateMode.Immediate, true, false);
-			InputForwardCvar = new Cvar<ConfigurableInput>("input_forward", Key.W, "When triggered in an active game session, moves the player forwards.", UpdateMode.Immediate, true, false);
-			InputBackwardCvar = new Cvar<ConfigurableInput>("input_backward", Key.S, "When triggered in an active game session, moves the player backwards.", UpdateMode.Immediate, true, false);
-			InputStrafeLeftCvar = new Cvar<ConfigurableInput>("input_strafe_left", Key.A, "When triggered in an active game session, moves the player to the left.", UpdateMode.Immediate, true, false);
-			InputStrafeRightCvar = new Cvar<ConfigurableInput>("input_strafe_right", Key.D, "When triggered in an active game session, moves the player to the right.", UpdateMode.Immediate, true, false);
-			InputPrimaryWeaponCvar = new Cvar<ConfigurableInput>("input_primary_weapon", MouseButton.Left, "When triggered in an active game session, fires the player's primary weapon.", UpdateMode.Immediate, true, false);
-			InputSecondaryWeaponCvar = new Cvar<ConfigurableInput>("input_secondary_weapon", MouseButton.Right, "When triggered in an active game session, fires the player's secondary weapon.", UpdateMode.Immediate, true, false);
-			InputTertiaryWeaponCvar = new Cvar<ConfigurableInput>("input_tertiary_weapon", Key.Num1, "When triggered in an active game session, fires the player's tertiary weapon.", UpdateMode.Immediate, true, false);
-			InputQuaternaryWeaponCvar = new Cvar<ConfigurableInput>("input_quaternary_weapon", Key.Num2, "When triggered in an active game session, fires the player's quaternary weapon.", UpdateMode.Immediate, true, false);
-			InputChatCvar = new Cvar<ConfigurableInput>("input_chat", Key.Return, "When triggered in an active game session, opens the chat input.", UpdateMode.Immediate, true, false);
+			PlayerNameCvar = new Cvar<string>("player_name", "UnnamedPlayer", "The name of the player.", UpdateMode.Immediate, true, false,
+				new NotEmptyAttribute(), new MaximumLengthAttribute(Specification.PlayerNameLength, true));
+			EventMessageDisplayTimeCvar = new Cvar<double>("event_message_display_time", 3,
+				"The display time (in seconds) of event messages such as 'X killed Y', 'X joined the game', etc.", UpdateMode.Immediate, true, false,
+				new RangeAttribute(0.5, 60.0));
+			ChatMessageDisplayTimeCvar = new Cvar<double>("chat_message_display_time", 6, "The display time (in seconds) of chat messages.",
+				UpdateMode.Immediate, true, false, new RangeAttribute(0.5, 60.0));
+			InputShowScoreboardCvar = new Cvar<ConfigurableInput>("input_show_scoreboard", Key.Tab,
+				"When triggered in an active game session, shows the scoreboard.", UpdateMode.Immediate, true, false);
+			InputRespawnCvar = new Cvar<ConfigurableInput>("input_respawn", MouseButton.Left,
+				"When triggered in an active game session, respawns the player after death.", UpdateMode.Immediate, true, false);
+			InputForwardCvar = new Cvar<ConfigurableInput>("input_forward", Key.W,
+				"When triggered in an active game session, moves the player forwards.", UpdateMode.Immediate, true, false);
+			InputBackwardCvar = new Cvar<ConfigurableInput>("input_backward", Key.S,
+				"When triggered in an active game session, moves the player backwards.", UpdateMode.Immediate, true, false);
+			InputStrafeLeftCvar = new Cvar<ConfigurableInput>("input_strafe_left", Key.A,
+				"When triggered in an active game session, moves the player to the left.", UpdateMode.Immediate, true, false);
+			InputStrafeRightCvar = new Cvar<ConfigurableInput>("input_strafe_right", Key.D,
+				"When triggered in an active game session, moves the player to the right.", UpdateMode.Immediate, true, false);
+			InputPrimaryWeaponCvar = new Cvar<ConfigurableInput>("input_primary_weapon", MouseButton.Left,
+				"When triggered in an active game session, fires the player's primary weapon.", UpdateMode.Immediate, true, false);
+			InputSecondaryWeaponCvar = new Cvar<ConfigurableInput>("input_secondary_weapon", MouseButton.Right,
+				"When triggered in an active game session, fires the player's secondary weapon.", UpdateMode.Immediate, true, false);
+			InputTertiaryWeaponCvar = new Cvar<ConfigurableInput>("input_tertiary_weapon", Key.Num1,
+				"When triggered in an active game session, fires the player's tertiary weapon.", UpdateMode.Immediate, true, false);
+			InputQuaternaryWeaponCvar = new Cvar<ConfigurableInput>("input_quaternary_weapon", Key.Num2,
+				"When triggered in an active game session, fires the player's quaternary weapon.", UpdateMode.Immediate, true, false);
+			InputChatCvar = new Cvar<ConfigurableInput>("input_chat", Key.Return, "When triggered in an active game session, opens the chat input.",
+				UpdateMode.Immediate, true, false);
 
 			CvarRegistry.Register(PlayerNameCvar);
 			CvarRegistry.Register(EventMessageDisplayTimeCvar);
@@ -804,4 +817,3 @@
 		}
 	}
 }
-

@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Pegasus.Math
+﻿namespace Pegasus.Math
 {
+	using System;
 	using System.Globalization;
 	using System.Runtime.InteropServices;
 
@@ -660,4 +659,3 @@ namespace Pegasus.Math
 		}
 	}
 }
-

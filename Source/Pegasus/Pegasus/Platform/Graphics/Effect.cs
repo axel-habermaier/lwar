@@ -39,9 +39,9 @@
 		}
 
 #if DEBUG
-		/// <summary>
-		///   Ensures that the instance has been disposed.
-		/// </summary>
+	/// <summary>
+	///   Ensures that the instance has been disposed.
+	/// </summary>
 		~Effect()
 		{
 			Log.Error("Finalizer runs for effect '{0}'", GetType().FullName);

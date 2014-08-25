@@ -112,7 +112,7 @@
 
 			_cancellation = new CancellationTokenSource();
 			var token = _cancellation.Token;
-			
+
 			_task = Task.Factory.StartNew(() =>
 			{
 				var timer = new StepTimer

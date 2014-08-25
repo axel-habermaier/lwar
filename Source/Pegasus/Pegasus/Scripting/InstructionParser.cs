@@ -23,7 +23,7 @@
 		///     A parser for identifiers.
 		/// </summary>
 		private static readonly Parser<string> Identifier = String(c => Char.IsLetter(c) || c == '_',
-																   c => Char.IsLetterOrDigit(c) || c == '_', "identifier");
+			c => Char.IsLetterOrDigit(c) || c == '_', "identifier");
 
 		/// <summary>
 		///     Skips any number of whitespaces and then expects the end of the input.
@@ -109,8 +109,8 @@
 					inputStream.SkipWhiteSpaces(); // To get the correct column in the error message
 
 					return Errors(new ErrorMessage(ErrorType.Expected, TypeRegistry.GetDescription(parameters[i].Type)),
-								  new ErrorMessage(ErrorType.Message, GetExampleString(parameters[i].Type)),
-								  new ErrorMessage(ErrorType.Message, Help.GetHint(command.Name)));
+						new ErrorMessage(ErrorType.Message, GetExampleString(parameters[i].Type)),
+						new ErrorMessage(ErrorType.Message, Help.GetHint(command.Name)));
 				}
 
 				// The argument must be separated from the previous one by at least one white space character
@@ -133,7 +133,7 @@
 		}
 
 		/// <summary>
-		/// Gets the example string for the given type.
+		///     Gets the example string for the given type.
 		/// </summary>
 		/// <param name="type">The type the examples should be returned for.</param>
 		private static string GetExampleString(Type type)

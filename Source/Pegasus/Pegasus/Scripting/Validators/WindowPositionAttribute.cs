@@ -3,7 +3,6 @@
 	using System;
 	using Framework.UserInterface;
 	using Math;
-	using Platform;
 
 	/// <summary>
 	///     Ensures that the validated value lies within the acceptable bounds of a window position.
@@ -18,8 +17,8 @@
 			get
 			{
 				return String.Format("Only screen positions between ({0},{1}) and ({2},{3}) are supported.",
-									 -NativeWindow.MaximumSize.Width, -NativeWindow.MaximumSize.Height,
-									 NativeWindow.MaximumSize.Width, NativeWindow.MaximumSize.Height);
+					-NativeWindow.MaximumSize.Width, -NativeWindow.MaximumSize.Height,
+					NativeWindow.MaximumSize.Width, NativeWindow.MaximumSize.Height);
 			}
 		}
 
@@ -31,8 +30,8 @@
 			get
 			{
 				return String.Format("must lie within ({0},{1}) and ({2},{3})",
-									 -NativeWindow.MaximumSize.Width, -NativeWindow.MaximumSize.Height,
-									 NativeWindow.MaximumSize.Width, NativeWindow.MaximumSize.Height);
+					-NativeWindow.MaximumSize.Width, -NativeWindow.MaximumSize.Height,
+					NativeWindow.MaximumSize.Width, NativeWindow.MaximumSize.Height);
 			}
 		}
 

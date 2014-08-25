@@ -535,7 +535,7 @@
 		{
 			return string.Format("[M11: {0}, M12: {1}, M13: {2}, M14: {3}] [M21: {4}, M22: {5}, M23: {6}, M24: {7}] " +
 								 "[M31: {8}, M32: {9}, M33: {10}, M34: {11}] [M41: {12}, M42: {13}, M43: {14}, M44: {15}]",
-								 M11, M12, M13, M14, M21, M22, M23, M24, M31, M32, M33, M34, M41, M42, M43, M44);
+				M11, M12, M13, M14, M21, M22, M23, M24, M31, M32, M33, M34, M41, M42, M43, M44);
 		}
 
 		/// <summary>
@@ -566,9 +566,9 @@
 		public static Matrix operator +(Matrix left, Matrix right)
 		{
 			return new Matrix(left.M11 + right.M11, left.M12 + right.M12, left.M13 + right.M13, left.M14 + right.M14,
-							  left.M21 + right.M21, left.M22 + right.M22, left.M23 + right.M23, left.M24 + right.M24,
-							  left.M31 + right.M31, left.M32 + right.M32, left.M33 + right.M33, left.M34 + right.M34,
-							  left.M41 + right.M41, left.M42 + right.M42, left.M43 + right.M43, left.M44 + right.M44);
+				left.M21 + right.M21, left.M22 + right.M22, left.M23 + right.M23, left.M24 + right.M24,
+				left.M31 + right.M31, left.M32 + right.M32, left.M33 + right.M33, left.M34 + right.M34,
+				left.M41 + right.M41, left.M42 + right.M42, left.M43 + right.M43, left.M44 + right.M44);
 		}
 
 		/// <summary>
@@ -579,9 +579,9 @@
 		public static Matrix operator -(Matrix left, Matrix right)
 		{
 			return new Matrix(left.M11 - right.M11, left.M12 - right.M12, left.M13 - right.M13, left.M14 - right.M14,
-							  left.M21 - right.M21, left.M22 - right.M22, left.M23 - right.M23, left.M24 - right.M24,
-							  left.M31 - right.M31, left.M32 - right.M32, left.M33 - right.M33, left.M34 - right.M34,
-							  left.M41 - right.M41, left.M42 - right.M42, left.M43 - right.M43, left.M44 - right.M44);
+				left.M21 - right.M21, left.M22 - right.M22, left.M23 - right.M23, left.M24 - right.M24,
+				left.M31 - right.M31, left.M32 - right.M32, left.M33 - right.M33, left.M34 - right.M34,
+				left.M41 - right.M41, left.M42 - right.M42, left.M43 - right.M43, left.M44 - right.M44);
 		}
 
 		/// <summary>

@@ -4,8 +4,8 @@
 	using System.Collections.Generic;
 	using Assets.Effects;
 	using Pegasus;
-	using Pegasus.Math;
 	using Pegasus.Assets;
+	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;

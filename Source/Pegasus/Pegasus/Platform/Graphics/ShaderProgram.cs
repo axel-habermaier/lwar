@@ -82,7 +82,7 @@
 
 			if (VertexShader.NativePtr != IntPtr.Zero && FragmentShader.NativePtr != IntPtr.Zero)
 				_shaderProgram = NativeMethods.CreateProgram(Application.Current.GraphicsDevice.NativePtr, VertexShader.NativePtr,
-															 FragmentShader.NativePtr);
+					FragmentShader.NativePtr);
 		}
 
 		/// <summary>

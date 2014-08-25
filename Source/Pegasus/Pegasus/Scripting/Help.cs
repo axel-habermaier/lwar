@@ -11,8 +11,6 @@
 	/// </summary>
 	internal class Help : DisposableObject
 	{
-
-
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
@@ -60,7 +58,7 @@
 				builder.Append("   Type 'list_cvars' to list all available cvars.\n");
 				builder.Append("Commands:\n");
 				builder.Append("   Type '<command-name> <value1> <value2> ...' to invoke the command with parameters value1, value2, ... " +
-								"Optional parameters can be omitted at the end of the command invocation.\n");
+							   "Optional parameters can be omitted at the end of the command invocation.\n");
 				builder.Append("   Type 'help <command-name>' to view a description of the usage and purpose of the command.\n");
 				builder.Append("   Type 'list_commands' to list all available commands.\n");
 

@@ -3,7 +3,6 @@
 	using System;
 	using System.Collections.Generic;
 	using Pegasus;
-	using Pegasus.Framework;
 	using Pegasus.Platform;
 	using Pegasus.Platform.Memory;
 	using Rendering;

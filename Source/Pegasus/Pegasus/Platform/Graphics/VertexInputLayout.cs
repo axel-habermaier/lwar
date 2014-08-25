@@ -63,17 +63,17 @@
 			Assert.ArgumentNotNull(vertexInputBindings);
 			Assert.ArgumentInRange(indexOffset, 0, Int32.MaxValue);
 			Assert.That(!vertexInputBindings.GroupBy(e => e.Semantics).Select((s, _) => s.Count()).Any(c => c > 1),
-						"The list of vertex input elements contains at least two elements with the same value set for the Semantics property.");
+				"The list of vertex input elements contains at least two elements with the same value set for the Semantics property.");
 
 			_vertexInputBindings = vertexInputBindings;
 			_indexBuffer = indexBuffer;
 
 			if (indexBuffer == null)
 				_vertexInputLayout = NativeMethods.CreateInputLayout(graphicsDevice.NativePtr, IntPtr.Zero, 0, IndexSize.SixteenBits,
-																	 _vertexInputBindings, _vertexInputBindings.Length);
+					_vertexInputBindings, _vertexInputBindings.Length);
 			else
 				_vertexInputLayout = NativeMethods.CreateInputLayout(graphicsDevice.NativePtr, indexBuffer.NativePtr, indexOffset,
-																	 indexBuffer.IndexSize, _vertexInputBindings, _vertexInputBindings.Length);
+					indexBuffer.IndexSize, _vertexInputBindings, _vertexInputBindings.Length);
 		}
 
 		/// <summary>

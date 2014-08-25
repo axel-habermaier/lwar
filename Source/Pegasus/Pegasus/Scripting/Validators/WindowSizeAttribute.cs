@@ -3,7 +3,6 @@
 	using System;
 	using Framework.UserInterface;
 	using Math;
-	using Platform;
 
 	/// <summary>
 	///     Ensures that the validated value lies within the acceptable bounds of a window size.
@@ -18,8 +17,8 @@
 			get
 			{
 				return String.Format("Only resolutions between {0}x{1} and {2}x{3} are supported.",
-									 NativeWindow.MinimumSize.Width, NativeWindow.MinimumSize.Height,
-									 NativeWindow.MaximumSize.Width, NativeWindow.MaximumSize.Height);
+					NativeWindow.MinimumSize.Width, NativeWindow.MinimumSize.Height,
+					NativeWindow.MaximumSize.Width, NativeWindow.MaximumSize.Height);
 			}
 		}
 
@@ -31,8 +30,8 @@
 			get
 			{
 				return String.Format("must lie within {0}x{1} and {2}x{3}",
-									 NativeWindow.MinimumSize.Width, NativeWindow.MinimumSize.Height,
-									 NativeWindow.MaximumSize.Width, NativeWindow.MaximumSize.Height);
+					NativeWindow.MinimumSize.Width, NativeWindow.MinimumSize.Height,
+					NativeWindow.MaximumSize.Width, NativeWindow.MaximumSize.Height);
 			}
 		}
 

@@ -28,7 +28,7 @@
 		{
 			Assert.ArgumentNotNull(target);
 			Assert.That(!(target is ICommand) || (parameter is object[] && ((object[])parameter).Length == ((ICommand)target).Parameters.Count()),
-						"Incorrect command parameters.");
+				"Incorrect command parameters.");
 
 			_target = target;
 			_parameter = parameter;
@@ -53,7 +53,7 @@
 					deferred = String.Format(", pending update: '{0}\\\0'", TypeRegistry.ToString(cvar.DeferredValue));
 
 				Log.Info("'{0}' is '{1}\\\0', default '{2}\\\0'{3}", cvar.Name, TypeRegistry.ToString(cvar.Value),
-						 TypeRegistry.ToString(cvar.DefaultValue), deferred);
+					TypeRegistry.ToString(cvar.DefaultValue), deferred);
 
 				if (cvar.UpdateMode != UpdateMode.Immediate && cvar.HasDeferredValue)
 					Log.Warn("{0}", cvar.UpdateMode.ToDisplayString());

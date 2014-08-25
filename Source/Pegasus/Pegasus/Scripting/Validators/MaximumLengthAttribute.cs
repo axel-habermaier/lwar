@@ -30,7 +30,7 @@
 			get
 			{
 				return String.Format("The given string exceeds the maximum allowed length of {0} {1}.", Maximum,
-									 CheckUtf8Length ? "UTF-8 bytes" : "characters");
+					CheckUtf8Length ? "UTF-8 bytes" : "characters");
 			}
 		}
 

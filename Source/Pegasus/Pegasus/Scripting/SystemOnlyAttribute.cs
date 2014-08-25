@@ -1,7 +1,6 @@
 ﻿namespace Pegasus.Scripting
 {
 	using System;
-	using Platform;
 
 	/// <summary>
 	///     When applied to a cvar property or command method in a registry specification interface, indicates that the cvar or

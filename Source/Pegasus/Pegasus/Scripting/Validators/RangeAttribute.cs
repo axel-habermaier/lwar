@@ -18,7 +18,7 @@
 			Assert.ArgumentNotNull(upperBound);
 			Assert.That(lowerBound.GetType() == upperBound.GetType(), "The types of the lower and upper bounds do not match.");
 			Assert.ArgumentSatisfies(lowerBound is IComparable,
-									 "The types of the lower and upper bounds must implement IComparable.");
+				"The types of the lower and upper bounds must implement IComparable.");
 
 			LowerBound = (IComparable)lowerBound;
 			UpperBound = (IComparable)upperBound;
@@ -42,7 +42,7 @@
 			get
 			{
 				return String.Format("The given value does not lie within {0} and {1}.",
-									 TypeRegistry.ToString(LowerBound), TypeRegistry.ToString(UpperBound));
+					TypeRegistry.ToString(LowerBound), TypeRegistry.ToString(UpperBound));
 			}
 		}
 
