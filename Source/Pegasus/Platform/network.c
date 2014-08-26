@@ -276,28 +276,9 @@ PG_API_EXPORT pgString pgGetLastNetworkError()
 
 static pgVoid pgNetworkError(pgString message)
 {
-	int length, i;
-	pgString osMessage;
-
-#ifdef WINDOWS
-	osMessage = pgGetWin32ErrorMessage(GetLastError());
-#else
-	pgChar buffer[2048];
-	strerror_r(errno, buffer, sizeof(buffer) / sizeof(pgChar));
-
-	osMessage = buffer;
-#endif
-
-	length = sprintf(lastNetworkError, "%s %s", message, osMessage);
+	pgString osMessage = pgGetOsErrorMessage();
+	sprintf(lastNetworkError, "%s %s", message, osMessage);
 	hasError = PG_TRUE;
-
-	for (i = length; i > 0; --i)
-	{
-		if (lastNetworkError[i - 1] == '\r' || lastNetworkError[i - 1] == '\n')
-			lastNetworkError[i - 1] = '\0';
-		else
-			break;
-	}
 }
 
 static PG_NORETURN pgVoid pgNetworkDie(pgString message)

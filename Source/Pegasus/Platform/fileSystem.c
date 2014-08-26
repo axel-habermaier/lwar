@@ -153,28 +153,9 @@ PG_API_EXPORT pgString pgGetLastFileError()
 
 static pgVoid pgFileSystemError(pgString message)
 {
-	int length, i;
-	pgString osMessage;
-
-#ifdef WINDOWS
-	osMessage = pgGetWin32ErrorMessage(GetLastError());
-#else
-	pgChar buffer[2048];
-	strerror_r(errno, buffer, sizeof(buffer) / sizeof(pgChar));
-
-	osMessage = buffer;
-#endif
-
-	length = sprintf(lastError, "%s %s", message, osMessage);
+	pgString osMessage = pgGetOsErrorMessage();
+	sprintf(lastError, "%s %s", message, osMessage);
 	hasError = PG_TRUE;
-
-	for (i = length; i > 0; --i)
-	{
-		if (lastError[i - 1] == '\r' || lastError[i - 1] == '\n')
-			lastError[i - 1] = '\0';
-		else
-			break;
-	}
 }
 
 static PG_NORETURN pgVoid pgFileSystemDie(pgString message)

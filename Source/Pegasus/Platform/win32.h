@@ -62,7 +62,7 @@
 // Windows functions
 //====================================================================================================================
 
-pgString pgGetWin32ErrorMessage(DWORD error);
+pgChar* pgGetWin32ErrorMessage(DWORD error);
 pgVoid pgWin32Error(pgString message);
 pgVoid pgDieWin32Error(pgString message, DWORD error);
 

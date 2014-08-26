@@ -36,9 +36,9 @@ pgVoid pgShowMessageBox(pgString caption, pgString message)
 // Windows-specific functions
 //====================================================================================================================
 
-pgString pgGetWin32ErrorMessage(DWORD error)
+pgChar* pgGetWin32ErrorMessage(DWORD error)
 {
-	static char buffer[2048];
+	static pgChar buffer[2048];
 	DWORD success;
 
 	success = FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, NULL, error,

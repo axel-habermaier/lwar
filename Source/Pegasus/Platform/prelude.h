@@ -156,6 +156,7 @@ typedef struct
 
 extern pgLibraryState pgState;
 
+pgString pgGetOsErrorMessage();
 pgString pgFormat(pgString message, ...);
 PG_NORETURN pgVoid pgNoReturn();
 

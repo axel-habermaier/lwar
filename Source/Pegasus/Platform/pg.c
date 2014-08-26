@@ -43,6 +43,32 @@ pgVoid pgShutdown()
 // Internal functions
 //====================================================================================================================
 
+pgString pgGetOsErrorMessage()
+{
+	pgInt32 length, i;
+	pgChar* osMessage;
+
+#ifdef WINDOWS
+	osMessage = pgGetWin32ErrorMessage(GetLastError());
+#else
+	static pgChar buffer[2048];
+	strerror_r(errno, buffer, sizeof(buffer) / sizeof(pgChar));
+
+	osMessage = buffer;
+#endif
+
+	length = strlen(osMessage);
+	for (i = length; i > 0; --i)
+	{
+		if (osMessage[i - 1] == '\r' || osMessage[i - 1] == '\n')
+			osMessage[i - 1] = '\0';
+		else
+			break;
+	}
+
+	return osMessage;
+}
+
 pgString pgFormat(pgString message, ...)
 {
 	static char buffer[4096];
