@@ -27,24 +27,15 @@ namespace Pegasus.Assets.AssetLoaders
 		/// <param name="assetName">The name of the asset.</param>
 		public override void Load(BufferReader buffer, object asset, string assetName)
 		{
-			Load(buffer, asset as Font, assetName);
-		}
-
-		/// <summary>
-		///     Loads the asset data into the given asset.
-		/// </summary>
-		/// <param name="buffer">The buffer the asset data should be read from.</param>
-		/// <param name="font">The asset instance that should be reinitialized with the loaded data.</param>
-		/// <param name="assetName">The name of the asset.</param>
-		public static void Load(BufferReader buffer, Font font, string assetName)
-		{
 			Assert.ArgumentNotNull(buffer);
-			Assert.ArgumentNotNull(font);
+			Assert.ArgumentNotNull(asset);
+			Assert.ArgumentOfType<Font>(asset);
 			Assert.ArgumentNotNullOrWhitespace(assetName);
 
 			// Load the font map
+			var font = (Font)asset;
 			AssetHeader.Validate(buffer, (byte)Assets.AssetType.Texture2D);
-			TextureLoader.Load(buffer, font.Texture, assetName);
+			Get((byte)Assets.AssetType.Texture2D).Load(buffer, font.Texture, assetName);
 
 			// Load the font metadata
 			var lineHeight = buffer.ReadUInt16();

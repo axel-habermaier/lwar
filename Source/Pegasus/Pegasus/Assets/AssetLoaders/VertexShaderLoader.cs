@@ -24,21 +24,11 @@ namespace Pegasus.Assets.AssetLoaders
 		/// <param name="buffer">The buffer the asset data should be read from.</param>
 		/// <param name="asset">The asset instance that should be reinitialized with the loaded data.</param>
 		/// <param name="assetName">The name of the asset.</param>
-		public override void Load(BufferReader buffer, object asset, string assetName)
-		{
-			Load(buffer, (VertexShader)asset, assetName);
-		}
-
-		/// <summary>
-		///     Loads the asset data into the given asset.
-		/// </summary>
-		/// <param name="buffer">The buffer the asset data should be read from.</param>
-		/// <param name="shader">The asset instance that should be reinitialized with the loaded data.</param>
-		/// <param name="assetName">The name of the asset.</param>
-		public static unsafe void Load(BufferReader buffer, VertexShader shader, string assetName)
+		public override unsafe void Load(BufferReader buffer, object asset, string assetName)
 		{
 			Assert.ArgumentNotNull(buffer);
-			Assert.ArgumentNotNull(shader);
+			Assert.ArgumentNotNull(asset);
+			Assert.ArgumentOfType<VertexShader>(asset);
 			Assert.ArgumentNotNullOrWhitespace(assetName);
 
 			var inputCount = buffer.ReadByte();
@@ -57,6 +47,7 @@ namespace Pegasus.Assets.AssetLoaders
 			int length;
 			ExtractShaderCode(buffer, out data, out length);
 
+			var shader = (VertexShader)asset;
 			shader.Reinitialize(data, length, inputs);
 			shader.SetName(assetName);
 		}

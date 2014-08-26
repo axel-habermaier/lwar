@@ -16,11 +16,6 @@
 	public sealed class AssetsManager : DisposableObject
 	{
 		/// <summary>
-		///     The registered asset loaders that can be used to load assets.
-		/// </summary>
-		private static readonly Dictionary<byte, AssetLoader> Loaders = new Dictionary<byte, AssetLoader>();
-
-		/// <summary>
 		///     Indicates whether the asset manager loads its asset asynchronously.
 		/// </summary>
 		private readonly bool _asyncLoading;
@@ -51,18 +46,6 @@
 		private readonly List<ShaderProgram> _pendingPrograms;
 
 		/// <summary>
-		///     Initializes the type, registering the default asset loaders.
-		/// </summary>
-		static AssetsManager()
-		{
-			RegisterAssetLoader(new AssetLoaders.FontLoader());
-			RegisterAssetLoader(new Texture2DLoader());
-			RegisterAssetLoader(new CubeMapLoader());
-			RegisterAssetLoader(new FragmentShaderLoader());
-			RegisterAssetLoader(new VertexShaderLoader());
-		}
-
-		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used to load the assets.</param>
@@ -89,18 +72,6 @@
 		public bool LoadingCompleted
 		{
 			get { return _pendingAssets.Count == 0 && _pendingPrograms.Count == 0; }
-		}
-
-		/// <summary>
-		///     Registers an asset loader that assets manager can subsequently use to load assets.
-		/// </summary>
-		/// <param name="assetLoader">The asset loader that should be registered.</param>
-		public static void RegisterAssetLoader(AssetLoader assetLoader)
-		{
-			Assert.ArgumentNotNull(assetLoader);
-			Assert.That(!Loaders.ContainsKey(assetLoader.AssetType), "An asset loader for this asset type has already been registered.");
-
-			Loaders.Add(assetLoader.AssetType, assetLoader);
 		}
 
 		/// <summary>
@@ -239,12 +210,13 @@
 		{
 			try
 			{
-				Log.Info("Loading {0} {1}...", Loaders[info.Type].AssetTypeName, GetAssetDisplayName(info));
+				var loader = AssetLoader.Get(info.Type);
+				Log.Info("Loading {0} {1}...", loader.AssetTypeName, GetAssetDisplayName(info));
 
 				using (var reader = BufferReader.Create(FileSystem.ReadAllBytes(info.Path)))
 				{
 					AssetHeader.Validate(reader, info.Type);
-					Loaders[info.Type].Load(reader, info.Asset, info.Path);
+					loader.Load(reader, info.Asset, info.Path);
 				}
 			}
 			catch (Exception e)
@@ -324,7 +296,7 @@
 			if (asset != null)
 				return (T)asset;
 
-			asset = Loaders[assetIdentifier.AssetType].Allocate(_graphicsDevice, assetIdentifier.AssetName);
+			asset = AssetLoader.Get(assetIdentifier.AssetType).Allocate(_graphicsDevice, assetIdentifier.AssetName);
 
 			var info = AssetInfo.Create(assetIdentifier, asset);
 			if (_asyncLoading)

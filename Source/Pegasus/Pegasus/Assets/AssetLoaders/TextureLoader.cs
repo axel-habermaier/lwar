@@ -15,21 +15,11 @@ namespace Pegasus.Assets.AssetLoaders
 		/// <param name="buffer">The buffer the asset data should be read from.</param>
 		/// <param name="asset">The asset instance that should be reinitialized with the loaded data.</param>
 		/// <param name="assetName">The name of the asset.</param>
-		public override void Load(BufferReader buffer, object asset, string assetName)
-		{
-			Load(buffer, (Texture)asset, assetName);
-		}
-
-		/// <summary>
-		///     Loads the asset data into the given asset.
-		/// </summary>
-		/// <param name="buffer">The buffer the asset data should be read from.</param>
-		/// <param name="texture">The asset instance that should be reinitialized with the loaded data.</param>
-		/// <param name="assetName">The name of the asset.</param>
-		public static unsafe void Load(BufferReader buffer, Texture texture, string assetName)
+		public override unsafe void Load(BufferReader buffer, object asset, string assetName)
 		{
 			Assert.ArgumentNotNull(buffer);
-			Assert.ArgumentNotNull(texture);
+			Assert.ArgumentNotNull(asset);
+			Assert.ArgumentOfType<Texture>(asset);
 			Assert.ArgumentNotNullOrWhitespace(assetName);
 
 			var description = new TextureDescription
@@ -62,6 +52,7 @@ namespace Pegasus.Assets.AssetLoaders
 				buffer.Skip((int)surfaceSize);
 			}
 
+			var texture = (Texture)asset;
 			texture.Reinitialize(description, surfaces);
 			texture.SetName(assetName);
 		}
