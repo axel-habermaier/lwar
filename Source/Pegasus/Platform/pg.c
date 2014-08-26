@@ -45,7 +45,7 @@ pgVoid pgShutdown()
 
 pgString pgGetOsErrorMessage()
 {
-	pgInt32 length, i;
+	size_t length, i;
 	pgChar* osMessage;
 
 #ifdef WINDOWS
