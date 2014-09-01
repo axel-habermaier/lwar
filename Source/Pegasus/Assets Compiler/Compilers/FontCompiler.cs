@@ -23,21 +23,6 @@
 		private readonly FreeTypeLibrary _freeType = new FreeTypeLibrary();
 
 		/// <summary>
-		///     The parser that is used to parse the font definitions.
-		/// </summary>
-		private readonly ConfigurationFileParser _parser = new ConfigurationFileParser(new Dictionary<string, Func<string, object>>
-		{
-			{ "File", s => s },
-			{ "Family", s => s },
-			{ "Size", s => Int32.Parse(s) },
-			{ "Aliased", s => Boolean.Parse(s) },
-			{ "Bold", s => Boolean.Parse(s) },
-			{ "Italic", s => Boolean.Parse(s) },
-			{ "Characters", ParseCharacterRanges },
-			{ "InvalidChar", s => s[0] }
-		});
-
-		/// <summary>
 		///     A value indicating whether the font loader must be regenerated.
 		/// </summary>
 		private bool _regenerateFontLoader;
@@ -48,30 +33,6 @@
 		public FontCompiler()
 		{
 			SupportsMultithreading = false;
-		}
-
-		/// <summary>
-		///     Parses the character range.
-		/// </summary>
-		/// <param name="range">The range that should be parsed.</param>
-		private static IEnumerable<char> ParseCharacterRanges(string range)
-		{
-			Assert.ArgumentNotNullOrWhitespace(range);
-
-			var ranges = range.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
-			foreach (var r in ranges)
-			{
-				var pair = r.Split(new[] { "-" }, StringSplitOptions.RemoveEmptyEntries);
-				Assert.That(pair.Length == 2, "Invalid character range '{0}'.", range);
-
-				var begin = 0;
-				var end = 0;
-				if (!Int32.TryParse(pair[0], out begin) || !Int32.TryParse(pair[1], out end))
-					Log.Die("Invalid character range '{0}'.", range);
-
-				for (var i = begin; i <= end; ++i)
-					yield return (char)i;
-			}
 		}
 
 		/// <summary>
@@ -102,31 +63,17 @@
 		/// <param name="writer">The writer the compilation output should be appended to.</param>
 		protected override void Compile(FontAsset asset, BinaryWriter writer)
 		{
+			var metadata = new FontMetadata(asset.SourceDirectory, asset.SourcePath);
 			WriteAssetHeader(writer, (byte)AssetType.Font);
 			_regenerateFontLoader = true;
 
-			// Read the font configuration
-			var configuration = _parser.Parse(asset.SourcePath);
-
-			var fontFile = Path.Combine(asset.SourceDirectory, (string)configuration["File"]);
-			var size = (int)configuration["Size"];
-			var antialiased = !(bool)configuration["Aliased"];
-			var renderMode = antialiased ? RenderMode.Antialiased : RenderMode.Aliased;
-			var bold = (bool)configuration["Bold"];
-			var italic = (bool)configuration["Italic"];
-			var characters = (IEnumerable<char>)configuration["Characters"];
-			var invalidChar = (char)configuration["InvalidChar"];
-
-			Assert.That(!bold, "Bold fonts are currently not supported.");
-			Assert.That(!italic, "Italic fonts are currently not supported.");
-
 			// Verify that the font file actually exists
-			if (!File.Exists(fontFile))
-				Log.Die("Unable to locate '{0}'.", configuration["File"]);
+			if (!File.Exists(metadata.FontFile))
+				Log.Die("Unable to locate '{0}'.", metadata.FontFile);
 
 			// Initialize the font data structures
-			var fontPtr = _freeType.CreateFont(fontFile);
-			using (var font = new Font(fontPtr, size, bold, italic, renderMode, characters, invalidChar))
+			var fontPtr = _freeType.CreateFont(metadata.FontFile);
+			using (var font = new Font(fontPtr, metadata))
 			using (var fontMap = new FontMap(font, GetFontMapPath(asset)))
 			{
 				// Write the font map
@@ -269,7 +216,7 @@
 
 					writer.AppendBlockStatement(() =>
 					{
-						var fonts = assets.Select(font => _parser.Parse(font.SourcePath));
+						var fonts = assets.Select(font => new FontMetadata(font.SourceDirectory, font.SourcePath));
 
 						writer.AppendLine("Assert.ArgumentNotNullOrWhitespace(fontFamily);");
 						writer.NewLine();
@@ -278,26 +225,25 @@
 						writer.AppendLine("switch (fontFamily)");
 						writer.AppendBlockStatement(() =>
 						{
-							foreach (var family in fonts.GroupBy(font => font["family"]))
+							foreach (var family in fonts.GroupBy(font => font.Family))
 							{
 								writer.AppendLine("case \"{0}\":", family.Key);
 								writer.IncreaseIndent();
 								writer.AppendLine("switch (size)");
 								writer.AppendBlockStatement(() =>
 								{
-									foreach (var size in family.GroupBy(font => font["size"]))
+									foreach (var size in family.GroupBy(font => font.Size))
 									{
 										writer.AppendLine("case {0}:", size.Key);
 										writer.IncreaseIndent();
 										foreach (var font in size)
 										{
-											var sourceFile = (string)font[ConfigurationFileParser.SourceFile];
-											var asset = assets.Single(a => a.SourcePath == sourceFile);
+											var asset = assets.Single(a => a.SourcePath == font.SourceFile);
 
 											writer.AppendLine("if (bold == {0} && italic == {1} && aliased == {2})",
-												((bool)font["bold"]).ToString().ToLower(),
-												((bool)font["italic"]).ToString().ToLower(),
-												((bool)font["aliased"]).ToString().ToLower());
+												(font.Bold).ToString().ToLower(),
+												(font.Italic).ToString().ToLower(),
+												(font.Aliased).ToString().ToLower());
 											writer.IncreaseIndent();
 											writer.AppendLine("font = {0}.{1}.{2};",
 												Configuration.AssetsProject.RootNamespace,

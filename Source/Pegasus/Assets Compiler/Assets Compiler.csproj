@@ -406,6 +406,7 @@
     <Compile Include="Assets\TextureAsset.cs" />
     <Compile Include="BinaryWriter.cs" />
     <Compile Include="Compilers\AssetIdentifierListGenerator.cs" />
+    <Compile Include="Fonts\FontMetadata.cs" />
     <Compile Include="CSharp\CodeElement.cs" />
     <Compile Include="CSharp\CSharpFile.cs" />
     <Compile Include="CSharp\CSharpProject.cs" />

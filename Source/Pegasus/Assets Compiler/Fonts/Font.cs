@@ -29,28 +29,22 @@
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="font">The native freetype font instance.</param>
-		/// <param name="size">The size (in pixels) of the characters.</param>
-		/// <param name="bold">Indicates whether the font weight should be bold.</param>
-		/// <param name="italic">Indicates whether the font should be italic.</param>
-		/// <param name="renderMode">Indicates whether anti-aliasing should be used when rendering the glyphs.</param>
-		/// <param name="characters">The characters that the font should contain.</param>
-		/// <param name="invalidChar">The character that should be used to representing missing glyphs.</param>
-		public Font(IntPtr font, int size, bool bold, bool italic, RenderMode renderMode, IEnumerable<char> characters, char invalidChar)
+		/// <param name="metadata">The font metadata.</param>
+		public Font(IntPtr font, FontMetadata metadata)
 		{
 			Assert.ArgumentNotNull(font);
-			Assert.InRange(renderMode);
-			Assert.ArgumentNotNull(characters);
 
 			_fontPtr = font;
 			_font = (FreeType.Face)Marshal.PtrToStructure(font, typeof(FreeType.Face));
 
-			FreeType.Invoke(() => FreeType.SetPixelSize(_fontPtr, 0, (uint)size));
+			FreeType.Invoke(() => FreeType.SetPixelSize(_fontPtr, 0, (uint)metadata.Size));
 
 			// Add the glyph that is used to show non-printable or non-supported characters; must be the first glyph
-			AddGlyph(renderMode, invalidChar);
+			var renderMode = !metadata.Aliased ? RenderMode.Antialiased : RenderMode.Aliased;
+			AddGlyph(renderMode, metadata.InvalidChar);
 
 			// Add the printable ASCII-glyphs
-			foreach (var character in characters)
+			foreach (var character in metadata.Characters)
 				AddGlyph(renderMode, character);
 		}
 
