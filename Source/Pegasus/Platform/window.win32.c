@@ -128,7 +128,7 @@ pgVoid pgGetWindowPlacementCore(pgWindow* window)
 pgVoid pgChangeToFullscreenModeCore(pgWindow* window)
 {
 	LONG_PTR style = GetWindowLongPtr(window->hwnd, GWL_STYLE);
-	style &= ~(WS_CAPTION | WS_THICKFRAME | WS_SYSMENU);
+	style &= ~(WS_CAPTION | WS_THICKFRAME | WS_SYSMENU | WS_OVERLAPPEDWINDOW);
 
 	if (!SetWindowLongPtr(window->hwnd, GWL_STYLE, style))
 		pgWin32Error("Failed to set fullscreen window style.");
@@ -156,7 +156,7 @@ pgVoid pgChangeToFullscreenModeCore(pgWindow* window)
 pgVoid pgChangeToWindowedModeCore(pgWindow* window)
 { 
 	LONG_PTR style = GetWindowLongPtr(window->hwnd, GWL_STYLE);
-	style |= WS_CAPTION | WS_THICKFRAME | WS_SYSMENU;
+	style |= WS_CAPTION | WS_THICKFRAME | WS_SYSMENU | WS_OVERLAPPEDWINDOW;
 
 	if (!SetWindowLongPtr(window->hwnd, GWL_STYLE, style))
 		pgWin32Error("Failed to set new window style.");

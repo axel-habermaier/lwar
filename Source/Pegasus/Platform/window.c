@@ -27,6 +27,9 @@ pgWindow* pgOpenWindow(pgString title, pgWindowPlacement placement, pgWindowCall
 	PG_ASSERT_NOT_NULL(callbacks.mouseLeft);
 	pgConstrainWindowPlacement(&placement);
 
+	if (placement.mode == PG_WINDOW_MINIMIZED)
+		placement.mode = PG_WINDOW_NORMAL;
+
 	PG_ALLOC(pgWindow, window);
 	window->callbacks = callbacks;
 	window->placement = placement;
