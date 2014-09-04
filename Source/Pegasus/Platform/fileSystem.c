@@ -297,7 +297,6 @@ static pgBool pgCloseFile(FILE* file)
 static pgBool pgReadFile(pgByte* buffer, pgUint32* sizeInBytes)
 {
 	FILE* file;
-	pgUint32 actualSize;
 
 	PG_ASSERT_NOT_NULL(buffer);
 	PG_ASSERT_NOT_NULL(sizeInBytes);
@@ -306,27 +305,19 @@ static pgBool pgReadFile(pgByte* buffer, pgUint32* sizeInBytes)
 	if (file == NULL)
 		return PG_FALSE;
 
-	if (!pgTryGetFileSize(file, &actualSize))
+	if (!pgTryGetFileSize(file, sizeInBytes))
 	{
 		pgCloseFile(file);
 		return PG_FALSE;
 	}
 
-	if (actualSize > *sizeInBytes)
-	{
-		pgCloseFile(file);
-		pgFileSystemError("File size is too large.");
-		return PG_FALSE;
-	}
-
-	if (fread(buffer, 1, actualSize, file) != actualSize)
+	if (fread(buffer, 1, *sizeInBytes, file) != *sizeInBytes)
 	{
 		pgCloseFile(file);
 		pgFileSystemError("Failed to read the contents of the file.");
 		return PG_FALSE;
 	}
 
-	*sizeInBytes = actualSize;
 	pgCloseFile(file);
 	return PG_TRUE;
 }
