@@ -89,7 +89,7 @@
 				child.Measure(availableChildSize);
 				var desiredChildSize = child.DesiredSize;
 
-				// We now updated the dock size and the accumulated size depending on the child's Dock value
+				// We now update the dock size and the accumulated size depending on the child's Dock value
 				switch (GetDock(child))
 				{
 					case Dock.Top:
