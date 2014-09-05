@@ -71,11 +71,6 @@
 		}
 
 		/// <summary>
-		///     Gets the keyboard device that raised the event.
-		/// </summary>
-		public Keyboard Keyboard { get; private set; }
-
-		/// <summary>
 		///     Gets the set of key modifiers that were pressed when the event was raised.
 		/// </summary>
 		public KeyModifiers Modifiers { get; private set; }
@@ -93,7 +88,6 @@
 			Assert.ArgumentInRange(key);
 
 			CachedInstance.Reset();
-			CachedInstance.Keyboard = keyboard;
 			CachedInstance.Key = key;
 			CachedInstance.ScanCode = scanCode;
 			CachedInstance._state = state;

@@ -205,13 +205,13 @@
 			switch (e.Key)
 			{
 				case Key.Right:
-					if (e.Keyboard.IsPressed(Key.LeftControl) || e.Keyboard.IsPressed(Key.RightControl))
+					if ((e.Modifiers & KeyModifiers.Control) == KeyModifiers.Control)
 						textBox._caret.Position = textBox.GetBeginningOfNextWord();
 					else
 						textBox._caret.Move(1);
 					break;
 				case Key.Left:
-					if (e.Keyboard.IsPressed(Key.LeftControl) || e.Keyboard.IsPressed(Key.RightControl))
+					if ((e.Modifiers & KeyModifiers.Control) == KeyModifiers.Control)
 						textBox._caret.Position = textBox.GetBeginningOfPreviousWord();
 					else
 						textBox._caret.Move(-1);

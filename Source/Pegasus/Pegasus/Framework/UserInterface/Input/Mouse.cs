@@ -14,7 +14,7 @@
 	/// <summary>
 	///     Represents the state of the mouse.
 	/// </summary>
-	public class Mouse : DisposableObject
+	internal class Mouse : DisposableObject
 	{
 		/// <summary>
 		///     Stores whether a button is currently being double-clicked.
@@ -42,6 +42,11 @@
 		internal Mouse()
 		{
 		}
+
+		/// <summary>
+		/// Gets a value indicating whether the mouse input is currently captured by an UI element.
+		/// </summary>
+		internal bool InputIsCaptured { get; private set; }
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -73,9 +78,35 @@
 		}
 
 		/// <summary>
+		///     Gets the position of the mouse normalized in both directions to the range -1..1 such
+		///     that the origin lies at the center of the window.
+		/// </summary>
+		public Vector2 NormalizedPosition
+		{
+			get { return NormalizePosition(Position); }
+		}
+
+		/// <summary>
 		///     Gets or sets the window the mouse is associated with.
 		/// </summary>
 		public Window Window { get; private set; }
+
+		/// <summary>
+		///     Normalizes the given mouse position relative to size of the mouse's window such that both directions lie within the
+		///     range -1..1, with the origin lying at the center of the window.
+		/// </summary>
+		internal Vector2 NormalizePosition(Vector2i position)
+		{
+			var size = Window.Size;
+			var x = position.X - size.Width / 2;
+			var y = position.Y - size.Height / 2;
+
+			// It's important to do the division and conversion to float now and not earlier; otherwise,
+			// there would be some drift if the width or height of the window is uneven.
+			// This implementation matches what the platform library does when resetting the cursor to the
+			// center of the window when the cursor is captured.
+			return new Vector2(x / (float)size.Width, y / (float)size.Height);
+		}
 
 		/// <summary>
 		///     Invoked when a button has been pressed.
@@ -159,6 +190,7 @@
 			if (hoveredElement == _hoveredElement)
 				return;
 
+			InputIsCaptured = false;
 			var args = MouseEventArgs.Create(this, Position, _states, Window.Keyboard.GetModifiers());
 
 			if (_hoveredElement != null)
@@ -167,8 +199,17 @@
 			_hoveredElement = hoveredElement;
 			Log.Debug("Hovered element: {0}", _hoveredElement == null ? "None" : _hoveredElement.GetType().Name);
 
-			if (_hoveredElement != null)
-				SetIsMouseOver(args);
+			if (_hoveredElement == null)
+				return;
+
+			SetIsMouseOver(args);
+				
+			var element = _hoveredElement;
+			do
+			{
+				InputIsCaptured = InputManager.GetCapturesInput(element);
+				element = element.VisualParent;
+			} while (element != null && !InputIsCaptured);
 		}
 
 		/// <summary>

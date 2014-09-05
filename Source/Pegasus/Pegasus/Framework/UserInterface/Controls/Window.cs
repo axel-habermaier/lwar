@@ -47,12 +47,12 @@
 		/// <summary>
 		///     Gets the keyboard state of this window.
 		/// </summary>
-		public Keyboard Keyboard { get; private set; }
+		internal Keyboard Keyboard { get; private set; }
 
 		/// <summary>
 		///     Gets the mouse state of this window.
 		/// </summary>
-		public Mouse Mouse { get; private set; }
+		internal Mouse Mouse { get; private set; }
 
 		/// <summary>
 		///     The output the window's contents are rendered to.

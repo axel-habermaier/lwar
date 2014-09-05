@@ -10,7 +10,7 @@
 	/// <summary>
 	///     Represents the state of the keyboard.
 	/// </summary>
-	public class Keyboard : DisposableObject
+	internal class Keyboard : DisposableObject
 	{
 		/// <summary>
 		///     Indicates whether all keyboard input events are handled by an UI element.

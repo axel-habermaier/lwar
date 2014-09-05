@@ -25,10 +25,7 @@
 		/// </summary>
 		protected InputState[] InputStates { get; set; }
 
-		/// <summary>
-		///     Gets the mouse device that raised the event.
-		/// </summary>
-		public Mouse Mouse { get; protected set; }
+	
 
 		/// <summary>
 		///     Gets the position of the mouse at the time the event was generated.
@@ -39,21 +36,7 @@
 		///     Gets the position of the mouse at the time the event was generated normalized in both directions to the range -1..1 such
 		///     that the origin lies at the center of the window.
 		/// </summary>
-		public Vector2 NormalizedPosition
-		{
-			get
-			{
-				var size = Mouse.Window.Size;
-				var x = Position.X - size.Width / 2;
-				var y = Position.Y - size.Height / 2;
-
-				// It's important to do the division and conversion to float now and not earlier; otherwise,
-				// there would be some drift if the width or height of the window is uneven.
-				// This implementation matches what the platform library does when resetting the cursor to the
-				// center of the window when the cursor is captured.
-				return new Vector2(x / (float)size.Width, y / (float)size.Height);
-			}
-		}
+		public Vector2 NormalizedPosition { get; protected set; }
 
 		/// <summary>
 		///     Gets the set of key modifiers that was pressed when the event was raised.
@@ -107,14 +90,14 @@
 		/// <param name="position">The position of the mouse at the time the event was generated.</param>
 		/// <param name="inputStates">The states of the mouse buttons.</param>
 		/// <param name="modifiers">The key modifiers that were pressed when the event was raised.</param>
-		public static MouseEventArgs Create(Mouse mouse, Vector2i position, InputState[] inputStates, KeyModifiers modifiers)
+		internal static MouseEventArgs Create(Mouse mouse, Vector2i position, InputState[] inputStates, KeyModifiers modifiers)
 		{
 			Assert.ArgumentNotNull(mouse);
 			Assert.ArgumentNotNull(inputStates);
 
 			CachedInstance.Reset();
-			CachedInstance.Mouse = mouse;
 			CachedInstance.Position = position;
+			CachedInstance.NormalizedPosition = mouse.NormalizePosition(position);
 			CachedInstance.InputStates = inputStates;
 			CachedInstance.Modifiers = modifiers;
 

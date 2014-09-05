@@ -7,7 +7,6 @@
 	using Pegasus;
 	using Pegasus.Framework;
 	using Pegasus.Framework.UserInterface.Input;
-	using Pegasus.Math;
 	using Pegasus.Platform;
 	using Pegasus.Platform.Memory;
 	using Scripting;
@@ -41,11 +40,6 @@
 		///     The input message that is sent to the server periodically.
 		/// </summary>
 		private InputMessage _inputMessage;
-
-		/// <summary>
-		///     The current target position of the mouse.
-		/// </summary>
-		private Vector2 _targetPosition;
 
 		#region Network-synced input states
 
@@ -89,15 +83,6 @@
 			_inputDevice.Add(_shooting2.Input);
 			_inputDevice.Add(_shooting3.Input);
 			_inputDevice.Add(_shooting4.Input);
-			_inputDevice.MouseMoved += OnMouseMoved;
-		}
-
-		/// <summary>
-		///     Updates the current target position.
-		/// </summary>
-		private void OnMouseMoved(MouseEventArgs args)
-		{
-			_targetPosition = args.NormalizedPosition;
 		}
 
 		/// <summary>
@@ -148,7 +133,7 @@
 			_shooting4.Update(ref _inputMessage.Shooting4);
 
 			// Add the target to the message
-			var worldCoordinates = _gameSession.Camera.ToWorldCoordinates(_targetPosition);
+			var worldCoordinates = _gameSession.Camera.ToWorldCoordinates(_inputDevice.NormalizedMousePosition);
 			if (_gameSession.LocalPlayer.Ship != null)
 				_inputMessage.Target = worldCoordinates - _gameSession.LocalPlayer.Ship.Position;
 
@@ -170,7 +155,6 @@
 			_inputDevice.Remove(_shooting2.Input);
 			_inputDevice.Remove(_shooting3.Input);
 			_inputDevice.Remove(_shooting4.Input);
-			_inputDevice.MouseMoved -= OnMouseMoved;
 		}
 
 		/// <summary>

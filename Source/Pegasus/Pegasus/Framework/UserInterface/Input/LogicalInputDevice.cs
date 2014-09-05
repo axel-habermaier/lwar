@@ -3,6 +3,7 @@
 	using System;
 	using System.Collections.Generic;
 	using Controls;
+	using Math;
 	using Platform.Memory;
 
 	/// <summary>
@@ -49,6 +50,16 @@
 		private Mouse _mouse;
 
 		/// <summary>
+		///     The current mouse position.
+		/// </summary>
+		private Vector2i _mousePosition;
+
+		/// <summary>
+		///     The current normalized mouse position.
+		/// </summary>
+		private Vector2 _normalizedMousePosition;
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="element">The UI element that should be associated with this logical device.</param>
@@ -63,6 +74,35 @@
 			_element.MouseUp += OnMouseUp;
 			_element.MouseWheel += OnMouseWheel;
 			_element.MouseMove += OnMouseMoved;
+		}
+
+		/// <summary>
+		///     Gets the position of the mouse.
+		/// </summary>
+		public Vector2i MousePosition
+		{
+			get
+			{
+				if (!Mouse.InputIsCaptured)
+					_mousePosition = Mouse.Position;
+
+				return _mousePosition;
+			}
+		}
+
+		/// <summary>
+		///     Gets the position of the mouse normalized in both directions to the range -1..1 such
+		///     that the origin lies at the center of the window.
+		/// </summary>
+		public Vector2 NormalizedMousePosition
+		{
+			get
+			{
+				if (!Mouse.InputIsCaptured)
+					_normalizedMousePosition = Mouse.NormalizedPosition;
+
+				return _normalizedMousePosition;
+			}
 		}
 
 		/// <summary>
@@ -220,11 +260,23 @@
 
 			// Update all key states
 			for (var i = 0; i < _keyStates.Length; ++i)
+			{
+				// We might have missed a key up event for a pressed key, so update the input state accordingly
+				if (_keyStates[i].IsPressed && !Keyboard.IsPressed((Key)i))
+					_keyStates[i].Released();
+
 				_keyStates[i].Update();
+			}
 
 			// Update all mouse button states
 			for (var i = 0; i < _mouseButtonStates.Length; ++i)
+			{
+				// We might have missed a mouse up event for a pressed mouse button, so update the input state accordingly
+				if (_mouseButtonStates[i].IsPressed && !Mouse.IsPressed((MouseButton)i))
+					_mouseButtonStates[i].Released();
+
 				_mouseButtonStates[i].Update();
+			}
 		}
 
 		/// <summary>
@@ -247,7 +299,7 @@
 		public bool IsPressed(Key key)
 		{
 			Assert.ArgumentInRange(key);
-			return _keyStates[(int)key].IsPressed && Keyboard.IsPressed(key);
+			return _keyStates[(int)key].IsPressed;
 		}
 
 		/// <summary>
@@ -258,7 +310,7 @@
 		public bool WentDown(Key key)
 		{
 			Assert.ArgumentInRange(key);
-			return _keyStates[(int)key].WentDown && Keyboard.WentDown(key);
+			return _keyStates[(int)key].WentDown;
 		}
 
 		/// <summary>
@@ -269,7 +321,7 @@
 		public bool WentUp(Key key)
 		{
 			Assert.ArgumentInRange(key);
-			return _keyStates[(int)key].WentUp && Keyboard.WentUp(key);
+			return _keyStates[(int)key].WentUp;
 		}
 
 		/// <summary>
@@ -280,7 +332,7 @@
 		public bool IsRepeated(Key key)
 		{
 			Assert.ArgumentInRange(key);
-			return _keyStates[(int)key].IsRepeated && Keyboard.IsRepeated(key);
+			return _keyStates[(int)key].IsRepeated;
 		}
 
 		/// <summary>
@@ -290,7 +342,7 @@
 		public bool IsPressed(MouseButton button)
 		{
 			Assert.ArgumentInRange(button);
-			return _mouseButtonStates[(int)button].IsPressed && Mouse.IsPressed(button);
+			return _mouseButtonStates[(int)button].IsPressed;
 		}
 
 		/// <summary>
@@ -300,7 +352,7 @@
 		public bool IsDoubleClicked(MouseButton button)
 		{
 			Assert.ArgumentInRange(button);
-			return _doubleClicked[(int)button] && Mouse.IsDoubleClicked(button);
+			return _doubleClicked[(int)button];
 		}
 
 		/// <summary>
@@ -311,7 +363,7 @@
 		public bool WentDown(MouseButton button)
 		{
 			Assert.ArgumentInRange(button);
-			return _mouseButtonStates[(int)button].WentDown && Mouse.WentDown(button);
+			return _mouseButtonStates[(int)button].WentDown;
 		}
 
 		/// <summary>
@@ -322,7 +374,7 @@
 		public bool WentUp(MouseButton button)
 		{
 			Assert.ArgumentInRange(button);
-			return _mouseButtonStates[(int)button].WentUp && Mouse.WentUp(button);
+			return _mouseButtonStates[(int)button].WentUp;
 		}
 	}
 }
