@@ -35,7 +35,7 @@
 			InputBindings.Add(new ScanCodeBinding(PlatformInfo.ConsoleKey, "ToggleConsole", triggerOnRepeat: false) { Preview = true });
 			DataContext = dataContext;
 
-			InitializeComponents();
+			LoadContent();
 		}
 
 		/// <summary>

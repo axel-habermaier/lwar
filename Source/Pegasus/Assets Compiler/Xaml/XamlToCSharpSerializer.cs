@@ -74,24 +74,24 @@
 					_writer.AppendLine("///     Initializes a new instance.");
 					_writer.AppendLine("/// </summary>");
 					_writer.AppendLine("public {0}()", className);
-					_writer.AppendBlockStatement(() =>
-					{
-						_writer.AppendLine("InitializeComponents();");
-						_writer.AppendLine("OnLoaded();");
-					});
+					_writer.AppendBlockStatement(() => _writer.AppendLine("LoadContent();"));
 					_writer.NewLine();
 
 					_writer.AppendLine("/// <summary>");
-					_writer.AppendLine("///     Invoked once the UI element and all of its children have been fully loaded.");
+					_writer.AppendLine("///     Invoked once the UI element's content has been fully loaded.");
 					_writer.AppendLine("/// </summary>");
 					_writer.AppendLine("partial void OnLoaded();");
 					_writer.NewLine();
 
 					_writer.AppendLine("/// <summary>");
-					_writer.AppendLine("///     Initializes the UI element's children.");
+					_writer.AppendLine("///     Loads and initializes the UI element's content.");
 					_writer.AppendLine("/// </summary>");
-					_writer.AppendLine("private void InitializeComponents()");
-					_writer.AppendBlockStatement(() => GenerateCode(_xamlRoot));
+					_writer.AppendLine("private void LoadContent()");
+					_writer.AppendBlockStatement(() =>
+					{
+						GenerateCode(_xamlRoot);
+						_writer.AppendLine("OnLoaded();");
+					});
 				});
 			});
 
