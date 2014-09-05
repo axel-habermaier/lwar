@@ -96,7 +96,7 @@
 				if (_focusedElement != Window)
 					_focusedElements.Push(value);
 
-				Log.Debug("Focused element: {0}", _focusedElement.GetType().Name);
+				Log.DebugIf(false, "Focused element: {0}", _focusedElement.GetType().Name);
 				Log.DebugIf(_focusedElements.Count > 32, "Unusually large focused elements history stack.");
 			}
 		}

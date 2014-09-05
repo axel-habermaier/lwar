@@ -197,7 +197,7 @@
 				UnsetIsMouseOver(_hoveredElement, args);
 
 			_hoveredElement = hoveredElement;
-			Log.Debug("Hovered element: {0}", _hoveredElement == null ? "None" : _hoveredElement.GetType().Name);
+			Log.DebugIf(false, "Hovered element: {0}", _hoveredElement == null ? "None" : _hoveredElement.GetType().Name);
 
 			if (_hoveredElement == null)
 				return;
