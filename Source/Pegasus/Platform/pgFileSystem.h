@@ -3,7 +3,7 @@
 
 #include "pg.h"
 
-#ifdef _MSC_VER
+#ifdef PG_COMPILER_VISUAL_STUDIO
 	typedef wchar_t pgPathChar;
 #else
 	typedef pgChar pgPathChar;

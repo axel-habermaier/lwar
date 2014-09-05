@@ -1,7 +1,7 @@
 #include "prelude.h"
 #include <stdio.h>
 
-#ifdef _MSC_VER
+#ifdef PG_COMPILER_VISUAL_STUDIO
 	PG_DISABLE_WARNING(4917)
 		#undef INITGUID
 		#include <Shlobj.h>
@@ -12,7 +12,7 @@
 // Helper functions and error state
 //====================================================================================================================
 
-#ifdef _MSC_VER
+#ifdef PG_COMPILER_VISUAL_STUDIO
 	#define fopen _wfopen
 	#define remove _wremove
 	#define MODE(x) L#x
@@ -111,7 +111,7 @@ PG_API_EXPORT const pgPathChar* pgGetUserDirectory()
 	// On Windows, when compiling with Visual Studio, use the local app data directory to store app files; on all
 	// other platforms and compilers, use the current working directory instead.
 
-#ifdef _MSC_VER
+#ifdef PG_COMPILER_VISUAL_STUDIO
 	PWSTR userDir;
 	size_t length;
 
@@ -184,7 +184,7 @@ static pgVoid pgAddToPath(pgString path)
 	size_t length2;
 	size_t length;
 
-#ifdef _MSC_VER
+#ifdef PG_COMPILER_VISUAL_STUDIO
 	pgPathChar conversionBuffer[FILENAME_MAX];
 	size_t converted = mbstowcs(conversionBuffer, path, sizeof(conversionBuffer) / sizeof(pgPathChar));
 	if (converted == (size_t)-1)
@@ -263,7 +263,7 @@ static FILE* pgOpenFile(pgFileMode fileMode)
 		mode = MODE(a);
 		break;
 	case PG_FILE_READ:
-#ifdef _MSC_VER
+#ifdef PG_COMPILER_VISUAL_STUDIO
 		mode = MODE(rb);
 #else
 		mode = MODE(r);

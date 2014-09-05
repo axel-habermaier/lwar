@@ -1,6 +1,6 @@
 #include "prelude.h"
 
-#if defined(OPENGL3) && defined(LINUX)
+#if defined(PG_GRAPHICS_OPENGL3) && defined(PG_SYSTEM_LINUX)
 	
 #include <stdlib.h>
 #include <string.h>

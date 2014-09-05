@@ -1,6 +1,6 @@
 #include "prelude.h"
 
-#if defined(OPENGL3) && defined(WINDOWS)
+#if defined(PG_GRAPHICS_OPENGL3) && defined(PG_SYSTEM_WINDOWS)
 #pragma warning(push, 0)
 #include <stdlib.h>
 #include <string.h>

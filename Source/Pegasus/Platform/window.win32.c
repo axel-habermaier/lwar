@@ -1,6 +1,6 @@
 #include "prelude.h"
 
-#ifdef WINDOWS
+#ifdef PG_SYSTEM_WINDOWS
 
 //====================================================================================================================
 // Helper functions, defines, and state

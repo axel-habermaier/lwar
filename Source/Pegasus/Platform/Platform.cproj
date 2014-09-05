@@ -17,7 +17,7 @@
     <OutputPath>..\..\..\Binaries x64\Debug OpenGL3\</OutputPath>
     <OutputName>Platform</OutputName>
     <CompileTarget>SharedLibrary</CompileTarget>
-    <DefineSymbols>DEBUG OPENGL3</DefineSymbols>
+    <DefineSymbols>DEBUG PG_GRAPHICS_OPENGL3</DefineSymbols>
     <SourceDirectory>.</SourceDirectory>
     <WarningLevel>All</WarningLevel>
     <Libs>
@@ -32,7 +32,7 @@
     <OutputName>Platform</OutputName>
     <CompileTarget>SharedLibrary</CompileTarget>
     <OptimizationLevel>3</OptimizationLevel>
-    <DefineSymbols>OPENGL3</DefineSymbols>
+    <DefineSymbols>PG_GRAPHICS_OPENGL3</DefineSymbols>
     <SourceDirectory>.</SourceDirectory>
     <WarningLevel>All</WarningLevel>
     <Libs>

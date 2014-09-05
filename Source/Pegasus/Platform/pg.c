@@ -48,7 +48,7 @@ pgString pgGetOsErrorMessage()
 	size_t length, i;
 	pgChar* osMessage;
 
-#ifdef WINDOWS
+#ifdef PG_SYSTEM_WINDOWS
 	osMessage = pgGetWin32ErrorMessage(GetLastError());
 #else
 	static pgChar buffer[2048];

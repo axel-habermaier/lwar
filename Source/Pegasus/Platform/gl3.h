@@ -7,7 +7,7 @@
 
 #include "glExt.h"
 
-#ifdef WINDOWS
+#ifdef PG_SYSTEM_WINDOWS
 
 	#include "win32.h"
 	#include "wglExt.h"
@@ -19,7 +19,7 @@
 		HGLRC	hrc;
 	} pgContext;
 
-#elif defined(LINUX)
+#elif defined(PG_SYSTEM_LINUX)
 
 	#include "glxExt.h"
 

@@ -1,6 +1,6 @@
 #include "prelude.h"
 
-#ifdef LINUX
+#ifdef PG_SYSTEM_LINUX
 
 // The next message that should be handled
 static pgMessage nextMessage;

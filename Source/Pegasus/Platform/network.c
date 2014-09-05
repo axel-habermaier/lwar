@@ -64,10 +64,6 @@ PG_API_EXPORT pgString pgIPAddressToString(pgIPAddress* address)
 
 PG_API_EXPORT pgSocket* pgCreateUdpSocket()
 {
-#ifdef WINDOWS
-	u_long _true = 1;
-#endif
-
 	pgSocket* sock = NULL;
 	PG_ALLOC(pgSocket, sock);
 
@@ -78,7 +74,8 @@ PG_API_EXPORT pgSocket* pgCreateUdpSocket()
 		return NULL;
 	}
 
-#ifdef WINDOWS
+#ifdef PG_SYSTEM_WINDOWS
+	u_long _true = 1;
 	if (socket_error(ioctlsocket(sock->socket, FIONBIO, &_true)))
 #else
 	if (socket_error(fcntl(sock->socket, F_SETFL, fcntl(sock->socket, F_GETFL, 0) | O_NDELAY)))
@@ -192,7 +189,7 @@ PG_API_EXPORT pgReceiveStatus pgTryReceiveUdpPacket(pgSocket* socket, pgPacket* 
 	size = recvfrom(socket->socket, (char*)packet->data, packet->capacity, 0, (struct sockaddr*)&from, &len);
 	packet->size = (pgUint32)size;
 
-#ifdef WINDOWS
+#ifdef PG_SYSTEM_WINDOWS
 	if (WSAGetLastError() == WSAEWOULDBLOCK)
 #else
 	if (socket_error(size) && errno == EAGAIN)

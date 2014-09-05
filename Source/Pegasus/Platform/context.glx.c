@@ -1,6 +1,6 @@
 #include "prelude.h"
 
-#if defined(LINUX)
+#if defined(PG_SYSTEM_LINUX)
 
 //====================================================================================================================
 // Helper functions 

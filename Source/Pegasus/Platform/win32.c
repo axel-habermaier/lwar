@@ -1,7 +1,7 @@
 #include "prelude.h"
 #include <stdio.h>
 
-#ifdef WINDOWS
+#ifdef PG_SYSTEM_WINDOWS
 
 #include "win32.h"
 

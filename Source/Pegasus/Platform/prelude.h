@@ -6,7 +6,8 @@
 //====================================================================================================================
 #ifdef _MSC_VER
 
-	#define WINDOWS
+	#define PG_SYSTEM_WINDOWS
+	#define PG_COMPILER_VISUAL_STUDIO
 
 	// Allows emitting #pragma directives within macros
 	#define PG_PRAGMA(pragma)	__pragma(pragma)
@@ -47,7 +48,7 @@
 //====================================================================================================================
 #elif defined(__GNUC__)
 
-	#define LINUX
+	#define PG_SYSTEM_LINUX
 
 	#define PG_INLINE inline
 	#define PG_NORETURN __attribute__ ((noreturn))
@@ -181,17 +182,17 @@ PG_NORETURN pgVoid pgNoReturn();
 // Platform-specific includes
 //====================================================================================================================
 
-#ifdef WINDOWS
+#ifdef PG_SYSTEM_WINDOWS
 	#include "win32.h"	
 
-	#ifdef OPENGL3
+	#ifdef PG_GRAPHICS_OPENGL3
 		#include "gl3.h"
-	#elif defined(DIRECT3D11)
+	#elif defined(PG_GRAPHICS_DIRECT3D11)
 		#include "d3d11.h"
 	#else
 		#error Unsupported graphics API
 	#endif
-#elif defined(LINUX)
+#elif defined(PG_SYSTEM_LINUX)
 	#include "linux.h"	
 	#include "gl3.h"
 #else

@@ -1,6 +1,6 @@
 #include "prelude.h"
 
-#if defined(WINDOWS) && defined(OPENGL3)
+#if defined(PG_SYSTEM_WINDOWS) && defined(PG_GRAPHICS_OPENGL3)
 
 //====================================================================================================================
 // Helper functions 

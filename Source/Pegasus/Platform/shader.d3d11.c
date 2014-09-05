@@ -1,6 +1,6 @@
 #include "prelude.h"
 
-#ifdef DIRECT3D11
+#ifdef PG_GRAPHICS_DIRECT3D11
 
 //====================================================================================================================
 // Helper functions

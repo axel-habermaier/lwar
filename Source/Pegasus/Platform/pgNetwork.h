@@ -7,13 +7,13 @@
 // Network types
 //====================================================================================================================
 
-typedef struct pgSocket		pgSocket;
+typedef struct pgSocket	pgSocket;
 typedef	struct pgIPAddress
 {
 	pgByte ip[16];
 } pgIPAddress;
 
-typedef struct pgPacket
+typedef struct
 {
 	pgByte* data;
 	pgUint32 size;
@@ -22,7 +22,7 @@ typedef struct pgPacket
 	pgUint16 port;
 } pgPacket;
 
-typedef enum pgReceiveStatus
+typedef enum
 {
 	PG_RECEIVE_ERROR = 0,
 	PG_RECEIVE_DATA_AVAILABLE = 1,
