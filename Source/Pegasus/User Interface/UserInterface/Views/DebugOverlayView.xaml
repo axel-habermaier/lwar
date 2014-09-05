@@ -8,6 +8,7 @@
 			 x:Class="Pegasus.Framework.UserInterface.Views.DebugOverlayView"
 			 x:Name="UserControl"
 			 FontFamily="Liberation Mono"
+			 IsHitTestVisible="false"
 			 FontSize="11"
 			 TextOptions.TextRenderingMode="Aliased"
 			 Foreground="White" 

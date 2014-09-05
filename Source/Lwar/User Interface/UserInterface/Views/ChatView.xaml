@@ -12,8 +12,7 @@
 			 FontSize="16"
 			 HorizontalAlignment="Stretch"
 			 VerticalAlignment="Stretch"
-			 input:Keyboard.HandlesAllInput="true"
-			 input:Mouse.HandlesAllInput="true">
+			 input:InputManager.CapturesInput="true">
 	<UserControl.InputBindings>
 		<input:KeyBinding Key="Return" Method="Send" />
 		<input:KeyBinding Key="NumpadEnter" Method="Send" />
@@ -31,8 +30,8 @@
 					<RowDefinition Height="Auto" />
 				</Grid.RowDefinitions>
 				<TextBlock Grid.Row="0" Grid.Column="0" Margin="0,4,0,0">Say:</TextBlock>
-				<TextBox x:Name="MessageInput" 
-					     Width="600"
+				<TextBox Width="600"
+						 input:InputManager.AutoFocus="true"
 						 MaxLength="{Binding MaxMessageLength}"
 						 Text="{Binding Message}" Grid.Row="0"
 						 Grid.Column="1"

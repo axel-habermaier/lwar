@@ -308,8 +308,6 @@
       <Link>UserInterface\Views\UserInterface.cs</Link>
     </Compile>
     <Compile Include="UserInterface\Views\GameSessionView.cs" />
-    <Compile Include="UserInterface\Views\InGameMenuView.cs" />
-    <Compile Include="UserInterface\Views\LoadingView.cs" />
     <Compile Include="UserInterface\Views\ChatView.cs" />
     <Compile Include="UserInterface\Views\ShipOverlayPanel.cs" />
     <Compile Include="UserInterface\Views\ShipOverlayView.cs" />

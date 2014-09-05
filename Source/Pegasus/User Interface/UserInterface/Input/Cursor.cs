@@ -7,7 +7,7 @@
 	public class Cursor
 	{
 		public static readonly DependencyProperty CursorProperty = DependencyProperty.RegisterAttached(
-			"Cursor", typeof(Cursor), typeof(Mouse), new PropertyMetadata(default(Cursor)));
+			"Cursor", typeof(Cursor), typeof(Cursor), new PropertyMetadata(default(Cursor)));
 
 		public Point HotSpot { get; set; }
 		public string Texture { get; set; }

@@ -7,6 +7,7 @@
 	using Controls;
 	using Math;
 	using Platform;
+	using Platform.Logging;
 	using Platform.Memory;
 	using Rendering;
 
@@ -15,11 +16,6 @@
 	/// </summary>
 	public class Mouse : DisposableObject
 	{
-		/// <summary>
-		///     Indicates whether all mouse input events are handled by an UI element.
-		/// </summary>
-		public static readonly DependencyProperty<bool> HandlesAllInputProperty = new DependencyProperty<bool>();
-
 		/// <summary>
 		///     Stores whether a button is currently being double-clicked.
 		/// </summary>
@@ -39,19 +35,6 @@
 		///     The UI element the mouse is currently over. Null if the mouse is not over any UI element.
 		/// </summary>
 		private UIElement _hoveredElement;
-
-		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static Mouse()
-		{
-			UIElement.MouseDownEvent.Raised += HandleEvent;
-			UIElement.MouseUpEvent.Raised += HandleEvent;
-			UIElement.MouseWheelEvent.Raised += HandleEvent;
-			UIElement.MouseEnterEvent.Raised += HandleEvent;
-			UIElement.MouseLeaveEvent.Raised += HandleEvent;
-			UIElement.MouseMoveEvent.Raised += HandleEvent;
-		}
 
 		/// <summary>
 		///     Initializes a new instance for testing purposes.
@@ -93,37 +76,6 @@
 		///     Gets or sets the window the mouse is associated with.
 		/// </summary>
 		public Window Window { get; private set; }
-
-		/// <summary>
-		///     Marks the event as handled.
-		/// </summary>
-		private static void HandleEvent(object sender, MouseEventArgs e)
-		{
-			var element = sender as UIElement;
-			if (element != null && GetHandlesAllInput(element))
-				e.Handled = true;
-		}
-
-		/// <summary>
-		///     Gets a value indicating whether all keyboard input events are handled by the UI element.
-		/// </summary>
-		/// <param name="element">The UI element that should be checked.</param>
-		public static bool GetHandlesAllInput(UIElement element)
-		{
-			Assert.ArgumentNotNull(element);
-			return element.GetValue(HandlesAllInputProperty);
-		}
-
-		/// <summary>
-		///     Sets a value indicating that all keyboard input events are handled by the UI element.
-		/// </summary>
-		/// <param name="element">The UI element that should handle all keyboard input events.</param>
-		/// <param name="handlesAllInput">Indicates whether the UI element should handle all keyboard input events.</param>
-		public static void SetHandlesAllInput(UIElement element, bool handlesAllInput)
-		{
-			Assert.ArgumentNotNull(element);
-			element.SetValue(HandlesAllInputProperty, handlesAllInput);
-		}
 
 		/// <summary>
 		///     Invoked when a button has been pressed.
@@ -213,7 +165,7 @@
 				UnsetIsMouseOver(_hoveredElement, args);
 
 			_hoveredElement = hoveredElement;
-			//Log.Info("Hovered element: {0}", _hoveredElement == null ? "None" : _hoveredElement.GetType().Name);
+			Log.Debug("Hovered element: {0}", _hoveredElement == null ? "None" : _hoveredElement.GetType().Name);
 
 			if (_hoveredElement != null)
 				SetIsMouseOver(args);

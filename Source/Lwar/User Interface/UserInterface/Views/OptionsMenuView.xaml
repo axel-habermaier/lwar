@@ -5,8 +5,7 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:converters="clr-namespace:Pegasus.Framework.UserInterface.Converters;assembly=PegasusUI"
 			 xmlns:input="clr-namespace:Pegasus.Framework.UserInterface.Input;assembly=PegasusUI"
-			 input:Keyboard.HandlesAllInput="true"
-			 input:Mouse.HandlesAllInput="true"
+			 input:InputManager.CapturesInput="true"
 			 mc:Ignorable="d"
 			 FontFamily="Liberation Sans"
 			 FontSize="16"
@@ -24,16 +23,17 @@
 				<RowDefinition Height="Auto" />
 			</Grid.RowDefinitions>
 			<TextBlock Margin="0,4,15,0" Grid.Row="0" Grid.Column="0">Player Name:</TextBlock>
-			<TextBox HorizontalAlignment="Left" Width="380" MaxLength="{Binding MaxPlayerNameLength}" Text="{Binding PlayerName}" Grid.Row="0" Grid.Column="1" />
+			<TextBox input:InputManager.AutoFocus="true" HorizontalAlignment="Left" Width="380" MaxLength="{Binding MaxPlayerNameLength}"
+					 Text="{Binding PlayerName}" Grid.Row="0" Grid.Column="1" />
 			<TextBlock Margin="0,10,0,10" Foreground="Red" TextWrapping="Wrap"
-				   Grid.Row="1" Grid.Column="1"
-				   Visibility="{Binding PlayerNameLengthExceeded, Converter={converters:BooleanToVisibilityConverter}}"
-				   Text="The player name exceeds the maximum allowed length."/>
+					   Grid.Row="1" Grid.Column="1"
+					   Visibility="{Binding PlayerNameLengthExceeded, Converter={converters:BooleanToVisibilityConverter}}"
+					   Text="The player name exceeds the maximum allowed length." />
 			<TextBlock Margin="0,10,0,10" Foreground="Red" TextWrapping="Wrap"
-				   Grid.Row="1" Grid.Column="1"
-				   Visibility="{Binding PlayerNameMissing, Converter={converters:BooleanToVisibilityConverter}}"
-				   Text="You must enter a player name."/>
-		</Grid>	
+					   Grid.Row="1" Grid.Column="1"
+					   Visibility="{Binding PlayerNameMissing, Converter={converters:BooleanToVisibilityConverter}}"
+					   Text="You must enter a player name." />
+		</Grid>
 		<StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
 			<Button Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center" Click="{Binding Ok}">OK</Button>
 			<Button Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center" Click="{Binding Cancel}">Cancel</Button>

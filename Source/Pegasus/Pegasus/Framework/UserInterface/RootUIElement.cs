@@ -16,6 +16,7 @@
 		public RootUIElement()
 		{
 			IsAttachedToRoot = true;
+			SetReadOnlyValue(IsVisibleProperty, true);
 		}
 
 		/// <summary>

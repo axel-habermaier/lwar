@@ -249,5 +249,10 @@
 		///     Raised when a change to a resource dictionary in this UI element or one of its ancestors has occurred.
 		/// </summary>
 		internal event Action ResourcesInvalidated;
+
+		/// <summary>
+		///     Raised when the value of the UI element's IsVisible property changed.
+		/// </summary>
+		public event DependencyPropertyChangedHandler<bool> IsVisibleChanged;
 	}
 }

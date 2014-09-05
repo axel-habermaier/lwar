@@ -251,6 +251,7 @@
     <Compile Include="Framework\UserInterface\Input\Cursor.cs" />
     <Compile Include="Framework\UserInterface\Input\InputBinding.cs" />
     <Compile Include="Framework\UserInterface\Input\InputBindingCollection.cs" />
+    <Compile Include="Framework\UserInterface\Input\InputManager.cs" />
     <Compile Include="Framework\UserInterface\Input\KeyBinding.cs" />
     <Compile Include="Framework\UserInterface\Input\KeyModifiers.cs" />
     <Compile Include="Framework\UserInterface\Input\MouseButtonEventArgs.cs" />

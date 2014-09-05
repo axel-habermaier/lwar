@@ -90,7 +90,7 @@ pgVoid pgNoReturn()
 	// A dummy non-returning function that is needed by the PG_DIE macro. Visual studio does not try to verify
 	// whether the function actually returns, whereas GCC and clang do.
 
-#ifndef WINDOWS
+#ifndef PG_SYSTEM_WINDOWS
 	for(;;) {}
 #endif
 }

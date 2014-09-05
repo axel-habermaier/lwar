@@ -4,8 +4,9 @@
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 mc:Ignorable="d"
+			 IsHitTestVisible="false"
 			 d:DesignHeight="300" d:DesignWidth="300">
-	<ItemsControl ItemsSource="{Binding EventMessages}" IsHitTestVisible="false">
+	<ItemsControl ItemsSource="{Binding EventMessages}">
 		<ItemsControl.ItemTemplate>
 			<DataTemplate>
 				<TextBlock Text="{Binding DisplayString}" Margin="2" TextWrapping="Wrap" />

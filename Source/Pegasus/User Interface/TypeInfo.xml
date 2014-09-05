@@ -91,12 +91,9 @@
 	<Class Name="System.Collections.Generic.List&lt;RowDefinition&gt;" IsList="true">
 	</Class>
 
-	<Class Name="Pegasus.Framework.UserInterface.Input.Keyboard">
-		<Property Type="bool" Name="HandlesAllInput"/>
-	</Class>
-
-	<Class Name="Pegasus.Framework.UserInterface.Input.Mouse">
-		<Property Type="bool" Name="HandlesAllInput"/>
+	<Class Name="Pegasus.Framework.UserInterface.Input.InputManager">
+		<Property Type="bool" Name="CapturesInput"/>
+		<Property Type="bool" Name="AutoFocus"/>
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.DataGridTemplateColumn">

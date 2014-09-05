@@ -9,7 +9,7 @@
 	HorizontalAlignment="Stretch"
 	VerticalAlignment="Stretch"
 	Background="Black"
-	Focusable="true"
+	input:InputManager.AutoFocus="true"
 	FontFamily="Liberation Sans"
 	FontSize="16"
 	d:DesignHeight="300" 

@@ -8,9 +8,7 @@
 			 mc:Ignorable="d"
 			 HorizontalAlignment="Stretch"
 			 VerticalAlignment="Stretch"
-			 input:Keyboard.HandlesAllInput="true"
-			 input:Mouse.HandlesAllInput="true"
-			 Focusable="true"
+			 input:InputManager.CapturesInput="true"
 			 Background="#AA000000">
 	<UserControl.InputBindings>
 		<input:KeyBinding Key="Escape" Method="ContinueImplicit" TriggerOnRepeat="false"></input:KeyBinding>

@@ -4,14 +4,13 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:controls="clr-namespace:Pegasus.Framework.UserInterface.Controls;assembly=PegasusUI"
 			 xmlns:input="clr-namespace:Pegasus.Framework.UserInterface.Input;assembly=PegasusUI"
-			 xmlns:converters="clr-namespace:Pegasus.Framework.UserInterface.Converters;assembly=PegasusUI"
 			 xmlns:userInterface="clr-namespace:Lwar.UserInterface.Views"
 			 mc:Ignorable="d"
 			 FontFamily="Liberation Sans"
 			 FontSize="16"
 			 d:DesignHeight="600"
 			 d:DesignWidth="800"
-			 Focusable="true"
+			 input:InputManager.AutoFocus="true"
 			 Foreground="White">
 	<UserControl.InputBindings>
 		<input:ConfigurableBinding Cvar="Lwar.Scripting.Cvars.InputChatCvar" Method="ShowChatInput" />

@@ -80,7 +80,6 @@
 
 			Application.Current.Window.LayoutRoot.Add(_view);
 			Commands.ShowConsole(false);
-			_view.Focus();
 		}
 	}
 }

@@ -10,10 +10,8 @@
 			 HorizontalAlignment="Stretch"
 			 VerticalAlignment="Stretch"
 			 Foreground="White"
-			 input:Mouse.HandlesAllInput="true"
-			 input:Keyboard.HandlesAllInput="true"
-			 Background="#AA000000"
-			 Focusable="True">
+			 input:InputManager.CapturesInput="true"
+			 Background="#AA000000">
 	<UserControl.InputBindings>
 		<input:KeyBinding Key="Escape" Method="Close" />
 		<input:KeyBinding Key="Return" Method="Close" />

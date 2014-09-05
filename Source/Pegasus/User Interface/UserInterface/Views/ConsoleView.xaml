@@ -14,8 +14,7 @@
 			 TextOptions.TextRenderingMode="Aliased"
 			 Foreground="White"
 			 Visibility="{Binding IsVisible, Converter={converters:BooleanToVisibilityConverter}}"
-			 input:Keyboard.HandlesAllInput="true"
-			 input:Mouse.HandlesAllInput="true"
+			 input:InputManager.CapturesInput="true"
 			 VerticalAlignment="Stretch"
 			 HorizontalAlignment="Stretch">
 	<UserControl.InputBindings>
@@ -41,9 +40,9 @@
 				<TextBox 
 					DataContext="{Binding Prompt}"
 					MaxLength="{Binding MaxLength}"
-					x:Name="Prompt"
 					DockPanel.Dock="Bottom" 
 					Text="{Binding Input}"
+					input:InputManager.AutoFocus="true"
 					TextChanged="{Binding TextChanged}">
 					<TextBox.InputBindings>
 						<input:KeyBinding Key="Escape" Method="ClearInput" />

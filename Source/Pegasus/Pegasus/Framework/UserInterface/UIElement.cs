@@ -97,6 +97,8 @@
 			PreviewKeyDownEvent.Raised += OnInputEvent;
 			PreviewKeyUpEvent.Raised += OnInputEvent;
 			DataContextProperty.Changed += OnDataContextChanged;
+			VisibilityProperty.Changed += OnVisibilityChanged;
+			IsVisibleProperty.Changed += OnIsVisibleChanged;
 		}
 
 		/// <summary>
@@ -187,6 +189,28 @@
 			var element = obj as UIElement;
 			if (element != null)
 				element._cachedFont = null;
+		}
+
+		/// <summary>
+		///     Updates the IsVisible property.
+		/// </summary>
+		private static void OnVisibilityChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<Visibility> args)
+		{
+			var element = obj as UIElement;
+			if (element != null)
+				element.UpdateVisibleState();
+		}
+
+		/// <summary>
+		///     Raises the IsVisibleChanged event.
+		/// </summary>
+		/// <param name="obj"></param>
+		/// <param name="args"></param>
+		private static void OnIsVisibleChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<bool> args)
+		{
+			var element = obj as UIElement;
+			if (element != null && element.IsVisibleChanged != null)
+				element.IsVisibleChanged(obj, args);
 		}
 
 		/// <summary>
@@ -303,6 +327,24 @@
 
 			if (Style != null)
 				Style.Apply(this);
+		}
+
+		/// <summary>
+		///     Updates the UI element's visible state.
+		/// </summary>
+		private void UpdateVisibleState()
+		{
+			var isVisible = Visibility == Visibility.Visible && IsAttachedToRoot &&
+							VisualParent != null && VisualParent.IsVisible;
+
+			if (IsVisible == isVisible)
+				return;
+
+			SetReadOnlyValue(IsVisibleProperty, isVisible);
+
+			var count = VisualChildrenCount;
+			for (var i = 0; i < count; ++i)
+				GetVisualChild(i).UpdateVisibleState();
 		}
 
 		/// <summary>
@@ -678,7 +720,7 @@
 		internal UIElement HitTest(Vector2d position, bool boundsTestOnly)
 		{
 			// If the element isn't visible or hit test visible, there can be no hit.
-			if (Visibility != Visibility.Visible || !IsHitTestVisible)
+			if (!IsVisible || !IsHitTestVisible)
 				return null;
 
 			// Check if the position lies within the element's bounding box. If not, there can be no hit.
@@ -701,7 +743,11 @@
 					return hitTestResult;
 			}
 
-			// If no child was hit, check if we should return this UI element instead.
+			// If the UI element captures all input, return it, even though there might not have been a hit otherwise
+			if (InputManager.GetCapturesInput(this))
+				return this;
+
+			// Otherwise, check if we should return this UI element instead.
 			if (boundsTestOnly || HitTestCore(position))
 				return this;
 

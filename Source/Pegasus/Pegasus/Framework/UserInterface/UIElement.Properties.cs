@@ -123,10 +123,16 @@
 				affectsArrange: true, validationCallback: ValidateAlignment);
 
 		/// <summary>
-		///     Indicates whether the UI element is visible.
+		///     The visibility of the UI element.
 		/// </summary>
 		public static readonly DependencyProperty<Visibility> VisibilityProperty =
 			new DependencyProperty<Visibility>(defaultValue: Visibility.Visible, affectsMeasure: true);
+
+		/// <summary>
+		///     Indicates whether the UI element is visible in the user interface.
+		/// </summary>
+		public static readonly DependencyProperty<bool> IsVisibleProperty =
+			new DependencyProperty<bool>(isReadOnly: true);
 
 		/// <summary>
 		///     Indicates whether the UI element can receive the keyboard focus.
@@ -323,12 +329,20 @@
 		}
 
 		/// <summary>
-		///     Gets or sets a value indicating whether the UI element is visible.
+		///     Gets or sets the visibility of the UI element.
 		/// </summary>
 		public Visibility Visibility
 		{
 			get { return GetValue(VisibilityProperty); }
 			set { SetValue(VisibilityProperty, value); }
+		}
+
+		/// <summary>
+		///     Gets a value indicating whether the UI element is actually visible in the user interface.
+		/// </summary>
+		public bool IsVisible
+		{
+			get { return GetValue(IsVisibleProperty); }
 		}
 
 		/// <summary>
@@ -421,6 +435,8 @@
 				// The new parent's layout must be invalidated
 				if (_visualParent != null)
 					_visualParent.SetDirtyState(true, true);
+
+				UpdateVisibleState();
 			}
 		}
 
@@ -485,22 +501,7 @@
 		/// </summary>
 		internal bool CanBeFocused
 		{
-			get
-			{
-				if (!IsAttachedToRoot || !Focusable)
-					return false;
-
-				var element = this;
-				while (element != null)
-				{
-					if (element.Visibility != Visibility.Visible || !element.IsHitTestVisible)
-						return false;
-
-					element = element.LogicalParent;
-				}
-
-				return true;
-			}
+			get { return IsAttachedToRoot && Focusable && IsVisible; }
 		}
 
 		/// <summary>
