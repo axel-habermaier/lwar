@@ -1,4 +1,7 @@
-﻿namespace Pegasus.AssetsCompiler
+﻿
+#pragma warning disable 0162
+
+namespace Pegasus.AssetsCompiler
 {
 	using System;
 	using System.IO;

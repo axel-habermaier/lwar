@@ -22,7 +22,7 @@
 		/// <summary>
 		///     Indicates whether the platform is a big or little endian architecture.
 		/// </summary>
-		public static readonly EndianessType Endianess = 
+		public const EndianessType Endianess = 
 #if BigEndian
 			EndianessType.Big;
 #else
@@ -32,7 +32,7 @@
 		/// <summary>
 		///     The type of the platform the application is running on.
 		/// </summary>
-		public static readonly PlatformType Platform =
+		public const PlatformType Platform =
 #if Windows
 			PlatformType.Windows;
 #elif Linux
@@ -62,11 +62,11 @@
 		/// <summary>
 		///     Gets the type of graphics API that is used for rendering.
 		/// </summary>
-		public static readonly GraphicsApi GraphicsApi =
+		public const GraphicsApi GraphicsApi =
 #if Direct3D11
-			GraphicsApi.Direct3D11;
+			Graphics.GraphicsApi.Direct3D11;
 #else
-			GraphicsApi.OpenGL3;
+			Graphics.GraphicsApi.OpenGL3;
 #endif
 	}
 }

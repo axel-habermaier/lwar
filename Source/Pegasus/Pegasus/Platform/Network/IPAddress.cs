@@ -24,10 +24,7 @@
 		/// <summary>
 		///     Represents the '::' IPv6 address.
 		/// </summary>
-		public static IPAddress Any
-		{
-			get { return new IPAddress(); }
-		}
+		public static readonly IPAddress Any = new IPAddress();
 
 		/// <summary>
 		///     Gets a value indicating whether the IP address is an IPv6-mapped IPv4 address.

@@ -4,7 +4,6 @@
 	using System.Diagnostics;
 	using System.Runtime.InteropServices;
 	using System.Security;
-	using Graphics;
 	using Logging;
 	using Memory;
 
@@ -14,9 +13,9 @@
 	internal class NativeLibrary : DisposableObject
 	{
 #if Linux
-	/// <summary>
-	///   The name of the native Pegasus.Platform library.
-	/// </summary>
+		/// <summary>
+		///   The name of the native Pegasus.Platform library.
+		/// </summary>
 		internal const string LibraryName = "libPlatform.so";
 #else
 		/// <summary>
@@ -29,14 +28,6 @@
 		///     Indicates whether the library is already initialized.
 		/// </summary>
 		private static bool _isInitialized;
-
-		/// <summary>
-		///     Gets the graphics API that is used by the library.
-		/// </summary>
-		public static GraphicsApi GraphicsApi
-		{
-			get { return NativeMethods.GetGraphicsApi(); }
-		}
 
 		/// <summary>
 		///     The log callback that has been passed to the native code. We must keep a reference in order to prevent
@@ -111,9 +102,6 @@
 
 			[DllImport(LibraryName, EntryPoint = "pgShutdown")]
 			public static extern void Shutdown();
-
-			[DllImport(LibraryName, EntryPoint = "pgGetGraphicsApi")]
-			public static extern GraphicsApi GetGraphicsApi();
 
 			[DllImport(LibraryName, EntryPoint = "pgShowMessageBox")]
 			public static extern void ShowMessageBox(string caption, string message);

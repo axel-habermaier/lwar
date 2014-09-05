@@ -19,7 +19,8 @@ namespace Pegasus.Assets.AssetLoaders
 		/// <param name="length">The length of the extracted shader code in bytes.</param>
 		protected static unsafe void ExtractShaderCode(BufferReader buffer, out byte* shaderCode, out int length)
 		{
-			switch (NativeLibrary.GraphicsApi)
+#pragma warning disable 0162
+			switch (PlatformInfo.GraphicsApi)
 			{
 				case GraphicsApi.Direct3D11:
 					buffer.Skip(buffer.ReadInt32());
@@ -36,6 +37,7 @@ namespace Pegasus.Assets.AssetLoaders
 				default:
 					throw new InvalidOperationException("Unsupported graphics API.");
 			}
+#pragma warning restore 0162
 		}
 	}
 }

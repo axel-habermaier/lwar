@@ -20,7 +20,7 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		private KeyEventArgs()
+		internal KeyEventArgs()
 		{
 		}
 

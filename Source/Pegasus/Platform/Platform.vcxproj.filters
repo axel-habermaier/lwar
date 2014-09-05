@@ -110,9 +110,6 @@
     <ClCompile Include="texture.gl3.c">
       <Filter>Graphics\OpenGL 3</Filter>
     </ClCompile>
-    <ClCompile Include="graphics.c">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="network.c" />
     <ClCompile Include="fileSystem.c" />
   </ItemGroup>

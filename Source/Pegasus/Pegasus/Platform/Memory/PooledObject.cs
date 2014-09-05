@@ -6,9 +6,8 @@
 
 	/// <summary>
 	///     An abstract base class for objects whose instances are pooled in order to reduce the pressure on the garbage
-	///     collector. Pooled types should perform all their initialization in the OnReusing() method, which is called whenever
-	///     the instance is reused. Similarly, all cleanup logic that must be run when an instance is returned to the pool
-	///     should be done in the OnReturning method.
+	///     collector. Pooled types should override the OnReturning method to perform all their cleanup logic that must be run when
+	///     an instance is returned to the pool.
 	/// </summary>
 	public abstract class PooledObject : IPooledObject, IDisposable
 	{
@@ -72,14 +71,6 @@
 
 			_pool = objectPool;
 			IsAvailable = false;
-			OnReusing();
-		}
-
-		/// <summary>
-		///     Invoked when the pooled instance is reused and should reset or reinitialize its state.
-		/// </summary>
-		protected virtual void OnReusing()
-		{
 		}
 
 		/// <summary>

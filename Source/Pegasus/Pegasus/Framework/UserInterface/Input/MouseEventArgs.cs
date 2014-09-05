@@ -16,7 +16,7 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		protected MouseEventArgs()
+		internal MouseEventArgs()
 		{
 		}
 
@@ -24,8 +24,6 @@
 		///     Gets or sets the states of the mouse buttons.
 		/// </summary>
 		protected InputState[] InputStates { get; set; }
-
-	
 
 		/// <summary>
 		///     Gets the position of the mouse at the time the event was generated.

@@ -152,14 +152,16 @@
 
 			// For OpenGL, we have to flip the quad upside-down and change its winding, because OpenGL's window
 			// coordinate origins are at the bottom left corner... annoying
+#pragma warning disable 0162
 			ushort[] indices;
 			if (PlatformInfo.GraphicsApi == GraphicsApi.OpenGL3)
 				indices = new ushort[] { 0, 2, 1, 0, 3, 2 };
 			else
 				indices = new ushort[] { 0, 1, 2, 0, 2, 3 };
 
-			var flip = PlatformInfo.GraphicsApi == GraphicsApi.OpenGL3 ? -1 : 1;
+			const int flip = PlatformInfo.GraphicsApi == GraphicsApi.OpenGL3 ? -1 : 1;
 			var texture = new RectangleF(0, 0, 1, 1);
+#pragma warning restore 0162
 
 			var vertices = new[]
 			{

@@ -19,7 +19,6 @@ PG_ASSERT_SIZE(pgBool, 4);
 // Enumeration types are expected to be 4 bytes long
 PG_ASSERT_SIZE(pgKey, 4);
 PG_ASSERT_SIZE(pgMouseButton, 4);
-PG_ASSERT_SIZE(pgGraphicsApi, 4);
 PG_ASSERT_SIZE(pgBlendOperation, 4);
 PG_ASSERT_SIZE(pgBlendOption, 4);
 PG_ASSERT_SIZE(pgColorWriteChannels, 4);

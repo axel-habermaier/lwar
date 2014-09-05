@@ -17,7 +17,7 @@
 		///     Adds the given pool to the list of global pools that are disposed automatically during application shutdown.
 		/// </summary>
 		/// <param name="objectPool">The object pool that should be added.</param>
-		protected void AddGlobalPool(ObjectPool objectPool)
+		protected static void AddGlobalPool(ObjectPool objectPool)
 		{
 			Assert.ArgumentNotNull(objectPool);
 			Assert.That(!GlobalPools.Contains(objectPool), "The object pool has already been added.");

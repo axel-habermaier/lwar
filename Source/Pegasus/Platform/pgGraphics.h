@@ -24,12 +24,6 @@ typedef struct pgQuery					pgQuery;
 
 typedef enum
 {
-	PG_API_OPENGL_3							= 701,
-	PG_API_DIRECT3D_11						= 702
-} pgGraphicsApi;
-
-typedef enum
-{
 	PG_BLEND_OP_ADD							= 1001,
 	PG_BLEND_OP_SUBTRACT					= 1002,
 	PG_BLEND_OP_REVERSE_SUBTRACT			= 1003,
@@ -351,12 +345,6 @@ typedef struct
 	pgInt32 width;
 	pgInt32 height;
 } pgRectangle;
-
-//====================================================================================================================
-// Graphics functions
-//====================================================================================================================
-
-PG_API_EXPORT pgGraphicsApi pgGetGraphicsApi();
 
 //====================================================================================================================
 // Graphics device functions
