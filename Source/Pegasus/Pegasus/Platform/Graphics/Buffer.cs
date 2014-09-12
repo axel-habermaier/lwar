@@ -119,9 +119,9 @@
 		}
 
 #if DEBUG
-	/// <summary>
-	///     Invoked after the name of the graphics object has changed. This method is only available in debug builds.
-	/// </summary>
+		/// <summary>
+		///     Invoked after the name of the graphics object has changed. This method is only available in debug builds.
+		/// </summary>
 		protected override void OnRenamed()
 		{
 			if (_buffer != IntPtr.Zero)

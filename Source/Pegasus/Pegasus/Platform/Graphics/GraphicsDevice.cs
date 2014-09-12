@@ -15,7 +15,7 @@
 		/// <summary>
 		///     The maximum number of frames the GPU can be behind the CPU.
 		/// </summary>
-		public const int FrameLag = 3;
+		private const int FrameLag = 3;
 
 		/// <summary>
 		///     The timestamp queries that mark the beginning of a frame.
@@ -174,7 +174,7 @@
 		/// <summary>
 		///     Gets the GPU frame time in milliseconds for the last frame.
 		/// </summary>
-		public double FrameTime { get; private set; }
+		internal double FrameTime { get; private set; }
 
 		/// <summary>
 		///     Disposes the object, releasing all managed and unmanaged resources.

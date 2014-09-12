@@ -1,4 +1,6 @@
-﻿namespace Pegasus
+﻿// ReSharper disable UnusedParameter.Global
+
+namespace Pegasus
 {
 	using System;
 	using System.Diagnostics;

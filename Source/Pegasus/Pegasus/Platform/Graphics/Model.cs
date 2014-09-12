@@ -150,17 +150,15 @@
 
 			// For OpenGL, we have to flip the quad upside-down and change its winding, because OpenGL's window
 			// coordinate origins are at the bottom left corner... annoying
-#pragma warning disable 0162
-			ushort[] indices;
-			if (PlatformInfo.GraphicsApi == GraphicsApi.OpenGL3)
-				indices = new ushort[] { 0, 2, 1, 0, 3, 2 };
-			else
-				indices = new ushort[] { 0, 1, 2, 0, 2, 3 };
-
-			const int flip = PlatformInfo.GraphicsApi == GraphicsApi.OpenGL3 ? -1 : 1;
+#if Direct3D11
+			var indices = new ushort[] { 0, 1, 2, 0, 2, 3 };
+			const int flip = 1;
+#else
+			var indices = new ushort[] { 0, 2, 1, 0, 3, 2 };
+			const int flip = -1;
+#endif
+				
 			var texture = new RectangleF(0, 0, 1, 1);
-#pragma warning restore 0162
-
 			var vertices = new[]
 			{
 				new VertexPositionNormalTexture

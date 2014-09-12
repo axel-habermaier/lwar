@@ -13,23 +13,20 @@
 		///     Initializes a new instance.
 		/// </summary>
 		public NetworkException()
-			: base(LastNetworkError)
+			: base(GetLastError())
 		{
 		}
 
 		/// <summary>
 		///     Gets a string describing the last network error that occurred.
 		/// </summary>
-		private static string LastNetworkError
+		private static string GetLastError()
 		{
-			get
-			{
-				var error = NativeMethods.GetLastNetworkError();
-				if (error == IntPtr.Zero)
-					return "An unknown network error occurred.";
+			var error = NativeMethods.GetLastNetworkError();
+			if (error == IntPtr.Zero)
+				return "An unknown network error occurred.";
 
-				return Marshal.PtrToStringAnsi(error);
-			}
+			return Marshal.PtrToStringAnsi(error);
 		}
 
 		/// <summary>

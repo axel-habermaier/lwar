@@ -13,23 +13,20 @@
 		///     Initializes a new instance.
 		/// </summary>
 		public FileSystemException()
-			: base(LastError)
+			: base(GetLastError())
 		{
 		}
 
 		/// <summary>
 		///     Gets a string describing the last file system error that occurred.
 		/// </summary>
-		private static string LastError
+		private static string GetLastError()
 		{
-			get
-			{
-				var error = NativeMethods.GetLastError();
-				if (error == IntPtr.Zero)
-					return "An unknown file system error occurred.";
+			var error = NativeMethods.GetLastFileError();
+			if (error == IntPtr.Zero)
+				return "An unknown file system error occurred.";
 
-				return Marshal.PtrToStringAnsi(error);
-			}
+			return Marshal.PtrToStringAnsi(error);
 		}
 
 		/// <summary>
@@ -39,7 +36,7 @@
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetLastFileError")]
-			public static extern IntPtr GetLastError();
+			public static extern IntPtr GetLastFileError();
 		}
 	}
 }

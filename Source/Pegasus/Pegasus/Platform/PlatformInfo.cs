@@ -2,7 +2,9 @@
 {
 	using System;
 	using Graphics;
-	using EndianessType = Memory.Endianess;
+	using Memory;
+
+	//using EndianessType = Memory.Endianess;
 
 	/// <summary>
 	///     Provides further information about the platform the application is running on.
@@ -22,11 +24,11 @@
 		/// <summary>
 		///     Indicates whether the platform is a big or little endian architecture.
 		/// </summary>
-		public const EndianessType Endianess = 
+		public const Endianess Endianess = 
 #if BigEndian
-			EndianessType.Big;
+			Memory.Endianess.Big;
 #else
-			EndianessType.Little;
+			Memory.Endianess.Little;
 #endif
 
 		/// <summary>
@@ -42,7 +44,7 @@
 		/// <summary>
 		///     The scan code of the console key.
 		/// </summary>
-		public const int ConsoleKey =
+		internal const int ConsoleKey =
 #if Windows
 			41;
 #elif Linux
