@@ -8,6 +8,7 @@
 			 mc:Ignorable="d"
 			 Visibility="{Binding IsVisible, Converter={converters:BooleanToVisibilityConverter}}"
 			 Foreground="White"
+			 input:Cursor.Cursor="Arrow"
 			 FontFamily="Liberation Sans"
 			 FontSize="16"
 			 HorizontalAlignment="Stretch"

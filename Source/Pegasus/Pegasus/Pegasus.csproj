@@ -249,6 +249,7 @@
     <Compile Include="Framework\UserInterface\Input\ConfigurableBinding.cs" />
     <Compile Include="Framework\UserInterface\Input\ConfigurableInput.cs" />
     <Compile Include="Framework\UserInterface\Input\Cursor.cs" />
+    <Compile Include="Framework\UserInterface\Input\Cursors.cs" />
     <Compile Include="Framework\UserInterface\Input\InputBinding.cs" />
     <Compile Include="Framework\UserInterface\Input\InputBindingCollection.cs" />
     <Compile Include="Framework\UserInterface\Input\InputManager.cs" />

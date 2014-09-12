@@ -158,7 +158,7 @@
 			using (Assets = new AssetsManager(GraphicsDevice, asyncLoading: false))
 			{
 				RegisterFontLoader(new FontLoader(Assets));
-				Cursor.LoadCursors(Assets);
+				Cursors.Load(Assets);
 
 				using (_appWindowViewModel = new AppWindowViewModel(consoleViewModel))
 				{

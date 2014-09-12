@@ -1,9 +1,12 @@
 ﻿namespace Pegasus.Framework.UserInterface.Input
 {
 	using System;
+	using System.ComponentModel;
+	using System.Globalization;
 	using System.Windows;
 	using System.Windows.Media;
 
+	[TypeConverter(typeof(CursorTypeConverter))]
 	public class Cursor
 	{
 		public static readonly DependencyProperty CursorProperty = DependencyProperty.RegisterAttached(
@@ -21,6 +24,19 @@
 		public static Cursor GetCursor(DependencyObject element)
 		{
 			return (Cursor)element.GetValue(CursorProperty);
+		}
+
+		private class CursorTypeConverter : TypeConverter
+		{
+			public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
+			{
+				return true;
+			}
+
+			public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
+			{
+				return new Cursor();
+			}
 		}
 	}
 }

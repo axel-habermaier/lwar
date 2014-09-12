@@ -20,6 +20,7 @@
 		<Property Type="Pegasus.Platform.Graphics.Texture2D" Name="Texture"/>
 		<Property Type="Pegasus.Math.Vector2i" Name="HotSpot"/>
 		<Property Type="Pegasus.Platform.Graphics.Color" Name="Color"/>
+		<Property Type="Pegasus.Framework.UserInterface.Input.Cursor" Name="Cursor"/>
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.DataTemplate">

@@ -72,7 +72,7 @@
 		public TextBox()
 			: this(String.Empty)
 		{
-			SetValue(Cursor.CursorProperty, Cursor.Text);
+			SetValue(Cursor.CursorProperty, Cursors.Text);
 		}
 
 		/// <summary>

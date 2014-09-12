@@ -38,6 +38,7 @@
 			{ "Pegasus.Scripting.Cvar", s => s },
 			{ "Pegasus.Platform.Graphics.Texture2D", s => String.Format("Pegasus.Framework.Application.Current.Assets.Load({0})", s) },
 			{ "Pegasus.Math.Vector2i", s => String.Format("new Pegasus.Math.Vector2i({0})", s) },
+			{ "Pegasus.Framework.UserInterface.Input.Cursor", s => String.Format("Pegasus.Framework.UserInterface.Input.Cursors.{0}", s) }
 		};
 
 		/// <summary>

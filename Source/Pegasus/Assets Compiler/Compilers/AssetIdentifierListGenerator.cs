@@ -137,7 +137,7 @@
 
 			if (encloseWithClass)
 			{
-				writer.AppendLine("public static class {0}", className);
+				writer.AppendLine("internal static class {0}", className);
 				writer.AppendBlockStatement(generate);
 			}
 			else

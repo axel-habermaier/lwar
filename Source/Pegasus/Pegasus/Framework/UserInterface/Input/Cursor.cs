@@ -1,7 +1,6 @@
 namespace Pegasus.Framework.UserInterface.Input
 {
 	using System;
-	using Assets;
 	using Math;
 	using Platform.Graphics;
 	using Rendering;
@@ -72,16 +71,6 @@ namespace Pegasus.Framework.UserInterface.Input
 		}
 
 		/// <summary>
-		///     Gets the arrow cursor.
-		/// </summary>
-		public static Cursor Arrow { get; private set; }
-
-		/// <summary>
-		///     Gets the text insertion cursor.
-		/// </summary>
-		public static Cursor Text { get; private set; }
-
-		/// <summary>
 		///     Gets the cursor that is displayed when the mouse hovers the UI element or any of its children.
 		/// </summary>
 		/// <param name="element">The UI element the cursor should be returned for.</param>
@@ -102,18 +91,6 @@ namespace Pegasus.Framework.UserInterface.Input
 			Assert.ArgumentNotNull(cursor);
 
 			element.SetValue(CursorProperty, cursor);
-		}
-
-		/// <summary>
-		///     Loads the default cursors.
-		/// </summary>
-		/// <param name="assets">The assets manager that should be used to load the cursors.</param>
-		internal static void LoadCursors(AssetsManager assets)
-		{
-			Assert.ArgumentNotNull(assets);
-
-			Arrow = new Cursor(assets.Load(Cursors.Pointer), Vector2i.Zero, Color.White);
-			Text = new Cursor(assets.Load(Cursors.Text), new Vector2i(7, 7), Color.White);
 		}
 
 		/// <summary>

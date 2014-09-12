@@ -351,7 +351,7 @@
 					break;
 			}
 
-			cursor = cursor ?? Cursor.Arrow;
+			cursor = cursor ?? Cursors.Arrow;
 			cursor.Draw(spriteBatch, Position);
 		}
 
