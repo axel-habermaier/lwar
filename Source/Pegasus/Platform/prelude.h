@@ -67,7 +67,7 @@
 	#define PG_MULTILINE_MACRO_END } while (PG_FALSE)
 
 #else
-	#error Unsupported OS or compiler
+	#error Unsupported operating system or compiler
 #endif
 
 //====================================================================================================================

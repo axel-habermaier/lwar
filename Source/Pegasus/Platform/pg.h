@@ -9,7 +9,7 @@
 #elif defined(__unix__)
 	#define PG_API_EXPORT __attribute__ ((__visibility__ ("default")))
 #else
-	#error Unsupported operation system or compiler
+	#error Unsupported operating system or compiler
 #endif
 
 //====================================================================================================================
