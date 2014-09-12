@@ -3,6 +3,7 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using Platform;
 	using Platform.Graphics;
 	using Platform.Memory;
 
@@ -76,6 +77,33 @@
 			Assert.That(!Loaders.ContainsKey(assetLoader.AssetType), "An asset loader for this asset type has already been registered.");
 
 			Loaders.Add(assetLoader.AssetType, assetLoader);
+		}
+
+		/// <summary>
+		///     Reads and validates the asset file header in the given buffer.
+		/// </summary>
+		/// <param name="buffer">The buffer the asset file header should be read from.</param>
+		/// <param name="assetType">The type of the asset that is expected to follow in the buffer.</param>
+		internal static void ValidateHeader(BufferReader buffer, byte assetType)
+		{
+			Assert.ArgumentNotNull(buffer);
+
+			if (!buffer.CanRead(5))
+				throw new InvalidOperationException("Asset is corrupted: Header information missing.");
+
+			if (buffer.ReadByte() != 'p' || buffer.ReadByte() != 'g')
+				throw new InvalidOperationException("Asset is corrupted: Application identifier mismatch in asset file header.");
+
+			var assetVersion = buffer.ReadUInt16();
+			if (assetVersion < PlatformInfo.AssetFileVersion)
+				throw new InvalidOperationException("Asset is stored in an outdated version of the compiled asset format and must be re-compiled.");
+
+			if (assetVersion > PlatformInfo.AssetFileVersion)
+				throw new InvalidOperationException("Asset is stored in a newer version of the compiled asset format.");
+
+			var actualType = buffer.ReadByte();
+			if (actualType != assetType)
+				throw new InvalidOperationException("Unexpected asset type stored in asset file.");
 		}
 	}
 }

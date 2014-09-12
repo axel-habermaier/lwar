@@ -215,7 +215,7 @@
 
 				using (var reader = BufferReader.Create(FileSystem.ReadAllBytes(info.Path)))
 				{
-					AssetHeader.Validate(reader, info.Type);
+					AssetLoader.ValidateHeader(reader, info.Type);
 					loader.Load(reader, info.Asset, info.Path);
 				}
 			}

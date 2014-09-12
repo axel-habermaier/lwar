@@ -34,7 +34,7 @@ namespace Pegasus.Assets.AssetLoaders
 
 			// Load the font map
 			var font = (Font)asset;
-			AssetHeader.Validate(buffer, (byte)Assets.AssetType.Texture2D);
+			ValidateHeader(buffer, (byte)Assets.AssetType.Texture2D);
 			Get((byte)Assets.AssetType.Texture2D).Load(buffer, font.Texture, assetName);
 
 			// Load the font metadata

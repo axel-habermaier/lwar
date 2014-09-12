@@ -45,7 +45,6 @@ pgVoid pgShutdown()
 
 pgString pgGetOsErrorMessage()
 {
-	size_t length, i;
 	pgChar* osMessage;
 
 #ifdef PG_SYSTEM_WINDOWS
@@ -57,16 +56,22 @@ pgString pgGetOsErrorMessage()
 	osMessage = buffer;
 #endif
 
-	length = strlen(osMessage);
-	for (i = length; i > 0; --i)
+	return pgTrim(osMessage);
+}
+
+pgChar* pgTrim(pgChar* message)
+{
+	size_t length = strlen(message);
+
+	for (size_t i = length; i > 0; --i)
 	{
-		if (osMessage[i - 1] == '\r' || osMessage[i - 1] == '\n')
-			osMessage[i - 1] = '\0';
+		if (message[i - 1] == '\r' || message[i - 1] == '\n')
+			message[i - 1] = '\0';
 		else
 			break;
 	}
 
-	return osMessage;
+	return message;
 }
 
 pgString pgFormat(pgString message, ...)

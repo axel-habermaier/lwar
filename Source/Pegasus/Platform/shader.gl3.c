@@ -103,10 +103,10 @@ static pgVoid pgCompile(pgShader* shader, GLenum shaderType, pgUint8* shaderCode
 	glGetShaderiv(shader->id, GL_COMPILE_STATUS, &success);
 	glGetShaderInfoLog(shader->id, sizeof(buffer) / sizeof(GLchar), &logLength, buffer);
 	if (success == GL_FALSE)
-		PG_DIE("Shader compilation failed: %s", buffer);
+		PG_DIE("Shader compilation failed: %s", pgTrim(buffer));
 
 	if (logLength != 0)
-		PG_WARN("%s", buffer);
+		PG_WARN("%s", pgTrim(buffer));
 }
 
 #endif
