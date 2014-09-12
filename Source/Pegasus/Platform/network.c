@@ -110,7 +110,7 @@ PG_API_EXPORT pgBool pgDestroyUdpSocket(pgSocket* socket)
 	return PG_TRUE;
 }
 
-PG_API_EXPORT pgBool pgBindUdpSocket(pgSocket* socket, pgUint16 port)
+PG_API_EXPORT pgBool pgBindUdpSocket(pgSocket* socket, pgUInt16 port)
 {
 	struct sockaddr_in6 addr = { 0 };
 	PG_ASSERT_NOT_NULL(socket);
@@ -128,7 +128,7 @@ PG_API_EXPORT pgBool pgBindUdpSocket(pgSocket* socket, pgUint16 port)
 	return PG_TRUE;
 }
 
-PG_API_EXPORT pgBool pgBindUdpSocketMulticast(pgSocket* socket, pgInt32 timeToLive, pgIPAddress* ipAddress, pgUint16 port)
+PG_API_EXPORT pgBool pgBindUdpSocketMulticast(pgSocket* socket, pgInt32 timeToLive, pgIPAddress* ipAddress, pgUInt16 port)
 {
 	int loop = 1;
 	struct sockaddr_in6 addr;
@@ -187,7 +187,7 @@ PG_API_EXPORT pgReceiveStatus pgTryReceiveUdpPacket(pgSocket* socket, pgPacket* 
 	PG_ASSERT_NOT_NULL(packet->data);
 
 	size = recvfrom(socket->socket, (char*)packet->data, packet->capacity, 0, (struct sockaddr*)&from, &len);
-	packet->size = (pgUint32)size;
+	packet->size = (pgUInt32)size;
 
 #ifdef PG_SYSTEM_WINDOWS
 	if (WSAGetLastError() == WSAEWOULDBLOCK)
@@ -245,7 +245,7 @@ PG_API_EXPORT pgBool pgSendUdpPacket(pgSocket* socket, pgPacket* packet)
 		return PG_FALSE;
 	}
 
-	if ((pgUint32)sent != packet->size)
+	if ((pgUInt32)sent != packet->size)
 	{
 		pgNetworkError("UDP packet was sent only partially.");
 		return PG_FALSE;

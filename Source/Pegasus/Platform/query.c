@@ -53,7 +53,7 @@ pgVoid pgGetQueryData(pgQuery* query, pgVoid* data, pgInt32 size)
 	PG_ASSERT_NOT_NULL(data);
 	PG_ASSERT_IN_RANGE(size, 0, INT32_MAX);
 	PG_ASSERT(!query->isActive, "Cannot get the data of a currently inactive query.");
-	PG_ASSERT(query->type != PG_TIMESTAMP_QUERY || size == sizeof(pgUint64), "Invalid data type.");
+	PG_ASSERT(query->type != PG_TIMESTAMP_QUERY || size == sizeof(pgUInt64), "Invalid data type.");
 	PG_ASSERT(query->type != PG_TIMESTAMP_DISJOINT_QUERY || size == sizeof(pgTimestampDisjointQueryData), "Invalid data type.");
 	PG_ASSERT(query->type != PG_SYNCED_QUERY, "PG_SYNCED_QUERY does not return any data.");
 

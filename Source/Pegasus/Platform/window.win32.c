@@ -485,13 +485,13 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 
 	case WM_DEADCHAR:
 		message->type = PG_MESSAGE_DEAD_CHARACTER_ENTERED;
-		message->character = (pgUint16)wParam;
+		message->character = (pgUInt16)wParam;
 		message->scanCode = (pgInt32)((pgByte*)&lParam)[2];
 		break;
 
 	case WM_CHAR:
 		message->type = PG_MESSAGE_CHARACTER_ENTERED;
-		message->character = (pgUint16)wParam;
+		message->character = (pgUInt16)wParam;
 		message->scanCode = (pgInt32)((pgByte*)&lParam)[2];
 		break;
 

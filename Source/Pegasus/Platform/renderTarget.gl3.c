@@ -78,7 +78,7 @@ pgVoid pgClearColorCore(pgRenderTarget* renderTarget, pgColor color)
 	PG_ASSERT_NO_GL_ERRORS();
 }
 
-pgVoid pgClearDepthStencilCore(pgRenderTarget* renderTarget, pgBool clearDepth, pgBool clearStencil, pgFloat32 depth, pgUint8 stencil)
+pgVoid pgClearDepthStencilCore(pgRenderTarget* renderTarget, pgBool clearDepth, pgBool clearStencil, pgFloat32 depth, pgUInt8 stencil)
 {
 	pgInt32 glTargets = 0;
 	GLboolean scissorEnabled = renderTarget->device->scissorEnabled;

@@ -589,7 +589,7 @@ pgVoid pgSetClearDepth(pgGraphicsDevice* device, pgFloat32 depth)
 	PG_ASSERT_NO_GL_ERRORS();
 }
 
-pgVoid pgSetClearStencil(pgGraphicsDevice* device, pgUint8 stencil)
+pgVoid pgSetClearStencil(pgGraphicsDevice* device, pgUInt8 stencil)
 {
 	if (device->stencilClear == stencil)
 		return;

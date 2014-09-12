@@ -6,13 +6,13 @@
 // Helper functions
 //====================================================================================================================
 
-static pgVoid pgCompile(pgShader* shader, GLenum shaderType, pgUint8* shaderCode, pgUint8* end);
+static pgVoid pgCompile(pgShader* shader, GLenum shaderType, pgUInt8* shaderCode, pgUInt8* end);
 
 //====================================================================================================================
 // Core functions
 //====================================================================================================================
 
-pgVoid pgCreateVertexShaderCore(pgShader* shader, pgUint8* shaderData, pgUint8* end, pgShaderInput* input, pgInt32 inputCount)
+pgVoid pgCreateVertexShaderCore(pgShader* shader, pgUInt8* shaderData, pgUInt8* end, pgShaderInput* input, pgInt32 inputCount)
 {
 	PG_UNUSED(input);
 	PG_UNUSED(inputCount);
@@ -20,7 +20,7 @@ pgVoid pgCreateVertexShaderCore(pgShader* shader, pgUint8* shaderData, pgUint8* 
 	pgCompile(shader, GL_VERTEX_SHADER, shaderData, end);
 }
 
-pgVoid pgCreateFragmentShaderCore(pgShader* shader, pgUint8* shaderData, pgUint8* end)
+pgVoid pgCreateFragmentShaderCore(pgShader* shader, pgUInt8* shaderData, pgUInt8* end)
 {
 	pgCompile(shader, GL_FRAGMENT_SHADER, shaderData, end);
 }
@@ -82,7 +82,7 @@ pgVoid pgBindProgramCore(pgProgram* program)
 // Helper functions
 //====================================================================================================================
 
-static pgVoid pgCompile(pgShader* shader, GLenum shaderType, pgUint8* shaderCode, pgUint8* end)
+static pgVoid pgCompile(pgShader* shader, GLenum shaderType, pgUInt8* shaderCode, pgUInt8* end)
 {
 	GLchar buffer[4096];
 	GLint success, logLength;

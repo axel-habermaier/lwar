@@ -228,15 +228,15 @@ typedef enum
 
 typedef struct
 {
-	pgUint8 red;
-	pgUint8 green;
-	pgUint8 blue;
-	pgUint8 alpha;
+	pgUInt8 red;
+	pgUInt8 green;
+	pgUInt8 blue;
+	pgUInt8 alpha;
 } pgColor;
 
 typedef struct
 {
-	pgUint64	frequency;
+	pgUInt64	frequency;
 	pgBool		valid;
 } pgTimestampDisjointQueryData;
 
@@ -283,8 +283,8 @@ typedef struct
 	pgBool			depthEnabled;
 	pgBool			depthWriteEnabled;
 	pgBool			stencilEnabled;
-	pgUint8			stencilReadMask;
-	pgUint8			stencilWriteMask;
+	pgUInt8			stencilReadMask;
+	pgUInt8			stencilWriteMask;
 } pgDepthStencilDesc;
 
 typedef struct
@@ -317,25 +317,25 @@ typedef struct
 
 typedef struct
 {
-	pgUint32				width;
-	pgUint32				height;
-	pgUint32				depth;
-	pgUint32				arraySize;
+	pgUInt32				width;
+	pgUInt32				height;
+	pgUInt32				depth;
+	pgUInt32				arraySize;
 	pgTextureType			type;
 	pgSurfaceFormat			format;
-	pgUint32				mipmaps;
-	pgUint32				surfaceCount;
+	pgUInt32				mipmaps;
+	pgUInt32				surfaceCount;
 	pgTextureFlags			flags;
 } pgTextureDescription;
 
 typedef struct
 {
-	pgUint32				width;
-	pgUint32				height;
-	pgUint32				depth;
-	pgUint32				size;
-	pgUint32				stride;
-	pgUint8*				data;
+	pgUInt32				width;
+	pgUInt32				height;
+	pgUInt32				depth;
+	pgUInt32				size;
+	pgUInt32				stride;
+	pgUInt8*				data;
 } pgSurface;
 
 typedef struct
@@ -427,7 +427,7 @@ PG_API_EXPORT pgVoid pgDestroyRenderTarget(pgRenderTarget* renderTarget);
 
 PG_API_EXPORT pgVoid pgGetRenderTargetSize(pgRenderTarget* renderTarget, pgInt32* width, pgInt32* height);
 PG_API_EXPORT pgVoid pgClearColor(pgRenderTarget* renderTarget, pgColor color);
-PG_API_EXPORT pgVoid pgClearDepthStencil(pgRenderTarget* renderTarget, pgBool clearDepth, pgBool clearStencil, pgFloat32 depth, pgUint8 stencil);
+PG_API_EXPORT pgVoid pgClearDepthStencil(pgRenderTarget* renderTarget, pgBool clearDepth, pgBool clearStencil, pgFloat32 depth, pgUInt8 stencil);
 PG_API_EXPORT pgVoid pgBindRenderTarget(pgRenderTarget* renderTarget);
 
 //====================================================================================================================

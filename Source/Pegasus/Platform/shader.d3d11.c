@@ -12,7 +12,7 @@ static pgVoid pgFillInputDescs(D3D11_INPUT_ELEMENT_DESC* descs, pgShaderInput* i
 // Core functions
 //====================================================================================================================
 
-pgVoid pgCreateVertexShaderCore(pgShader* shader, pgUint8* shaderData, pgUint8* end, pgShaderInput* inputs, pgInt32 inputCount)
+pgVoid pgCreateVertexShaderCore(pgShader* shader, pgUInt8* shaderData, pgUInt8* end, pgShaderInput* inputs, pgInt32 inputCount)
 {
 	size_t byteCodeLength = end - shaderData;
 	D3D11_INPUT_ELEMENT_DESC inputDescs[PG_INPUT_BINDINGS_COUNT];
@@ -25,7 +25,7 @@ pgVoid pgCreateVertexShaderCore(pgShader* shader, pgUint8* shaderData, pgUint8* 
 		"Failed to create input layout.");
 }
 
-pgVoid pgCreateFragmentShaderCore(pgShader* shader, pgUint8* shaderData, pgUint8* end)
+pgVoid pgCreateFragmentShaderCore(pgShader* shader, pgUInt8* shaderData, pgUInt8* end)
 {
 	size_t byteCodeLength = end - shaderData;
 

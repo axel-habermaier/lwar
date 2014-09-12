@@ -74,7 +74,7 @@ pgVoid pgClearColor(pgRenderTarget* renderTarget, pgColor color)
 	pgClearColorCore(renderTarget, color);
 }
 
-pgVoid pgClearDepthStencil(pgRenderTarget* renderTarget, pgBool clearDepth, pgBool clearStencil, pgFloat32 depth, pgUint8 stencil)
+pgVoid pgClearDepthStencil(pgRenderTarget* renderTarget, pgBool clearDepth, pgBool clearStencil, pgFloat32 depth, pgUInt8 stencil)
 {
 	PG_ASSERT_NOT_NULL(renderTarget);
 	PG_ASSERT(clearDepth || clearStencil, "Either depth or stencil clearing must be enabled.");
@@ -102,9 +102,9 @@ static pgVoid pgValidate(pgTexture** colorBuffers, pgInt32 count, pgTexture* dep
 {
 	pgInt32 i, j;
 
-	pgUint32 width = colorBuffers[0]->desc.width;
-	pgUint32 height = colorBuffers[0]->desc.height;
-	pgUint32 depth = colorBuffers[0]->desc.depth;
+	pgUInt32 width = colorBuffers[0]->desc.width;
+	pgUInt32 height = colorBuffers[0]->desc.height;
+	pgUInt32 depth = colorBuffers[0]->desc.depth;
 	pgTextureType type = colorBuffers[0]->desc.type;
 
 	PG_ASSERT(depthStencil == NULL || depthStencil->desc.flags & PG_TEXTURE_BIND_DEPTH_STENCIL, 

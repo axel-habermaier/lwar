@@ -137,8 +137,8 @@ typedef enum
 	PG_KEY_BACKSLASH2		= 108
 } pgKey;
 
-typedef pgVoid (*pgCharacterEnteredCallback)(pgUint16 character, pgInt32 scanCode);
-typedef pgVoid (*pgDeadCharacterEnteredCallback)(pgUint16 character, pgInt32 scanCode, pgBool* cancel);
+typedef pgVoid (*pgCharacterEnteredCallback)(pgUInt16 character, pgInt32 scanCode);
+typedef pgVoid (*pgDeadCharacterEnteredCallback)(pgUInt16 character, pgInt32 scanCode, pgBool* cancel);
 typedef pgVoid (*pgKeyPressedCallback)(pgKey key, pgInt32 scanCode);
 typedef pgVoid (*pgKeyReleasedCallback)(pgKey key, pgInt32 scanCode);
 typedef pgVoid (*pgMouseWheelCallback)(pgInt32 delta);

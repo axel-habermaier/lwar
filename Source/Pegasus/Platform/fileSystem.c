@@ -44,15 +44,15 @@ static pgVoid pgNormalize();
 static FILE* pgOpenFile(pgFileMode fileMode);
 static pgBool pgCloseFile(FILE* file);
 
-static pgBool pgReadFile(pgByte* buffer, pgUint32* sizeInBytes);
-static pgBool pgWriteFile(pgFileMode fileMode, pgByte* content, pgUint32 sizeInBytes);
-static pgBool pgTryGetFileSize(FILE* file, pgUint32* size);
+static pgBool pgReadFile(pgByte* buffer, pgUInt32* sizeInBytes);
+static pgBool pgWriteFile(pgFileMode fileMode, pgByte* content, pgUInt32 sizeInBytes);
+static pgBool pgTryGetFileSize(FILE* file, pgUInt32* size);
 
 //====================================================================================================================
 // File system functions
 //====================================================================================================================
 
-PG_API_EXPORT pgBool pgReadAppFile(pgString path, pgByte* buffer, pgUint32* sizeInBytes)
+PG_API_EXPORT pgBool pgReadAppFile(pgString path, pgByte* buffer, pgUInt32* sizeInBytes)
 {
 	PG_ASSERT_NOT_NULL(path);
 
@@ -60,7 +60,7 @@ PG_API_EXPORT pgBool pgReadAppFile(pgString path, pgByte* buffer, pgUint32* size
 	return pgReadFile(buffer, sizeInBytes);
 }
 
-PG_API_EXPORT pgBool pgReadUserFile(pgString fileName, pgByte* buffer, pgUint32* sizeInBytes)
+PG_API_EXPORT pgBool pgReadUserFile(pgString fileName, pgByte* buffer, pgUInt32* sizeInBytes)
 {
 	PG_ASSERT_NOT_NULL(fileName);
 
@@ -68,7 +68,7 @@ PG_API_EXPORT pgBool pgReadUserFile(pgString fileName, pgByte* buffer, pgUint32*
 	return pgReadFile(buffer, sizeInBytes);
 }
 
-PG_API_EXPORT pgBool pgWriteUserFile(pgString fileName, pgByte* content, pgUint32 sizeInBytes)
+PG_API_EXPORT pgBool pgWriteUserFile(pgString fileName, pgByte* content, pgUInt32 sizeInBytes)
 {
 	PG_ASSERT_NOT_NULL(fileName);
 
@@ -76,7 +76,7 @@ PG_API_EXPORT pgBool pgWriteUserFile(pgString fileName, pgByte* content, pgUint3
 	return pgWriteFile(PG_FILE_WRITE, content, sizeInBytes);
 }
 
-PG_API_EXPORT pgBool pgAppendUserFile(pgString fileName, pgByte* content, pgUint32 sizeInBytes)
+PG_API_EXPORT pgBool pgAppendUserFile(pgString fileName, pgByte* content, pgUInt32 sizeInBytes)
 {
 	PG_ASSERT_NOT_NULL(fileName);
 
@@ -294,7 +294,7 @@ static pgBool pgCloseFile(FILE* file)
 	return PG_TRUE;
 }
 
-static pgBool pgReadFile(pgByte* buffer, pgUint32* sizeInBytes)
+static pgBool pgReadFile(pgByte* buffer, pgUInt32* sizeInBytes)
 {
 	FILE* file;
 
@@ -322,7 +322,7 @@ static pgBool pgReadFile(pgByte* buffer, pgUint32* sizeInBytes)
 	return PG_TRUE;
 }
 
-static pgBool pgWriteFile(pgFileMode fileMode, pgByte* content, pgUint32 sizeInBytes)
+static pgBool pgWriteFile(pgFileMode fileMode, pgByte* content, pgUInt32 sizeInBytes)
 {
 	FILE* file;
 
@@ -349,7 +349,7 @@ static pgBool pgWriteFile(pgFileMode fileMode, pgByte* content, pgUint32 sizeInB
 	return PG_TRUE;
 }
 
-static pgBool pgTryGetFileSize(FILE* file, pgUint32* size)
+static pgBool pgTryGetFileSize(FILE* file, pgUInt32* size)
 {
 	long fileSize;
 
@@ -379,6 +379,6 @@ static pgBool pgTryGetFileSize(FILE* file, pgUint32* size)
 		return PG_FALSE;
 	}
 
-	*size = (pgUint32)fileSize;
+	*size = (pgUInt32)fileSize;
 	return PG_TRUE;
 }

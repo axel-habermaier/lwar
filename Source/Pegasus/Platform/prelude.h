@@ -280,7 +280,7 @@ typedef struct
 {
 	pgMessageType type;
 	union {
-		pgUint16 character;
+		pgUInt16 character;
 		pgKey key;
 		pgMouseButton button;
 		pgInt32 delta;
@@ -384,8 +384,8 @@ struct pgProgram
 	PG_PROGRAM_PLATFORM
 };
 
-pgVoid pgCreateVertexShaderCore(pgShader* shader, pgUint8* shaderData, pgUint8* end, pgShaderInput* inputs, pgInt32 inputCount);
-pgVoid pgCreateFragmentShaderCore(pgShader* shader, pgUint8* shaderData, pgUint8* end);
+pgVoid pgCreateVertexShaderCore(pgShader* shader, pgUInt8* shaderData, pgUInt8* end, pgShaderInput* inputs, pgInt32 inputCount);
+pgVoid pgCreateFragmentShaderCore(pgShader* shader, pgUInt8* shaderData, pgUInt8* end);
 pgVoid pgDestroyShaderCore(pgShader* shader);
 
 pgVoid pgCreateProgramCore(pgProgram* program);
@@ -472,7 +472,7 @@ pgVoid pgCreateRenderTargetCore(pgRenderTarget* renderTarget);
 pgVoid pgDestroyRenderTargetCore(pgRenderTarget* renderTarget);
 
 pgVoid pgClearColorCore(pgRenderTarget* renderTarget, pgColor color);
-pgVoid pgClearDepthStencilCore(pgRenderTarget* renderTarget, pgBool clearDepth, pgBool clearStencil, pgFloat32 depth, pgUint8 stencil);
+pgVoid pgClearDepthStencilCore(pgRenderTarget* renderTarget, pgBool clearDepth, pgBool clearStencil, pgFloat32 depth, pgUInt8 stencil);
 pgVoid pgBindRenderTargetCore(pgRenderTarget* renderTarget);
 
 //====================================================================================================================

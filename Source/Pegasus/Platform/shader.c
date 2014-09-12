@@ -7,8 +7,8 @@
 pgShader* pgCreateVertexShader(pgGraphicsDevice* device, pgVoid* shaderData, pgInt32 length, pgShaderInput* inputs, pgInt32 inputCount)
 {
 	pgShader* shader;
-	pgUint8* data = (pgUint8*)shaderData;
-	pgUint8* end = data + length;
+	pgUInt8* data = (pgUInt8*)shaderData;
+	pgUInt8* end = data + length;
 
 	PG_ASSERT_NOT_NULL(device);
 	PG_ASSERT_NOT_NULL(shaderData);
@@ -27,8 +27,8 @@ pgShader* pgCreateVertexShader(pgGraphicsDevice* device, pgVoid* shaderData, pgI
 pgShader* pgCreateFragmentShader(pgGraphicsDevice* device, pgVoid* shaderData, pgInt32 length)
 {
 	pgShader* shader;
-	pgUint8* data = (pgUint8*)shaderData;
-	pgUint8* end = data + length;
+	pgUInt8* data = (pgUInt8*)shaderData;
+	pgUInt8* end = data + length;
 
 	PG_ASSERT_NOT_NULL(device);
 	PG_ASSERT_NOT_NULL(shaderData);

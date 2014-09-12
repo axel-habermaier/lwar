@@ -22,7 +22,7 @@ static pgVoid pgRebindTexture();
 
 pgVoid pgCreateTextureCore(pgTexture* texture, pgSurface* surfaces)
 {
-	pgUint32 i;
+	pgUInt32 i;
 
 	pgConvertTextureType(texture->desc.type, &texture->glType, &texture->glBoundType);
 	
@@ -40,7 +40,7 @@ pgVoid pgCreateTextureCore(pgTexture* texture, pgSurface* surfaces)
 			break;
 		case PG_TEXTURE_CUBE_MAP:
 		{
-			pgUint32 j;
+			pgUInt32 j;
 			GLenum faces[] = 
 			{ 
 				GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 

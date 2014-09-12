@@ -9,11 +9,11 @@
 	typedef pgChar pgPathChar;
 #endif
 
-PG_API_EXPORT pgBool pgReadAppFile(pgString path, pgByte* buffer, pgUint32* sizeInBytes);
-PG_API_EXPORT pgBool pgReadUserFile(pgString fileName, pgByte* buffer, pgUint32* sizeInBytes);
+PG_API_EXPORT pgBool pgReadAppFile(pgString path, pgByte* buffer, pgUInt32* sizeInBytes);
+PG_API_EXPORT pgBool pgReadUserFile(pgString fileName, pgByte* buffer, pgUInt32* sizeInBytes);
 
-PG_API_EXPORT pgBool pgWriteUserFile(pgString fileName, pgByte* content, pgUint32 sizeInBytes);
-PG_API_EXPORT pgBool pgAppendUserFile(pgString fileName, pgByte* content, pgUint32 sizeInBytes);
+PG_API_EXPORT pgBool pgWriteUserFile(pgString fileName, pgByte* content, pgUInt32 sizeInBytes);
+PG_API_EXPORT pgBool pgAppendUserFile(pgString fileName, pgByte* content, pgUInt32 sizeInBytes);
 
 PG_API_EXPORT pgBool pgDeleteUserFile(pgString fileName);
 

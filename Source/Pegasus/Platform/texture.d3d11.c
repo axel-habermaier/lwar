@@ -99,7 +99,7 @@ static pgVoid pgInitTextureDesc2D(pgTexture* texture, D3D11_TEXTURE2D_DESC* desc
 
 static D3D11_SUBRESOURCE_DATA* pgInitResourceData(pgTexture* texture, pgSurface* surfaces)
 {
-	pgUint32 i;
+	pgUInt32 i;
 	D3D11_SUBRESOURCE_DATA* data = NULL;
 
 	if (texture->desc.flags & PG_TEXTURE_GENERATE_MIPMAPS)
@@ -112,8 +112,8 @@ static D3D11_SUBRESOURCE_DATA* pgInitResourceData(pgTexture* texture, pgSurface*
 
 	if (texture->desc.type == PG_TEXTURE_CUBE_MAP)
 	{
-		pgUint32 j;
-		pgUint32 faces[] = { 5, 1, 4, 0, 3, 2 };
+		pgUInt32 j;
+		pgUInt32 faces[] = { 5, 1, 4, 0, 3, 2 };
 
 		for (i = 0; i < 6; ++i)
 		{

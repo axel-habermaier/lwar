@@ -48,7 +48,7 @@ pgFloat64 pgGetTime()
 {
 	struct timespec time;
     clock_gettime(CLOCK_MONOTONIC, &time);
-    return (double)(((pgUint64)time.tv_sec) * 1e9 + time.tv_nsec) * 1e-9;
+    return (double)(((pgUInt64)time.tv_sec) * 1e9 + time.tv_nsec) * 1e-9;
 }
 
 pgVoid pgShowMessageBox(pgString caption, pgString message)

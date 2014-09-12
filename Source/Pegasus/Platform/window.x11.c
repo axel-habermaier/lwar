@@ -349,7 +349,7 @@ static pgVoid ProcessEvent(pgWindow* window, XEvent* e, pgMessage* message)
                     PG_DEBUG("The unicode character exceeds the limits of a 2-byte unsigned integer.");
 
                 nextMessage.type = isDead ? PG_MESSAGE_DEAD_CHARACTER_ENTERED : PG_MESSAGE_CHARACTER_ENTERED;
-                nextMessage.character = (pgUint16)symbol;
+                nextMessage.character = (pgUInt16)symbol;
                 nextMessage.scanCode = e->xkey.keycode;
             }
         }
