@@ -120,12 +120,12 @@
 		protected override void OnDisposing()
 		{
 			ValidateThread();
-			Log.Debug("Pooled objects of type '{0}': {1} object(s) have now been released.", typeof(T).FullName, _allocationCount);
+			Log.Debug("Releasing {1} pooled object(s) of type '{0}'...", typeof(T).FullName, _allocationCount);
 
 #if DEBUG
 			var leakedObjects = _allocatedObjects.Except(_pooledObjects).ToArray();
 			if (leakedObjects.Length > 0)
-				Log.Debug("Pooled objects of type '{0}': Leaked {1} object(s).", typeof(T).FullName, leakedObjects.Length);
+				Log.Debug("Leaked {1} object(s) of type '{0}'.", typeof(T).FullName, leakedObjects.Length);
 
 			if (leakedObjects.Length > 0 && Debugger.IsAttached)
 				Debugger.Break();

@@ -171,10 +171,9 @@
 		/// <param name="action">Writes the message to the console.</param>
 		private static void WriteColored(ConsoleColor color, Action action)
 		{
-			var currentColor = Console.ForegroundColor;
 			Console.ForegroundColor = color;
 			action();
-			Console.ForegroundColor = currentColor;
+			Console.ResetColor();
 		}
 	}
 }

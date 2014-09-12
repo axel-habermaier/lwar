@@ -12,7 +12,7 @@
 	/// <summary>
 	///     Represents a compilation unit that compiles all assets into a binary format.
 	/// </summary>
-	public class CompilationUnit : IDisposable
+	internal class CompilationUnit : IDisposable
 	{
 		/// <summary>
 		///     The list of assets that are compiled by the compilation unit.

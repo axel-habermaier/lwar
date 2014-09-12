@@ -5,7 +5,6 @@
 namespace Lwar.Assets.EntityTemplates.Compilation
 {
 	using System;
-	using Pegasus.Math;
 
 	/// <summary>
 	///     Represents an entity template that is shared between the client and the server.

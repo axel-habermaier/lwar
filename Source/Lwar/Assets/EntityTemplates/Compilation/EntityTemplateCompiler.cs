@@ -210,7 +210,6 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 				writer.AppendLine("using Pegasus.Assets;");
 				writer.AppendLine("using Pegasus.Platform.Graphics;");
 				writer.AppendLine("using Pegasus.Platform.Memory;");
-				writer.AppendLine("using Pegasus.Rendering;");
 				writer.NewLine();
 
 				writer.AppendLine("public static class EntityTemplates");

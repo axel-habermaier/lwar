@@ -10,7 +10,7 @@
 	/// <summary>
 	///     Represents external process.
 	/// </summary>
-	public class ExternalProcess : IDisposable
+	internal class ExternalProcess : IDisposable
 	{
 		/// <summary>
 		///     The external process.

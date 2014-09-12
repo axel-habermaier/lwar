@@ -2,7 +2,6 @@
 {
 	using System;
 	using Compilation;
-	using Pegasus.Math;
 
 	/// <summary>
 	///     The ship entity templates that are shared between the client and the server.
