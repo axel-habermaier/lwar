@@ -2,7 +2,7 @@
 {
 	using System;
 	using Math;
-	using Rendering;
+	using Platform.Graphics;
 
 	/// <summary>
 	///     Represents a scrollable area.

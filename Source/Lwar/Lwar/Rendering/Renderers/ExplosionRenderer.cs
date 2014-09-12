@@ -6,7 +6,6 @@
 	using Pegasus.Assets;
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
-	using Pegasus.Rendering;
 
 	/// <summary>
 	///     Renders explosion effects into a 3D scene.

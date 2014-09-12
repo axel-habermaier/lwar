@@ -9,7 +9,6 @@
 	using Pegasus.Platform;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
-	using Pegasus.Rendering;
 
 	/// <summary>
 	///     Renders suns into a 3D scene.

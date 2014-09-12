@@ -3,7 +3,6 @@
 	using System;
 	using Pegasus.Assets;
 	using Pegasus.Platform.Graphics;
-	using Pegasus.Rendering;
 
 	/// <summary>
 	///     Represents a renderer that renders an object into a 3D scene.

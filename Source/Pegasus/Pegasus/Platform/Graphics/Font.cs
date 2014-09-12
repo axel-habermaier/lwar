@@ -3,7 +3,6 @@
 	using System;
 	using Math;
 	using Memory;
-	using Rendering;
 
 	/// <summary>
 	///     Provides the metadata and operations for drawing text.

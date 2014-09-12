@@ -7,7 +7,6 @@
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
-	using Pegasus.Rendering;
 
 	/// <summary>
 	///     Renders a starfield as a parallax scrolling effect.

@@ -1,10 +1,9 @@
-﻿namespace Pegasus.Rendering
+﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
 	using System.Diagnostics;
 	using System.Runtime.InteropServices;
-	using Platform.Graphics;
-	using Platform.Memory;
+	using Memory;
 
 	/// <summary>
 	///     Represents a dynamic vertex buffer that is split into several chunks. Each chunk is of the requested size; therefore,

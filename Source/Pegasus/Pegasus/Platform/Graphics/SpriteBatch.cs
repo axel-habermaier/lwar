@@ -1,15 +1,13 @@
-﻿namespace Pegasus.Rendering
+﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
 	using System.Collections.Generic;
 	using System.Runtime.InteropServices;
 	using Assets;
 	using Assets.Effects;
+	using Logging;
 	using Math;
-	using Platform;
-	using Platform.Graphics;
-	using Platform.Logging;
-	using Platform.Memory;
+	using Memory;
 
 	/// <summary>
 	///     Efficiently draws large amounts of 2D sprites by batching together quads with the same texture.

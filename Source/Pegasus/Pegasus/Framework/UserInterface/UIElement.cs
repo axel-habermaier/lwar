@@ -6,7 +6,6 @@
 	using Input;
 	using Math;
 	using Platform.Graphics;
-	using Rendering;
 
 	/// <summary>
 	///     Provides layouting, input, hit testing, rendering, and other base functionality for all UI elements.

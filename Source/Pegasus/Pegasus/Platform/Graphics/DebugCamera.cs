@@ -1,10 +1,8 @@
-﻿namespace Pegasus.Rendering
+﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
 	using Framework.UserInterface.Input;
 	using Math;
-	using Platform;
-	using Platform.Graphics;
 
 	/// <summary>
 	///     Represents a six-degrees-of-freedom debug camera.

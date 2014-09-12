@@ -5,7 +5,6 @@
 	using Platform.Graphics;
 	using Platform.Logging;
 	using Platform.Memory;
-	using Rendering;
 	using Scripting;
 
 	/// <summary>

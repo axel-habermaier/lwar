@@ -2,7 +2,7 @@
 {
 	using System;
 	using Math;
-	using Rendering;
+	using Platform.Graphics;
 
 	/// <summary>
 	///     Allows each child to take up the entire area of the panel.

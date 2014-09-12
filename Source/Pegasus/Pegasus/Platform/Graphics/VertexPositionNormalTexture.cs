@@ -1,9 +1,8 @@
-﻿namespace Pegasus.Rendering
+﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
 	using System.Runtime.InteropServices;
 	using Math;
-	using Platform.Graphics;
 
 	/// <summary>
 	///     Holds position, texture coordinates, and normal data for a vertex.

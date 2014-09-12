@@ -8,7 +8,6 @@
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
-	using Pegasus.Rendering;
 
 	/// <summary>
 	///     Renders shield effects into a 3D scene.

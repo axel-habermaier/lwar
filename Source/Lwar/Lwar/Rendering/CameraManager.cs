@@ -6,7 +6,7 @@
 	using Pegasus.Framework;
 	using Pegasus.Framework.UserInterface.Controls;
 	using Pegasus.Platform.Memory;
-	using Pegasus.Rendering;
+	using Pegasus.Platform.Graphics;
 	using Scripting;
 
 	/// <summary>

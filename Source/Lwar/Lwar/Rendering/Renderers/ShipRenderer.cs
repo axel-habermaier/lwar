@@ -5,7 +5,6 @@
 	using Gameplay.Entities;
 	using Pegasus.Assets;
 	using Pegasus.Platform.Graphics;
-	using Pegasus.Rendering;
 
 	/// <summary>
 	///     Renders ships into a 3D scene.

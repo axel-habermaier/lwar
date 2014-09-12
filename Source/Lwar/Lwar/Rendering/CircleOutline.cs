@@ -6,7 +6,6 @@
 	using Pegasus;
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
-	using Pegasus.Rendering;
 
 	/// <summary>
 	///     Builds up a model containing circle outlines.

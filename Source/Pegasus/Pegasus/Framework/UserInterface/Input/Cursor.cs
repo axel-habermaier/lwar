@@ -3,7 +3,6 @@ namespace Pegasus.Framework.UserInterface.Input
 	using System;
 	using Math;
 	using Platform.Graphics;
-	using Rendering;
 
 	/// <summary>
 	///     Represents the mouse cursor.

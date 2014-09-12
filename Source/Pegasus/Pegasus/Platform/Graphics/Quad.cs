@@ -1,9 +1,8 @@
-﻿namespace Pegasus.Rendering
+﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
 	using System.Runtime.InteropServices;
 	using Math;
-	using Platform.Graphics;
 
 	/// <summary>
 	///     Represents a rectangle with possibly non-axis aligned edges.

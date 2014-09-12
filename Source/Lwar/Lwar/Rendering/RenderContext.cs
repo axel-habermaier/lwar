@@ -8,7 +8,6 @@
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
-	using Pegasus.Rendering;
 	using Renderers;
 
 	/// <summary>

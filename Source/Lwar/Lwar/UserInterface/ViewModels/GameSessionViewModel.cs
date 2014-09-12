@@ -12,7 +12,7 @@
 	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Platform.Network;
-	using Pegasus.Rendering;
+	using Pegasus.Platform.Graphics;
 	using Rendering;
 	using Scripting;
 	using Views;

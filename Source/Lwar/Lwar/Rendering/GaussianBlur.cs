@@ -8,7 +8,6 @@
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
-	using Pegasus.Rendering;
 
 	/// <summary>
 	///     Represents a GPU-based gaussian blur filter than can be applied to a texture.

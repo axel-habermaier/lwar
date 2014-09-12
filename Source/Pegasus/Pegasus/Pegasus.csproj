@@ -354,7 +354,7 @@
     <Compile Include="Framework\Bootstrapper.cs" />
     <Compile Include="Framework\UserInterface\Controls\WindowMode.cs" />
     <Compile Include="Platform\StepTimer.cs" />
-    <Compile Include="Rendering\DynamicVertexBuffer.cs" />
+    <Compile Include="Platform\Graphics\DynamicVertexBuffer.cs" />
     <Compile Include="Framework\UserInterface\DataBinding.cs" />
     <Compile Include="Framework\UserInterface\Controls\Button.cs" />
     <Compile Include="Framework\UserInterface\Controls\ContentControl.cs" />
@@ -405,14 +405,14 @@
     <Compile Include="Platform\Logging\LogType.cs" />
     <Compile Include="Platform\Clock.cs" />
     <Compile Include="Platform\Timer.cs" />
-    <Compile Include="Rendering\Camera3D.cs" />
-    <Compile Include="Rendering\Camera2D.cs" />
-    <Compile Include="Rendering\FullscreenQuad.cs" />
-    <Compile Include="Rendering\Model.cs" />
-    <Compile Include="Rendering\RenderOutput.cs" />
-    <Compile Include="Rendering\VertexPositionNormal.cs" />
-    <Compile Include="Rendering\DebugCamera.cs" />
-    <Compile Include="Rendering\VertexPositionNormalTexture.cs" />
+    <Compile Include="Platform\Graphics\Camera3D.cs" />
+    <Compile Include="Platform\Graphics\Camera2D.cs" />
+    <Compile Include="Platform\Graphics\FullscreenQuad.cs" />
+    <Compile Include="Platform\Graphics\Model.cs" />
+    <Compile Include="Platform\Graphics\RenderOutput.cs" />
+    <Compile Include="Platform\Graphics\VertexPositionNormal.cs" />
+    <Compile Include="Platform\Graphics\DebugCamera.cs" />
+    <Compile Include="Platform\Graphics\VertexPositionNormalTexture.cs" />
     <Compile Include="Math\Circle.cs">
       <DependentUpon>Circle.tt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -449,7 +449,7 @@
     <Compile Include="Platform\Memory\PooledObject.cs" />
     <Compile Include="Platform\Graphics\BufferType.cs" />
     <Compile Include="Platform\Graphics\ShaderType.cs" />
-    <Compile Include="Rendering\Camera.cs" />
+    <Compile Include="Platform\Graphics\Camera.cs" />
     <Compile Include="Scripting\CommandAttribute.cs" />
     <Compile Include="Scripting\CommandParameter.cs" />
     <Compile Include="Scripting\Commands.cs">
@@ -579,8 +579,8 @@
     <Compile Include="Platform\Memory\Interop.cs" />
     <Compile Include="Platform\PlatformType.cs" />
     <Compile Include="Platform\PlatformInfo.cs" />
-    <Compile Include="Rendering\Quad.cs" />
-    <Compile Include="Rendering\SpriteBatch.cs" />
+    <Compile Include="Platform\Graphics\Quad.cs" />
+    <Compile Include="Platform\Graphics\SpriteBatch.cs" />
     <Compile Include="Framework\UserInterface\TextLine.cs" />
     <Compile Include="Framework\UserInterface\TextSequence.cs" />
     <Compile Include="Framework\UserInterface\TextToken.cs" />
@@ -623,7 +623,7 @@
     <Compile Include="Platform\Graphics\TextureFilter.cs" />
     <Compile Include="Platform\Graphics\VertexDataFormat.cs" />
     <Compile Include="Platform\Graphics\VertexBuffer.cs" />
-    <Compile Include="Rendering\VertexPositionColorTexture.cs" />
+    <Compile Include="Platform\Graphics\VertexPositionColorTexture.cs" />
     <Compile Include="Platform\Graphics\VertexShader.cs" />
     <Compile Include="Platform\Logging\Log.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

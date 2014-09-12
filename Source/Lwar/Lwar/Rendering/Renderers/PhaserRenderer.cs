@@ -2,7 +2,7 @@
 {
 	using System;
 	using Gameplay.Entities;
-	using Pegasus.Rendering;
+	using Pegasus.Platform.Graphics;
 
 	/// <summary>
 	///     Renders phasers into a 3D scene.

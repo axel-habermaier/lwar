@@ -9,7 +9,7 @@
 	using Platform;
 	using Platform.Logging;
 	using Platform.Memory;
-	using Rendering;
+	using Platform.Graphics;
 
 	/// <summary>
 	///     Represents the state of the mouse.

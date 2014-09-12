@@ -4,7 +4,6 @@
 	using Math;
 	using Platform;
 	using Platform.Graphics;
-	using Rendering;
 
 	/// <summary>
 	///     Represents layouted text.

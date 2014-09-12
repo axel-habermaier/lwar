@@ -3,7 +3,6 @@
 	using System;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
-	using Pegasus.Rendering;
 
 	/// <summary>
 	///     Manages common properties of entities.

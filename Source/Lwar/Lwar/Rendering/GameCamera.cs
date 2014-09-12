@@ -7,7 +7,6 @@
 	using Pegasus.Math;
 	using Pegasus.Platform;
 	using Pegasus.Platform.Graphics;
-	using Pegasus.Rendering;
 
 	/// <summary>
 	///     Represents the camera that is used to draw the game session.

@@ -4,7 +4,7 @@
 	using Input;
 	using Math;
 	using Platform;
-	using Rendering;
+	using Platform.Graphics;
 
 	/// <summary>
 	///     Represents a control that can be used to edit text.

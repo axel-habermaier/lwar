@@ -7,7 +7,6 @@
 	using Platform.Graphics;
 	using Platform.Logging;
 	using Platform.Memory;
-	using Rendering;
 
 	/// <summary>
 	///     Represents an operating system window that hosts UI elements.

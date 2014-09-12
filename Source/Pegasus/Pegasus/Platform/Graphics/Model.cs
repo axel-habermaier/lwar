@@ -1,11 +1,9 @@
-﻿namespace Pegasus.Rendering
+﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
 	using System.Collections.Generic;
 	using Math;
-	using Platform;
-	using Platform.Graphics;
-	using Platform.Memory;
+	using Memory;
 
 	/// <summary>
 	///     Represents a 3D model.
