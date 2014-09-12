@@ -37,6 +37,10 @@ pgVoid pgShutdown()
 	pgState.appName = NULL;
 
 	pgShutdownCore();
+
+#ifdef DEBUG
+	pgReportAllocatedMemory();
+#endif
 }
 
 //====================================================================================================================
@@ -85,7 +89,7 @@ pgString pgFormat(pgString message, ...)
 
 	if (vsnprintf((char*)buffer, sizeof(buffer), (char*)message, vl) < 0)
 		PG_DIE("Error while generating log message.");
-	
+
 	va_end(vl);
 	return buffer;
 }
@@ -118,3 +122,86 @@ pgInt32 pgClamp(pgInt32 value, pgInt32 min, pgInt32 max)
 
 	return value;
 }
+
+//====================================================================================================================
+// Memory debugging
+//====================================================================================================================
+
+#ifdef DEBUG
+
+typedef struct pgMemoryInfo
+{
+	pgVoid* ptr;
+	pgString type;
+	pgString file;
+	pgInt32 line;
+	struct pgMemoryInfo* next;
+	struct pgMemoryInfo* prev;
+} pgMemoryInfo;
+
+static pgMemoryInfo* pgMemory = NULL;
+
+static pgMemoryInfo* pgFindMemoryInfo(pgVoid* ptr)
+{
+	for (pgMemoryInfo* info = pgMemory; info != NULL; info = info->next)
+		if (info->ptr == ptr)
+			return info;
+
+	return NULL;
+}
+
+pgVoid pgAllocated(pgVoid* ptr, pgString type, pgString file, pgInt32 line)
+{
+	pgMemoryInfo* info = pgFindMemoryInfo(ptr);
+	if (info != NULL)
+		PG_DIE("Memory is reallocated without being freed at %s:%d. The original allocation of type '%s' occurred at %s:%d.",
+			file, line, info->type, info->file, info->line);
+
+	info = (pgMemoryInfo*)malloc(sizeof(pgMemoryInfo));
+	info->ptr = ptr;
+	info->type = type;
+	info->file = file;
+	info->line = line;
+	info->next = pgMemory;
+	info->prev = NULL;
+
+	if (pgMemory != NULL)
+		pgMemory->prev = info;
+
+	pgMemory = info;
+}
+
+pgVoid pgDeallocated(pgVoid* ptr)
+{
+	if (ptr == NULL)
+		return;
+
+	pgMemoryInfo* info = pgFindMemoryInfo(ptr);
+	if (info != NULL)
+	{
+		if (info == pgMemory)
+		{
+			info->prev = NULL;
+			pgMemory = info->next;
+		}
+		else
+		{
+			info->prev->next = info->next;
+
+			if (info->next != NULL)
+				info->next->prev = info->prev;
+		}
+
+		free(info);
+	}
+	else
+		PG_DIE("Memory at location %p has already been freed.", ptr);
+}
+
+pgVoid pgReportAllocatedMemory()
+{
+	for (pgMemoryInfo* info = pgMemory; info != NULL; info = info->next)
+		PG_ERROR("Leaked an instance of type '%s', allocated at %s:%d.", info->type, info->file, info->line);
+}
+
+#endif

@@ -67,7 +67,7 @@
 	#define PG_MULTILINE_MACRO_END } while (PG_FALSE)
 
 #else
-#error Unsupported OS or compiler
+	#error Unsupported OS or compiler
 #endif
 
 //====================================================================================================================
@@ -80,6 +80,15 @@
 // Fails compilation if the condition evaluates to false at compile-time
 #define PG_COMPILE_TIME_ASSERT(name, x) typedef int assert_##name[(x) * 2 - 1]
 
+// Memory debugging helper macros
+#ifdef DEBUG
+	#define PG_ALLOCATED(ptr, type) pgAllocated((ptr), #type, __FILE__, __LINE__)
+	#define PG_DEALLOCATED(ptr) pgDeallocated(ptr)
+#else
+	#define PG_ALLOCATED(ptr, type)
+	#define PG_DEALLOCATED(ptr)
+#endif
+
 // Allocates an object of the given type and stores the pointer in the given pointer variable. If the allocation
 // fails, the application is terminated.
 #define PG_ALLOC(type, ptr) \
@@ -88,6 +97,7 @@
 	if ((ptr) == NULL) \
 		PG_DIE("Out of memory: Failed to allocate %d bytes for an object of type '" #type "'.", sizeof(type)); \
 	memset((void*)(ptr), 0, sizeof(type)); \
+	PG_ALLOCATED(ptr, type); \
 	PG_MULTILINE_MACRO_END
 
 // Allocates an array of the given type and length and stores the pointer in the given pointer variable. If the allocation
@@ -98,9 +108,15 @@
 	if ((ptr) == NULL) \
 		PG_DIE("Out of memory: Failed to allocate %d bytes for an array of type '" #type "'.", sizeof(type) * length); \
 	memset((void*)(ptr), 0, sizeof(type) * length); \
+	PG_ALLOCATED(ptr, type); \
 	PG_MULTILINE_MACRO_END
 
-#define PG_FREE(variable) free((void*)(variable));
+// Frees the memory allocated with PG_ALLOC or PG_ALLOC_ARRAY
+#define PG_FREE(variable) \
+	PG_MULTILINE_MACRO_BEGIN \
+	PG_DEALLOCATED(variable); \
+	free((void*)(variable)); \
+	PG_MULTILINE_MACRO_END
 
 #ifdef DEBUG
 	#define PG_ASSERT(cond, fmt, ...)										\
@@ -157,6 +173,12 @@ typedef struct
 
 extern pgLibraryState pgState;
 
+#ifdef DEBUG
+	pgVoid pgAllocated(pgVoid* ptr, pgString type, pgString file, pgInt32 line);
+	pgVoid pgDeallocated(pgVoid* ptr);
+	pgVoid pgReportAllocatedMemory();
+#endif
+
 pgChar* pgTrim(pgChar* message);
 pgString pgGetOsErrorMessage();
 pgString pgFormat(pgString message, ...);
@@ -175,8 +197,14 @@ PG_NORETURN pgVoid pgNoReturn();
 
 #ifdef DEBUG
 	#define PG_DEBUG(fmt, ...) pgState.logCallback(PG_LOGTYPE_DEBUG, pgFormat(fmt, ##__VA_ARGS__))
+	#define PG_DEBUG_IF(condition, fmt, ...) \
+		PG_MULTILINE_MACRO_BEGIN \
+		if (condition) \
+			pgState.logCallback(PG_LOGTYPE_DEBUG, pgFormat(fmt, ##__VA_ARGS__)); \
+		PG_MULTILINE_MACRO_END
 #else
 	#define PG_DEBUG(fmt, ...)
+	#define PG_DEBUG_IF(condition, fmt, ...)
 #endif
 
 //====================================================================================================================
