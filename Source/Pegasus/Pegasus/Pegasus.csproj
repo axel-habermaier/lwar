@@ -210,6 +210,9 @@
     <Compile Include="..\Assets\Fonts\FontLoader.cs">
       <Link>Assets\FontLoader.cs</Link>
     </Compile>
+    <Compile Include="..\User Interface\UserInterface.cs">
+      <Link>Framework\UserInterface\Views\UserInterface.cs</Link>
+    </Compile>
     <Compile Include="Assert.Framework.cs" />
     <Compile Include="Assets\AssetLoaders\CubeMapLoader.cs" />
     <Compile Include="Assets\AssetLoaders\AssetLoader.cs" />
@@ -635,9 +638,6 @@
     <Compile Include="Scripting\UpdateMode.cs" />
     <Compile Include="Scripting\Validators\ValidatorAttribute.cs" />
     <Compile Include="Scripting\Validators\WindowSizeAttribute.cs" />
-    <Compile Include="..\User Interface\UserInterface.cs">
-      <Link>Framework\UserInterface\UserInterface.cs</Link>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Math\Circle.tt">

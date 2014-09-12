@@ -130,7 +130,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
@@ -169,6 +168,9 @@
     </Compile>
     <Compile Include="UserInterface\Views\ScoreboardView.xaml.cs">
       <DependentUpon>ScoreboardView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UserInterface\Views\ShipOverlayPanel.xaml.cs">
+      <DependentUpon>ShipOverlayPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="UserInterface\Views\WaitingView.xaml.cs">
       <DependentUpon>WaitingView.xaml</DependentUpon>
@@ -251,6 +253,10 @@
     <Page Include="UserInterface\Styles\CheckBoxStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UserInterface\Views\ShipOverlayPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserInterface\Views\ShipOverlayView.xaml">
       <SubType>Designer</SubType>

@@ -29,6 +29,7 @@
 								UseAppResolution="{Binding UseAppResolution}">
 		<controls:AreaPanel x:Name="LayoutRoot">
 
+			<userInterface:ShipOverlayPanel/>
 			<userInterface:RespawnView DataContext="{Binding Respawn}" />
 			<userInterface:WaitingView/>
 			<userInterface:EventListView/>

@@ -11,7 +11,7 @@
 	using Pegasus.Platform.Graphics;
 	using Rendering;
 
-	internal class ShipOverlayPanel : Canvas
+	internal partial class ShipOverlayPanel : Canvas
 	{
 		/// <summary>
 		///     The list of players taking part in the game session.
@@ -29,9 +29,17 @@
 		private readonly PlayerInfo[] _playerInfos = new PlayerInfo[Specification.MaxPlayers];
 
 		/// <summary>
-		///     Initializes a new instance.
+		///     Gets the game camera that is used to draw the game session.
 		/// </summary>
-		public ShipOverlayPanel()
+		private GameCamera Camera
+		{
+			get { return GetValue(GameCameraProperty); }
+		}
+
+		/// <summary>
+		///     Invoked once the UI element's content has been fully loaded.
+		/// </summary>
+		partial void OnLoaded()
 		{
 			CreateDataBinding(PlayersProperty, BindingMode.OneWay, "Players");
 			CreateDataBinding(GameCameraProperty, BindingMode.OneWay, "CameraManager", "GameCamera");
@@ -45,14 +53,6 @@
 				_playerInfos[i].Overlay = overlay;
 				Add(overlay);
 			}
-		}
-
-		/// <summary>
-		///     Gets the game camera that is used to draw the game session.
-		/// </summary>
-		private GameCamera Camera
-		{
-			get { return GetValue(GameCameraProperty); }
 		}
 
 		/// <summary>

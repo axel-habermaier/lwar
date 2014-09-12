@@ -10,4 +10,5 @@
 	<Class Name="Lwar.UserInterface.Views.RespawnView" Inherits="Pegasus.Framework.UserInterface.UIElement"></Class>
 	<Class Name="Lwar.UserInterface.Views.EventListView" Inherits="Pegasus.Framework.UserInterface.UIElement"></Class>
 	<Class Name="Lwar.UserInterface.Views.WaitingView" Inherits="Pegasus.Framework.UserInterface.UIElement"></Class>
+	<Class Name="Lwar.UserInterface.Views.ShipOverlayPanel" Inherits="Pegasus.Framework.UserInterface.UIElement"></Class>
 </Types>
