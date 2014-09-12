@@ -2,9 +2,10 @@
 {
 	using System;
 	using System.Diagnostics;
-	using Network;
+	using Lwar.Network;
 	using Pegasus;
 	using Pegasus.Framework.UserInterface.Input;
+	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Network;
 	using Pegasus.Scripting;
 	using Pegasus.Scripting.Validators;
@@ -12,8 +13,7 @@
 	internal static class Commands
 	{
 		/// <summary>
-		///     Starts up a new local server instance. If a local server is currently running, it is shut down before the new server is
-		///     started.
+		///     Starts up a new local server instance. If a local server is currently running, it is shut down before the new server is started.
 		/// </summary>
 		public static Command StartServerCommand { get; private set; }
 
@@ -48,8 +48,7 @@
 		public static Command ExitCommand { get; private set; }
 
 		/// <summary>
-		///     Describes the usage and the purpose of the the cvar or command with the given name. If no name is given, displays a help
-		///     text about the usage of cvars and commands in general.
+		///     Describes the usage and the purpose of the the cvar or command with the given name. If no name is given, displays a help text about the usage of cvars and commands in general.
 		/// </summary>
 		public static Command<string> HelpCommand { get; private set; }
 
@@ -89,8 +88,7 @@
 		public static Command PrintAppInfoCommand { get; private set; }
 
 		/// <summary>
-		///     Binds a command invocation to a logical input. Whenever the input is triggered, the command is invoked with the
-		///     specified arguments.
+		///     Binds a command invocation to a logical input. Whenever the input is triggered, the command is invoked with the specified arguments.
 		/// </summary>
 		public static Command<InputTrigger, string> BindCommand { get; private set; }
 
@@ -587,17 +585,14 @@
 		/// </summary>
 		public static void Initialize()
 		{
-			StartServerCommand = new Command("start_server",
-				"Starts up a new local server instance. If a local server is currently running, it is shut down before the new server is started.",
-				false);
+			StartServerCommand = new Command("start_server", "Starts up a new local server instance. If a local server is currently running, it is shut down before the new server is started.", false);
 			StopServerCommand = new Command("stop_server", "Shuts down the currently running server.", false);
-			ConnectCommand = new Command<IPAddress, ushort>("connect", "Connects to a game session on a remote or local server.", false,
+			ConnectCommand = new Command<IPAddress, ushort>("connect", "Connects to a game session on a remote or local server.", false, 
 				new CommandParameter("ipAddress", typeof(IPAddress), false, default(IPAddress), "The IP address of the server."),
 				new CommandParameter("port", typeof(ushort), true, Specification.DefaultServerPort, "The port of the server."));
 			DisconnectCommand = new Command("disconnect", "Disconnects from the current game session.", false);
-			SayCommand = new Command<string>("say", "Sends a chat message to all peers.", false,
-				new CommandParameter("message", typeof(string), false, default(string), "The message that should be sent.", new NotEmptyAttribute(),
-					new MaximumLengthAttribute(Specification.ChatMessageLength, true)));
+			SayCommand = new Command<string>("say", "Sends a chat message to all peers.", false, 
+				new CommandParameter("message", typeof(string), false, default(string), "The message that should be sent.", new NotEmptyAttribute(), new MaximumLengthAttribute(Specification.ChatMessageLength, true)));
 			ToggleDebugCameraCommand = new Command("toggle_debug_camera", "Toggles between the game and the debugging camera.", false);
 
 			CommandRegistry.Register(StartServerCommand);
@@ -633,3 +628,4 @@
 		}
 	}
 }
+

@@ -14,7 +14,7 @@ namespace Pegasus.Scripting.Parsing.Combinators
 		/// </summary>
 		public ConfigurableInputParser()
 		{
-			var ws = ~WhiteSpaces;
+			var ws = ~Parsers.WhiteSpaces;
 			var dot = Character('.') + ws;
 			var plus = Character('+') + ws;
 			var openBracket = ~(Character('[') + ws);

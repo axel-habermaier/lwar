@@ -17,7 +17,7 @@
 		/// </summary>
 		public InputTriggerParser()
 		{
-			var ws = ~WhiteSpaces;
+			var ws = ~Parsers.WhiteSpaces;
 			var comma = ~(Character(',') + ws);
 			var openParen = ~(Character('(') + ws);
 			var closeParen = ~(Character(')') + ws);
@@ -75,7 +75,7 @@
 			return SeparatedBy1(operandParser, operatorParser)
 				.Apply(triggers =>
 					triggers.Aggregate((binaries, next) => new BinaryInputTrigger(triggerType, binaries, next)))
-				   + ~WhiteSpaces;
+				   + ~Parsers.WhiteSpaces;
 		}
 	}
 }

@@ -31,17 +31,17 @@
 			var stringParser = new QuotedStringParser() | unquotedSingleWordString;
 
 			// Register the C# built-in types (except for char, for which there is no obvious use-case)
-			Register(new BooleanParser(), "Boolean", b => b ? "true" : "false", "true", "false", "0", "1", "on", "off");
-			Register(new UInt8Parser(), "8-bit unsigned integer", null, "0", "17");
-			Register(new Int8Parser(), "8-bit signed integer", null, "-17", "0", "17");
-			Register(new UInt16Parser(), "16-bit unsigned integer", null, "0", "17");
-			Register(new Int16Parser(), "16-bit signed integer", null, "-17", "0", "17");
-			Register(new UInt32Parser(), "32-bit unsigned integer", null, "0", "17");
-			Register(new Int32Parser(), "32-bit signed integer", null, "-17", "0", "17");
-			Register(new UInt64Parser(), "64-bit unsigned integer", null, "0", "17");
-			Register(new Int64Parser(), "64-bit signed integer", null, "-17", "0", "17");
-			Register(new Float32Parser(), "32-bit floating point number", f => f.ToString("F"), "-17.1", "0.0", "17");
-			Register(new Float64Parser(), "64-bit floating point number", d => d.ToString("F"), "-17.1", "0.0", "17");
+			Register(Parsers.Boolean, "Boolean", b => b ? "true" : "false", "true", "false", "0", "1", "on", "off");
+			Register(Parsers.UInt8, "8-bit unsigned integer", null, "0", "17");
+			Register(Parsers.Int8, "8-bit signed integer", null, "-17", "0", "17");
+			Register(Parsers.UInt16, "16-bit unsigned integer", null, "0", "17");
+			Register(Parsers.Int16, "16-bit signed integer", null, "-17", "0", "17");
+			Register(Parsers.UInt32, "32-bit unsigned integer", null, "0", "17");
+			Register(Parsers.Int32, "32-bit signed integer", null, "-17", "0", "17");
+			Register(Parsers.UInt64, "64-bit unsigned integer", null, "0", "17");
+			Register(Parsers.Int64, "64-bit signed integer", null, "-17", "0", "17");
+			Register(Parsers.Float32, "32-bit floating point number", f => f.ToString("F"), "-17.1", "0.0", "17");
+			Register(Parsers.Float64, "64-bit floating point number", d => d.ToString("F"), "-17.1", "0.0", "17");
 			Register(stringParser, "string", null, "\"\"", "word", "\"multiple words\"", "\"escaped quote: \\\"\"");
 
 			// Register default Pegasus framework types

@@ -13,7 +13,9 @@ namespace Pegasus.Scripting.Parsing.Combinators
 		/// </summary>
 		public Vector2IParser()
 		{
-			Parser = Pipe(Int32, ~WhiteSpaces + String(";") + ~WhiteSpaces, Int32, (x, _, y) => new Vector2i(x, y));
+			var int32 = Parsers.Int32;
+			var ws = ~Parsers.WhiteSpaces;
+			Parser = Pipe(int32, ws + String(";") + ws, int32, (x, _, y) => new Vector2i(x, y));
 		}
 	}
 }

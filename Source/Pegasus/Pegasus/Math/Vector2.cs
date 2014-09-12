@@ -1,12 +1,10 @@
 ﻿// ReSharper disable InconsistentNaming
-
 using System;
 
 namespace Pegasus.Math
 {
 	using System.Globalization;
 	using System.Runtime.InteropServices;
-	using Math = System.Math;
 
 	/// <summary>
 	///     Represents a two-component vector of 32-bit floating point values.
@@ -45,7 +43,7 @@ namespace Pegasus.Math
 		/// </summary>
 		public float Length
 		{
-			get { return (float)Math.Sqrt(SquaredLength); }
+			get { return (float)System.Math.Sqrt(SquaredLength); }
 		}
 
 		/// <summary>
@@ -205,7 +203,7 @@ namespace Pegasus.Math
 		public static Vector2 Transform(ref Vector2 vector, ref Matrix matrix)
 		{
 			return new Vector2(matrix.M11 * vector.X + matrix.M21 * vector.Y + matrix.M41,
-				matrix.M12 * vector.X + matrix.M22 * vector.Y + matrix.M42);
+							   matrix.M12 * vector.X + matrix.M22 * vector.Y + matrix.M42);
 		}
 
 		/// <summary>
@@ -217,7 +215,7 @@ namespace Pegasus.Math
 		public static void Transform(ref Vector2 vector, ref Matrix matrix, out Vector2 result)
 		{
 			result = new Vector2(matrix.M11 * vector.X + matrix.M21 * vector.Y + matrix.M41,
-				matrix.M12 * vector.X + matrix.M22 * vector.Y + matrix.M42);
+							     matrix.M12 * vector.X + matrix.M22 * vector.Y + matrix.M42);
 		}
 	}
 
@@ -258,7 +256,7 @@ namespace Pegasus.Math
 		/// </summary>
 		public double Length
 		{
-			get { return Math.Sqrt(SquaredLength); }
+			get { return System.Math.Sqrt(SquaredLength); }
 		}
 
 		/// <summary>
@@ -418,7 +416,7 @@ namespace Pegasus.Math
 		public static Vector2 Transform(ref Vector2 vector, ref Matrix matrix)
 		{
 			return new Vector2(matrix.M11 * vector.X + matrix.M21 * vector.Y + matrix.M41,
-				matrix.M12 * vector.X + matrix.M22 * vector.Y + matrix.M42);
+							   matrix.M12 * vector.X + matrix.M22 * vector.Y + matrix.M42);
 		}
 
 		/// <summary>
@@ -430,7 +428,7 @@ namespace Pegasus.Math
 		public static void Transform(ref Vector2 vector, ref Matrix matrix, out Vector2 result)
 		{
 			result = new Vector2(matrix.M11 * vector.X + matrix.M21 * vector.Y + matrix.M41,
-				matrix.M12 * vector.X + matrix.M22 * vector.Y + matrix.M42);
+							     matrix.M12 * vector.X + matrix.M22 * vector.Y + matrix.M42);
 		}
 	}
 
@@ -1006,3 +1004,4 @@ namespace Pegasus.Math
 }
 
 // ReSharper restore InconsistentNaming
+

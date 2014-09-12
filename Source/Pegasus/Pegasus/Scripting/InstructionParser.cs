@@ -28,7 +28,7 @@
 		/// <summary>
 		///     Skips any number of whitespaces and then expects the end of the input.
 		/// </summary>
-		private static readonly SkipParser EndOfInstruction = ~(WhiteSpaces + ~EndOfInput);
+		private static readonly SkipParser EndOfInstruction = ~(Parsers.WhiteSpaces + ~Parsers.EndOfInput);
 
 		/// <summary>
 		///     Parses the given input string and returns the instruction.
@@ -70,7 +70,7 @@
 		{
 			var cvarDisplay = EndOfInstruction.Apply(_ => new Instruction(cvar, null));
 
-			var cvarSet = (~WhiteSpaces1 + TypeRegistry.GetParser(cvar.ValueType) + EndOfInstruction)
+			var cvarSet = (~Parsers.WhiteSpaces1 + TypeRegistry.GetParser(cvar.ValueType) + EndOfInstruction)
 				.Apply(v => new Instruction(cvar, v));
 
 			var cvarParser = Attempt(cvarDisplay) | cvarSet;

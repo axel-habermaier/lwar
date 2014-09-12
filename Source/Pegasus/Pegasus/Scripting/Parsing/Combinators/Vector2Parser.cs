@@ -13,7 +13,9 @@
 		/// </summary>
 		public Vector2Parser()
 		{
-			Parser = Pipe(Float32, ~WhiteSpaces + String(";") + ~WhiteSpaces, Float32, (x, _, y) => new Vector2(x, y));
+			var float32 = Parsers.Float32;
+			var ws = ~Parsers.WhiteSpaces;
+			Parser = Pipe(float32, ws + String(";") + ws, float32, (x, _, y) => new Vector2(x, y));
 		}
 	}
 }

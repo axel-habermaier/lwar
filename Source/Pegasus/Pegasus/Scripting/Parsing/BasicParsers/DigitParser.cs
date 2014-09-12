@@ -14,13 +14,11 @@
 		public override Reply<char> Parse(InputStream inputStream)
 		{
 			var digit = inputStream.Peek();
-			if (Char.IsDigit(digit))
-			{
-				inputStream.Skip(1);
-				return Success(digit);
-			}
+			if (!Char.IsDigit(digit))
+				return Expected("digit");
 
-			return Expected("digit");
+			inputStream.Skip(1);
+			return Success(digit);
 		}
 	}
 }

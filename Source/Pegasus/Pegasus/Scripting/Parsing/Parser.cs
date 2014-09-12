@@ -10,7 +10,7 @@
 	///     An abstract base class for the implementation of basic parsers and combined parsers.
 	/// </summary>
 	/// <typeparam name="TResult">The type of the parser result.</typeparam>
-	public abstract partial class Parser<TResult>
+	public abstract class Parser<TResult>
 	{
 		#region Parse methods
 

@@ -16,7 +16,7 @@
 			var ipParser = new IPAddressParser();
 
 			var ip = Between(ipParser, Character('['), Character(']')) | ipParser;
-			var port = (~Character(':') + UInt16).Optional(0);
+			var port = (~Character(':') + Parsers.UInt16).Optional(0);
 			Parser = Pipe(ip, port, (i, p) => new IPEndPoint(i, p));
 		}
 	}
