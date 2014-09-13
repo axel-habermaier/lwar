@@ -229,4 +229,32 @@ namespace Pegasus
 	public sealed class PureAttribute : Attribute
 	{
 	}
+
+	/// <summary>
+	///     Describes the contract of a method.
+	/// </summary>
+	/// <remarks>
+	///     Syntax:
+	///     FDT      ::= FDTRow [;FDTRow]*
+	///     FDTRow   ::= Input =&gt; Output | Output &lt;= Input
+	///     Input    ::= ParameterName: Value [, Input]*
+	///     Output   ::= [ParameterName: Value]* {halt|stop|void|nothing|Value}
+	///     Value    ::= true | false | null | notnull | canbenull
+	///     If a method has single input parameter, it's name can be omitted. Using <c>halt</c> (or <c>void</c>/<c>nothing</c>,
+	///     which are the same) for method output means that the methods doesn't return normally. The <c>canbenull</c> annotation
+	///     is only applicable for output parameters. You can use multiple attributes for each FDT row, or
+	///     use single attribute with rows separated by semicolon.
+	/// </remarks>
+	[AttributeUsage(AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
+	public sealed class ContractAnnotationAttribute : Attribute
+	{
+		public ContractAnnotationAttribute(string contract, bool forceFullStates = false)
+		{
+			Contract = contract;
+			ForceFullStates = forceFullStates;
+		}
+
+		public string Contract { get; private set; }
+		public bool ForceFullStates { get; private set; }
+	}
 }

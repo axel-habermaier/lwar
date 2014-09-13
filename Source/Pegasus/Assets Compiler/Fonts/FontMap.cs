@@ -125,7 +125,7 @@
 		}
 
 		/// <summary>
-		///     Gets the area that the glyph corresponding to the given character occupies in the font mpa.
+		///     Gets the area that the glyph corresponding to the given character occupies in the font map.
 		/// </summary>
 		/// <param name="character">The character the glyph are should be returned for.</param>
 		public Rectangle GetGlyphArea(char character)

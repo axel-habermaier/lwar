@@ -125,7 +125,7 @@
 #if DEBUG
 			var leakedObjects = _allocatedObjects.Except(_pooledObjects).ToArray();
 			if (leakedObjects.Length > 0)
-				Log.Debug("Leaked {1} object(s) of type '{0}'.", typeof(T).FullName, leakedObjects.Length);
+				Log.Error("Leaked {1} object(s) of type '{0}'.", typeof(T).FullName, leakedObjects.Length);
 
 			if (leakedObjects.Length > 0 && Debugger.IsAttached)
 				Debugger.Break();

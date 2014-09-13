@@ -41,7 +41,7 @@
 		/// </summary>
 		/// <param name="message">The message that should be formatted and passed as an argument of the OnFatalError event.</param>
 		/// <param name="arguments">The arguments that should be copied into the message.</param>
-		[DebuggerHidden, StringFormatMethod("message")]
+		[DebuggerHidden, StringFormatMethod("message"), ContractAnnotation("=> halt")]
 		public static void Die(string message, params object[] arguments)
 		{
 			Assert.ArgumentNotNullOrWhitespace(message);
