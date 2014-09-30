@@ -48,7 +48,22 @@
 		/// <param name="item">The item that should be enumerated.</param>
 		public static Enumerator<T> FromItem(T item)
 		{
-			return new Enumerator<T> { _item = item, _singleItem = item != null };
+			Assert.ArgumentNotNull((object)item);
+			return new Enumerator<T> { _item = item, _singleItem = true };
+		}
+
+		/// <summary>
+		///     Creates an enumerator for a single item. If the item is null, an empty enumerator is returned.
+		/// </summary>
+		/// <typeparam name="TItem">The type of the item that should be enumerated.</typeparam>
+		/// <param name="item">The item that should be enumerated.</param>
+		public static Enumerator<TItem> FromItemOrEmpty<TItem>(TItem item)
+			where TItem : class
+		{
+			if (item == null)
+				return Enumerator<TItem>.Empty;
+
+			return new Enumerator<TItem> { _item = item, _singleItem = true };
 		}
 
 		/// <summary>

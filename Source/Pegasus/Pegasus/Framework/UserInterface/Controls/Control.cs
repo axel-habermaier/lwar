@@ -143,7 +143,7 @@
 		/// </summary>
 		protected internal override sealed Enumerator<UIElement> LogicalChildren
 		{
-			get { return Enumerator<UIElement>.FromItem(_templateRoot); }
+			get { return Enumerator<UIElement>.FromItemOrEmpty(_templateRoot); }
 		}
 
 		/// <summary>

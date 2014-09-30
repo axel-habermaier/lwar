@@ -82,7 +82,7 @@
 					// Word tokens might be split into several tokens if they don't fit into a single line
 					return HandleWordToken();
 				default:
-					Assert.That(false, "Unexpected token type.");
+					Assert.NotReached("Unexpected token type.");
 					return TextToken.EndOfText;
 			}
 		}

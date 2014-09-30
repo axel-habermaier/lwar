@@ -8,7 +8,7 @@
 	/// <summary>
 	///     Used to check for asset hash collisions in debug builds.
 	/// </summary>
-	internal static class AssetHashCollision
+	internal static class HashCollisions 
 	{
 		/// <summary>
 		///     Stores a list of all asset hash codes and the corresponding asset names.

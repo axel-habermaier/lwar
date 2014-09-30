@@ -1,29 +1,12 @@
 ﻿namespace Pegasus.Framework
 {
 	using System;
-	using System.Collections.Generic;
 
 	/// <summary>
 	///     Represents a collection that provides change notifications when items are added, removed, or replaced.
 	/// </summary>
 	public class ObservableCollection<T> : CustomCollection<T>, INotifyPropertyChanged, INotifyCollectionChanged
 	{
-		/// <summary>
-		///     Initializes a new, empty instance.
-		/// </summary>
-		public ObservableCollection()
-		{
-		}
-
-		/// <summary>
-		///     Initializes a new instance, containing all items from the given list.
-		/// </summary>
-		/// <param name="list">The list of items that should be contained in the new instance.</param>
-		public ObservableCollection(IList<T> list)
-			: base(list)
-		{
-		}
-
 		/// <summary>
 		///     Raised when the collection has been changed.
 		/// </summary>

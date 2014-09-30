@@ -5,26 +5,10 @@
 	using System.Collections.ObjectModel;
 
 	/// <summary>
-	///     Represents base class for custom collections.
+	///     Represents a base class for custom collections.
 	/// </summary>
 	public abstract class CustomCollection<T> : Collection<T>
 	{
-		/// <summary>
-		///     Initializes a new, empty instance.
-		/// </summary>
-		protected CustomCollection()
-		{
-		}
-
-		/// <summary>
-		///     Initializes a new instance, containing all items from the given list.
-		/// </summary>
-		/// <param name="list">The list of items that should be contained in the new instance.</param>
-		protected CustomCollection(IList<T> list)
-			: base(list)
-		{
-		}
-
 		/// <summary>
 		///     Gets the version of the collection. Each modification of the collection increments the version number by one.
 		/// </summary>
@@ -43,6 +27,10 @@
 		///     Adds the items to the collection.
 		/// </summary>
 		/// <param name="items">The items that should be added.</param>
+		/// <remarks>
+		///     Invocations of this method should be avoided for performance reasons, as foreach allocates an
+		///     enumerator object on the heap.
+		/// </remarks>
 		public void AddRange(IEnumerable<T> items)
 		{
 			Assert.ArgumentNotNull(items);
@@ -112,6 +100,7 @@
 		/// <summary>
 		///     Gets an enumerator for the collection.
 		/// </summary>
+		/// <Remarks>This method returns a custom enumerator in order to avoid heap allocations.</Remarks>
 		public new Enumerator<T> GetEnumerator()
 		{
 			if (Count == 0)

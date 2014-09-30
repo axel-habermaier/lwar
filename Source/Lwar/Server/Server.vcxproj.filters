@@ -50,14 +50,14 @@
     <ClCompile Include="pq.c">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="queue.c">
-      <Filter>Utils</Filter>
-    </ClCompile>
     <ClCompile Include="time.c">
       <Filter>Utils</Filter>
     </ClCompile>
     <ClCompile Include="uint.c">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="queue.c">
+      <Filter>Network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

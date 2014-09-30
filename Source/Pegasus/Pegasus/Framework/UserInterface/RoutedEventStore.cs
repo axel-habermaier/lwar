@@ -72,7 +72,7 @@
 		/// <param name="activated">Indicates whether the bindings should be activated.</param>
 		public void SetBindingsActivationState(bool activated)
 		{
-			foreach (var value in _values.GetEnumerator())
+			foreach (var value in _values)
 				value.SetBindingActivationState(activated);
 		}
 

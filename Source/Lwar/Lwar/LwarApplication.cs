@@ -30,7 +30,7 @@
 		///     Invoked when the application is initializing.
 		/// </summary>
 		protected override void Initialize()
-		{
+		{ 
 			RegisterFontLoader(new FontLoader(Assets));
 			Commands.Resolve();
 			Cvars.Resolve();

@@ -335,7 +335,7 @@
     <Compile Include="Framework\UserInterface\Views\ConsoleView.cs" />
     <Compile Include="Framework\UserInterface\Visibility.cs" />
     <Compile Include="Math\LineSegment.cs" />
-    <Compile Include="Assets\AssetHashCollision.cs" />
+    <Compile Include="Assets\HashCollisions.cs" />
     <Compile Include="Platform\FileSystem.cs" />
     <Compile Include="Platform\Graphics\ShaderProgram.cs" />
     <Compile Include="Platform\FileSystemException.cs" />

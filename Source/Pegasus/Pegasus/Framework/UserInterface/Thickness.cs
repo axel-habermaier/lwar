@@ -10,22 +10,22 @@
 		/// <summary>
 		///     The width of the lower side of the rectangle.
 		/// </summary>
-		public double Bottom;
+		public readonly double Bottom;
 
 		/// <summary>
 		///     The width of the left side of the rectangle.
 		/// </summary>
-		public double Left;
+		public readonly double Left;
 
 		/// <summary>
 		///     The width of the right side of the rectangle.
 		/// </summary>
-		public double Right;
+		public readonly double Right;
 
 		/// <summary>
 		///     The width of the upper side of the rectangle.
 		/// </summary>
-		public double Top;
+		public readonly double Top;
 
 		/// <summary>
 		///     Initializes a new instance that has a uniform width on each side.
