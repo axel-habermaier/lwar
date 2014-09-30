@@ -4,6 +4,7 @@
 	using System.Diagnostics;
 	using System.Runtime.InteropServices;
 	using System.Security;
+	using System.Security.Cryptography;
 	using Logging;
 	using Memory;
 
@@ -75,6 +76,20 @@
 		}
 
 		/// <summary>
+		///     Copies given number of bytes from the source to the destination.
+		/// </summary>
+		/// <param name="destination">The address of the first byte that should be written.</param>
+		/// <param name="source">The address of the first byte that should be read.</param>
+		/// <param name="byteCount">The number of bytes that should be copied.</param>
+		public static void Copy(IntPtr destination, IntPtr source, int byteCount)
+		{
+			Assert.ArgumentNotNull(destination);
+			Assert.ArgumentNotNull(source);
+
+			NativeMethods.MemCopy(destination, source, byteCount);
+		}
+
+		/// <summary>
 		///     Invoked when the native library generates a log entry.
 		/// </summary>
 		/// <param name="type">The type of the generated log entry.</param>
@@ -99,6 +114,9 @@
 
 			[DllImport(LibraryName, EntryPoint = "pgInitialize")]
 			public static extern void Initialize(LogCallback callback, [MarshalAs(UnmanagedType.LPStr)] string appName);
+
+			[DllImport(LibraryName, EntryPoint = "pgMemCopy")]
+			public static extern void MemCopy(IntPtr destination, IntPtr source, int byteCount);
 
 			[DllImport(LibraryName, EntryPoint = "pgShutdown")]
 			public static extern void Shutdown();

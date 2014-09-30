@@ -59,5 +59,6 @@ typedef pgVoid (*pgLogCallback)(pgLogType type, pgString message);
 PG_API_EXPORT pgVoid pgInitialize(pgLogCallback callback, pgString appName);
 PG_API_EXPORT pgVoid pgShutdown();
 PG_API_EXPORT pgFloat64 pgGetTime();
+PG_API_EXPORT pgVoid pgMemCopy(pgVoid* destination, const pgVoid* source, pgInt32 byteCount);
 
 #endif

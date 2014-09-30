@@ -43,6 +43,18 @@ pgVoid pgShutdown()
 #endif
 }
 
+pgVoid pgMemCopy(pgVoid* destination, const pgVoid* source, pgInt32 byteCount)
+{
+	PG_ASSERT_NOT_NULL(destination);
+	PG_ASSERT_NOT_NULL(source);
+	PG_ASSERT(byteCount > 0, "At least 1 byte must be copied.");
+	PG_ASSERT((source < destination && ((const pgByte*)source) + byteCount <= (pgByte*)destination) ||
+			  (destination < source && ((pgByte*)destination) + byteCount <= (pgByte*)source),
+			  "The memory regions overlap.");
+
+	memcpy(destination, source, (size_t)byteCount);
+}
+
 //====================================================================================================================
 // Internal functions
 //====================================================================================================================
@@ -155,7 +167,7 @@ pgVoid pgAllocated(pgVoid* ptr, pgString type, pgString file, pgInt32 line)
 	pgMemoryInfo* info = pgFindMemoryInfo(ptr);
 	if (info != NULL)
 		PG_DIE("Memory is reallocated without being freed at %s:%d. The original allocation of type '%s' occurred at %s:%d.",
-			file, line, info->type, info->file, info->line);
+		file, line, info->type, info->file, info->line);
 
 	info = (pgMemoryInfo*)malloc(sizeof(pgMemoryInfo));
 	info->ptr = ptr;

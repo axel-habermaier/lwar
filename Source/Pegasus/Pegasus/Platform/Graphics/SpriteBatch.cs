@@ -626,7 +626,7 @@
 						var bytes = _sections[section].NumQuads * _quadSize;
 
 						// Copy the entire section to the vertex buffer
-						Interop.Copy(vertexOffset, quadOffset, bytes);
+						NativeLibrary.Copy(vertexOffset, quadOffset, bytes);
 
 						// Update the section list's total quad count
 						_sectionLists[i].NumQuads += _sections[section].NumQuads;

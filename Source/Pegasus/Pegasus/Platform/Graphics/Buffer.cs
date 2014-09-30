@@ -92,7 +92,7 @@
 			Assert.NotDisposed(this);
 
 			var gpuData = Map(MapMode.WriteDiscard);
-			Interop.Copy(gpuData, data, size);
+			NativeLibrary.Copy(gpuData, data, size);
 			Unmap();
 		}
 

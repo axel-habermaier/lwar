@@ -579,7 +579,6 @@
     <Compile Include="Framework\UserInterface\Input\KeyEventArgs.cs" />
     <Compile Include="Framework\UserInterface\Input\MouseEventArgs.cs" />
     <Compile Include="Platform\Memory\EndianConverter.cs" />
-    <Compile Include="Platform\Memory\Interop.cs" />
     <Compile Include="Platform\PlatformType.cs" />
     <Compile Include="Platform\PlatformInfo.cs" />
     <Compile Include="Platform\Graphics\Quad.cs" />
