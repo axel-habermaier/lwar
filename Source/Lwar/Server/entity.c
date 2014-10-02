@@ -1,7 +1,7 @@
 #include <assert.h>
 #include <math.h>
-#include <stdint.h>
 #include <stddef.h>
+#include <stdint.h>
 
 #include "server.h"
 #include "vector.h"
