@@ -78,8 +78,9 @@ pgString pgGetOsErrorMessage()
 pgChar* pgTrim(pgChar* message)
 {
 	size_t length = strlen(message);
+	size_t i;
 
-	for (size_t i = length; i > 0; --i)
+	for (i = length; i > 0; --i)
 	{
 		if (message[i - 1] == '\r' || message[i - 1] == '\n')
 			message[i - 1] = '\0';
@@ -155,7 +156,8 @@ static pgMemoryInfo* pgMemory = NULL;
 
 static pgMemoryInfo* pgFindMemoryInfo(pgVoid* ptr)
 {
-	for (pgMemoryInfo* info = pgMemory; info != NULL; info = info->next)
+	pgMemoryInfo* info;
+	for (info = pgMemory; info != NULL; info = info->next)
 		if (info->ptr == ptr)
 			return info;
 
@@ -212,7 +214,8 @@ pgVoid pgDeallocated(pgVoid* ptr)
 
 pgVoid pgReportAllocatedMemory()
 {
-	for (pgMemoryInfo* info = pgMemory; info != NULL; info = info->next)
+	pgMemoryInfo* info;
+	for (info = pgMemory; info != NULL; info = info->next)
 		PG_ERROR("Leaked an instance of type '%s', allocated at %s:%d.", info->type, info->file, info->line);
 }
 
