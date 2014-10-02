@@ -39,7 +39,7 @@ Game Physics
         for each pair of entities
             solve for t the quadratic equation
                 | x1'(t) - x2'(t) | = r1 + r2
-            pick the smallest non-negative solution t* <= Δt, if it exists
+            pick the smallest non-negative solution t* ≤ Δt, if it exists
             and record the collision between these entities at this point in time
 
         for each collision
@@ -105,7 +105,7 @@ Weapons and Equipment
 
     - Attack weapons, such as lasers, phasers, mini-guns, or rocket launchers,
       expel particles or emit rays. These are attached to the ship with an
-      offset of position and orientation. A ship has at most two weapons
+      offset of position and orientation. A ship has at most two attack weapons.
 
     - Defensive weapons, such as shock-wave generators may be directed or not.
       Some defensive weapons are automatic, for example a laser tower that aims
@@ -116,11 +116,11 @@ Planets with Gravity
 
     Planets influence other entities by a gravity force. The acceleration a
     caused by a planet with mass m1 at position x1 to an entity x2 with mass m2
-    is proportional to the inverse of the distance. It is computed as
+    is proportional to the inverse of the distance squared. It is computed as
 
             (m1 + m2) · normalized(x1 - x2)
         a = -------------------------------
-                   m1 · | x1 - x2| ²
+                   m1 · | x1 - x2 | ²
 
     The term m1 + m2 determines the gravity force, and m1 in the denominator
     accommodates for the inertia of the entity which is proportional to its mass.
@@ -136,5 +136,6 @@ Revision History
 
     Rev.    Date        Author      Changes
     ---------------------------------------------------------------------------
+    2       14-09-25    Gidon       Very minor typos
     1       13-02-11    Gidon       Initial version, documenting physics.c
                                     and some planned improvements and features
