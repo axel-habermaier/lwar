@@ -23,6 +23,7 @@ Client
 - Add debugging capabilities and statistics to network
 	- Show server network statistics
 	- Collect and show client network statistics (avg number of times a reliable message was sent/received, # of incoming packets per second, etc.)
+- Fix respawn screen being displayed for a couple of frames after the player joined a new game session
 
 Pegasus.Framework
 ========
