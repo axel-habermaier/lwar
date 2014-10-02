@@ -33,7 +33,7 @@
 		///     The log callback that has been passed to the native code. We must keep a reference in order to prevent
 		///     the garbage collector from freeing the delegate while it is still being used by native code.
 		/// </summary>
-		private readonly NativeMethods.LogCallback _logCallback;
+		private readonly NativeMethods.LogCallback _logCallback = OnLoggedMessage;
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -43,8 +43,6 @@
 		{
 			Assert.ArgumentNotNullOrWhitespace(appName);
 			Assert.That(!_isInitialized, "The library has already been initialized.");
-
-			_logCallback = OnLoggedMessage;
 
 			NativeMethods.Initialize(_logCallback, appName);
 			_isInitialized = true;

@@ -8,7 +8,7 @@
 	/// <summary>
 	///     Represents an IPv4 or IPv6 internet protocol address.
 	/// </summary>
-	public unsafe struct IPAddress
+	public unsafe struct IPAddress : IEquatable<IPAddress>
 	{
 		/// <summary>
 		///     Represents the IP address of the local host.
@@ -16,15 +16,15 @@
 		public static readonly IPAddress LocalHost = Parse("::1");
 
 		/// <summary>
+		///     Represents the '::' IPv6 address.
+		/// </summary>
+		public static readonly IPAddress Any = new IPAddress();
+
+		/// <summary>
 		///     The underlying native IP address.
 		/// </summary>
 		[UsedImplicitly]
 		private fixed byte _bytes [16];
-
-		/// <summary>
-		///     Represents the '::' IPv6 address.
-		/// </summary>
-		public static readonly IPAddress Any = new IPAddress();
 
 		/// <summary>
 		///     Gets a value indicating whether the IP address is an IPv6-mapped IPv4 address.
@@ -44,6 +44,23 @@
 					return ip->_bytes[10] == 255 && ip->_bytes[11] == 255;
 				}
 			}
+		}
+
+		/// <summary>
+		///     Indicates whether the the given IP address is equal to the current one.
+		/// </summary>
+		public bool Equals(IPAddress other)
+		{
+			fixed (IPAddress* ip = &this)
+			{
+				for (var i = 0; i < 16; ++i)
+				{
+					if (ip->_bytes[i] != other._bytes[i])
+						return false;
+				}
+			}
+
+			return true;
 		}
 
 		/// <summary>
@@ -91,23 +108,6 @@
 				return str.Substring(ipv6Prefix.Length);
 
 			return str;
-		}
-
-		/// <summary>
-		///     Indicates whether the the given IP address is equal to the current one.
-		/// </summary>
-		public bool Equals(IPAddress other)
-		{
-			fixed (IPAddress* ip = &this)
-			{
-				for (var i = 0; i < 16; ++i)
-				{
-					if (ip->_bytes[i] != other._bytes[i])
-						return false;
-				}
-			}
-
-			return true;
 		}
 
 		/// <summary>

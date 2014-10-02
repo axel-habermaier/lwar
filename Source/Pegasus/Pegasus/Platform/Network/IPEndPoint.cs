@@ -5,7 +5,7 @@
 	/// <summary>
 	///     Represents an endpoint consisting of an IP address and a port number.
 	/// </summary>
-	public struct IPEndPoint
+	public struct IPEndPoint : IEquatable<IPEndPoint>
 	{
 		/// <summary>
 		///     Initializes a new instance.
@@ -30,6 +30,14 @@
 		public ushort Port { get; private set; }
 
 		/// <summary>
+		///     Indicates whether the the given IP endpoint is equal to the current one.
+		/// </summary>
+		public bool Equals(IPEndPoint other)
+		{
+			return Address.Equals(other.Address) && Port == other.Port;
+		}
+
+		/// <summary>
 		///     Returns a string that represents the current object.
 		/// </summary>
 		public override string ToString()
@@ -38,14 +46,6 @@
 				return String.Format("{0}:{1}", Address, Port);
 
 			return String.Format("[{0}]:{1}", Address, Port);
-		}
-
-		/// <summary>
-		///     Indicates whether the the given IP endpoint is equal to the current one.
-		/// </summary>
-		public bool Equals(IPEndPoint other)
-		{
-			return Address.Equals(other.Address) && Port == other.Port;
 		}
 
 		/// <summary>

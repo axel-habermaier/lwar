@@ -231,7 +231,7 @@ namespace Pegasus
 	}
 
 	/// <summary>
-	///     Describes the contract of a method.
+	///     Describes the contract of a method that Resharper uses to improve its code analysis.
 	/// </summary>
 	/// <remarks>
 	///     Syntax:
