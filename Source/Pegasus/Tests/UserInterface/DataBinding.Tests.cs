@@ -18,7 +18,7 @@
 			_viewModel = new TestViewModel();
 			_control = new TestControl();
 		}
-
+		
 		private readonly Thickness _margin1 = new Thickness(2);
 		private readonly Thickness _margin2 = new Thickness(4);
 		private readonly Thickness _margin3 = new Thickness(8);

@@ -3,8 +3,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>12.0.0</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{94C7A0B3-7F1A-4632-A1F1-72938065DA3F}</ProjectGuid>
     <Compiler>
       <Compiler ctype="GccCompiler" />
@@ -84,7 +82,6 @@
     <Compile Include="texture.d3d11.c" />
     <Compile Include="texture.gl3.c" />
     <Compile Include="buffer.c" />
-    <Compile Include="graphics.c" />
     <Compile Include="network.c" />
     <Compile Include="fileSystem.c" />
   </ItemGroup>

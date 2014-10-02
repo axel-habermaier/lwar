@@ -1,4 +1,8 @@
-﻿namespace Lwar.Assets.EntityTemplates.Compilation
+﻿using Pegasus.AssetsCompiler.Assets.Attributes;
+
+[assembly: Ignore("EntityTemplates/Compilation/Vector2.cs")]
+
+namespace Lwar.Assets.EntityTemplates.Compilation
 {
 	using System;
 
@@ -20,11 +24,11 @@
 		/// <summary>
 		///     The X-component of the vector.
 		/// </summary>
-		public float X { get; set; }
+		public float X { get; private set; }
 
 		/// <summary>
 		///     The Y-component of the vector.
 		/// </summary>
-		public float Y { get; set; }
+		public float Y { get; private set; }
 	}
 }

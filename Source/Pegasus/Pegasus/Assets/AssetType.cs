@@ -8,11 +8,6 @@
 	public enum AssetType : byte
 	{
 		/// <summary>
-		///     Indicates that the type of the asset is unknown.
-		/// </summary>
-		Unknown = 0,
-
-		/// <summary>
 		///     Indicates that the asset is a font.
 		/// </summary>
 		Font = 1,

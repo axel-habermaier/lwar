@@ -24,7 +24,7 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="text">The text for which the sequence should be created.</param>
+		/// <param name="text">The text the sequence should be created for.</param>
 		/// <param name="index">The index of the first character in the sequence.</param>
 		public TextSequence(TextString text, int index)
 			: this()

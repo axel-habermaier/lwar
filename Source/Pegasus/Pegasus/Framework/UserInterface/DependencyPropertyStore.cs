@@ -61,7 +61,7 @@
 			Assert.ArgumentNotNull(obj);
 			Assert.ArgumentNotNull(inheritingObject);
 
-			foreach (var value in _values.GetEnumerator())
+			foreach (var value in _values)
 			{
 				if (!value.Property.Inherits)
 					continue;
@@ -76,7 +76,7 @@
 		/// <param name="obj">The dependency object whose inherited values should be unset.</param>
 		public void UnsetInheritedValues(DependencyObject obj)
 		{
-			foreach (var value in _values.GetEnumerator())
+			foreach (var value in _values)
 			{
 				if (!value.Property.Inherits)
 					continue;
@@ -91,7 +91,7 @@
 		/// <param name="activated">Indicates whether the bindings should be activated.</param>
 		public void SetBindingsActivationState(bool activated)
 		{
-			foreach (var value in _values.GetEnumerator())
+			foreach (var value in _values)
 				value.SetBindingActivationState(activated);
 		}
 	}

@@ -59,3 +59,4 @@ Server
 - server: copy string to player, free memory
 - figure out how to communicate amount of ammunition
 - BUG: assert(p->a <= p->b); packet.c:39 (?)
+       assert(ship); rules.c:178

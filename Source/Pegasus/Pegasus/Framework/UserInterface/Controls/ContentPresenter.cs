@@ -54,7 +54,7 @@
 		/// </summary>
 		protected internal override Enumerator<UIElement> LogicalChildren
 		{
-			get { return Enumerator<UIElement>.FromItem(_presentedElement); }
+			get { return Enumerator<UIElement>.FromItemOrEmpty(_presentedElement); }
 		}
 
 		/// <summary>

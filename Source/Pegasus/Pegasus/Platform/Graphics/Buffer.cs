@@ -4,7 +4,6 @@
 	using System.Diagnostics;
 	using System.Runtime.InteropServices;
 	using System.Security;
-	using Memory;
 
 	/// <summary>
 	///     Base class for graphics buffers.
@@ -92,7 +91,7 @@
 			Assert.NotDisposed(this);
 
 			var gpuData = Map(MapMode.WriteDiscard);
-			Interop.Copy(gpuData, data, size);
+			NativeLibrary.Copy(gpuData, data, size);
 			Unmap();
 		}
 

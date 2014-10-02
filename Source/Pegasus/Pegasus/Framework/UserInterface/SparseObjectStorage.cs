@@ -25,7 +25,7 @@
 		/// <summary>
 		///     Gets an enumerator for all objects currently stored in the sparse object storage.
 		/// </summary>
-		internal Enumerator GetEnumerator()
+		public Enumerator GetEnumerator()
 		{
 			return new Enumerator(_count, _objects);
 		}
@@ -163,7 +163,11 @@
 
 				_count = count;
 
-				// We have to make a copy of the objects here, as the list may be changed while it is being enumerated
+				// We have to make a copy of the objects here, as the list may be changed while it is being enumerated.
+				// We copying the objects to a temporary array that is used for as long as the enumerator hasn't reached
+				// the end; this leaks the temporary arrays if the enumerator is not fully enumerated, however, that should
+				// never be the case. We're pooling the temporary arrays to reduce garbage collections.
+
 				if (objects == null)
 					return;
 
@@ -171,6 +175,9 @@
 					_objects = new IndexedObject[objects.Length];
 				else
 				{
+					// We simply take the first temporary array on the stack and discard it if it is too small. This might
+					// cause more garbage than necessary, however, eventually all pooled arrays will become large enough
+					// and no further allocations occur.
 					_objects = Pooled.Pop();
 					if (_objects.Length < objects.Length)
 						_objects = new IndexedObject[objects.Length];
@@ -201,17 +208,6 @@
 				// Otherwise, enumerate the next element
 				Current = _objects[_current++].Object;
 				return true;
-			}
-
-			/// <summary>
-			///     Gets the enumerator that can be used with C#'s foreach loops.
-			/// </summary>
-			/// <remarks>
-			///     This method just returns the enumerator object. It is only required to enable foreach support.
-			/// </remarks>
-			public Enumerator GetEnumerator()
-			{
-				return this;
 			}
 		}
 
