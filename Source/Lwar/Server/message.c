@@ -47,7 +47,7 @@ size_t header_pack(char *s, size_t app_id, size_t ack, size_t time) {
     size_t i=0;
     i += uint32_pack(s+i, app_id);
     i += uint32_pack(s+i, ack);
-    i += uint32_pack(s+i, time);
+    // i += uint32_pack(s+i, time);
     return i;
 }
 

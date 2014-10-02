@@ -182,6 +182,7 @@ void protocol_recv() {
     stats.nrecv = 0;
 
     Packet p;
+    packet_init_recv(&p);
     while(packet_recv(&p)) {
         stats.nrecv ++;
         packet_scan(&p);
