@@ -36,9 +36,9 @@ typedef SOCKET Socket;
 
 static int numConnections = 0;
 
-typedef struct Connection {
+struct Connection {
 	Socket socket;
-} Connection;
+};
 
 static void conn_error(const char* const msg)
 {
@@ -291,7 +291,7 @@ bool address_create(Address* addr, const char* ip, uint16_t port)
 	if (!inet_pton(AF_INET6, MULTICAST_GROUP, &result))
 		return false;
 
-	int q =sizeof(result);
+	// int q = sizeof(result);
 	memcpy(&addr->ip, &result, sizeof(result));
 	addr->port = htons(port);
 	addr->isIPv6 = true;

@@ -74,5 +74,3 @@ static inline void project(Vec v, Vec b, Vec *p, Vec *r) {
     *p = scale(b, s);
     *r = sub(v,*p);
 }
-
-typedef struct Vec Vec;

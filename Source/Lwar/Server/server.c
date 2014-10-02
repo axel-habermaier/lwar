@@ -6,7 +6,6 @@
 #include "server.h"
 
 #include "log.h"
-#include "connection.h"
 #include "rules.h"
 
 static Server _server;

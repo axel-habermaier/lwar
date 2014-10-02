@@ -1,5 +1,3 @@
-typedef struct Address Address;
-
 typedef struct Connection Connection;
 
 bool conn_init(Connection* connection);

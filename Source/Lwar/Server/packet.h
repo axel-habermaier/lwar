@@ -1,3 +1,4 @@
+typedef enum PacketType PacketType;
 typedef struct Packet Packet;
 
 enum {
@@ -7,16 +8,25 @@ enum {
 	MAX_PACKET_LENGTH    = 512,
 };
 
+enum PacketType {
+    PACKET_NONE,
+    PACKET_SEND,
+    PACKET_RECV,
+};
+
 struct Packet {
-    /* some stores serialized messages in p+a...p+b */
+    /* some stores serialized messages in p+start...p+end */
+    PacketType type;
+
     Address adr;
 
     /* allow some overflow: since string length is a byte, this can be max 256 + some backup */
     char    p[MAX_PACKET_LENGTH + MAX_NAME_LENGTH + 16];
-    size_t  a,b;
+    size_t  start, end;
 
     /* temp storage for incoming packets */
     size_t  ack;
+    size_t  time;
 
     /* connection failed */
     bool    io_failed;
@@ -27,7 +37,8 @@ bool packet_hasdata(Packet *p);
 /* return how many updates + 1 header still fit into p */
 size_t packet_update_n(Packet *p, size_t len);
 
-void packet_init(Packet *p, Address *adr, size_t ack, size_t time);
+void packet_init_send(Packet *p, Address *adr, size_t ack, size_t time);
+void packet_init_recv(Packet *p);
 
 bool packet_put(Packet *p, Pack *pack, void *u);
 bool packet_get(Packet *p, Unpack *unpack, void *u);

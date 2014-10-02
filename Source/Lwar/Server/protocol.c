@@ -211,7 +211,7 @@ void protocol_notify_kill(Player *k, Player *v) {
 }
 
 static void packet_init_header(Client *c, Packet *p) {
-    packet_init(p, &c->adr, c->last_in_reliable_seqno, server->cur_clock);
+    packet_init_send(p, &c->adr, c->last_in_reliable_seqno, server->cur_clock);
 }
 
 static void send_kick(Client *c) {
@@ -230,7 +230,7 @@ static void send_kick(Client *c) {
 
 static void send_reject(Address *adr, size_t ack, RejectReason reason) {
     Packet p;
-    packet_init(&p, adr, ack, 0);
+    packet_init_send(&p, adr, ack, 0);
 
     Message m;
     m.type  = MESSAGE_REJECT;

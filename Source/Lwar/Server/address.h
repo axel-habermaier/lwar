@@ -9,11 +9,13 @@ enum {
 
 #define MULTICAST_GROUP "FF05::3"
 
-typedef struct Address {
+typedef struct Address Address;
+
+struct Address {
 	uint8_t ip[16];
 	uint16_t port;
 	bool isIPv6;
-} Address;
+};
 
 bool address_create(Address *adr, const char *ip, uint16_t port);
 bool address_eq(Address *adr0, Address *adr1);

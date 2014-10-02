@@ -43,10 +43,11 @@ size_t id_unpack(const char *out, Id *id) {
     return 4;
 }
 
-size_t header_pack(char *s, size_t app_id, size_t ack) {
+size_t header_pack(char *s, size_t app_id, size_t ack, size_t time) {
     size_t i=0;
     i += uint32_pack(s+i, app_id);
     i += uint32_pack(s+i, ack);
+    i += uint32_pack(s+i, time);
     return i;
 }
 
@@ -348,5 +349,8 @@ void message_debug(Message *m, const char *s) {
     case MESSAGE_COLLISION:
         log_debug("%scollision %d, %d", s, m->collision.entity_id[0].n, m->collision.entity_id[1].n);
         break;
+	case MESSAGE_DISCOVERY:
+        log_debug("%sdiscovery (%d rev %d), port %d", s, m->discovery.app_id, m->discovery.rev, m->discovery.port);
+		break;
     }
 }

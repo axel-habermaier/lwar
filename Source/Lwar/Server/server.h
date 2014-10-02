@@ -3,9 +3,10 @@
 #include "address.h"
 #include "array.h"
 #include "bitset.h"
+#include "connection.h"
 #include "list.h"
-#include "pq.h"
 #include "pool.h"
+#include "pq.h"
 
 enum {
     MAX_CLIENTS         =    8,
@@ -30,12 +31,11 @@ enum {
 typedef size_t (Pack)(char *, void *);
 typedef size_t (Unpack)(const char *, void *);
 
+typedef float  Real;
 typedef struct Vec Vec;
-typedef float      Real;
 
 typedef struct Str Str;
 typedef struct Id Id;
-typedef struct Address Address;
 
 /* clock_t on unix */
 /* measures discrete time steps in milliseconds */
@@ -59,7 +59,6 @@ typedef struct Collision Collision;
 typedef struct Player Player;
 typedef struct Client Client;
 typedef struct Server Server;
-typedef struct Connection Connection;
 
 extern Server *server;
 
@@ -276,7 +275,7 @@ struct Collision {
     Vec x;
 };
 
-typedef struct Client {
+struct Client {
     List _l;
 
     Player player;
@@ -298,7 +297,7 @@ typedef struct Client {
 
     /* count protocol violations */
     size_t misbehavior;
-} Client;
+};
 
 struct Connection {
 	char _[8];
