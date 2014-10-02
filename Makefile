@@ -4,9 +4,9 @@ VPATH = Source/Lwar/Server Source/Lwar/Dedicated
 BUILD = Build/Debug/Server
 
 SERVER_H      = server.h
-SERVER_SRC    = array.c client.c connection.c entity.c format.c log.c message.c \
-                physics.c packet.c player.c pq.c protocol.c queue.c rules.c \
-                server.c pool.c time.c templates.c uint.c update.c
+SERVER_SRC    = array.c client.c connection.c debug.c entity.c format.c log.c \
+                message.c physics.c packet.c player.c pq.c protocol.c queue.c \
+                rules.c server.c pool.c time.c templates.c uint.c update.c
 SERVER_OBJ    = $(addprefix $(BUILD)/,$(SERVER_SRC:.c=.o))
 SERVER_SO     = $(BUILD)/libserver.so
 SERVER_LIB    = 
