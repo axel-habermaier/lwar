@@ -148,8 +148,8 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 					writer.AppendLine("{0:0.0######}f, // length", template.Length);
 					writer.AppendLine("{0:0.0######}f, // mass", template.Mass);
 					writer.AppendLine("{0:0.0######}f, // radius", template.Radius);
-					writer.AppendLine("{0}, {1}, // acceleration", template.Acceleration.X, template.Acceleration.Y);
-					writer.AppendLine("{0}, {1}, // deceleration", template.Decelaration.X, template.Decelaration.Y);
+					writer.AppendLine("{{{0}, {1}}}, // acceleration", template.Acceleration.X, template.Acceleration.Y);
+					writer.AppendLine("{{{0}, {1}}}, // deceleration", template.Decelaration.X, template.Decelaration.Y);
 					writer.AppendLine("{0:0.0######}f, // rotation", template.Rotation);
 				}, true);
 

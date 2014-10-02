@@ -4,7 +4,6 @@
 	using System.Diagnostics;
 	using System.Runtime.InteropServices;
 	using System.Security;
-	using Memory;
 
 	/// <summary>
 	///     Base class for graphics buffers.
