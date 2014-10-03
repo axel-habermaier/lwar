@@ -11,7 +11,6 @@
 #include "rules.h"
 
 static Server _server;
-Address address_multicast;
 
 Server *server=&_server;
 
