@@ -1,10 +1,10 @@
-#include <assert.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
 
 #include "list.h"
 #include "pool.h"
+#include "debug.h"
 
 static void check_i(Pool *pool, void *p) {
     assert(pool->mem <= (char*)p);

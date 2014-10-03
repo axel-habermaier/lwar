@@ -1,9 +1,9 @@
-#include <assert.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
 
 #include "server.h"
+#include "debug.h"
 #include "message.h"
 #include "packet.h"
 #include "log.h"

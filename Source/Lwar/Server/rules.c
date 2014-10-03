@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <math.h>
 #include <stdint.h>
 #include <stddef.h>
@@ -8,6 +7,7 @@
 #include "server.h"
 #include "message.h"
 #include "vector.h"
+#include "debug.h"
 
 #include "rules.h"
 
