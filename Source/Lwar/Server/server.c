@@ -3,12 +3,20 @@
 #include <setjmp.h>
 #include <string.h>
 
+#include "types.h"
+
 #include "server_export.h"
-#include "server.h"
+#include "state.h"
 
 #include "debug.h"
 #include "log.h"
 #include "rules.h"
+#include "physics.h"
+#include "protocol.h"
+#include "entity.h"
+#include "client.h"
+#include "queue.h"
+#include "packet.h"
 
 static Server _server;
 
