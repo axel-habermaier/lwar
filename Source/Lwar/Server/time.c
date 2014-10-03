@@ -2,7 +2,6 @@
 #include <stdint.h>
 
 #include "server.h"
-#include "server_export.h"
 
 static const Real TIME_SCALE = 1000;
 
