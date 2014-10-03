@@ -1,3 +1,13 @@
+#ifndef MESSAGE_H
+#define MESSAGE_H
+
+#include <stdbool.h>
+#include <stddef.h>
+
+#include "id.h"
+#include "str.h"
+#include "config.h"
+
 typedef enum   MessageType MessageType;
 typedef struct Message Message;
 
@@ -10,11 +20,6 @@ size_t message_unpack(const char *s, void *p);
 /* void header_debug(Header *h, const char *s); */
 void message_debug(Message *m, const char *s);
 /* void update_debug(Update *u, const char *s); */
-
-enum {
-    MAX_NAME_LENGTH = 32,
-    MAX_CHAT_LENGTH = 256,
-};
 
 enum MessageType {
     MESSAGE_CONNECT			  =   1,
@@ -160,3 +165,5 @@ struct Message {
 		} discovery;
     };
 };
+
+#endif

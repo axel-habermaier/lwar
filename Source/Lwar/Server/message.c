@@ -1,12 +1,10 @@
-#include <stdint.h>
-#include <stdlib.h>
-#include <string.h>
+#include "message.h"
 
 #include "uint.h"
-#include "server.h"
 #include "debug.h"
 #include "log.h"
-#include "message.h"
+
+#include <stdlib.h>
 
 static bool has_seqno(Message *m) {
 	return m->type != MESSAGE_DISCOVERY;
@@ -14,21 +12,6 @@ static bool has_seqno(Message *m) {
 
 bool is_reliable(Message *m) {
     return m->type < 100;
-}
-
-static size_t str_pack(char *out, Str in) {
-    size_t i=0;
-    i += uint8_pack(out+i, in.n);
-    memcpy(out+i, in.s, in.n);
-    return i + in.n;
-}
-
-static size_t str_unpack(const char *in, Str *out) {
-    size_t i=0;
-    i += uint8_unpack(in+i, &out->n);
-    out->s = (char*)malloc(out->n);
-    memcpy(out->s, in+i, out->n);
-    return i + out->n;
 }
 
 size_t header_pack(char *s, size_t app_id, size_t ack, size_t time) {

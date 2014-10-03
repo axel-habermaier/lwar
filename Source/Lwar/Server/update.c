@@ -1,11 +1,10 @@
 #include "update.h"
 
+#include "id.h"
 #include "uint.h"
+#include "list.h"
 
 #include <limits.h>
-
-#include "server.h"
-#include "message.h"
 
 struct Format {
     List _l;

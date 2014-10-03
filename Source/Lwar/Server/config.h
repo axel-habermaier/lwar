@@ -23,7 +23,11 @@ enum {
 
     NUM_SLOTS           =    4,
 
+    MAX_NAME_LENGTH     =   32,
+    MAX_CHAT_LENGTH     =  256,
+
     /* gameplay */
+
     MISBEHAVIOR_LIMIT   =   10,
 
     MAX_PLANETS         = 11,

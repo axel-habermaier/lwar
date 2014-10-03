@@ -1,15 +1,7 @@
-#include "connection.h"
-
-#include "config.h"
-
-#include "debug.h"
-#include "log.h"
-
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
-#include <stdint.h>
 
 /* Unix */
 #ifdef __unix__
@@ -40,6 +32,14 @@ typedef SOCKET Socket;
 
 
 #define socket_valid(s)   (! socket_invalid(s))
+
+#include "connection.h"
+
+#include "config.h"
+
+#include "debug.h"
+#include "log.h"
+
 
 static int numConnections = 0;
 
