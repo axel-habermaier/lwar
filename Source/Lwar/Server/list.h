@@ -20,6 +20,8 @@
  * using the generic single-entry routines.
  */
 
+typedef struct list_head List;
+
 struct list_head {
 	struct list_head *next, *prev;
 };

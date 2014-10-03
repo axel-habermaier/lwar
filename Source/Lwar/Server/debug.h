@@ -1,5 +1,9 @@
-#include <stdbool.h>
+#ifndef DEBUG_H
+#define DEBUG_H
+
 #include <setjmp.h>
+#include <stdbool.h>
+#include <stddef.h>
 
 #define assert(test) \
     debug_assert((test), #test, __FILE__, __LINE__)
@@ -16,3 +20,5 @@ struct FailedAssertion {
 
 extern jmp_buf assert_handler;
 extern FailedAssertion failed_assertion;
+
+#endif

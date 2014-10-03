@@ -1,3 +1,9 @@
+#ifndef ARRAY_H
+#define ARRAY_H
+
+#include <stdbool.h>
+#include <stddef.h>
+
 typedef struct Array Array;
 
 struct Array {
@@ -18,3 +24,5 @@ void *array_at_check(Array *a, size_t i);
     for(p = (t*)(a->mem); \
         p < (a)->mem + (a)->size * (a)->n; \
         p ++)
+
+#endif

@@ -1,14 +1,13 @@
-#include <stdint.h>
-#include <stddef.h>
-
 #include "uint.h"
 
-size_t uint8_pack(char *out, uint8_t in) {
+/* implementation for x86, x86_64 */
+
+size_t uint8_pack(char *out,uint8_t in) {
     out[0] = in;
     return 1;
 }
 
-size_t uint8_unpack(const char *in, uint8_t *out) {
+size_t uint8_unpack(const char *in,uint8_t *out) {
     *out = in[0];
     return 1;
 }

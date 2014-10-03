@@ -1,3 +1,6 @@
+#ifndef BITSET_H
+#define BITSET_H
+
 typedef unsigned long BitSet;
 
 #define set_empty 0
@@ -10,3 +13,5 @@ typedef unsigned long BitSet;
 
 #define set_contains(s,i) \
     (((s) & (BitSet)(1 << (i))) != 0)
+
+#endif

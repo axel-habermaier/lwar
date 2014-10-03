@@ -1,10 +1,7 @@
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdlib.h>
-
-#include "list.h"
 #include "pool.h"
 #include "debug.h"
+
+#include <stdlib.h> /* malloc */
 
 static void check_i(Pool *pool, void *p) {
     assert(pool->mem <= (char*)p);
@@ -15,6 +12,17 @@ static void check_i(Pool *pool, void *p) {
 static size_t get_i(Pool *pool, void *p) {
     return (((char *)p) - pool->mem) / pool->size;
 }
+
+static List *pool_get_unchecked(Pool *pool, size_t i) {
+    return (List *)pool->mem + pool->size * i;
+}
+
+static List *pool_get_checked(Pool *pool, size_t i) {
+    List *l = pool_get_unchecked(pool, i);
+    check_i(pool, l);
+    return l;
+}
+
 
 void pool_init(Pool *pool, void *p, size_t n, size_t size,
                void (*ctor)(size_t, void *),
@@ -37,7 +45,7 @@ void pool_init(Pool *pool, void *p, size_t n, size_t size,
 
     size_t i;
     for(i = 0; i < pool->n; i++) {
-        List *l = (List *)(pool->mem + pool->size*i);
+        List *l = pool_get_unchecked(l, i);
         INIT_LIST_HEAD(l);
         list_add_tail(l, &pool->free);
     }
@@ -52,21 +60,17 @@ void pool_shutdown(Pool *pool) {
 }
 
 void pool_add(Pool *pool, size_t i) {
-    List *l = (List *)pool->mem + pool->size * i;
-    check_i(pool, l);
+    List *l = pool_get_checked(pool, i);
     INIT_LIST_HEAD(l);
     list_add_tail(l, &pool->free);
 }
 
 void *pool_get(Pool *pool, size_t i) {
-    List *l = (List *)pool->mem + pool->size * i;
-    check_i(pool, l);
-    return l;
+    return pool_get_checked(pool, i);
 }
 
 void *pool_remove(Pool *pool, size_t i) {
-    List *l = (List *)pool->mem + pool->size * i;
-    check_i(pool, l);
+    List *l = pool_get_checked(pool, i);
     list_del(l);
     return l;
 }
