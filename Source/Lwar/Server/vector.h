@@ -1,7 +1,8 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
-typedef float  Real;
+#include "real.h"
+
 typedef struct Vec Vec;
 
 struct Vec {
