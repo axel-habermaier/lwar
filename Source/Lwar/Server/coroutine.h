@@ -1,5 +1,5 @@
-#ifndef BITSET_H
-#define BITSET_H
+#ifndef COROUTINE_H
+#define COROUTINE_H
 
 /* credits to: http://www.chiark.greenend.org.uk/~sgtatham/coroutines.html */
 

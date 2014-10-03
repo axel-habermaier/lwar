@@ -1,9 +1,6 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H
 
-#include <stdbool.h>
-#include <stddef.h>
-
 #include "id.h"
 #include "str.h"
 #include "config.h"

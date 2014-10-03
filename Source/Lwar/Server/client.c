@@ -1,9 +1,9 @@
-#include <stdint.h>
-#include <stddef.h>
+#include "types.h"
 
-#include "server.h"
-#include "debug.h"
+#include "client.h"
+
 #include "log.h"
+#include "state.h"
 
 static Client _clients[MAX_CLIENTS];
 

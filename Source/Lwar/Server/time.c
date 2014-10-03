@@ -1,9 +1,8 @@
+#include "types.h"
+
 #include "time.h"
 
-#include <stddef.h>
-#include <stdint.h>
-
-#include "server.h"
+#include "state.h"
 
 static const Real TIME_SCALE = 1000;
 

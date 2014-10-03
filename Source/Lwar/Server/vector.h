@@ -3,11 +3,15 @@
 
 #include "real.h"
 
+#include <math.h>
+
 typedef struct Vec Vec;
 
 struct Vec {
     Real x,y;
 };
+
+static const Vec _0 = {0,0};
 
 static inline Vec add(Vec v0, Vec v1) {
     Vec v = { v0.x+v1.x, v0.y+v1.y };

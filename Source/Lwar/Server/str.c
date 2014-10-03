@@ -13,8 +13,7 @@ size_t str_pack(char *out, Str in) {
 size_t str_unpack(const char *in, Str *out) {
     size_t i=0;
     i += uint8_unpack(in+i, &out->n);
-    out->s = (char*)malloc(out->n);
-    memcpy(out->s, in+i, out->n);
+    out->s = strndup(in+i, out->n);
     return i + out->n;
 }
 

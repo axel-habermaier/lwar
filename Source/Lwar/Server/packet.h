@@ -1,3 +1,10 @@
+#ifndef PACKET_H
+#define PACKET_H
+
+#include "address.h"
+#include "config.h"
+#include "update.h"
+
 typedef enum PacketType PacketType;
 typedef struct Packet Packet;
 
@@ -46,3 +53,7 @@ bool packet_recv(Packet *p);
 bool packet_send(Packet *p);
 
 void packet_debug(Packet *p);
+
+void packet_send_discovery();
+
+#endif
