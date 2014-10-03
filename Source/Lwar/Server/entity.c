@@ -1,12 +1,15 @@
-#include <math.h>
-#include <stddef.h>
-#include <stdint.h>
+#include "types.h"
 
-#include "server.h"
+#include "entity.h"
+
 #include "debug.h"
-#include "vector.h"
+#include "update.h"
+#include "event.h"
 #include "log.h"
 #include "performance.h"
+#include "state.h"
+
+#include <math.h>
 
 static Entity _entities[MAX_ENTITIES];
 
@@ -56,15 +59,10 @@ void entity_hit(Entity *e, Real damage, Player *k) {
         k->kills ++;
         p->deaths ++;
 
-        protocol_notify_kill(k, p);
+        event_kill(k, p);
     }
 
     e->health -= damage;
-}
-
-static void notify(Entity *e) {
-    player_notify_entity(e);
-    protocol_notify_entity(e);
 }
 
 static void act(Entity *e) {
@@ -77,17 +75,6 @@ static void act(Entity *e) {
 
     if(e->health <= 0)
         entity_remove(e);
-}
-
-void entities_notify_collision(Collision *c) {
-    Entity *e0 = c->e[0];
-    Entity *e1 = c->e[1];
-    Real i0 = c->i[0];
-    Real i1 = c->i[1];
-    EntityType *t0 = e0->type;
-    EntityType *t1 = e1->type;
-    if(t0->collide) t0->collide(e0, e1, i0);
-    if(t1->collide) t1->collide(e1, e0, i1);
 }
 
 void entities_update() {
@@ -167,7 +154,7 @@ Entity *entity_create(EntityType *t, Player *p, Vec x, Vec v) {
     e->radius = t->init_radius;
     e->collides = (e->radius > 0);   /* TODO: this is a hacky-heuristics */
     e->bounces  = (e->mass < 1000);
-    notify(e);
+    event_entity(e);
     log_debug("+ entity %d (%s), pos = (%.1f,%.1f) v = (%.1f,%.1f)", e->id.n, e->type->name, e->x.x, e->x.y, e->v.x, e->v.y);
     return e;
 }
@@ -177,7 +164,7 @@ void entity_remove(Entity *e) {
 
     if(e && !e->dead) {
         e->dead = true;
-        notify(e);
+        event_entity(e);
         log_debug("- entity %d (%s)", e->id.n, e->type->name);
         children_foreach(e,c)
             entity_remove(c);

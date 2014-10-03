@@ -1,12 +1,16 @@
-#include <stddef.h>
-#include <stdint.h>
-#include <string.h>
+#include "types.h"
 
-#include "server.h"
+#include "packet.h"
+
+#include "connection.h"
 #include "debug.h"
+#include "log.h"
 #include "message.h"
 #include "packet.h"
-#include "log.h"
+#include "state.h"
+
+#include <stdint.h>
+#include <string.h>
 
 static bool check_put(Packet *p,size_t n) {
     return    n != 0

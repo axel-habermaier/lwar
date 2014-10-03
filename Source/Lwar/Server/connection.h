@@ -3,8 +3,6 @@
 
 #include "address.h"
 
-typedef struct Connection Connection;
-
 bool conn_init(Connection* connection);
 void conn_shutdown(Connection* connection);
 

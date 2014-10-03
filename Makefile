@@ -7,30 +7,31 @@ SERVER_H      = server.h
 SERVER_SRC    = \
 address.c       \
 array.c         \
+client.c        \
 connection.c    \
 debug.c         \
+entity.c        \
 id.c            \
 log.c           \
+message.c       \
 performance.c   \
-uint.c          \
 pool.c          \
 pq.c            \
-message.c       \
+real.c 			\
 str.c           \
+time.c          \
+uint.c          \
+update.c        \
+packet.c        \
+player.c        \
+physics.c       \
+queue.c         \
+protocol.c      \
 
-#client.c        \
-#entity.c        \
-#packet.c        \
-#physics.c       \
-#player.c        \
-#protocol.c      \
-#queue.c         \
+#templates.c     \
+#server.c        \
 #rules.c         \
 #scratch.c       \
-#server.c        \
-#templates.c     \
-#time.c          \
-#update.c         
 
 SERVER_OBJ    = $(addprefix $(BUILD)/,$(SERVER_SRC:.c=.o))
 SERVER_SO     = $(BUILD)/libserver.so

@@ -1,21 +1,16 @@
+#include "types.h"
+
 #include "update.h"
 
+#include "entity.h"
 #include "id.h"
-#include "uint.h"
 #include "list.h"
+#include "message.h"
+#include "real.h"
+#include "state.h"
+#include "uint.h"
 
 #include <limits.h>
-
-struct Format {
-    List _l;
-    size_t id;
-
-    Pack *pack;
-    Unpack *unpack;
-    List  all;
-    size_t len;
-    size_t n;
-};
 
 Format format_ship    = { {0,0}, MESSAGE_UPDATE,        update_ship_pack,   0 };
 Format format_pos     = { {0,0}, MESSAGE_UPDATE_POS,    update_pos_pack,    0 };

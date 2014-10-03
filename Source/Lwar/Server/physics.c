@@ -1,46 +1,21 @@
+#include "types.h"
+
+#include "physics.h"
+
+#include "debug.h"
+#include "event.h"
+#include "log.h"
+#include "performance.h"
+#include "state.h"
+#include "vector.h"
+
 #define _USE_MATH_DEFINES // required for M_PI on VS2012
 #include <math.h>
 #include <limits.h>
 #include <stdint.h>
 #include <stddef.h>
 
-#include "server.h"
-
-#include "vector.h"
-#include "debug.h"
-#include "log.h"
-#include "performance.h"
-
-static size_t mod(long a,long b) {
-    return (a % b + b) % b;
-}
-
-Real rad(Real a) {
-    return a * M_PI / 180.0;
-}
-
-size_t deg(Real a) {
-    Real d = a * 180.0 / M_PI;
-    return mod(d, 360);
-}
-
-size_t deg100(Real a){
-	Real d = a * 180.0 / M_PI;
-	return mod(d * 100, 360 * 100);
-}
-
 static Collision _collisions[MAX_COLLISIONS];
-
-/* solve a x^2 + bx + c = 0 for x
- * and store solutions in x0,x1.
- * return the number of solutions */
-int roots(Real a, Real b, Real c, Real *x0, Real *x1) {
-    Real d = b*b - 4*a*c;
-    if(d<0) return 0;
-    if(x0) *x0 = (-b + sqrt(d)) / (2*a);
-    if(x1) *x1 = (-b - sqrt(d)) / (2*a);
-    return (d==0) ? 1 : 2;
-}
 
 /* predict velocity at time t, given current acceleration */
 Vec physics_v(Vec v, Vec a, Time t) {
@@ -81,11 +56,6 @@ static void move_remaining(Entity *e) {
     } else {
         move(e, e->remaining);
     }
-}
-
-static void notify(Collision *c) {
-    entities_notify_collision(c);
-    protocol_notify_collision(c);
 }
 
 /* compute possible collision point at time t in the future
@@ -236,7 +206,7 @@ static void handle_collisions(Time t) {
         c->i[0] = impact(e0->v, v0);
         c->i[1] = impact(e1->v, v1);
 
-        notify(c);
+        event_collision(c);
 
         /* remaining time of the entities will be spent in physics_move */
     }
