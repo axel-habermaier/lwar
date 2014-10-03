@@ -275,26 +275,3 @@ bool conn_send(Connection* connection, const char *buf, size_t size, Address* ad
 
 	return true;
 }
-
-bool address_eq(Address *adr0, Address *adr1) {
-    if (adr0->port != adr1->port)
-		return false;
-
-	return memcmp(adr0->ip, adr1->ip, sizeof(adr1->ip)) == 0;
-}
-
-bool address_create(Address* addr, const char* ip, uint16_t port)
-{
-	memset(addr, 0, sizeof(Address));
-
-	struct in6_addr result;
-	if (!inet_pton(AF_INET6, MULTICAST_GROUP, &result))
-		return false;
-
-	// int q = sizeof(result);
-	memcpy(&addr->ip, &result, sizeof(result));
-	addr->port = htons(port);
-	addr->isIPv6 = true;
-
-	return true;
-}
