@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <stdint.h>
 #include <stddef.h>
 // #include <stdlib.h>
@@ -6,6 +5,7 @@
 #include "server.h"
 #include "coroutine.h"
 #include "message.h"
+#include "debug.h"
 #include "log.h"
 
 enum {

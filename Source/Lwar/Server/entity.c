@@ -1,9 +1,9 @@
-#include <assert.h>
 #include <math.h>
 #include <stddef.h>
 #include <stdint.h>
 
 #include "server.h"
+#include "debug.h"
 #include "vector.h"
 #include "log.h"
 #include "performance.h"

@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -32,6 +31,7 @@ typedef SOCKET Socket;
 
 #include "address.h"
 #include "connection.h"
+#include "debug.h"
 #include "log.h"
 
 static int numConnections = 0;

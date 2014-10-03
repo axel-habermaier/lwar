@@ -1,10 +1,10 @@
-#include <assert.h>
 #include <string.h>
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
 
 #include "pq.h"
+#include "debug.h"
 
 static void check_i(PrioQueue *pq, void *p) {
     assert(pq->mem <= (char*)p);

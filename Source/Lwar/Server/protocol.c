@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <math.h>
 #include <setjmp.h>
 #include <stdint.h>
@@ -10,6 +9,7 @@
 #include "coroutine.h"
 #include "message.h"
 #include "packet.h"
+#include "debug.h"
 #include "log.h"
 #include "performance.h"
 

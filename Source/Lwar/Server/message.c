@@ -1,10 +1,10 @@
-#include <assert.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "uint.h"
 #include "server.h"
+#include "debug.h"
 #include "log.h"
 #include "message.h"
 

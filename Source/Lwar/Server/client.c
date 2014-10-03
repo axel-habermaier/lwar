@@ -1,8 +1,8 @@
-#include <assert.h>
 #include <stdint.h>
 #include <stddef.h>
 
 #include "server.h"
+#include "debug.h"
 #include "log.h"
 
 static Client _clients[MAX_CLIENTS];

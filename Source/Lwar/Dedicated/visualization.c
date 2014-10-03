@@ -2,7 +2,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-
 #include <GL/gl.h>
 
 #include "server.h"
@@ -38,6 +37,7 @@ static void glTriangle(float r, float phi) {
     glEnd();
 }
 
+/*
 static void glCircle(float r) {
     glScalef(r,r,1);
     int i;
@@ -49,7 +49,7 @@ static void glCircle(float r) {
     }
     glEnd();
 }
-
+*/
 static void glDisc(float r) {
     glScalef(r,r,1);
     int i;

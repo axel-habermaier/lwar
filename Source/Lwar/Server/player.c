@@ -1,4 +1,3 @@
-#include <assert.h>
 #define _USE_MATH_DEFINES // required for M_PI on VS2012
 #include <math.h>
 #include <stdarg.h>
@@ -9,6 +8,7 @@
 #include "server.h"
 
 #include "vector.h"
+#include "debug.h"
 #include "log.h"
 
 void player_init(Player *p, size_t id) {

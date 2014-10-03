@@ -1,7 +1,7 @@
 #include <stdarg.h>
 #include <stdio.h>
-#include <assert.h>
 
+#include "debug.h"
 #include "log.h"
 #include "server_export.h"
 

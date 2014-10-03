@@ -5,7 +5,7 @@
 #include "server.h"
 #include "debug.h"
 
-static jmp_buf assert_handler;
+jmp_buf assert_handler;
 FailedAssertion failed_assertion;
 
 void test() {
