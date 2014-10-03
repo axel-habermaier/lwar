@@ -8,19 +8,21 @@ SERVER_SRC    = \
 address.c       \
 array.c         \
 connection.c    \
+debug.c         \
+id.c            \
+log.c           \
+performance.c   \
+uint.c          \
+pool.c          \
+pq.c            \
+message.c       \
+str.c           \
 
 #client.c        \
-#debug.c         \
 #entity.c        \
-#id.c            \
-#log.c           \
-#message.c       \
 #packet.c        \
-#performance.c   \
 #physics.c       \
 #player.c        \
-#pool.c          \
-#pq.c            \
 #protocol.c      \
 #queue.c         \
 #rules.c         \
@@ -28,7 +30,6 @@ connection.c    \
 #server.c        \
 #templates.c     \
 #time.c          \
-#uint.c          \
 #update.c         
 
 SERVER_OBJ    = $(addprefix $(BUILD)/,$(SERVER_SRC:.c=.o))
@@ -43,7 +44,7 @@ DEDICATED_BIN = $(BUILD)/dedicated
 
 CC = clang
 LD = clang
-CFLAGS = -Wall -g -fPIC -ISource/Lwar/Server
+CFLAGS = -Wall -g -fPIC # -ISource/Lwar/Server
 
 all: $(BUILD) $(SERVER_SO) # $(DEDICATED_BIN)
 

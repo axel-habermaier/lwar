@@ -45,7 +45,7 @@ void pool_init(Pool *pool, void *p, size_t n, size_t size,
 
     size_t i;
     for(i = 0; i < pool->n; i++) {
-        List *l = pool_get_unchecked(l, i);
+        List *l = pool_get_unchecked(pool, i);
         INIT_LIST_HEAD(l);
         list_add_tail(l, &pool->free);
     }

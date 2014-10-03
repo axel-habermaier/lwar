@@ -1,6 +1,8 @@
 #ifndef ID_H
 #define ID_H
 
+#include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 
 typedef struct Id Id;
