@@ -3,6 +3,7 @@
 	using System;
 	using Controls;
 	using Math;
+	using Platform.Logging;
 	using Platform.Memory;
 	using Scripting;
 	using Views;
@@ -149,8 +150,14 @@
 		/// </summary>
 		private void SetDefaultResolution()
 		{
-			if (Cvars.ResolutionCvar.HasExplicitValue)
-				Cvars.Resolution = Window.MonitorResolution;
+			if (!Cvars.ResolutionCvar.HasExplicitValue)
+				return;
+
+			var resolution = Window.MonitorResolution;
+
+			Log.Info("No resolution has been explicitly set. Using the the resolution of the window's monitor ({0}).",
+				TypeRegistry.ToString(resolution));
+			Cvars.Resolution = resolution;
 		}
 	}
 }

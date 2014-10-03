@@ -50,7 +50,7 @@
 			Register(new EnumerationLiteralParser<WindowMode>(ignoreCase: true), null, null);
 			Register(new Vector2Parser(), null, v => String.Format("{0};{1}", v.X, v.Y), "0;0", "-10.0;10.5");
 			Register(new Vector2IParser(), null, v => String.Format("{0};{1}", v.X, v.Y), "0;0", "-10;10");
-			Register(new SizeParser(), null, s => String.Format("{0};{1}", s.Width, s.Height), "0;0", "-10;10");
+			Register(new SizeParser(), null, s => String.Format("{0}x{1}", s.Width, s.Height), "0x0", "-10x10", "1920x1200");
 			Register(new EnumerationLiteralParser<Key>(false), "Keyboard key name", null, "A", "B", "LeftControl", "Return", "F1");
 			Register(new EnumerationLiteralParser<MouseButton>(false), "Mouse button", null, "Left", "Right", "Middle", "XButton1", "XButton2");
 			Register(new InputTriggerParser(), null, i => String.Format("[{0}]", i), "[Key(Return,WentDown)]", "[Key(A,Pressed)]",

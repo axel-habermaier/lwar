@@ -15,7 +15,7 @@ namespace Pegasus.Scripting.Parsing.Combinators
 		{
 			var int32 = Parsers.Int32;
 			var ws = ~Parsers.WhiteSpaces;
-			Parser = Pipe(int32, ws + String(";") + ws, int32, (width, _, height) => new Size(width, height));
+			Parser = Pipe(int32, ws + String("x") + ws, int32, (width, _, height) => new Size(width, height));
 		}
 	}
 }
