@@ -1,10 +1,8 @@
-#include <string.h>
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdlib.h>
-
 #include "pq.h"
 #include "debug.h"
+
+// #include <string.h>
+#include <stdlib.h> /* malloc */
 
 static void check_i(PrioQueue *pq, void *p) {
     assert(pq->mem <= (char*)p);
@@ -40,7 +38,7 @@ static void exch(char* base,size_t size,size_t a,size_t b) {
   }
 }
 
-/* borrowed from http://de.wikipedia.org/wiki/Bin%C3%A4rer_Heap */
+/* borrowed from http://de.wikipedia.org/wiki/Binärer_Heap */
 
 static void down(char *mem, size_t i, size_t n, size_t s,
                  int (*cmp)(const void *, const void *))

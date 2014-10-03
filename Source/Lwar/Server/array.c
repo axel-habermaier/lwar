@@ -1,9 +1,6 @@
-#include <stdbool.h>
-#include <stdint.h>
-#include <stdlib.h>
-
 #include "array.h"
-#include "debug.h"
+
+#include <stdlib.h> /* malloc */
 
 void *array_at_check(Array *a, size_t i) {
     assert(i < a->n);

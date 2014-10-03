@@ -1,3 +1,13 @@
+#ifndef VECTOR_H
+#define VECTOR_H
+
+typedef float  Real;
+typedef struct Vec Vec;
+
+struct Vec {
+    Real x,y;
+};
+
 static inline Vec add(Vec v0, Vec v1) {
     Vec v = { v0.x+v1.x, v0.y+v1.y };
     return v;
@@ -29,7 +39,7 @@ static inline Real dist(Vec v0, Vec v1) {
     return len(sub(v0,v1));
 }
 
-static inline Real dist2(Vec v0, Vec v1) {
+static inline Real dist_sq(Vec v0, Vec v1) {
     return dot_sq(sub(v0,v1));
 }
 
@@ -74,3 +84,5 @@ static inline void project(Vec v, Vec b, Vec *p, Vec *r) {
     *p = scale(b, s);
     *r = sub(v,*p);
 }
+
+#endif

@@ -1,4 +1,11 @@
-typedef struct list_head List;
+#ifndef POOL_H
+#define POOL_H
+
+#include <stdbool.h>
+#include <stddef.h>
+
+#include "list.h"
+
 typedef struct Pool Pool;
 
 struct Pool {
@@ -42,3 +49,5 @@ void *pool_remove(Pool *pool, size_t i);
     for (p  = ((p) ? (p) : (t*)((pool)->allocated.next)); \
          p != (t*)&(pool)->allocated; \
          p  = (t*)(((List *)p)->next))
+
+#endif

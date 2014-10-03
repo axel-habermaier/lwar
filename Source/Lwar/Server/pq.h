@@ -1,3 +1,9 @@
+#ifndef PQ_H
+#define PQ_H
+
+#include <stdbool.h>
+#include <stddef.h>
+
 typedef struct PrioQueue PrioQueue;
 
 struct PrioQueue {
@@ -30,3 +36,4 @@ void  pq_decreased(PrioQueue *pq, void *p);
          !pq_empty(pq); \
          pq_free_min(pq)) /* note: no need to update p each iteration */
 
+#endif

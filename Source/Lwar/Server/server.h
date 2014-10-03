@@ -31,9 +31,6 @@ enum {
 typedef size_t (Pack)(char *, void *);
 typedef size_t (Unpack)(const char *, void *);
 
-typedef float  Real;
-typedef struct Vec Vec;
-
 typedef struct Str Str;
 typedef struct Id Id;
 
@@ -145,10 +142,6 @@ void format_add_entity(Format *f, Entity *e);
 
 EntityType *entity_type_get(size_t id);
 void entity_type_register(const char *name, EntityType *t, Format *f);
-
-struct Vec {
-    Real x,y;
-};
 
 struct Str {
     unsigned char n;
