@@ -31,18 +31,6 @@ static size_t str_unpack(const char *in, Str *out) {
     return i + out->n;
 }
 
-size_t id_pack(char *out, Id id) {
-    uint16_pack(out,   id.gen);
-    uint16_pack(out+2, id.n);
-    return 4;
-}
-
-size_t id_unpack(const char *out, Id *id) {
-    uint16_unpack(out,   &id->gen);
-    uint16_unpack(out+2, &id->n);
-    return 4;
-}
-
 size_t header_pack(char *s, size_t app_id, size_t ack, size_t time) {
     size_t i=0;
     i += uint32_pack(s+i, app_id);

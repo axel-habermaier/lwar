@@ -11,16 +11,11 @@
 typedef size_t (Pack)(char *, void *);
 typedef size_t (Unpack)(const char *, void *);
 
-typedef struct Str Str;
-typedef struct Id Id;
-
 typedef struct Entity Entity;
 typedef struct Slot Slot;
 
 typedef struct EntityType EntityType;
 typedef struct SlotType SlotType;
-
-typedef struct Format Format;
 
 typedef struct Collision Collision;
 
@@ -29,8 +24,6 @@ typedef struct Client Client;
 typedef struct Server Server;
 
 extern Server *server;
-
-bool id_eq(Id id0, Id id1);
 
 void player_init(Player *p, size_t id);
 void player_clear(Player *p);
@@ -99,21 +92,8 @@ void physics_update();
 
 void rules_init();
 
-void format_register(Format *f);
-void format_add_entity(Format *f, Entity *e);
-
 EntityType *entity_type_get(size_t id);
 void entity_type_register(const char *name, EntityType *t, Format *f);
-
-struct Str {
-    unsigned char n;
-    char *s;
-};
-
-struct Id {
-    uint16_t gen;
-    uint16_t n;
-};
 
 struct Slot {
     Entity   *entity;
@@ -210,17 +190,6 @@ struct EntityType {
 
     const char *name;
     SlotType slots[NUM_SLOTS]; /* possible weapon attachments */
-};
-
-struct Format {
-    List _l;
-    size_t id;
-
-    Pack *pack;
-    Unpack *unpack;
-    List  all;
-    size_t len;
-    size_t n;
 };
 
 struct Collision {

@@ -1,10 +1,45 @@
-#include <stdint.h>
-#include <stddef.h>
+#include "update.h"
+
+#include "uint.h"
+
 #include <limits.h>
 
 #include "server.h"
 #include "message.h"
-#include "uint.h"
+
+struct Format {
+    List _l;
+    size_t id;
+
+    Pack *pack;
+    Unpack *unpack;
+    List  all;
+    size_t len;
+    size_t n;
+};
+
+Format format_ship    = { {0,0}, MESSAGE_UPDATE,        update_ship_pack,   0 };
+Format format_pos     = { {0,0}, MESSAGE_UPDATE_POS,    update_pos_pack,    0 };
+Format format_ray     = { {0,0}, MESSAGE_UPDATE_RAY,    update_ray_pack,    0 };
+Format format_circle  = { {0,0}, MESSAGE_UPDATE_CIRCLE, update_circle_pack, 0 };
+
+void format_register(Format *f) {
+    INIT_LIST_HEAD(&f->all);
+
+    f->len = 0;
+    f->n   = 0;
+
+    if(1) {
+        char s[64];
+        Entity e = {};
+        EntityType t = {};
+        e.type = &t;
+        f->len = f->pack(s,&e);
+    }
+
+    list_add_tail(&f->_l, &server->formats);
+}
+
 
 size_t update_ship_pack(char *s, void *p) {
     Entity *e = (Entity*)p;

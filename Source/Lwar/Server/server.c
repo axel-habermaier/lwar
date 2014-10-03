@@ -14,11 +14,6 @@ static Server _server;
 
 Server *server=&_server;
 
-bool id_eq(Id id0, Id id1) {
-    return    id0.n   == id1.n
-           && id0.gen == id1.gen;
-}
-
 int server_init() {
     /* initialize static server struct */
     memset(server, 0, sizeof(Server));

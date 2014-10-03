@@ -4,9 +4,33 @@ VPATH = Source/Lwar/Server Source/Lwar/Dedicated
 BUILD = Build/Debug/Server
 
 SERVER_H      = server.h
-SERVER_SRC    = array.c client.c connection.c debug.c entity.c format.c log.c \
-                message.c physics.c packet.c player.c pq.c protocol.c queue.c \
-                rules.c server.c pool.c time.c templates.c uint.c update.c
+SERVER_SRC    = \
+address.c       \
+array.c         \
+connection.c    \
+
+#client.c        \
+#debug.c         \
+#entity.c        \
+#id.c            \
+#log.c           \
+#message.c       \
+#packet.c        \
+#performance.c   \
+#physics.c       \
+#player.c        \
+#pool.c          \
+#pq.c            \
+#protocol.c      \
+#queue.c         \
+#rules.c         \
+#scratch.c       \
+#server.c        \
+#templates.c     \
+#time.c          \
+#uint.c          \
+#update.c         
+
 SERVER_OBJ    = $(addprefix $(BUILD)/,$(SERVER_SRC:.c=.o))
 SERVER_SO     = $(BUILD)/libserver.so
 SERVER_LIB    = 
@@ -21,7 +45,7 @@ CC = clang
 LD = clang
 CFLAGS = -Wall -g -fPIC -ISource/Lwar/Server
 
-all: $(BUILD) $(SERVER_SO) $(DEDICATED_BIN)
+all: $(BUILD) $(SERVER_SO) # $(DEDICATED_BIN)
 
 run: $(DEDICATED_BIN)
 	LD_LIBRARY_PATH=$(BUILD) ./$(DEDICATED_BIN)

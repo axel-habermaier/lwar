@@ -1,10 +1,12 @@
 #ifndef CONNECTION_H
 #define CONNECTION_H
 
+#include <stdbool.h>
 #include <stddef.h>
 
+#include "address.h"
+
 typedef struct Connection Connection;
-typedef struct Address Address;
 
 bool conn_init(Connection* connection);
 void conn_shutdown(Connection* connection);
