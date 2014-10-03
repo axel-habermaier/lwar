@@ -1,5 +1,7 @@
 #include "address.h"
 
+#include "config.h" /* MULTICAST_GROUP */
+
 #include <string.h>
 
 #ifdef __unix__

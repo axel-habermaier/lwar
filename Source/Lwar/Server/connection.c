@@ -1,12 +1,15 @@
 #include "connection.h"
 
-#include "address.h"
+#include "config.h"
+
 #include "debug.h"
 #include "log.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <stdint.h>
 
 /* Unix */
 #ifdef __unix__
