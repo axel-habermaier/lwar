@@ -3,6 +3,8 @@
 
 #include "real.h"
 
+#include <stdbool.h>
+
 /* clock_t on unix */
 /* measures discrete time steps in milliseconds */
 typedef unsigned long long Clock;

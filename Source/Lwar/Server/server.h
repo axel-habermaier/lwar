@@ -14,15 +14,6 @@ typedef size_t (Unpack)(const char *, void *);
 typedef struct Str Str;
 typedef struct Id Id;
 
-/* clock_t on unix */
-/* measures discrete time steps in milliseconds */
-typedef unsigned long long Clock;
-
-/* measures time intervals,
- * used for example by the physics engine
- */
-typedef Real Time;
-
 typedef struct Entity Entity;
 typedef struct Slot Slot;
 
@@ -40,15 +31,6 @@ typedef struct Server Server;
 extern Server *server;
 
 bool id_eq(Id id0, Id id1);
-
-Clock clock_delta();
-bool  clock_periodic(Clock *t, Clock i);
-bool  clock_periodic_active(Clock *t, Clock i, bool active);
-Clock to_clock(Time t);
-Time  to_time(Clock t);
-Time  time_delta();
-int   time_cmp(Time t0, Time t1);
-void  time_update(Clock t);
 
 void player_init(Player *p, size_t id);
 void player_clear(Player *p);
