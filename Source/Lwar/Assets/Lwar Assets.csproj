@@ -192,7 +192,7 @@
       <CustomCommands>
         <Command type="AfterBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(ProjectDir)/Lwar Assets.csproj&quot;" workingdir="$(TargetDir)" />
         <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc_copy.exe&quot; clean &quot;$(SolutionDir)/Lwar/Assets/Lwar Assets.csproj&quot;" workingdir="$(TargetDir)" />
-        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc_copy.exe&quot; clean &quot;$(SolutionDir)/Lwar/User Interface/Lwar UI.csproj&quot; /ui" workingdir="$(TargetDir)" />l
+        <Command type="BeforeClean" command="mono &quot;$(TargetDir)/pgc_copy.exe&quot; clean &quot;$(SolutionDir)/Lwar/User Interface/Lwar UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
