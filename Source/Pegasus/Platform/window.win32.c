@@ -210,6 +210,18 @@ pgVoid pgGetMousePositionCore(pgWindow* window, pgInt32* x, pgInt32* y)
 	*y = point.y;
 }
 
+pgVoid pgGetMonitorResolutionCore(pgWindow* window, pgInt32* width, pgInt32* height)
+{
+	HMONITOR monitor = MonitorFromWindow(window->hwnd, MONITOR_DEFAULTTONEAREST);
+	MONITORINFO monitorInfo = { sizeof(MONITORINFO) };
+
+	if (!GetMonitorInfo(monitor, &monitorInfo))
+		pgWin32Error("Failed to get monitor info.");
+
+	*width = (pgInt32)(monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left);
+	*height = (pgInt32)(monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top);
+}
+
 //====================================================================================================================
 // Internal functions
 //====================================================================================================================

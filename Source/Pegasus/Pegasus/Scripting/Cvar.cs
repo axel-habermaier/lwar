@@ -48,6 +48,7 @@
 			UpdateMode = mode;
 			Persistent = persistent;
 			SystemOnly = systemOnly;
+			HasExplicitValue = true;
 
 			_defaultValue = defaultValue;
 			_value = defaultValue;
@@ -69,6 +70,8 @@
 					DeferredUpdate(value);
 				else
 					UpdateValue(value);
+
+				HasExplicitValue = false;
 			}
 		}
 
@@ -77,6 +80,12 @@
 		///     if the cvar's update mode is immediate.
 		/// </summary>
 		public T DeferredValue { get; private set; }
+
+		/// <summary>
+		///     Gets a value indicating whether the cvar's value has been set explicitly. If false, the cvar has its default value. This
+		///     property is also true if the cvar's default value has been set explicitly.
+		/// </summary>
+		public bool HasExplicitValue { get; private set; }
 
 		/// <summary>
 		///     Gets a value indicating whether the cvar is readonly and cannot be set from the console.

@@ -311,6 +311,7 @@ pgVoid pgClipCursor(pgWindow* window, pgBool clip);
 
 pgVoid pgConstrainWindowPlacement(pgWindowPlacement* placement);
 pgRectangle pgGetDesktopArea();
+pgVoid pgGetMonitorResolutionCore(pgWindow* window, pgInt32* width, pgInt32* height);
 pgVoid pgGetMousePositionCore(pgWindow* window, pgInt32* x, pgInt32* y);
 pgVoid pgCancelDeadCharacter();
 

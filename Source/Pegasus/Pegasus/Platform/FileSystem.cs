@@ -62,6 +62,7 @@
 		public static unsafe ArraySegment<byte> ReadAllBytes(string path)
 		{
 			Assert.ArgumentNotNullOrWhitespace(path);
+			Assert.That(IsValidFileName(path), "Invalid file name.");
 
 			fixed (byte* buffer = Buffer)
 			{
@@ -81,6 +82,7 @@
 		public static unsafe string ReadAllText(string fileName)
 		{
 			Assert.ArgumentNotNullOrWhitespace(fileName);
+			Assert.That(IsValidFileName(fileName), "Invalid file name.");
 
 			fixed (byte* buffer = Buffer)
 			{
@@ -102,6 +104,7 @@
 		{
 			Assert.ArgumentNotNullOrWhitespace(fileName);
 			Assert.ArgumentNotNull(content);
+			Assert.That(IsValidFileName(fileName), "Invalid file name.");
 
 			var data = Encoding.UTF8.GetBytes(content);
 			fixed (byte* dataPtr = data)
@@ -121,6 +124,7 @@
 		{
 			Assert.ArgumentNotNullOrWhitespace(fileName);
 			Assert.ArgumentNotNull(content);
+			Assert.That(IsValidFileName(fileName), "Invalid file name.");
 
 			var data = Encoding.UTF8.GetBytes(content);
 			fixed (byte* dataPtr = data)
@@ -135,12 +139,26 @@
 		///     directory.
 		/// </summary>
 		/// <param name="fileName">The name of the file that should be deleted.</param>
-		public static void DeleteFile(string fileName)
+		public static void Delete(string fileName)
 		{
 			Assert.ArgumentNotNullOrWhitespace(fileName);
+			Assert.That(IsValidFileName(fileName), "Invalid file name.");
 
 			if (!NativeMethods.DeleteUserFile(fileName))
 				throw new FileSystemException();
+		}
+
+		/// <summary>
+		///     Checks whether a user file with the given name exists. This method can only check files in the application's user
+		///     directory.
+		/// </summary>
+		/// <param name="fileName">The name of the file that should be checked for.</param>
+		public static bool Exists(string fileName)
+		{
+			Assert.ArgumentNotNull(fileName);
+			Assert.That(IsValidFileName(fileName), "Invalid file name.");
+
+			return NativeMethods.UserFileExists(fileName);
 		}
 
 		/// <summary>
@@ -163,6 +181,9 @@
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDeleteUserFile")]
 			public static extern bool DeleteUserFile([MarshalAs(UnmanagedType.LPStr)] string fileName);
+
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgUserFileExists")]
+			public static extern bool UserFileExists([MarshalAs(UnmanagedType.LPStr)] string fileName);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetUserDirectory")]
 			public static extern IntPtr GetUserDirectory();

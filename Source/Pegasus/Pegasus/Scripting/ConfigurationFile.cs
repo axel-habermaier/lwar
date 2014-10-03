@@ -47,11 +47,14 @@
 				return;
 			}
 
+			if (!FileSystem.IsValidFileName(fileName))
+			{
+				Log.Error("'{0}' is not a valid file name.", fileName);
+				return;
+			}
+
 			_parser = parser;
 			_file = new AppFile(fileName);
-
-			if (!FileSystem.IsValidFileName(fileName))
-				Log.Error("'{0}' is not a valid file name.", _file.FileName);
 		}
 
 		/// <summary>

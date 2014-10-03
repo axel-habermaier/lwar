@@ -95,7 +95,7 @@
 		/// </param>
 		public bool Delete(Action<Exception> onException = null)
 		{
-			return Execute(() => FileSystem.DeleteFile(FileName), onException);
+			return Execute(() => FileSystem.Delete(FileName), onException);
 		}
 
 		/// <summary>

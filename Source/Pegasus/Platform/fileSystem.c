@@ -84,23 +84,29 @@ PG_API_EXPORT pgBool pgAppendUserFile(pgString fileName, pgByte* content, pgUInt
 	return pgWriteFile(PG_FILE_APPEND, content, sizeInBytes);
 }
 
-PG_API_EXPORT pgBool pgDeleteUserFile(pgString fileName)
+PG_API_EXPORT pgBool pgUserFileExists(pgString fileName)
 {
-	FILE *file;
+	FILE* file;
 
 	PG_ASSERT_NOT_NULL(fileName);
 
 	pgSetUserFilePath(fileName);
 	file = fopen(pathBuffer, MODE(r));
+	if (file == NULL)
+		return PG_FALSE;
 
-	if (file != NULL)
+	fclose(file);
+	return PG_TRUE;
+}
+
+PG_API_EXPORT pgBool pgDeleteUserFile(pgString fileName)
+{
+	PG_ASSERT_NOT_NULL(fileName);
+
+	if (pgUserFileExists(fileName) && remove(pathBuffer) != 0)
 	{
-		fclose(file);
-		if (remove(pathBuffer) != 0)
-		{
-			pgFileSystemError("Failed to remove file.");
-			return PG_FALSE;
-		}
+		pgFileSystemError("Failed to remove file.");
+		return PG_FALSE;
 	}
 
 	return PG_TRUE;

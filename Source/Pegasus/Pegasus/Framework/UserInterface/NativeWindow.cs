@@ -163,9 +163,15 @@
 		/// </summary>
 		public bool MouseCaptured
 		{
-			get { return _mouseCaptured; }
+			get
+			{
+				Assert.NotDisposed(this);
+				return _mouseCaptured;
+			}
 			set
 			{
+				Assert.NotDisposed(this);
+
 				if (_mouseCaptured == value)
 					return;
 
@@ -174,6 +180,21 @@
 					NativeMethods.CaptureMouse(_window);
 				else
 					NativeMethods.ReleaseMouse(_window);
+			}
+		}
+
+		/// <summary>
+		///     Gets the resolution of the window's monitor.
+		/// </summary>
+		public Size MonitorResolution
+		{
+			get
+			{
+				Assert.NotDisposed(this);
+
+				int width, height;
+				NativeMethods.GetMonitorResolution(_window, out width, out height);
+				return new Size(width, height);
 			}
 		}
 
@@ -444,6 +465,9 @@
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgReleaseMouse")]
 			public static extern void ReleaseMouse(IntPtr window);
+
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetMonitorResolution")]
+			public static extern void GetMonitorResolution(IntPtr window, out int width, out int height);
 
 			[StructLayout(LayoutKind.Sequential)]
 			public struct Callbacks

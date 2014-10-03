@@ -126,6 +126,14 @@
 		}
 
 		/// <summary>
+		///     Gets the resolution of the window's monitor.
+		/// </summary>
+		public Size MonitorResolution
+		{
+			get { return _window.MonitorResolution; }
+		}
+
+		/// <summary>
 		///     Gets or sets a value indicating whether the mouse is currently captured by the window.
 		/// </summary>
 		public bool MouseCaptured

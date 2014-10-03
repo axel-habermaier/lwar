@@ -16,6 +16,7 @@ PG_API_EXPORT pgBool pgWriteUserFile(pgString fileName, pgByte* content, pgUInt3
 PG_API_EXPORT pgBool pgAppendUserFile(pgString fileName, pgByte* content, pgUInt32 sizeInBytes);
 
 PG_API_EXPORT pgBool pgDeleteUserFile(pgString fileName);
+PG_API_EXPORT pgBool pgUserFileExists(pgString fileName);
 
 PG_API_EXPORT const pgPathChar* pgGetUserDirectory();
 PG_API_EXPORT pgString pgGetLastFileError();
