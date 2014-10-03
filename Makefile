@@ -3,7 +3,6 @@
 VPATH = Source/Lwar/Server Source/Lwar/Dedicated
 BUILD = Build/Debug/Server
 
-SERVER_H      = server.h
 SERVER_SRC    = \
 address.c       \
 array.c         \
@@ -27,9 +26,9 @@ player.c        \
 physics.c       \
 queue.c         \
 protocol.c      \
+server.c        \
 
 #templates.c     \
-#server.c        \
 #rules.c         \
 #scratch.c       \
 
@@ -61,7 +60,7 @@ clean:
 $(BUILD):
 	mkdir -p $@
 
-$(BUILD)/%.o: %.c $(SERVER_H)
+$(BUILD)/%.o: %.c
 	$(CC) -c $< -o $@ $(CFLAGS)
 
 $(SERVER_SO): $(SERVER_OBJ)

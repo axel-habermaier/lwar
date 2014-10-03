@@ -5,4 +5,6 @@ extern Format     format_pos;
 extern Format     format_ray;
 extern Format     format_circle;
 
+void rules_init();
+
 #include "entity.h"
