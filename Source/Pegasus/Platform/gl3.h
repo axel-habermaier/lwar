@@ -29,7 +29,6 @@
 		GLXContext		ctx;
 		GLXFBConfig*	configs;
 		XVisualInfo*	visuals;
-		SizeID			prevMode;
 	} pgContext;
 
 #else

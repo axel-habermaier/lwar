@@ -16,11 +16,6 @@
 		private int _deaths;
 
 		/// <summary>
-		///     The game session the player belongs to.
-		/// </summary>
-		private GameSession _gameSession;
-
-		/// <summary>
 		///     The number of kills that the player has scored.
 		/// </summary>
 		private int _kills;
@@ -98,7 +93,6 @@
 			Assert.ArgumentNotNullOrWhitespace(name);
 
 			var player = gameSession.Allocate<Player>();
-			player._gameSession = gameSession;
 			player.Identifier = id;
 			player.Ship = null;
 			player.Name = name;
