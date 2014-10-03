@@ -1,3 +1,6 @@
+#ifndef LOG_H
+#define LOG_H
+
 #ifdef _MSC_VER
 	#define NORETURN __declspec(noreturn)
 #else
@@ -9,3 +12,5 @@ void log_error(const char* message, ...);
 void log_warn(const char* message, ...);
 void log_info(const char* message, ...);
 void log_debug(const char* message, ...);
+
+#endif
