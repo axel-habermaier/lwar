@@ -14,7 +14,7 @@
 				 Background="Black" 
 				 Title="Pegasus">
 	<Window.InputBindings>
-		<input:KeyBinding Key="Return" Modifiers="Alt" Method="ToggleFullscreen" Preview="true" />
+		<input:KeyBinding TriggerOnRepeat="false" Key="Return" Modifiers="Alt" Method="ToggleFullscreen" Preview="true" />
 	</Window.InputBindings>
 	<controls:AreaPanel x:Name="LayoutRoot">
 		<views:ConsoleView DataContext="{Binding Console}" />
