@@ -8,26 +8,6 @@
 #include "pool.h"
 #include "pq.h"
 
-enum {
-    MAX_CLIENTS         =    8,
-    MAX_ENTITIES        = 4096,
-    MAX_ENTITY_TYPES    =   32,
-    MAX_COLLISIONS      =   32, /* should be n^2-1 for priority queue */
-    MAX_QUEUE           = 4096,
-    MAX_STRINGS         =  128,
-
-	NETWORK_REVISION    =   21,
-
-    NUM_SLOTS           =    4,
-
-    TIMEOUT_INTERVAL    =   15 * 1000 /*ms*/,
-    MISBEHAVIOR_LIMIT   =   10,
-
-    MAX_PLANETS         = 11,
-    MIN_PLANET_DIST     = 2500,
-    MAX_PLANET_DIST     = 2500,
-};
-
 typedef size_t (Pack)(char *, void *);
 typedef size_t (Unpack)(const char *, void *);
 

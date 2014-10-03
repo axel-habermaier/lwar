@@ -1,9 +1,10 @@
+#include "log.h"
+#include "debug.h"
+
+#include "server_export.h"
+
 #include <stdarg.h>
 #include <stdio.h>
-
-#include "debug.h"
-#include "log.h"
-#include "server_export.h"
 
 static LogCallbacks _callbacks;
 

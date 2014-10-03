@@ -1,8 +1,14 @@
-#include <stdint.h>
+#include "connection.h"
+
+#include "address.h"
+#include "debug.h"
+#include "log.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+/* Unix */
 #ifdef __unix__
 #include <arpa/inet.h>
 #include <errno.h>
@@ -18,6 +24,8 @@ typedef int Socket;
 #define closesocket close
 #endif
 
+
+/* Windows */
 #ifdef _MSC_VER
 #include <winsock2.h>
 #include <ws2tcpip.h>
@@ -27,12 +35,8 @@ typedef SOCKET Socket;
 #define socket_invalid(s) ((s) == INVALID_SOCKET)
 #endif
 
-#define socket_valid(s)   (! socket_invalid(s))
 
-#include "address.h"
-#include "connection.h"
-#include "debug.h"
-#include "log.h"
+#define socket_valid(s)   (! socket_invalid(s))
 
 static int numConnections = 0;
 

@@ -1,3 +1,6 @@
+#ifndef PERFORMANCE_H
+#define PERFORMANCE_H
+
 enum {
     TIMER_RECV,
     TIMER_SEND,
@@ -14,3 +17,4 @@ void timer_start(unsigned int timer);
 void timer_stop(unsigned int timer);
 void counter_set(unsigned int counter, unsigned int value);
 
+#endif
