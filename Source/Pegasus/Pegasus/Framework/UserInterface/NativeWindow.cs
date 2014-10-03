@@ -184,21 +184,6 @@
 		}
 
 		/// <summary>
-		///     Gets the resolution of the window's monitor.
-		/// </summary>
-		public Size MonitorResolution
-		{
-			get
-			{
-				Assert.NotDisposed(this);
-
-				int width, height;
-				NativeMethods.GetMonitorResolution(_window, out width, out height);
-				return new Size(width, height);
-			}
-		}
-
-		/// <summary>
 		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
@@ -465,9 +450,6 @@
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgReleaseMouse")]
 			public static extern void ReleaseMouse(IntPtr window);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetMonitorResolution")]
-			public static extern void GetMonitorResolution(IntPtr window, out int width, out int height);
 
 			[StructLayout(LayoutKind.Sequential)]
 			public struct Callbacks

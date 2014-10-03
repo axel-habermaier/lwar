@@ -213,16 +213,6 @@ pgVoid pgGetMousePositionCore(pgWindow* window, pgInt32* x, pgInt32* y)
 	XQueryPointer(x11.display, window->handle, &root, &child, &gx, &gy, x, y, &buttons);
 }
 
-pgVoid pgGetMonitorResolutionCore(pgWindow* window, pgInt32* width, pgInt32* height)
-{
-	XWindowAttributes attributes;
-	if (XGetWindowAttributes(x11.display, window->handle, &attributes) == 0)
-		PG_DIE("Failed to get the window attributes.");
-
-	*width = (pgInt32)WidthOfScreen(attributes.screen);
-	*height = (pgInt32)HeightOfScreen(attributes.screen);
-}
-
 //====================================================================================================================
 // Internal functions
 //====================================================================================================================

@@ -48,7 +48,6 @@
 			UpdateMode = mode;
 			Persistent = persistent;
 			SystemOnly = systemOnly;
-			HasExplicitValue = true;
 
 			_defaultValue = defaultValue;
 			_value = defaultValue;
@@ -71,7 +70,7 @@
 				else
 					UpdateValue(value);
 
-				HasExplicitValue = false;
+				HasExplicitValue = true;
 			}
 		}
 

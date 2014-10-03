@@ -234,7 +234,18 @@
 
 			Size size;
 			if (UseAppResolution)
+			{
+				if (!Cvars.ResolutionCvar.HasExplicitValue)
+				{
+					var resolution = this.ParentWindow.Size;
+
+					Log.Info("No resolution has been explicitly set. Setting the resolution to the size of the window ({0}).",
+						TypeRegistry.ToString(resolution));
+					Cvars.Resolution = resolution;
+				}
+
 				size = Cvars.Resolution;
+			}
 			else
 				size = new Size((int)Math.Round(ActualWidth), (int)Math.Round(ActualHeight));
 

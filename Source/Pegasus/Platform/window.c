@@ -263,15 +263,6 @@ pgVoid pgGetMousePosition(pgWindow* window, pgInt32* x, pgInt32* y)
 	pgGetMousePositionCore(window, x, y);
 }
 
-pgVoid pgGetMonitorResolution(pgWindow* window, pgInt32* width, pgInt32* height)
-{
-	PG_ASSERT_NOT_NULL(window);
-	PG_ASSERT_NOT_NULL(width);
-	PG_ASSERT_NOT_NULL(height);
-
-	pgGetMonitorResolutionCore(window, width, height);
-}
-
 //====================================================================================================================
 // Internal functions
 //====================================================================================================================

@@ -41,7 +41,6 @@
 
 			DebugOverlay = new DebugOverlayViewModel();
 			Window = new AppWindow(this, Application.Current.Name, Cvars.WindowPosition, Cvars.WindowSize, Cvars.WindowMode);
-			SetDefaultResolution();
 		}
 
 		/// <summary>
@@ -143,21 +142,6 @@
 			Console.SafeDispose();
 			DebugOverlay.SafeDispose();
 			Window.SafeDispose();
-		}
-
-		/// <summary>
-		///     Initializes the resolution to the size of the window's monitor if no explicit resolution has been set.
-		/// </summary>
-		private void SetDefaultResolution()
-		{
-			if (!Cvars.ResolutionCvar.HasExplicitValue)
-				return;
-
-			var resolution = Window.MonitorResolution;
-
-			Log.Info("No resolution has been explicitly set. Using the the resolution of the window's monitor ({0}).",
-				TypeRegistry.ToString(resolution));
-			Cvars.Resolution = resolution;
 		}
 	}
 }
