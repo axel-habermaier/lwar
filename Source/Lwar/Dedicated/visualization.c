@@ -3,7 +3,7 @@
 #include "log.h"
 #include "templates.h"
 #include "rules.h"
-#include "state.h"
+#include "server.h"
 #include "window.h"
 #include "vector.h"
 

@@ -3,7 +3,7 @@
 #include "client.h"
 
 #include "log.h"
-#include "state.h"
+#include "server.h"
 
 static Client _clients[MAX_CLIENTS];
 

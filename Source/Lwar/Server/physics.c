@@ -6,7 +6,7 @@
 #include "event.h"
 #include "log.h"
 #include "performance.h"
-#include "state.h"
+#include "server.h"
 #include "vector.h"
 
 #define _USE_MATH_DEFINES // required for M_PI on VS2012

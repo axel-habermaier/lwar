@@ -5,7 +5,7 @@
 #include "debug.h"
 #include "entity.h"
 #include "log.h"
-#include "state.h"
+#include "server.h"
 
 #define _USE_MATH_DEFINES // required for M_PI on VS2012
 #include <math.h>

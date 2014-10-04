@@ -2,7 +2,7 @@
 
 #include "clock.h"
 
-#include "state.h"
+#include "server.h"
 
 static const Real TIME_SCALE = 1000;
 

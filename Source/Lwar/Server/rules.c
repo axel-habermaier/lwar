@@ -5,7 +5,7 @@
 #include "debug.h"
 #include "templates.h"
 #include "message.h"
-#include "state.h"
+#include "server.h"
 #include "vector.h"
 
 #include <math.h>

@@ -7,7 +7,7 @@
 #include "list.h"
 #include "message.h"
 #include "real.h"
-#include "state.h"
+#include "server.h"
 #include "uint.h"
 
 #include <limits.h>

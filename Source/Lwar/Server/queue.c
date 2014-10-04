@@ -11,7 +11,7 @@
 #include "log.h"
 #include "message.h"
 #include "physics.h"
-#include "state.h"
+#include "server.h"
 
 typedef struct QueuedMessage QueuedMessage;
 typedef struct PerClient     PerClient;
