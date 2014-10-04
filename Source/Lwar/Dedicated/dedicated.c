@@ -1,17 +1,18 @@
-#include <assert.h>
+#include "types.h"
+
+#include "debug.h"
+#include "log.h"
+#include "performance.h"
+#include "server_export.h"
+#include "state.h"
+#include "visualization.h"
+
 #include <time.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
-
-#include "server_export.h"
-#include "server.h"
-#include "visualization.h"
-#include "log.h"
-#include "performance.h"
 
 /* typedef unsigned long long Clock; */
 static int visual,stats;
@@ -58,7 +59,7 @@ static void iputs(const char *msg) { fputs(msg,stdout); fputs("\n",stdout); fflu
 static void eputs(const char *msg) { fputs(msg,stderr); fputs("\n",stderr); fflush(stderr); }
 static void die  (const char *msg) { fputs(msg,stderr); fputs("\n",stderr); fflush(stderr); exit(1); };
 
-static LogCallbacks log = { die, eputs, eputs, iputs, eputs, };
+static LogCallbacks _log = { die, eputs, eputs, iputs, eputs, };
 static PerformanceCallbacks perf = { start, stop, inc };
 
 static void print_stats() {
@@ -98,7 +99,7 @@ int main(int argc, char *argv[]) {
             stats = 1;
     }
 
-    server_log_callbacks(log);
+    server_log_callbacks(_log);
     server_performance_callbacks(perf);
 
     if(!server_init()) return 1;

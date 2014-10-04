@@ -1,18 +1,20 @@
+#include "types.h"
+
+#include "log.h"
+#include "templates.h"
+#include "rules.h"
+#include "state.h"
+#include "window.h"
+#include "vector.h"
+
 #include <math.h>
-#include <stddef.h>
 #include <stdint.h>
 
 #include <GL/gl.h>
 
-#include "server.h"
-#include "rules.h"
-
-#include "log.h"
-#include "window.h"
-
 static Vec  camera;
 static Real camera_z;
-static Real scale = 0.05;
+static Real zoom = 0.05;
 static int width,height;
 
 static void glRect(float w, float h, float phi) {
@@ -102,7 +104,7 @@ static void draw_entity(Entity *e) {
 
 static void draw() {
     glPushMatrix();
-    glScalef(scale, scale, 1);
+    glScalef(zoom, zoom, 1);
     glTranslatef(-camera.x, -camera.y, -camera_z);
 
     Entity *e;
@@ -129,10 +131,10 @@ static void control() {
     }
 
     if(key_down('+'))
-        scale *= 1.03;
+        zoom *= 1.03;
 
     if(key_down('-'))
-        scale /= 1.03;
+        zoom /= 1.03;
 
     int mx,my;
     int ax,ay;
