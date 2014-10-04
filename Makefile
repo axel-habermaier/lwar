@@ -7,6 +7,7 @@ SERVER_SRC    = \
 address.c       \
 array.c         \
 client.c        \
+clock.c         \
 connection.c    \
 debug.c         \
 entity.c        \
@@ -19,7 +20,6 @@ pool.c          \
 pq.c            \
 real.c 			\
 str.c           \
-time.c          \
 uint.c          \
 update.c        \
 packet.c        \
@@ -43,9 +43,9 @@ DEDICATED_BIN = $(BUILD)/dedicated
 
 CC = clang
 LD = clang
-CFLAGS = -Wall -g -fPIC # -ISource/Lwar/Server
+CFLAGS = -Wall -g -fPIC -ISource/Lwar/Server
 
-all: $(BUILD) $(SERVER_SO) # $(DEDICATED_BIN)
+all: $(BUILD) $(SERVER_SO) $(DEDICATED_BIN)
 
 run: $(DEDICATED_BIN)
 	LD_LIBRARY_PATH=$(BUILD) ./$(DEDICATED_BIN)
