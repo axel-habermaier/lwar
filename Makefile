@@ -42,7 +42,7 @@ DEDICATED_BIN = $(BUILD)/dedicated
 
 CC = clang
 LD = clang
-CFLAGS = -Wall -g -fPIC -ISource/Lwar/Server
+CFLAGS = -Wall -g -fPIC -ISource/Lwar/Server -DDEBUG
 
 all: $(BUILD) $(SERVER_SO) $(DEDICATED_BIN)
 
