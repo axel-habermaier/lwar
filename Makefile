@@ -35,7 +35,6 @@ SERVER_OBJ    = $(addprefix $(BUILD)/,$(SERVER_SRC:.c=.o))
 SERVER_SO     = $(BUILD)/libserver.so
 SERVER_LIB    = 
 
-DEDICATED_H   =
 DEDICATED_SRC = dedicated.c visualization.c window.c window_x11.c
 DEDICATED_OBJ = $(addprefix $(BUILD)/,$(DEDICATED_SRC:.c=.o))
 DEDICATED_LIB = -lm -lGL -lX11 -lrt -lserver -L $(BUILD)
