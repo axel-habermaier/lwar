@@ -1,7 +1,7 @@
 #ifndef PHYSICS_H
 #define PHYSICS_H
 
-#include "time.h"
+#include "clock.h"
 #include "vector.h"
 
 struct Collision {

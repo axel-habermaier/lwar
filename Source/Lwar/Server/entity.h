@@ -2,11 +2,11 @@
 #define ENTITY_H
 
 #include "bitset.h"
+#include "clock.h"
 #include "config.h"
 #include "id.h"
 #include "list.h"
 #include "str.h"
-#include "time.h"
 #include "update.h"
 #include "vector.h"
 

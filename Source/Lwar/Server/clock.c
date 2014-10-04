@@ -1,6 +1,6 @@
 #include "types.h"
 
-#include "time.h"
+#include "clock.h"
 
 #include "state.h"
 
