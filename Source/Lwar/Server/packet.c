@@ -7,7 +7,7 @@
 #include "log.h"
 #include "message.h"
 #include "packet.h"
-#include "state.h"
+#include "server.h"
 
 #include <stdint.h>
 #include <string.h>

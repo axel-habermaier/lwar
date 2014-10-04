@@ -2,12 +2,6 @@
 
 #include "protocol.h"
 
-#include <math.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
 #include "coroutine.h"
 #include "debug.h"
 #include "log.h"
@@ -15,7 +9,13 @@
 #include "packet.h"
 #include "performance.h"
 #include "queue.h"
-#include "state.h"
+#include "server.h"
+
+#include <math.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #if _MSC_VER
 #define snprintf _snprintf

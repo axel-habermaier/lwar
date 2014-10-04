@@ -70,7 +70,6 @@
     <Compile Include="id.c" />
     <Compile Include="performance.c" />
     <Compile Include="real.c" />
-    <Compile Include="scratch.c" />
     <Compile Include="str.c" />
     <Compile Include="clock.c" />
   </ItemGroup>

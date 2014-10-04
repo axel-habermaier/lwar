@@ -1,12 +1,7 @@
-#include <stddef.h>
-#include <stdint.h>
-#include <setjmp.h>
-#include <string.h>
-
 #include "types.h"
 
 #include "server_export.h"
-#include "state.h"
+#include "server.h"
 
 #include "debug.h"
 #include "log.h"
@@ -17,6 +12,9 @@
 #include "client.h"
 #include "queue.h"
 #include "packet.h"
+
+#include <stdint.h>
+#include <string.h>
 
 static Server _server;
 
