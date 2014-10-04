@@ -100,7 +100,7 @@ static QueuedMessage *qm_create() {
     QueuedMessage *qm = pool_new(&server->queue, QueuedMessage);
 	if (!qm) {
 		queue_foreach(qm) {
-			log_debug("dest = %x", qm->dest);
+			log_debug("dest = %lx", qm->dest);
 			message_debug(&qm->m, "");
 		}
 		assert(false);

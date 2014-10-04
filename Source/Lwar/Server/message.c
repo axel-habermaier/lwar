@@ -297,7 +297,7 @@ void message_debug(Message *m, const char *s) {
         log_debug("%sname %d: %.*s", s, m->name.player_id.n, m->name.nick.n, m->name.nick.s);
         break;
 	case MESSAGE_KILL:
-        log_debug("%skill %d by %d ", s, m->kill.victim_id.n, m->kill.killer_id);
+        log_debug("%skill %d by %d ", s, m->kill.victim_id.n, m->kill.killer_id.n);
         break;
     case MESSAGE_SYNCED:
         log_debug("%ssynced", s);
