@@ -27,10 +27,8 @@ physics.c       \
 queue.c         \
 protocol.c      \
 server.c        \
-
-#templates.c     \
-#rules.c         \
-#scratch.c       \
+rules.c         \
+templates.c     \
 
 SERVER_OBJ    = $(addprefix $(BUILD)/,$(SERVER_SRC:.c=.o))
 SERVER_SO     = $(BUILD)/libserver.so
