@@ -77,6 +77,8 @@ static void server_update_internal(Clock time, int force) {
     protocol_cleanup();
     clients_cleanup();
     entities_cleanup();
+
+    // assert(8 + 7 == 11);
 }
 
 int server_update(Clock time, int force) {
@@ -86,7 +88,7 @@ int server_update(Clock time, int force) {
         return 0;
 
     if(setjmp(assert_handler)) {
-        log_die("assertion failed %s:%d '%s'",
+        log_die("assertion failed %s:%zu '%s'",
                 failed_assertion.file, failed_assertion.line,
                 failed_assertion.what);
         return -1;
