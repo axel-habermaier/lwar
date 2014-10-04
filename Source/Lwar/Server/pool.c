@@ -14,7 +14,7 @@ static size_t get_i(Pool *pool, void *p) {
 }
 
 static List *pool_get_unchecked(Pool *pool, size_t i) {
-    return (List *)pool->mem + pool->size * i;
+    return (List *)(pool->mem + pool->size * i);
 }
 
 static List *pool_get_checked(Pool *pool, size_t i) {

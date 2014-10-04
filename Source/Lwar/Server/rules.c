@@ -3,7 +3,7 @@
 #include "rules.h"
 
 #include "debug.h"
-#include "entities.h"
+#include "templates.h"
 #include "message.h"
 #include "state.h"
 #include "vector.h"
