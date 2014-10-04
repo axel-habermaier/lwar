@@ -2,6 +2,7 @@
 #include "debug.h"
 
 #include <stdlib.h> /* malloc */
+#include <string.h> /* memset */
 
 static void check_i(Pool *pool, void *p) {
     assert(pool->mem <= (char*)p);
@@ -88,6 +89,11 @@ void *pool_alloc(Pool *pool) {
 
     check_i(pool, l);
     list_move_tail(l, &pool->allocated);
+
+#ifdef DEBUG
+    memset(l+1, 0x00, pool->size - sizeof(List));
+#endif
+
     if(pool->ctor)
         pool->ctor(get_i(pool,l), l);
     pool->i ++;
@@ -108,7 +114,12 @@ void pool_free(Pool *pool, void *p) {
     List *l = (List *)p;
     check_i(pool, l);
     list_move_tail(l, &pool->free);
+
     if(pool->dtor)
         pool->dtor(get_i(pool,l), l);
     pool->i --;
+
+#ifdef DEBUG
+    memset(l+1, 0xFF, pool->size - sizeof(List));
+#endif
 }
