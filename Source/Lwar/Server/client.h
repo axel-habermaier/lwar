@@ -2,9 +2,9 @@
 #define CLIENT_H
 
 #include "address.h"
+#include "clock.h"
 #include "list.h"
 #include "player.h"
-#include "time.h"
 
 struct Client {
     List _l;
