@@ -34,4 +34,4 @@ Source/Lwar/User Interface/UserInterface.cs
 Source/Lwar/Lwar/Gameplay/Entities/EntityType.cs
 Source/Lwar/Lwar/Gameplay/Entities/EntityTemplates.cs
 Source/Lwar/Server/templates.c
-Source/Lwar/Server/entity.h
+Source/Lwar/Server/templates.h

@@ -10,6 +10,7 @@ client.c        \
 connection.c    \
 debug.c         \
 entity.c        \
+event.c         \
 id.c            \
 log.c           \
 message.c       \
