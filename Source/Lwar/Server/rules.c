@@ -1,15 +1,17 @@
-#include <math.h>
-#include <stdint.h>
-#include <stddef.h>
-#include <stdlib.h>
-#include <time.h>
-
-#include "server.h"
-#include "message.h"
-#include "vector.h"
-#include "debug.h"
+#include "types.h"
 
 #include "rules.h"
+
+#include "debug.h"
+#include "entities.h"
+#include "message.h"
+#include "state.h"
+#include "vector.h"
+
+#include <math.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <time.h>
 
 void templates_register();
 
