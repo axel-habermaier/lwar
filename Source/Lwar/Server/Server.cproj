@@ -3,8 +3,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>12.0.0</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{F35D340A-310C-4414-BE7F-87F061CE7C83}</ProjectGuid>
     <Compiler>
       <Compiler ctype="GccCompiler" />
@@ -36,16 +34,16 @@
     <CompileTarget>SharedLibrary</CompileTarget>
     <OptimizationLevel>3</OptimizationLevel>
     <SourceDirectory>.</SourceDirectory>
-    <Includes>
-      <Includes>
-        <Include>${ProjectDir}</Include>
-      </Includes>
-    </Includes>
     <Libs>
       <Libs>
         <Lib>m</Lib>
       </Libs>
     </Libs>
+    <Includes>
+      <Includes>
+        <Include>${ProjectDir}</Include>
+      </Includes>
+    </Includes>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="client.c" />
@@ -57,17 +55,24 @@
     <Compile Include="pq.c" />
     <Compile Include="protocol.c" />
     <Compile Include="server.c" />
-    <Compile Include="time.c" />
     <Compile Include="uint.c" />
     <Compile Include="packet.c" />
     <Compile Include="pool.c" />
     <Compile Include="player.c" />
     <Compile Include="rules.c" />
     <Compile Include="array.c" />
-    <Compile Include="format.c" />
     <Compile Include="queue.c" />
     <Compile Include="update.c" />
     <Compile Include="templates.c" />
+    <Compile Include="address.c" />
+    <Compile Include="debug.c" />
+    <Compile Include="event.c" />
+    <Compile Include="id.c" />
+    <Compile Include="performance.c" />
+    <Compile Include="real.c" />
+    <Compile Include="scratch.c" />
+    <Compile Include="str.c" />
+    <Compile Include="clock.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="connection.h" />
@@ -75,7 +80,6 @@
     <None Include="log.h" />
     <None Include="message.h" />
     <None Include="pq.h" />
-    <None Include="server.h" />
     <None Include="uint.h" />
     <None Include="vector.h" />
     <None Include="coroutine.h" />
@@ -87,5 +91,26 @@
     <None Include="array.h" />
     <None Include="bitset.h" />
     <None Include="update.h" />
+    <None Include="address.h" />
+    <None Include="client.h" />
+    <None Include="config.h" />
+    <None Include="debug.h" />
+    <None Include="entity.h" />
+    <None Include="event.h" />
+    <None Include="id.h" />
+    <None Include="physics.h" />
+    <None Include="player.h" />
+    <None Include="protocol.h" />
+    <None Include="queue.h" />
+    <None Include="real.h" />
+    <None Include="Server.cproj" />
+    <None Include="Server.md.pc" />
+    <None Include="Server.vcxproj" />
+    <None Include="Server.vcxproj.filters" />
+    <None Include="state.h" />
+    <None Include="str.h" />
+    <None Include="types.h" />
+    <None Include="templates.h" />
+    <None Include="clock.h" />
   </ItemGroup>
 </Project>
