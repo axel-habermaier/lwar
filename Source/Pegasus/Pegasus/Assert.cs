@@ -16,7 +16,7 @@ namespace Pegasus
 		/// </summary>
 		/// <typeparam name="T">The type of the argument to check for null.</typeparam>
 		/// <param name="argument">The argument to check for null.</param>
-		[Conditional("DEBUG"), DebuggerHidden]
+		[Conditional("DEBUG"), DebuggerHidden, ContractAnnotation("null => halt")]
 		public static void ArgumentNotNull<T>(T argument)
 			where T : class
 		{
@@ -28,7 +28,7 @@ namespace Pegasus
 		///     Throws an ArgumentNullException if the pointer is null.
 		/// </summary>
 		/// <param name="pointer">The pointer to check for null.</param>
-		[Conditional("DEBUG"), DebuggerHidden]
+		[Conditional("DEBUG"), DebuggerHidden, ContractAnnotation("null => halt")]
 		public static void ArgumentNotNull(IntPtr pointer)
 		{
 			if (pointer == IntPtr.Zero)
@@ -53,7 +53,7 @@ namespace Pegasus
 		///     only whitespace).
 		/// </summary>
 		/// <param name="argument">The argument to check.</param>
-		[Conditional("DEBUG"), DebuggerHidden]
+		[Conditional("DEBUG"), DebuggerHidden, ContractAnnotation("null => halt")]
 		public static void ArgumentNotNullOrWhitespace(string argument)
 		{
 			ArgumentNotNull(argument);
@@ -111,7 +111,7 @@ namespace Pegasus
 		/// <param name="condition">The condition that, if false, causes the exception to be raised.</param>
 		/// <param name="formatMessage">An error message explaining the exception to the user.</param>
 		/// <param name="parameters">The parameters for the error message.</param>
-		[Conditional("DEBUG"), DebuggerHidden, StringFormatMethod("formatMessage")]
+		[Conditional("DEBUG"), DebuggerHidden, StringFormatMethod("formatMessage"), ContractAnnotation("condition: false => halt")]
 		public static void ArgumentSatisfies(bool condition, string formatMessage, params object[] parameters)
 		{
 			ArgumentNotNull(formatMessage);
@@ -127,7 +127,7 @@ namespace Pegasus
 		/// <param name="obj">The object to check for null.</param>
 		/// <param name="formatMessage">An error message explaining the exception to the user.</param>
 		/// <param name="parameters">The parameters for the error message.</param>
-		[Conditional("DEBUG"), DebuggerHidden, StringFormatMethod("formatMessage")]
+		[Conditional("DEBUG"), DebuggerHidden, StringFormatMethod("formatMessage"), ContractAnnotation("obj: notnull => halt")]
 		public static void IsNull<T>(T obj, string formatMessage, params object[] parameters)
 			where T : class
 		{
@@ -144,7 +144,7 @@ namespace Pegasus
 		/// <param name="obj">The object to check for null.</param>
 		/// <param name="formatMessage">An error message explaining the exception to the user.</param>
 		/// <param name="parameters">The parameters for the error message.</param>
-		[Conditional("DEBUG"), DebuggerHidden, StringFormatMethod("formatMessage")]
+		[Conditional("DEBUG"), DebuggerHidden, StringFormatMethod("formatMessage"), ContractAnnotation("obj: null => halt")]
 		public static void NotNull<T>(T obj, string formatMessage, params object[] parameters)
 			where T : class
 		{
@@ -160,7 +160,7 @@ namespace Pegasus
 		/// <param name="ptr">The pointer to check for null.</param>
 		/// <param name="formatMessage">An error message explaining the exception to the user.</param>
 		/// <param name="parameters">The parameters for the error message.</param>
-		[Conditional("DEBUG"), DebuggerHidden, StringFormatMethod("formatMessage")]
+		[Conditional("DEBUG"), DebuggerHidden, StringFormatMethod("formatMessage"), ContractAnnotation("ptr: null => halt")]
 		public static void NotNull(IntPtr ptr, string formatMessage, params object[] parameters)
 		{
 			ArgumentNotNull(formatMessage);
@@ -174,7 +174,7 @@ namespace Pegasus
 		/// </summary>
 		/// <typeparam name="T">The type of the argument to check for null.</typeparam>
 		/// <param name="obj">The object to check for null.</param>
-		[Conditional("DEBUG"), DebuggerHidden]
+		[Conditional("DEBUG"), DebuggerHidden, ContractAnnotation("null => halt")]
 		public static void NotNull<T>(T obj)
 			where T : class
 		{
@@ -188,7 +188,7 @@ namespace Pegasus
 		/// <param name="s">The string to check.</param>
 		/// <param name="formatMessage">An error message explaining the exception to the user.</param>
 		/// <param name="parameters">The parameters for the error message.</param>
-		[Conditional("DEBUG"), DebuggerHidden, StringFormatMethod("formatMessage")]
+		[Conditional("DEBUG"), DebuggerHidden, StringFormatMethod("formatMessage"), ContractAnnotation("s: null => halt")]
 		public static void NotNullOrWhitespace(string s, string formatMessage, params object[] parameters)
 		{
 			ArgumentNotNull(s);
@@ -203,7 +203,7 @@ namespace Pegasus
 		/// <param name="condition">The condition that, if false, causes the exception to be raised.</param>
 		/// <param name="formatMessage">An error message explaining the exception to the user.</param>
 		/// <param name="parameters">The parameters for the error message.</param>
-		[Conditional("DEBUG"), DebuggerHidden, StringFormatMethod("formatMessage")]
+		[Conditional("DEBUG"), DebuggerHidden, StringFormatMethod("formatMessage"), ContractAnnotation("condition: false => halt")]
 		public static void That(bool condition, string formatMessage, params object[] parameters)
 		{
 			ArgumentNotNull(formatMessage);
@@ -217,7 +217,7 @@ namespace Pegasus
 		/// </summary>
 		/// <param name="formatMessage">An error message explaining the exception to the user.</param>
 		/// <param name="parameters">The parameters for the error message.</param>
-		[Conditional("DEBUG"), DebuggerHidden, StringFormatMethod("formatMessage")]
+		[Conditional("DEBUG"), DebuggerHidden, StringFormatMethod("formatMessage"), ContractAnnotation("=> halt")]
 		public static void NotReached(string formatMessage, params object[] parameters)
 		{
 			That(false, formatMessage, parameters);
