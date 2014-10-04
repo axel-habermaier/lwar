@@ -20,7 +20,8 @@ struct Connection {
 
 struct Server {
     bool       running;
-			   
+    Client    *self;
+
     Pool       clients;
     BitSet     connected;
 			   
@@ -35,8 +36,6 @@ struct Server {
     Clock      prev_clock;
     Clock      update_periodic;
 	Clock      discovery_periodic;
-
-    Client     *self;
 
 	Connection conn_clients;
 	Connection conn_discovery;

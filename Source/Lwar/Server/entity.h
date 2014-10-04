@@ -11,7 +11,7 @@
 #include "vector.h"
 
 struct Slot {
-    Entity   *entity;
+    Entity *entity;
     EntityType *selected_type;
 };
 
@@ -39,7 +39,7 @@ struct Entity {
     List siblings;  /* with sibling lists   */
     Entity *parent; /* and parent pointers  */
 
-    Slot   *slot;   /* if directly controlled by a player */
+    Slot *slot;     /* if directly controlled by a player */
 
 	Entity *target;
 
