@@ -21,6 +21,8 @@
 #define snprintf _snprintf
 #endif
 
+void debug_message(Message *m, const char *s);
+
 enum {
     UPDATE_INTERVAL = 30,
 };
@@ -174,7 +176,7 @@ static void packet_scan(Packet *p) {
     while(packet_get(p, message_unpack, &m)) {
         if(check_seqno(c, &m, m.seqno)) {
             if(is_reliable(&m))
-                message_debug(&m, src_fmt(c));
+                debug_message(&m, src_fmt(c));
             message_handle(c, &p->adr, &m, m.seqno);
         }
     }
@@ -280,7 +282,7 @@ static void send_queue_for(Client *c, Packet *p) {
         if(tries > 0)
             stats.nresend ++;
         if(tries == 0 && is_reliable(m))
-            message_debug(m, dest_fmt(c));
+            debug_message(m, dest_fmt(c));
 
     again_m:
         if(!packet_put(p, message_pack, m)) {

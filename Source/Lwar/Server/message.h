@@ -15,7 +15,7 @@ size_t message_pack(char *s, void *p);
 size_t message_unpack(const char *s, void *p);
 
 /* void header_debug(Header *h, const char *s); */
-void message_debug(Message *m, const char *s);
+/* void message_debug(Message *m, const char *s); */
 /* void update_debug(Update *u, const char *s); */
 
 enum MessageType {

@@ -98,13 +98,15 @@ static bool qm_check_relevant(Client *c, QueuedMessage *qm) {
 
 static QueuedMessage *qm_create() {
     QueuedMessage *qm = pool_new(&server->queue, QueuedMessage);
+    /*
 	if (!qm) {
 		queue_foreach(qm) {
 			log_debug("dest = %lx", qm->dest);
-			message_debug(&qm->m, "");
+			debug_message(&qm->m, "");
 		}
 		assert(false);
 	}
+    */
     assert(qm); /* TODO: handle allocation failure */
     return qm;
 }
