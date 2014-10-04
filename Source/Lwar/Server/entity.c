@@ -12,8 +12,6 @@
 
 #include <math.h>
 
-static Entity _entities[MAX_ENTITIES];
-
 /* accelerate e by absolute a */
 void entity_push(Entity *e, Vec a) {
     e->a = add(e->a, a);
@@ -196,9 +194,13 @@ void entity_attach(Entity *e, Entity *c, Vec dx, Real dphi) {
 }
 
 void entities_init() {
-    pool_static(&server->entities, _entities, entity_ctor, entity_dtor);
+    pool_dynamic(&server->entities, Entity, MAX_ENTITIES, entity_ctor, entity_dtor);
 }
 
 void entities_cleanup() {
     pool_free_pred(&server->entities, entity_check_obsolete);
+}
+
+void entities_shutdown() {
+    pool_shutdown(&server->entities);
 }

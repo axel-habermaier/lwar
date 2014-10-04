@@ -29,7 +29,6 @@ void pool_init(Pool *pool, void *p, size_t n, size_t size,
                void (*ctor)(size_t, void *),
                void (*dtor)(size_t, void *))
 {
-    assert(p);
     assert(size != 0);
 
     if(p) pool->mem = (char*)p;

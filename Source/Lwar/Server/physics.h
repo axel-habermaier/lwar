@@ -14,5 +14,6 @@ struct Collision {
 void physics_init();
 void physics_cleanup();
 void physics_update();
+void physics_shutdown();
 
 #endif

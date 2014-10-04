@@ -27,6 +27,7 @@ void  pq_free_all(PrioQueue *pq);
 void  pq_decreased(PrioQueue *pq, void *p);
 
 #define pq_static(pq,p,c)   pq_init(pq, p, sizeof(p)/sizeof(*p), sizeof(*p), c);
+#define pq_dynamic(pq,t,n,c) pq_init(pq, 0, n, sizeof(t), c);
 #define pq_new(pq,t)        ((t*)pq_alloc_check(pq,sizeof(t)))
 #define pq_min(pq,t)        ((t*)(pq)->mem)
 #define pq_empty(pq)        ((pq)->i == 0)

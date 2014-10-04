@@ -5,8 +5,6 @@
 #include "log.h"
 #include "server.h"
 
-static Client _clients[MAX_CLIENTS];
-
 static void client_ctor(size_t i, void *p) {
     Client *c = (Client*)p;
     c->next_out_reliable_seqno    = 1; /* important to start with one */
@@ -78,10 +76,14 @@ Client *client_get(Id player) {
 }
 
 void clients_init() {
-    pool_static(&server->clients, _clients, client_ctor, client_dtor);
-    /* pool_dynamic(&server->clients, Client, MAX_CLIENTS, client_ctor, client_dtor); */
+    pool_dynamic(&server->clients, Client, MAX_CLIENTS, client_ctor, client_dtor);
+
 }
 
 void clients_cleanup() {
     pool_free_pred(&server->clients, client_check_obsolete);
+}
+
+void clients_shutdown() {
+    pool_shutdown(&server->clients);
 }

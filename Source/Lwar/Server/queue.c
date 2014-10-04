@@ -30,8 +30,6 @@ struct QueuedMessage {
     Message m;
 };
 
-static QueuedMessage _queue[MAX_QUEUE];
-
 static void qm_ctor(size_t i, void *p) {
     QueuedMessage *qm = (QueuedMessage*)p;
     qm->dest = set_empty;
@@ -275,12 +273,15 @@ Message *queue_next(cr_t *state, Client *c, size_t *tries) {
 }
 
 /* TODO: these two functions do not really belong here */
-void protocol_init() {
+void queue_init() {
     INIT_LIST_HEAD(&server->formats);
-    pool_static(&server->queue, _queue, qm_ctor, qm_dtor);
-    /* pool_dynamic(&server->queue, QueuedMessage, MAX_QUEUE qm_ctor, qm_dtor); */
+    pool_dynamic(&server->queue, QueuedMessage, MAX_QUEUE, qm_ctor, qm_dtor);
 }
 
-void protocol_cleanup() {
+void queue_cleanup() {
     pool_free_pred(&server->queue, qm_check_obsolete);
+}
+
+void queue_shutdown() {
+    pool_shutdown(&server->queue);
 }

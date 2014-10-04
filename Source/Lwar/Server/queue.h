@@ -1,6 +1,10 @@
 #ifndef QUEUE_H
 #define QUEUE_H
 
+void queue_init();
+void queue_cleanup();
+void queue_shutdown();
+
 void queue_timeout(Client *c);
 void queue_gamestate_for(Client *cn);
 void queue_join(Client *c);

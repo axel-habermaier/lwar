@@ -34,7 +34,7 @@ void *pool_get(Pool *pool, size_t i);
 void *pool_remove(Pool *pool, size_t i);
 
 #define pool_static(pool,p,c,d)    pool_init(pool, p, sizeof(p)/sizeof(*p), sizeof(*p), c, d);
-// #define pool_dynamic(pool,t,n,c,d) pool_init(pool, 0, n, sizeof(t), c, d);
+#define pool_dynamic(pool,t,n,c,d) pool_init(pool, 0, n, sizeof(t), c, d);
 #define pool_new(pool,t)           ((t*)pool_alloc_check(pool,sizeof(t)))
 #define pool_at(pool,t,i)          ((i) < (pool)->n ? (t*)((pool)->mem + (pool)->size * (i)) : 0)
 

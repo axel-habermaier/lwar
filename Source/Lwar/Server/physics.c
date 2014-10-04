@@ -15,8 +15,6 @@
 #include <stdint.h>
 #include <stddef.h>
 
-static Collision _collisions[MAX_COLLISIONS];
-
 /* predict velocity at time t, given current acceleration */
 Vec physics_v(Vec v, Vec a, Time t) {
     return add(scale(a, t), v);
@@ -239,9 +237,13 @@ void physics_update() {
 }
 
 void physics_init() {
-    pq_static(&server->collisions, _collisions, collisions_cmp);
+    pq_dynamic(&server->collisions, Collision, MAX_COLLISIONS, collisions_cmp);
 }
 
 void physics_cleanup() {
     pq_free_all(&server->collisions);
+}
+
+void physics_shutdown() {
+    pq_shutdown(&server->collisions);
 }

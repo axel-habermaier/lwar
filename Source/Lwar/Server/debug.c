@@ -24,6 +24,11 @@ void debug_assert(bool test, const char *what, const char *file, size_t line) {
     if(test)
         return;
 
+    if(memchk(assert_handler, 0, sizeof(assert_handler))) {
+        log_die("assertion failed (uncaught) %s:%zu '%s'",
+                file, line, what);
+    }
+
     failed_assertion.what = what;
     failed_assertion.file = file;
     failed_assertion.line = line;

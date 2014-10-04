@@ -6,5 +6,6 @@ extern Format     format_ray;
 extern Format     format_circle;
 
 void rules_init();
+void rules_shutdown();
 
 #include "entity.h"

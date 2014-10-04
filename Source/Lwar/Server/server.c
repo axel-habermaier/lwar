@@ -23,6 +23,8 @@ Server *server=&_server;
 int server_init() {
     /* initialize static server struct */
     memset(server, 0, sizeof(Server));
+    memset(assert_handler, 0, sizeof(jmp_buf));
+
 	address_create(&address_multicast, MULTICAST_GROUP, MULTICAST_PORT);
 
     if(!conn_init(&server->conn_clients)) return 0;
@@ -31,7 +33,7 @@ int server_init() {
     if(!conn_init(&server->conn_discovery)) return 0;
 	if(!conn_multicast(&server->conn_discovery)) return 0;
 
-    protocol_init();
+    queue_init();
     physics_init();
 
     entities_init();
@@ -74,11 +76,9 @@ static void server_update_internal(Clock time, int force) {
     /* remove obsolete messages, clients, and entities
      * order is important
      */
-    protocol_cleanup();
+    queue_cleanup();
     clients_cleanup();
     entities_cleanup();
-
-    // assert(8 + 7 == 11);
 }
 
 int server_update(Clock time, int force) {
@@ -102,6 +102,13 @@ void server_shutdown() {
 	conn_shutdown(&server->conn_clients);
 	conn_shutdown(&server->conn_discovery);
 
-    /* TODO: shutdown components */
+    rules_shutdown();
+
+    entities_shutdown();
+    clients_shutdown();
+
+    physics_shutdown();
+    queue_shutdown();
+
     log_info("Terminated\n");
 }

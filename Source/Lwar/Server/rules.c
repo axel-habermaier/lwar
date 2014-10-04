@@ -62,6 +62,9 @@ void rules_init() {
     level_init();
 }
 
+void rules_shutdown() {
+}
+
 EntityType *entity_type_get(size_t id) {
     /* note: id 0 is not used as an enumeration value */
     if(id < MAX_ENTITY_TYPES)

@@ -95,6 +95,8 @@ struct EntityType {
 void    entities_init();
 void    entities_cleanup();
 void    entities_update();
+void    entities_shutdown();
+
 Entity *entity_create(EntityType *t, Player *p, Vec x, Vec v);
 void    entity_remove(Entity *e);
 void    entities_notify_collision(Collision *c);

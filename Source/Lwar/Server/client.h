@@ -32,6 +32,8 @@ struct Client {
 
 void    clients_init();
 void    clients_cleanup();
+void    clients_shutdown();
+
 Client *client_create(Address *adr);
 Client *client_create_local();
 void    client_remove(Client *c);

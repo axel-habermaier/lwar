@@ -78,7 +78,6 @@ static void up(char *mem, size_t i, size_t n, size_t s,
 void pq_init(PrioQueue *pq, void *p, size_t n, size_t size,
              int (*cmp)(const void *, const void *))
 {
-    assert(p);
     assert(cmp);
     assert(size != 0);
 
