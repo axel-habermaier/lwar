@@ -40,7 +40,7 @@ static void qm_dtor(size_t i, void *p) {}
 static bool qm_check_obsolete(size_t i, void *p) {
     QueuedMessage *qm = (QueuedMessage*)p;
     /* only keep qm for receiving clients */
-    return (qm->dest & server->connected) == 0;
+    return set_disjoint(qm->dest, server->connected);
 }
 
 static bool qm_check_dest(Client *c, QueuedMessage *qm) {
