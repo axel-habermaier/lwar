@@ -4,14 +4,10 @@
 
 #include "connection.h"
 #include "debug.h"
-#include "message.h"
-#include "packet.h"
 #include "pack.h"
 #include "server.h"
-#include "uint.h"
 #include "unpack.h"
 
-#include <stdint.h>
 #include <string.h>
 
 static bool check_put(Packet *p,size_t n) {
