@@ -3,6 +3,10 @@
 
 #include <string.h>
 
+#ifdef _MSC_VER
+	#define strndup(s, n) _strdup(s)
+#endif
+
 size_t str_pack(char *out, Str in) {
     size_t i=0;
     i += uint8_pack(out+i, in.n);

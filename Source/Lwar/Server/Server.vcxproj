@@ -175,7 +175,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG</PreprocessorDefinitions>
       <CompileAs>CompileAsCpp</CompileAs>
       <AdditionalOptions>/wd4305 /wd4244 /wd4800 %(AdditionalOptions) /wd4756</AdditionalOptions>
       <CallingConvention>StdCall</CallingConvention>
@@ -200,7 +200,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG</PreprocessorDefinitions>
       <CompileAs>CompileAsCpp</CompileAs>
       <AdditionalOptions>/wd4305 /wd4244 /wd4800 %(AdditionalOptions) /wd4756</AdditionalOptions>
       <CallingConvention>StdCall</CallingConvention>
@@ -221,7 +221,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG</PreprocessorDefinitions>
       <CompileAs>CompileAsCpp</CompileAs>
       <AdditionalOptions>/wd4305 /wd4244 /wd4267 /wd4800 %(AdditionalOptions) /wd4756</AdditionalOptions>
       <CallingConvention>StdCall</CallingConvention>
@@ -241,7 +241,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;DEBUG</PreprocessorDefinitions>
       <CompileAs>CompileAsCpp</CompileAs>
       <AdditionalOptions>/wd4305 /wd4244 /wd4267 /wd4800 %(AdditionalOptions) /wd4756</AdditionalOptions>
       <CallingConvention>StdCall</CallingConvention>
