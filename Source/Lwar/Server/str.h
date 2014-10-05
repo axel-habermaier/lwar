@@ -10,7 +10,4 @@ struct Str {
     char *s;
 };
 
-size_t str_pack(char *out, Str in);
-size_t str_unpack(const char *in, Str *out);
-
 #endif

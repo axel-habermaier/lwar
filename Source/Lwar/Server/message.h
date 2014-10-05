@@ -8,8 +8,8 @@
 typedef enum   MessageType MessageType;
 typedef struct Message Message;
 
-size_t message_pack(char *s, void *p);
-size_t message_unpack(const char *s, void *p);
+bool has_seqno(Message *m);
+bool is_reliable(Message *m);
 
 enum MessageType {
     MESSAGE_CONNECT			  =   1,
@@ -50,8 +50,6 @@ typedef enum {
 	REJECT_FULL				= 1,
 	REJECT_VERSION_MISMATCH = 2,
 } RejectReason;
-
-bool is_reliable(Message *m);
 
 struct Message {
     MessageType type;

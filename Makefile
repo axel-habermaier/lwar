@@ -18,6 +18,7 @@ message.c       \
 performance.c   \
 pool.c          \
 pq.c            \
+pack.c          \
 real.c 			\
 str.c           \
 uint.c          \
@@ -30,6 +31,7 @@ protocol.c      \
 server.c        \
 rules.c         \
 templates.c     \
+unpack.c        \
 
 SERVER_OBJ    = $(addprefix $(BUILD)/,$(SERVER_SRC:.c=.o))
 SERVER_SO     = $(BUILD)/libserver.so

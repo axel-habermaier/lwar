@@ -2,6 +2,8 @@
 
 #include "protocol.h"
 
+#include "pack.h"
+#include "unpack.h"
 #include "coroutine.h"
 #include "debug.h"
 #include "log.h"
@@ -20,6 +22,9 @@
 #if _MSC_VER
 #define snprintf _snprintf
 #endif
+
+void queue_forward(Message *m);
+Message *queue_next(cr_t *state, Client *c, size_t *tries);
 
 void debug_message(Message *m, const char *s);
 

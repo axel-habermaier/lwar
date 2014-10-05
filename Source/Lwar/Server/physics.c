@@ -204,7 +204,8 @@ static void handle_collisions(Time t) {
         c->i[0] = impact(e0->v, v0);
         c->i[1] = impact(e1->v, v1);
 
-        event_collision(c);
+        entities_notify_collision(c);
+        protocol_notify_collision(c);
 
         /* remaining time of the entities will be spent in physics_move */
     }
