@@ -32,7 +32,7 @@ size_t packet_update_n(Packet *p, size_t s) {
 }
 
 static void packet_init(Packet *p, const Address *adr, PacketType type, Connection *conn) {
-    memset(p->p, 0, sizeof(p->p));
+    memset(p, 0, sizeof(Packet));
     p->type  = type;
     p->adr   = *adr;
     p->conn  = conn;
