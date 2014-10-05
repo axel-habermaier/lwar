@@ -47,7 +47,7 @@ void packet_init_recv(Packet *p) {
 }
 
 void packet_init_discovery(Packet *p) {
-    packet_init(p, &address_multicast, PACKET_DISCOVERY, &server->conn_discovery);
+    packet_init(p, &address_multicast, PACKET_SEND, &server->conn_discovery);
 }
 
 bool packet_put(Packet *p, Pack *pack, void *u) {

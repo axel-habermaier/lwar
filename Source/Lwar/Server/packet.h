@@ -18,7 +18,6 @@ enum PacketType {
     PACKET_NONE,
     PACKET_SEND,
     PACKET_RECV,
-    PACKET_DISCOVERY,
 };
 
 struct Packet {
