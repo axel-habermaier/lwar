@@ -356,44 +356,65 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="address.c" />
     <ClCompile Include="array.c" />
     <ClCompile Include="client.c" />
+    <ClCompile Include="clock.c" />
     <ClCompile Include="connection.c" />
+    <ClCompile Include="debug.c" />
     <ClCompile Include="entity.c" />
-    <ClCompile Include="format.c" />
+    <ClCompile Include="event.c" />
+    <ClCompile Include="id.c" />
     <ClCompile Include="log.c" />
     <ClCompile Include="message.c" />
     <ClCompile Include="packet.c" />
+    <ClCompile Include="performance.c" />
     <ClCompile Include="physics.c" />
     <ClCompile Include="player.c" />
     <ClCompile Include="pq.c" />
     <ClCompile Include="protocol.c" />
     <ClCompile Include="queue.c" />
+    <ClCompile Include="real.c" />
     <ClCompile Include="rules.c" />
     <ClCompile Include="server.c" />
     <ClCompile Include="pool.c" />
+    <ClCompile Include="str.c" />
     <ClCompile Include="templates.c" />
-    <ClCompile Include="time.c" />
     <ClCompile Include="uint.c" />
     <ClCompile Include="update.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="address.h" />
     <ClInclude Include="array.h" />
+    <ClInclude Include="attributes.h" />
     <ClInclude Include="bitset.h" />
+    <ClInclude Include="client.h" />
+    <ClInclude Include="clock.h" />
+    <ClInclude Include="config.h" />
     <ClInclude Include="connection.h" />
     <ClInclude Include="coroutine.h" />
+    <ClInclude Include="debug.h" />
     <ClInclude Include="entity.h" />
+    <ClInclude Include="event.h" />
+    <ClInclude Include="id.h" />
     <ClInclude Include="list.h" />
     <ClInclude Include="log.h" />
     <ClInclude Include="message.h" />
     <ClInclude Include="packet.h" />
     <ClInclude Include="performance.h" />
+    <ClInclude Include="physics.h" />
+    <ClInclude Include="player.h" />
     <ClInclude Include="pq.h" />
+    <ClInclude Include="protocol.h" />
+    <ClInclude Include="queue.h" />
+    <ClInclude Include="real.h" />
     <ClInclude Include="rules.h" />
     <ClInclude Include="server.h" />
     <ClInclude Include="server_export.h" />
     <ClInclude Include="pool.h" />
+    <ClInclude Include="str.h" />
+    <ClInclude Include="templates.h" />
+    <ClInclude Include="types.h" />
     <ClInclude Include="uint.h" />
     <ClInclude Include="update.h" />
     <ClInclude Include="vector.h" />
