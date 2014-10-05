@@ -192,6 +192,11 @@ void protocol_recv() {
     Packet p;
     packet_init_recv(&p);
     while(packet_recv(&p)) {
+
+    //// size_t app_id;
+    //// p->start = header_unpack(p->p, &app_id, &p->ack);
+    //// if((int32_t)app_id != APP_ID) return false; /* TODO: warn */
+
         stats.nrecv ++;
         packet_scan(&p);
     }
@@ -220,7 +225,15 @@ void protocol_notify_kill(Player *k, Player *v) {
 }
 
 static void packet_init_header(Client *c, Packet *p) {
-    packet_init_send(p, &c->adr, c->last_in_reliable_seqno, server->cur_clock);
+    packet_init_send(p, &c->adr);
+
+    Header h = {
+        APP_ID,
+        c->last_in_reliable_seqno,
+        server->cur_clock,
+    };
+
+    packet_put(p, header_pack, &h);
 }
 
 static void send_kick(Client *c) {
@@ -237,9 +250,31 @@ static void send_kick(Client *c) {
     stats.nsend ++;
 }
 
+static void send_discovery() {
+    Packet p;
+    packet_init_discovery(&p);
+
+    Discovery d = {
+	    MESSAGE_DISCOVERY,
+	    APP_ID,
+	    NETWORK_REVISION,
+	    SERVER_PORT,
+    };
+
+    packet_put(&p, discovery_pack, &d);
+    bool ok = packet_send(&p);
+
+    assert(ok);
+}
+
+
 static void send_reject(Address *adr, size_t ack, RejectReason reason) {
     Packet p;
-    packet_init_send(&p, adr, ack, 0);
+    Client c = {
+        .adr = *adr,
+        .last_in_reliable_seqno = ack,
+    };
+    packet_init_header(&c, &p);
 
     Message m;
     m.type  = MESSAGE_REJECT;
@@ -341,6 +376,9 @@ static void protocol_timeout(Client *c) {
 void protocol_send(bool force) {
     if(!force && !clock_periodic(&server->update_periodic, UPDATE_INTERVAL))
         return;
+
+    if(clock_periodic(&server->discovery_periodic, DISCOVERY_INTERVAL))
+        send_discovery();
 
     timer_start(TIMER_SEND);
     stats.nsend   = 0;

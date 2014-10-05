@@ -2,6 +2,7 @@
 
 #include "debug.h"
 
+#include "packet.h"
 #include "pool.h"
 #include "log.h"
 #include "message.h"
@@ -143,8 +144,39 @@ void debug_message(Message *m, const char *s) {
     case MESSAGE_COLLISION:
         log_debug("%scollision %d, %d", s, m->collision.entity_id[0].n, m->collision.entity_id[1].n);
         break;
+    }
+}
+
+/*
 	case MESSAGE_DISCOVERY:
         log_debug("%sdiscovery (%d rev %d), port %d", s, m->discovery.app_id, m->discovery.rev, m->discovery.port);
 		break;
+*/
+
+/*
+void debug_packet(Packet *p) {
+    size_t start = p->start;
+    size_t end = p->end;
+    Header h;
+    Message m;
+    Update u;
+    size_t seqno;
+
+    log_debug("packet {");
+    p->start = header_unpack(p->p, &h);
+    header_debug(&h, "  ");
+    while(packet_get(p,&m,&seqno)) {
+        message_debug(&m, "  ");
+        if(m.type == MESSAGE_UPDATE) {
+            size_t i;
+            for(i=0; i<m.update.n; i++) {
+                packet_get_u(p, &u);
+                update_debug(&u, "    ");
+            }
+        }
     }
+    log_debug("}");
+    p->start = a;
+    p->end = b;
 }
+*/

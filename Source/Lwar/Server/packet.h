@@ -18,6 +18,7 @@ enum PacketType {
     PACKET_NONE,
     PACKET_SEND,
     PACKET_RECV,
+    PACKET_DISCOVERY,
 };
 
 struct Packet {
@@ -34,6 +35,7 @@ struct Packet {
     size_t  ack;
     size_t  time;
 
+    Connection *conn;
     /* connection failed */
     bool    io_failed;
 };
@@ -43,17 +45,14 @@ bool packet_hasdata(Packet *p);
 /* return how many updates + 1 header still fit into p */
 size_t packet_update_n(Packet *p, size_t len);
 
-void packet_init_send(Packet *p, Address *adr, size_t ack, size_t time);
+void packet_init_send(Packet *p, Address *adr);
 void packet_init_recv(Packet *p);
+void packet_init_discovery(Packet *p);
 
 bool packet_put(Packet *p, Pack *pack, void *u);
 bool packet_get(Packet *p, Unpack *unpack, void *u);
 
 bool packet_recv(Packet *p);
 bool packet_send(Packet *p);
-
-void packet_debug(Packet *p);
-
-void packet_send_discovery();
 
 #endif

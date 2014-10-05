@@ -56,9 +56,6 @@ static void server_update_internal(Clock time, int force) {
     if(!server->prev_clock)
         return;
 
-    if(clock_periodic(&server->discovery_periodic, DISCOVERY_INTERVAL))
-        packet_send_discovery();
-
     /* heartbeat
     if(clock_periodic(&debug_clock, 1000))
         log_debug("server time: %d", server->cur_clock);

@@ -39,14 +39,10 @@ size_t message_unpack(const char *s, void *p) {
     i += uint8_unpack(s+i, &_type);
     m->type = (MessageType)_type;
 
-	if (has_seqno(m)) {
-		uint32_t _seqno;
-		i += uint32_unpack(s+i, &_seqno);
-		assert(_seqno);
-		m->seqno = _seqno;
-	}
-	else
-		m->seqno = 0;
+	uint32_t _seqno;
+	i += uint32_unpack(s+i, &_seqno);
+	assert(_seqno);
+	m->seqno = _seqno;
 
     switch(m->type) {
     case MESSAGE_CONNECT:
@@ -133,11 +129,6 @@ size_t message_unpack(const char *s, void *p) {
         i += int16_unpack(s+i, &m->collision.x);
         i += int16_unpack(s+i, &m->collision.y);
         break;
-	case MESSAGE_DISCOVERY:
-		i += uint32_unpack(s+i, &m->discovery.app_id);
-		i += uint8_unpack(s+i, &m->discovery.rev);
-		i += uint16_unpack(s+i, &m->discovery.port);
-		break;
     }
     return i;
 }

@@ -6,9 +6,10 @@
 #include "config.h"
 
 typedef enum   MessageType MessageType;
+typedef struct Discovery Discovery;
+typedef struct Header Header;
 typedef struct Message Message;
 
-bool has_seqno(Message *m);
 bool is_reliable(Message *m);
 
 enum MessageType {
@@ -37,6 +38,9 @@ enum MessageType {
     MESSAGE_UPDATE_RAY		  = 112,
     MESSAGE_UPDATE_CIRCLE	  = 113,
 
+};
+
+enum {
 	MESSAGE_DISCOVERY		  = 200,
 };
 
@@ -50,6 +54,19 @@ typedef enum {
 	REJECT_FULL				= 1,
 	REJECT_VERSION_MISMATCH = 2,
 } RejectReason;
+
+struct Header {
+    uint32_t app_id;
+    uint32_t ack;
+    uint32_t time;
+};
+
+struct Discovery {
+    uint32_t type;
+    uint32_t app_id;
+    uint8_t  rev;
+    uint16_t port;
+};
 
 struct Message {
     MessageType type;

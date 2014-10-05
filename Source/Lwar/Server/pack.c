@@ -24,11 +24,22 @@ size_t str_pack(char *out, Str in) {
 }
 
 
-size_t header_pack(char *s, size_t app_id, size_t ack, size_t time) {
+size_t header_pack(char *s, void *p) {
+    Header *h = (Header*)p;
     size_t i=0;
-    i += uint32_pack(s+i, app_id);
-    i += uint32_pack(s+i, ack);
-    // i += uint32_pack(s+i, time);
+    i += uint32_pack(s+i, h->app_id);
+    i += uint32_pack(s+i, h->ack);
+    // i += uint32_pack(s+i, h->time);
+    return i;
+}
+
+size_t discovery_pack(char *s, void *p) {
+    Discovery *d = (Discovery*)p;
+    size_t i=0;
+    i += uint32_pack(s+i, d->type);
+    i += uint32_pack(s+i, d->app_id);
+    i += uint8_pack(s+i, d->rev);
+    i += uint16_pack(s+i, d->port);
     return i;
 }
 
@@ -39,12 +50,8 @@ size_t message_pack(char *s, void *p) {
 
     i += uint8_pack(s+i, m->type);
 
-	if (has_seqno(m)) {
-		assert(m->seqno);
-		i += uint32_pack(s+i, m->seqno);
-	}
-	else
-		assert(!m->seqno);
+    assert(m->seqno);
+    i += uint32_pack(s+i, m->seqno);
 
     switch(m->type) {
     case MESSAGE_CONNECT:
@@ -131,11 +138,6 @@ size_t message_pack(char *s, void *p) {
         i += int16_pack(s+i, m->collision.x);
         i += int16_pack(s+i, m->collision.y);
         break;
-	case MESSAGE_DISCOVERY:
-		i += uint32_pack(s+i, m->discovery.app_id);
-		i += uint8_pack(s+i, m->discovery.rev);
-		i += uint16_pack(s+i, m->discovery.port);
-		break;
     }
     return i;
 }

@@ -2,14 +2,14 @@
 
 #include "packet.h"
 
-#include "pack.h"
-#include "unpack.h"
 #include "connection.h"
 #include "debug.h"
-#include "uint.h"
 #include "message.h"
 #include "packet.h"
+#include "pack.h"
 #include "server.h"
+#include "uint.h"
+#include "unpack.h"
 
 #include <stdint.h>
 #include <string.h>
@@ -35,27 +35,23 @@ size_t packet_update_n(Packet *p, size_t s) {
     return 0;
 }
 
-
-void packet_init_send(Packet *p, Address *adr, size_t ack, size_t time) {
+static void packet_init(Packet *p, const Address *adr, PacketType type, Connection *conn) {
     memset(p->p, 0, sizeof(p->p));
-    p->type  = PACKET_SEND;
+    p->type  = type;
     p->adr   = *adr;
-    p->ack   = ack;
-    p->time  = time;
-    p->start = 0;
-    p->end   = header_pack(p->p, APP_ID, p->ack, p->time);
-    p->io_failed = 0;
+    p->conn  = conn;
+}
+
+void packet_init_send(Packet *p, Address *adr) {
+    packet_init(p, adr, PACKET_SEND, &server->conn_clients);
 }
 
 void packet_init_recv(Packet *p) {
-    memset(p->p, 0, sizeof(p->p));
-    p->type  = PACKET_RECV;
-    p->adr   = address_none;
-    p->ack   = 0;
-    p->time  = 0;
-    p->start = 0;
-    p->end   = 0;
-    p->io_failed = 0;
+    packet_init(p, &address_none, PACKET_RECV, &server->conn_clients);
+}
+
+void packet_init_discovery(Packet *p) {
+    packet_init(p, &address_multicast, PACKET_DISCOVERY, &server->conn_discovery);
 }
 
 bool packet_put(Packet *p, Pack *pack, void *u) {
@@ -91,16 +87,15 @@ bool packet_recv(Packet *p) {
     p->start = 0;
     p->end = MAX_PACKET_LENGTH;
 	p->adr = address_none;
-    if(!conn_recv(&server->conn_clients, p->p, &p->end, &p->adr)) {
+
+    if(!conn_recv(p->conn, p->p, &p->end, &p->adr)) {
         p->io_failed = true;
         return false;
     }
+
     p->io_failed = false;
     if(p->end == 0) return false; /* EAGAIN */
 
-    size_t app_id;
-    p->start = header_unpack(p->p, &app_id, &p->ack);
-    if((int32_t)app_id != APP_ID) return false; /* TODO: warn */
     return true;
 }
 
@@ -110,55 +105,12 @@ bool packet_send(Packet *p) {
     assert(p->adr.ip   != 0);
     assert(p->adr.port != 0);
 
-    if(!conn_send(&server->conn_clients, p->p, p->end - p->start, &p->adr)) {
+    if(!conn_send(p->conn, p->p, p->end - p->start, &p->adr)) {
         p->io_failed = true;
         return false;
     }
+
     p->io_failed = false;
+
     return true;
-}
-
-/*
-void packet_debug(Packet *p) {
-    size_t a = p->a;
-    size_t b = p->b;
-    Header h;
-    Message m;
-    Update u;
-    size_t seqno;
-
-    log_debug("packet {");
-    p->start = header_unpack(p->p, &h);
-    header_debug(&h, "  ");
-    while(packet_get(p,&m,&seqno)) {
-        message_debug(&m, "  ");
-        if(m.type == MESSAGE_UPDATE) {
-            size_t i;
-            for(i=0; i<m.update.n; i++) {
-                packet_get_u(p, &u);
-                update_debug(&u, "    ");
-            }
-        }
-    }
-    log_debug("}");
-    p->start = a;
-    p->end = b;
-}
-*/
-
-void packet_send_discovery()
-{
-	// TODO: Include information about the server (name, player count, estimated ping, etc.)
-	char buffer[16];
-
-	Message m;
-	m.seqno = 0;
-	m.type = MESSAGE_DISCOVERY;
-	m.discovery.app_id = APP_ID;
-	m.discovery.rev = NETWORK_REVISION;
-	m.discovery.port = SERVER_PORT;
-	size_t size = message_pack(buffer, &m);
-	assert(size <= sizeof(buffer) / sizeof(char));
-	
-	conn_send(&server->conn_discovery, buffer, size, &address_multicast);
 }
