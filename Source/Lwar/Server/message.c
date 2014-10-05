@@ -14,24 +14,6 @@ bool is_reliable(Message *m) {
     return m->type < 100;
 }
 
-size_t header_pack(char *s, size_t app_id, size_t ack, size_t time) {
-    size_t i=0;
-    i += uint32_pack(s+i, app_id);
-    i += uint32_pack(s+i, ack);
-    // i += uint32_pack(s+i, time);
-    return i;
-}
-
-size_t header_unpack(const char *s, size_t *app_id, size_t *ack) {
-    size_t i=0;
-    uint32_t _app_id,_ack;
-    i += uint32_unpack(s+i, &_app_id);
-    i += uint32_unpack(s+i, &_ack);
-    *app_id = _app_id;
-    *ack    = _ack;
-    return i;
-}
-
 size_t message_pack(char *s, void *p) {
     Message *m = (Message *)p;
     size_t i=0;

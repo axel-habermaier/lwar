@@ -8,15 +8,8 @@
 typedef enum   MessageType MessageType;
 typedef struct Message Message;
 
-size_t header_pack(char *s, size_t app_id, size_t ack, size_t time);
-size_t header_unpack(const char *s, size_t *app_id, size_t *ack);
-
 size_t message_pack(char *s, void *p);
 size_t message_unpack(const char *s, void *p);
-
-/* void header_debug(Header *h, const char *s); */
-/* void message_debug(Message *m, const char *s); */
-/* void update_debug(Update *u, const char *s); */
 
 enum MessageType {
     MESSAGE_CONNECT			  =   1,

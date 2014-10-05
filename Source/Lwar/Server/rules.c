@@ -4,7 +4,6 @@
 
 #include "debug.h"
 #include "templates.h"
-#include "message.h"
 #include "server.h"
 #include "vector.h"
 

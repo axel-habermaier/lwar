@@ -31,9 +31,6 @@ static void send_reject(Address *adr, size_t ack, RejectReason reason);
 static void send_kick(Client *c);
 static void protocol_timeout(Client *c);
 
-void queue_forward(Message *m);
-Message *queue_next(cr_t *state, Client *c, size_t *tries);
-
 static struct {
     size_t nsend,nresend,nrecv;
 } stats;

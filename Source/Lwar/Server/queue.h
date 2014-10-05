@@ -15,4 +15,7 @@ void queue_remove(Entity *e);
 void queue_kill(Player *k, Player *v);
 void queue_stats();
 
+void queue_forward(Message *m);
+Message *queue_next(cr_t *state, Client *c, size_t *tries);
+
 #endif
