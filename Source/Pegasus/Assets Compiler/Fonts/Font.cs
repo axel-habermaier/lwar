@@ -132,7 +132,7 @@
 
 			var kerning = new FreeType.Vector();
 			FreeType.Invoke(() => FreeType.GetKerning(_fontPtr, left.Index, right.Index, 0, out kerning));
-			return kerning.x / 64;
+			return (int)kerning.x / 64; // Note: Cast required in Linux 64 bit builds
 		}
 	}
 }
