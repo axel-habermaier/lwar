@@ -58,7 +58,7 @@
 
 			foreach (var bullet in Elements)
 			{
-				var rectangle = new RectangleF(bullet.Position.X - _texture.Width / 2.0f,
+				var rectangle = new Rectangle(bullet.Position.X - _texture.Width / 2.0f,
 					bullet.Position.Y - _texture.Height / 2.0f,
 					_texture.Width, _texture.Height);
 				spriteBatch.Draw(rectangle, _texture2, new Color(0, 255, 0, 255));
@@ -66,7 +66,7 @@
 
 			foreach (var bullet in Elements)
 			{
-				var rectangle = new RectangleF(bullet.Position.X - _texture.Width / 2.0f,
+				var rectangle = new Rectangle(bullet.Position.X - _texture.Width / 2.0f,
 					bullet.Position.Y - _texture.Height / 2.0f,
 					_texture.Width, _texture.Height);
 				spriteBatch.Draw(rectangle, _texture, Color.White);

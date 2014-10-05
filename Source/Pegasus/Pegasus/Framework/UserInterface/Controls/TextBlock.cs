@@ -122,15 +122,15 @@
 		///     to size itself to its contents. The computed desired size is allowed to exceed the available space; the parent UI
 		///     element might be able to use scrolling in this case.
 		/// </param>
-		protected override SizeD MeasureCore(SizeD availableSize)
+		protected override Size MeasureCore(Size availableSize)
 		{
 			Assert.NotNull(Font);
 
-			var width = Double.IsInfinity(availableSize.Width) ? Int32.MaxValue : (int)Math.Round(availableSize.Width);
-			var height = Double.IsInfinity(availableSize.Height) ? Int32.MaxValue : (int)Math.Round(availableSize.Height);
+			var width = Single.IsInfinity(availableSize.Width) ? Int32.MaxValue : (int)Math.Round(availableSize.Width);
+			var height = Single.IsInfinity(availableSize.Height) ? Int32.MaxValue : (int)Math.Round(availableSize.Height);
 
 			var size = _textLayout.Measure(Font, Text, new Size(width, height), 0, TextAlignment, TextWrapping);
-			return new SizeD(size.Width, size.Height);
+			return new Size(size.Width, size.Height);
 		}
 
 		/// <summary>
@@ -142,35 +142,35 @@
 		///     The final area allocated by the UI element's parent that the UI element should use to arrange
 		///     itself and its children.
 		/// </param>
-		protected override SizeD ArrangeCore(SizeD finalSize)
+		protected override Size ArrangeCore(Size finalSize)
 		{
-			var width = Double.IsInfinity(finalSize.Width) ? Int32.MaxValue : (int)Math.Round(finalSize.Width);
-			var height = Double.IsInfinity(finalSize.Height) ? Int32.MaxValue : (int)Math.Round(finalSize.Height);
+			var width = Single.IsInfinity(finalSize.Width) ? Int32.MaxValue : (int)Math.Round(finalSize.Width);
+			var height = Single.IsInfinity(finalSize.Height) ? Int32.MaxValue : (int)Math.Round(finalSize.Height);
 
 			var size = _textLayout.Arrange(Font, Text, new Size(width, height), 0, TextAlignment, TextWrapping);
-			return new SizeD(size.Width, size.Height);
+			return new Size(size.Width, size.Height);
 		}
 
 		/// <summary>
 		///     Computes the physical position of the caret at the given logical caret position.
 		/// </summary>
 		/// <param name="position">The logical position of the caret.</param>
-		internal Vector2i ComputeCaretPosition(int position)
+		internal Vector2 ComputeCaretPosition(int position)
 		{
 			var x = (int)Math.Round(VisualOffset.X);
 			var y = (int)Math.Round(VisualOffset.Y);
-			return _textLayout.ComputeCaretPosition(position) + new Vector2i(x, y);
+			return _textLayout.ComputeCaretPosition(position) + new Vector2(x, y);
 		}
 
 		/// <summary>
 		///     Gets the index of the character closest to the given position.
 		/// </summary>
 		/// <param name="position">The position the closest character should be returned for.</param>
-		internal int GetCharacterIndexAt(Vector2i position)
+		internal int GetCharacterIndexAt(Vector2 position)
 		{
 			var x = (int)Math.Round(VisualOffset.X);
 			var y = (int)Math.Round(VisualOffset.Y);
-			return _textLayout.GetCharacterIndexAt(position - new Vector2i(x, y));
+			return _textLayout.GetCharacterIndexAt(position - new Vector2(x, y));
 		}
 
 		/// <summary>
@@ -180,7 +180,7 @@
 		/// </summary>
 		/// <param name="position">The position that should be checked for a hit.</param>
 		/// <returns>Returns true if the UI element is hit; false, otherwise.</returns>
-		protected override bool HitTestCore(Vector2d position)
+		protected override bool HitTestCore(Vector2 position)
 		{
 			return _textLayout.HitTest(position) || base.HitTestCore(position);
 		}
@@ -197,7 +197,7 @@
 			var y = (int)Math.Round(VisualOffset.Y);
 
 			++spriteBatch.Layer;
-			_textLayout.Draw(spriteBatch, new Vector2i(x, y), Foreground);
+			_textLayout.Draw(spriteBatch, new Vector2(x, y), Foreground);
 			--spriteBatch.Layer;
 		}
 	}

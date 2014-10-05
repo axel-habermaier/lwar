@@ -9,7 +9,7 @@
 #define assert(test) \
     debug_assert((test), #test, __FILE__, __LINE__)
 #else
-#define assert(test)
+#define assert(test) (void)(test)
 #endif
 
 void debug_assert(bool test, const char *what, const char *file, size_t line);

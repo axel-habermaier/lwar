@@ -117,6 +117,7 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 			writer.AppendLine("#include <stdlib.h>");
 			writer.NewLine();
 			writer.AppendLine("#include \"server.h\"");
+			writer.AppendLine("#include \"templates.h\"");
 			writer.AppendLine("#include \"rules.h\"");
 			writer.AppendLine("#include \"vector.h\"");
 			writer.NewLine();

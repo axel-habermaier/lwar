@@ -52,7 +52,7 @@
 		/// <summary>
 		///     The current mouse position.
 		/// </summary>
-		private Vector2i _mousePosition;
+		private Vector2 _mousePosition;
 
 		/// <summary>
 		///     The current normalized mouse position.
@@ -79,7 +79,7 @@
 		/// <summary>
 		///     Gets the position of the mouse.
 		/// </summary>
-		public Vector2i MousePosition
+		public Vector2 MousePosition
 		{
 			get
 			{

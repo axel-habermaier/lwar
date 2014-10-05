@@ -56,11 +56,11 @@ namespace Pegasus.Assets.AssetLoaders
 
 				// Compute the texture coordinates
 				var textureLeft = x / (float)font.Texture.Width;
-				var textureRight = (x + glyphs[index].Area.Width) / (float)font.Texture.Width;
-				var textureTop = (y + glyphs[index].Area.Height) / (float)font.Texture.Height;
+				var textureRight = (x + glyphs[index].Area.Width) / font.Texture.Width;
+				var textureTop = (y + glyphs[index].Area.Height) / font.Texture.Height;
 				var textureBottom = y / (float)font.Texture.Height;
 
-				glyphs[index].TextureArea = new RectangleF(textureLeft, textureTop,
+				glyphs[index].TextureArea = new Rectangle(textureLeft, textureTop,
 					textureRight - textureLeft,
 					textureBottom - textureTop);
 

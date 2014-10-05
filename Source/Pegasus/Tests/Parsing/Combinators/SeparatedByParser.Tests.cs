@@ -26,7 +26,7 @@
 		public void Invalid_SeparatorOnly()
 		{
 			var result = Success("|", false);
-			result.Should().Equal(new List<int> { });
+			result.Should().Equal(new List<int>());
 		}
 
 		[Test]

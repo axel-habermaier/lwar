@@ -23,7 +23,7 @@
 		public const float TwoPi = (float)Math.PI * 2;
 
 		/// <summary>
-		///     Represents the value of Pi divided by two, i.e., a 90 dregree rotation.
+		///     Represents the value of Pi divided by two, i.e., a 90 degree rotation.
 		/// </summary>
 		public const float PiOver2 = (float)Math.PI / 2;
 
@@ -39,29 +39,6 @@
 		}
 
 		/// <summary>
-		///     Checks whether two double values are equal. If the difference between the two doubles is
-		///     small enough, they are considered equal.
-		/// </summary>
-		/// <param name="left">The first value to compare.</param>
-		/// <param name="right">The second value to compare.</param>
-		public static bool Equals(double left, double right)
-		{
-			return Math.Abs(left - right) < Epsilon;
-		}
-
-		/// <summary>
-		///     Scales the given value from the range [0, previousMax] to [0, newMax].
-		/// </summary>
-		/// <param name="value">The value that should be scaled.</param>
-		/// <param name="previousMax">The previous maximum value.</param>
-		/// <param name="newMax">The new maximum value.</param>
-		public static double Scale(double value, double previousMax, double newMax)
-		{
-			Assert.ArgumentSatisfies(!previousMax.Equals(0), "Invalid previous value.");
-			return value / previousMax * newMax;
-		}
-
-		/// <summary>
 		///     Scales the given value from the range [0, previousMax] to [0, newMax].
 		/// </summary>
 		/// <param name="value">The value that should be scaled.</param>
@@ -69,25 +46,8 @@
 		/// <param name="newMax">The new maximum value.</param>
 		public static float Scale(float value, float previousMax, float newMax)
 		{
-			Assert.ArgumentSatisfies(!previousMax.Equals(0), "Invalid previous value.");
+			Assert.ArgumentSatisfies(!Equals(previousMax, 0), "Invalid previous value.");
 			return value / previousMax * newMax;
-		}
-
-		/// <summary>
-		///     Clamps the given value to be in the range [min, max].
-		/// </summary>
-		/// <param name="value">The value that should be clamped.</param>
-		/// <param name="min">The lower bound of the clamped interval.</param>
-		/// <param name="max">The upper bound of the clamped interval.</param>
-		public static double Clamp(double value, double min, double max)
-		{
-			if (value < min || max <= min)
-				return min;
-
-			if (value > max)
-				return max;
-
-			return value;
 		}
 
 		/// <summary>
@@ -114,40 +74,6 @@
 		/// <param name="min">The lower bound of the clamped interval.</param>
 		/// <param name="max">The upper bound of the clamped interval.</param>
 		public static int Clamp(int value, int min, int max)
-		{
-			if (value < min || max <= min)
-				return min;
-
-			if (value > max)
-				return max;
-
-			return value;
-		}
-
-		/// <summary>
-		///     Clamps the given value to be in the range [min, max].
-		/// </summary>
-		/// <param name="value">The value that should be clamped.</param>
-		/// <param name="min">The lower bound of the clamped interval.</param>
-		/// <param name="max">The upper bound of the clamped interval.</param>
-		public static Fixed8 Clamp(Fixed8 value, Fixed8 min, Fixed8 max)
-		{
-			if (value < min || max <= min)
-				return min;
-
-			if (value > max)
-				return max;
-
-			return value;
-		}
-
-		/// <summary>
-		///     Clamps the given value to be in the range [min, max].
-		/// </summary>
-		/// <param name="value">The value that should be clamped.</param>
-		/// <param name="min">The lower bound of the clamped interval.</param>
-		/// <param name="max">The upper bound of the clamped interval.</param>
-		public static Fixed16 Clamp(Fixed16 value, Fixed16 min, Fixed16 max)
 		{
 			if (value < min || max <= min)
 				return min;
@@ -199,6 +125,24 @@
 		public static float RadToDeg(float radians)
 		{
 			return radians / Pi * 180.0f;
+		}
+
+		/// <summary>
+		///     Rounds the given value to nearest integral value.
+		/// </summary>
+		/// <param name="value">The value to round.</param>
+		public static float Round(float value)
+		{
+			return (float)Math.Round(value);
+		}
+
+		/// <summary>
+		///     Rounds the given value to nearest integral value.
+		/// </summary>
+		/// <param name="value">The value to round.</param>
+		public static int RoundIntegral(float value)
+		{
+			return (int)Math.Round(value);
 		}
 	}
 }

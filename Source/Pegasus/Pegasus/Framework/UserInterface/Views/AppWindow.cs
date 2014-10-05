@@ -26,7 +26,7 @@
 		/// <param name="position">The screen position of the window's top left corner.</param>
 		/// <param name="size">The size of the window's rendering area.</param>
 		/// <param name="mode">Indicates the window mode.</param>
-		internal AppWindow(object dataContext, string title, Vector2i position, Size size, WindowMode mode)
+		internal AppWindow(object dataContext, string title, Vector2 position, Size size, WindowMode mode)
 			: base(title, position, size, mode)
 		{
 			InputDevice = new LogicalInputDevice(this);

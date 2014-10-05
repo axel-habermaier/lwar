@@ -32,7 +32,7 @@
 			new XamlPrimitiveType("uint"),
 			new XamlPrimitiveType("long"),
 			new XamlPrimitiveType("ulong"),
-			new XamlPrimitiveType("single"),
+			new XamlPrimitiveType("float"),
 			new XamlPrimitiveType("double"),
 			new XamlPrimitiveType("string"),
 			new XamlPrimitiveType("System", "Type"),

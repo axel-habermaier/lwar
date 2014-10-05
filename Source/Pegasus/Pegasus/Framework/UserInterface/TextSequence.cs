@@ -68,7 +68,7 @@
 		/// </summary>
 		/// <param name="font">The font that should be used to determine the width of sequence.</param>
 		/// <param name="text">The text the sequence was created for.</param>
-		public int ComputeWidth(Font font, TextString text)
+		public float ComputeWidth(Font font, TextString text)
 		{
 			if (text.Length == 0)
 				return 0;
@@ -85,7 +85,7 @@
 		/// <param name="allowedWidth">The maximum allowed with for the first split part.</param>
 		/// <param name="part1">Returns the text sequence for the first split part.</param>
 		/// <param name="part2">Returns the text sequence for the second split part.</param>
-		public void Split(Font font, TextString text, int allowedWidth, out TextSequence part1, out TextSequence part2)
+		public void Split(Font font, TextString text, float allowedWidth, out TextSequence part1, out TextSequence part2)
 		{
 			var splitIndex = FindSplitIndex(font, text, allowedWidth);
 
@@ -96,10 +96,10 @@
 		/// <param name="font">The font that should be used to determine the width of sequence.</param>
 		/// <param name="text">The text the sequence was created for.</param>
 		/// <param name="allowedWidth">The maximum allowed with for the first split part.</param>
-		private int FindSplitIndex(Font font, TextString text, int allowedWidth)
+		private int FindSplitIndex(Font font, TextString text, float allowedWidth)
 		{
 			var splitIndex = FirstCharacter;
-			var width = 0;
+			var width = 0.0f;
 
 			for (; splitIndex < LastCharacter; ++splitIndex)
 			{

@@ -32,8 +32,8 @@ internal interface ICvars
 	/// <summary>
 	///     The screen position of the application window's top left corner in non-fullscreen mode.
 	/// </summary>
-	[Cvar("Vector2i.Zero"), Persistent, WindowPosition, SystemOnly]
-	Vector2i WindowPosition { get; set; }
+	[Cvar("Vector2.Zero"), Persistent, WindowPosition, SystemOnly]
+	Vector2 WindowPosition { get; set; }
 
 	/// <summary>
 	///     The width of the application's window in non-fullscreen mode.

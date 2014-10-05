@@ -28,10 +28,10 @@
 		public void DefaultValue_NonStandardDefault()
 		{
 			// This check is just to be sure that we're actually testing a dependency property with a non-standard default value
-			UIElement.WidthProperty.DefaultValue.Should().Be(Double.NaN);
+			UIElement.WidthProperty.DefaultValue.Should().Be(Single.NaN);
 
 			var control = new TestControl();
-			control.Width.Should().Be(Double.NaN);
+			control.Width.Should().Be(Single.NaN);
 		}
 
 		[Test]
@@ -102,7 +102,7 @@
 		{
 			const HorizontalAlignment horizontalAlignment = HorizontalAlignment.Right;
 			const VerticalAlignment verticalAlignment = VerticalAlignment.Center;
-			const double width = 0.5;
+			const float width = 0.5f;
 
 			var margin = new Thickness(2);
 			var viewModel = new TestViewModel();

@@ -89,7 +89,7 @@
 		///     to size itself to its contents. The computed desired size is allowed to exceed the available space; the parent UI
 		///     element might be able to use scrolling in this case.
 		/// </param>
-		protected override SizeD MeasureCore(SizeD availableSize)
+		protected override Size MeasureCore(Size availableSize)
 		{
 			// Reset all rows and columns
 			foreach (var column in ColumnDefinitions)
@@ -118,7 +118,7 @@
 				for (var r = rowIndex; r > 0; --r)
 					height -= RowDefinitions[r - 1].ActualHeight;
 
-				child.Measure(new SizeD(width, height));
+				child.Measure(new Size(width, height));
 				var desiredSize = child.DesiredSize;
 
 				column.RegisterChildWidth(desiredSize.Width);
@@ -126,7 +126,7 @@
 			}
 
 			// Compute the desired size of the grid and update the row and column offsets
-			var gridSize = new SizeD();
+			var gridSize = new Size();
 			foreach (var column in ColumnDefinitions)
 			{
 				column.Offset = gridSize.Width;
@@ -151,14 +151,14 @@
 		///     The final area allocated by the UI element's parent that the UI element should use to arrange
 		///     itself and its children.
 		/// </param>
-		protected override SizeD ArrangeCore(SizeD finalSize)
+		protected override Size ArrangeCore(Size finalSize)
 		{
 			foreach (var child in Children)
 			{
 				var column = ColumnDefinitions[GetColumn(child)];
 				var row = RowDefinitions[GetRow(child)];
 
-				child.Arrange(new RectangleD(column.Offset, row.Offset, column.ActualWidth, row.ActualHeight));
+				child.Arrange(new Rectangle(column.Offset, row.Offset, column.ActualWidth, row.ActualHeight));
 			}
 
 			return finalSize;

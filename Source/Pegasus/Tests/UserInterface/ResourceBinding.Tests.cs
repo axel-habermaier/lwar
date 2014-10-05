@@ -32,7 +32,7 @@
 		private readonly Thickness _thickness2 = new Thickness(4);
 		private readonly Thickness _thickness3 = new Thickness(8);
 
-		private const double Width = 4;
+		private const float Width = 4;
 
 		private static void AddBinding(UIElement element)
 		{
@@ -167,8 +167,8 @@
 		public void ImplicitStyle_Reparent_BothImplicit()
 		{
 			var button = new Button();
-			var userControl1 = new UserControl() { IsAttachedToRoot = true };
-			var userControl2 = new UserControl() { IsAttachedToRoot = true };
+			var userControl1 = new UserControl { IsAttachedToRoot = true };
+			var userControl2 = new UserControl { IsAttachedToRoot = true };
 
 			SetImplicitStyle1(userControl1);
 			SetImplicitStyle2(userControl2);

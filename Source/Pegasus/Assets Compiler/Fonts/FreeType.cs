@@ -77,7 +77,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 		// Disable annoying "private field is never used" warnings on Mono
 #pragma warning disable 0169
 
-		[StructLayout(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential), UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
 		public class Face
 		{
 			internal Long num_faces;
@@ -133,7 +133,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 			private IntPtr @internal;
 		}
 
-		[StructLayout(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential), UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
 		internal class GlyphSlot
 		{
 			internal IntPtr library;
@@ -171,7 +171,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 			private IntPtr @internal;
 		}
 
-		[StructLayout(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential), UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
 		internal struct GlyphMetrics
 		{
 			internal Long width;
@@ -186,7 +186,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 			internal Long vertAdvance;
 		}
 
-		[StructLayout(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential), UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
 		internal struct Outline
 		{
 			internal short n_contours;
@@ -199,7 +199,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 			internal int flags;
 		}
 
-		[StructLayout(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential), UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
 		internal struct Bitmap
 		{
 			internal int rows;
@@ -212,7 +212,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 			internal IntPtr palette;
 		}
 
-		[StructLayout(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential), UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
 		internal class Size
 		{
 			internal IntPtr face;
@@ -230,7 +230,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 			private IntPtr @internal;
 		}
 
-		[StructLayout(LayoutKind.Sequential)]
+		[StructLayout(LayoutKind.Sequential), UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
 		internal struct Vector
 		{
 			internal Long x;

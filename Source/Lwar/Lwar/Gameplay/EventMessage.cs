@@ -15,7 +15,7 @@
 		/// <summary>
 		///     The chat message, new player name, or kick reason.
 		/// </summary>
-		public string Message;
+		public readonly string Message;
 
 		/// <summary>
 		///     The player that scored the killed, joined, left, was kicked, timed out, was renamed, or sent the chat message.
@@ -55,6 +55,7 @@
 		/// <param name="other">An object to compare with this object.</param>
 		public bool Equals(EventMessage other)
 		{
+			// ReSharper disable once CompareOfFloatsByEqualityOperator
 			return String.Equals(DisplayString, other.DisplayString) && CreationTime == other.CreationTime;
 		}
 

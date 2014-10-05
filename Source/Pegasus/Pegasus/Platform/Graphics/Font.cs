@@ -153,7 +153,7 @@
 		///     The offset that should be applied to the glyph's position. The X-value of
 		///     the offset is updated to reflect the glyph width and the kerning offset.
 		/// </param>
-		internal Rectangle GetGlyphArea(TextString text, int start, int index, ref Vector2i offset)
+		internal Rectangle GetGlyphArea(TextString text, int start, int index, ref Vector2 offset)
 		{
 			Assert.ArgumentSatisfies(start >= 0, "Out of bounds.");
 			Assert.ArgumentSatisfies(start < text.Length, "Out of bounds.");
@@ -202,7 +202,7 @@
 				color = textColor.Value;
 
 			var glyph = GetGlyph(character);
-			quad = new Quad(new RectangleF(area.Left, area.Top, area.Width, area.Height), color, glyph.TextureArea);
+			quad = new Quad(new Rectangle(area.Left, area.Top, area.Width, area.Height), color, glyph.TextureArea);
 
 			return true;
 		}
@@ -263,14 +263,14 @@
 			/// <summary>
 			///     The area of the font texture that contains the glyph's image data.
 			/// </summary>
-			public RectangleF TextureArea;
+			public Rectangle TextureArea;
 
 			/// <summary>
 			///     Gets a value indicating whether the glyph is invalid, as not all fonts support all glyph.
 			/// </summary>
 			public bool IsInvalid
 			{
-				get { return Area == Rectangle.Empty && TextureArea == RectangleF.Empty; }
+				get { return Area == Rectangle.Empty && TextureArea == Rectangle.Empty; }
 			}
 		}
 

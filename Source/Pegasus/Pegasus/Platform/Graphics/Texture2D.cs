@@ -26,7 +26,7 @@
 		/// <param name="format">The format of the texture.</param>
 		/// <param name="flags">The flags that indicates which operations are supported on the texture.</param>
 		public Texture2D(GraphicsDevice graphicsDevice, Size size, SurfaceFormat format, TextureFlags flags)
-			: this(graphicsDevice, size.Width, size.Height, format, flags)
+			: this(graphicsDevice, size.IntegralWidth, size.IntegralHeight, format, flags)
 		{
 		}
 
@@ -73,7 +73,7 @@
 			get
 			{
 				ValidateAccess();
-				return new Size((int)Description.Width, (int)Description.Height);
+				return new Size(Description.Width, Description.Height);
 			}
 		}
 

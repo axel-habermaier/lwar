@@ -28,7 +28,7 @@
 		/// <summary>
 		///     Gets the position of the mouse at the time the event was generated.
 		/// </summary>
-		public Vector2i Position { get; protected set; }
+		public Vector2 Position { get; protected set; }
 
 		/// <summary>
 		///     Gets the position of the mouse at the time the event was generated normalized in both directions to the range -1..1 such
@@ -88,7 +88,7 @@
 		/// <param name="position">The position of the mouse at the time the event was generated.</param>
 		/// <param name="inputStates">The states of the mouse buttons.</param>
 		/// <param name="modifiers">The key modifiers that were pressed when the event was raised.</param>
-		internal static MouseEventArgs Create(Mouse mouse, Vector2i position, InputState[] inputStates, KeyModifiers modifiers)
+		internal static MouseEventArgs Create(Mouse mouse, Vector2 position, InputState[] inputStates, KeyModifiers modifiers)
 		{
 			Assert.ArgumentNotNull(mouse);
 			Assert.ArgumentNotNull(inputStates);

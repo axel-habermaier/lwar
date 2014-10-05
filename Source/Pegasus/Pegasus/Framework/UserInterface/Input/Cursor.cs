@@ -36,7 +36,7 @@ namespace Pegasus.Framework.UserInterface.Input
 		///     location lies.
 		/// </param>
 		/// <param name="color">The color the cursor should be drawn in.</param>
-		public Cursor(Texture2D texture, Vector2i hotSpot, Color color)
+		public Cursor(Texture2D texture, Vector2 hotSpot, Color color)
 		{
 			Assert.ArgumentNotNull(texture);
 
@@ -54,7 +54,7 @@ namespace Pegasus.Framework.UserInterface.Input
 		///     Gets or sets the hot spot of the cursor, i.e., the relative offset to the texture's origin where the cursor's
 		///     click location lies.
 		/// </summary>
-		public Vector2i HotSpot { get; set; }
+		public Vector2 HotSpot { get; set; }
 
 		/// <summary>
 		///     Gets or sets the texture that defines the cursors visual appearance.
@@ -97,7 +97,7 @@ namespace Pegasus.Framework.UserInterface.Input
 		/// </summary>
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the cursor.</param>
 		/// <param name="position">The position the cursor should be drawn at.</param>
-		internal void Draw(SpriteBatch spriteBatch, Vector2i position)
+		internal void Draw(SpriteBatch spriteBatch, Vector2 position)
 		{
 			Assert.ArgumentNotNull(spriteBatch);
 			Assert.ArgumentInRange(HotSpot.X, 0, Texture.Width);

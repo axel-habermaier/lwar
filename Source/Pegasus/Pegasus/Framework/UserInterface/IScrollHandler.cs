@@ -11,6 +11,6 @@
 		/// <summary>
 		///     Gets the area the scrolled content is presented in.
 		/// </summary>
-		RectangleD ScrollArea { get; }
+		Rectangle ScrollArea { get; }
 	}
 }

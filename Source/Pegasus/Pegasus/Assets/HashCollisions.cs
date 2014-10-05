@@ -13,23 +13,23 @@
 		/// <summary>
 		///     Stores a list of all asset hash codes and the corresponding asset names.
 		/// </summary>
-		private static Dictionary<int, string> _hashCodes;
+		private static Dictionary<int, string> _hashes;
 
 		/// <summary>
 		///     In debug builds, checks whether a hash collision occurred.
 		/// </summary>
 		/// <param name="assetName">The name of the asset.</param>
-		/// <param name="hashCode">The hash code of the asset.</param>
+		/// <param name="hash">The hash of the asset.</param>
 		[Conditional("DEBUG")]
-		public static void Validate(string assetName, int hashCode)
+		public static void Validate(string assetName, int hash)
 		{
-			if (_hashCodes == null)
-				_hashCodes = new Dictionary<int, string>();
+			if (_hashes == null)
+				_hashes = new Dictionary<int, string>();
 
-			if (_hashCodes.ContainsKey(hashCode))
-				Log.Die("Asset hash collision detected between '{0}' and '{1}'.", assetName, _hashCodes[hashCode]);
+			if (_hashes.ContainsKey(hash))
+				Log.Die("Asset hash collision detected between '{0}' and '{1}'.", assetName, _hashes[hash]);
 
-			_hashCodes.Add(hashCode, assetName);
+			_hashes.Add(hash, assetName);
 		}
 	}
 }

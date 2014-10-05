@@ -127,10 +127,7 @@
 				if (!File.Exists(AssetListPath))
 					Log.Die("Unable to load asset list assembly '{0}'.", AssetListPath);
 
-				if (_assetListAssembly == null)
-					_assetListAssembly = Assembly.LoadFile(AssetListPath);
-
-				return _assetListAssembly;
+				return _assetListAssembly ?? (_assetListAssembly = Assembly.LoadFile(AssetListPath));
 			}
 		}
 
@@ -139,13 +136,7 @@
 		/// </summary>
 		public static AssetsProject AssetsProject
 		{
-			get
-			{
-				if (_assetsProject == null)
-					_assetsProject = new AssetsProject(AssetsProjectPath);
-
-				return _assetsProject;
-			}
+			get { return _assetsProject ?? (_assetsProject = new AssetsProject(AssetsProjectPath)); }
 		}
 
 		/// <summary>

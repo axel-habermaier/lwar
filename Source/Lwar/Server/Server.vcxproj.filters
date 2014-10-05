@@ -35,9 +35,6 @@
       <Filter>Network</Filter>
     </ClCompile>
     <ClCompile Include="server.c" />
-    <ClCompile Include="format.c">
-      <Filter>Network</Filter>
-    </ClCompile>
     <ClCompile Include="array.c">
       <Filter>Utils</Filter>
     </ClCompile>
@@ -50,14 +47,35 @@
     <ClCompile Include="pq.c">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="time.c">
-      <Filter>Utils</Filter>
-    </ClCompile>
     <ClCompile Include="uint.c">
       <Filter>Utils</Filter>
     </ClCompile>
     <ClCompile Include="queue.c">
       <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="address.c">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="clock.c">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="debug.c">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="event.c">
+      <Filter>Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="id.c">
+      <Filter>Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="performance.c">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="real.c">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="str.c">
+      <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -115,6 +133,51 @@
     </ClInclude>
     <ClInclude Include="vector.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="attributes.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="client.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="clock.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="config.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="debug.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="event.h">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="id.h">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="physics.h">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="protocol.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="queue.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="real.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="str.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="templates.h">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="types.h">
+      <Filter>Gameplay</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

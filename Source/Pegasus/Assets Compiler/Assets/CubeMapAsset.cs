@@ -130,7 +130,7 @@
 				positiveZ,
 				positiveX,
 				negativeY,
-				positiveY,
+				positiveY
 			};
 		}
 	}

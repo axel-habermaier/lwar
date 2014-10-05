@@ -62,7 +62,7 @@
 		/// <summary>
 		///     Loads the texture data.
 		/// </summary>
-		public unsafe void Load()
+		public void Load()
 		{
 			Bitmap = (Bitmap)Image.FromFile(SourcePath);
 

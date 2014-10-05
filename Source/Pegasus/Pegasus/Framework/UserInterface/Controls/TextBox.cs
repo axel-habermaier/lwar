@@ -300,7 +300,7 @@
 		/// </summary>
 		/// <param name="position">The position that should be checked for a hit.</param>
 		/// <returns>Returns true if the UI element is hit; false, otherwise.</returns>
-		protected override bool HitTestCore(Vector2d position)
+		protected override bool HitTestCore(Vector2 position)
 		{
 			return true;
 		}

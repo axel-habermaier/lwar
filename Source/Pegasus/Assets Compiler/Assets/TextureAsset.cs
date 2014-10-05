@@ -83,7 +83,7 @@
 		///     Serializes the uncompressed texture into the given buffer.
 		/// </summary>
 		/// <param name="writer">The writer the DDS image should be serialized into.</param>
-		internal unsafe void Write(BinaryWriter writer)
+		internal void Write(BinaryWriter writer)
 		{
 			Assert.That(!Mipmaps, "Mipmap generation is not supported for uncompressed cube maps.");
 			Assert.That(Uncompressed, "Texture compression is not supported.");

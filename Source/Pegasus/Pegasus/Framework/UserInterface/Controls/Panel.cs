@@ -2,7 +2,6 @@
 {
 	using System;
 	using System.Collections.Generic;
-	using Math;
 	using Platform.Graphics;
 
 	/// <summary>

@@ -17,7 +17,7 @@
 		///     to size itself to its contents. The computed desired size is allowed to exceed the available space; the parent UI
 		///     element might be able to use scrolling in this case.
 		/// </param>
-		protected override SizeD MeasureCore(SizeD availableSize)
+		protected override Size MeasureCore(Size availableSize)
 		{
 			foreach (var child in Children)
 				child.Measure(availableSize);
@@ -34,10 +34,10 @@
 		///     The final area allocated by the UI element's parent that the UI element should use to arrange
 		///     itself and its children.
 		/// </param>
-		protected override SizeD ArrangeCore(SizeD finalSize)
+		protected override Size ArrangeCore(Size finalSize)
 		{
 			foreach (var child in Children)
-				child.Arrange(new RectangleD(Vector2d.Zero, finalSize));
+				child.Arrange(new Rectangle(Vector2.Zero, finalSize));
 
 			return finalSize;
 		}

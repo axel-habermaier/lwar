@@ -134,7 +134,7 @@
 		private void GenerateHeaderElements()
 		{
 			if (Grid.RowDefinitions.Count == 0)
-				Grid.RowDefinitions.Add(new RowDefinition { Height = Double.NaN });
+				Grid.RowDefinitions.Add(new RowDefinition { Height = Single.NaN });
 
 			var index = 0;
 			foreach (var column in Columns)
@@ -152,7 +152,7 @@
 		protected override void AddItem(object item, int index)
 		{
 			while (Grid.RowDefinitions.Count <= index + 1)
-				Grid.RowDefinitions.Add(new RowDefinition { Height = Double.NaN });
+				Grid.RowDefinitions.Add(new RowDefinition { Height = Single.NaN });
 
 			var columnIndex = 0;
 			foreach (var column in Columns)

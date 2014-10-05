@@ -160,14 +160,13 @@
 				return;
 
 			var method = dataContext.GetType().GetMethod(drawMethod);
-			if (method == null || method.ReturnType != typeof(void) || method.GetParameters().Length != 1 ||
-				method.GetParameters()[0].ParameterType != typeof(RenderOutput))
-			{
-				Log.Die("Unable to find method 'void {0}.{1}({2})'.", dataContext.GetType().FullName, drawMethod, typeof(RenderOutput).FullName);
-				return;
-			}
+			var validSignature = method != null && method.ReturnType == typeof(void) && method.GetParameters().Length == 1 &&
+								 method.GetParameters()[0].ParameterType == typeof(RenderOutput);
 
-			renderOutputPanel._drawMethod = (DrawCallback)Delegate.CreateDelegate(typeof(DrawCallback), dataContext, method);
+			if (validSignature)
+				renderOutputPanel._drawMethod = (DrawCallback)Delegate.CreateDelegate(typeof(DrawCallback), dataContext, method);
+			else
+				Log.Die("Unable to find method 'void {0}.{1}({2})'.", dataContext.GetType().FullName, drawMethod, typeof(RenderOutput).FullName);
 		}
 
 		/// <summary>
@@ -190,7 +189,7 @@
 		/// </summary>
 		/// <param name="oldSize">The old size of the UI element.</param>
 		/// <param name="newSize">The new size of the UI element.</param>
-		protected override void OnSizeChanged(SizeD oldSize, SizeD newSize)
+		protected override void OnSizeChanged(Size oldSize, Size newSize)
 		{
 			base.OnSizeChanged(oldSize, newSize);
 			DisposeGraphicsResources();
@@ -237,7 +236,7 @@
 			{
 				if (!Cvars.ResolutionCvar.HasExplicitValue)
 				{
-					var resolution = this.ParentWindow.Size;
+					var resolution = ParentWindow.Size;
 
 					Log.Info("No resolution has been explicitly set. Setting the resolution to the size of the window ({0}).",
 						TypeRegistry.ToString(resolution));
@@ -247,7 +246,7 @@
 				size = Cvars.Resolution;
 			}
 			else
-				size = new Size((int)Math.Round(ActualWidth), (int)Math.Round(ActualHeight));
+				size = new Size(ActualWidth, ActualHeight);
 
 			// Initialize the color buffer of the render target
 			_outputTexture = new Texture2D(Application.Current.GraphicsDevice, size, ColorBufferFormat, TextureFlags.RenderTarget);
@@ -309,17 +308,16 @@
 			// Take the different coordinate origins for OpenGL and Direct3D into account when rendering 
 			// the render target's color buffer... annoying
 #if Direct3D11
-			var textureArea = new RectangleF(0, 1, 1, -1);
+			var textureArea = new Rectangle(0, 1, 1, -1);
 #elif OpenGL3
-			var textureArea = new RectangleF(0, 0, 1, 1);
+			var textureArea = new Rectangle(0, 0, 1, 1);
 #endif
 
 			// Update the contents of the texture
 			_drawMethod(_renderOutput);
 
 			// Draw the contents into the UI
-			var area = VisualArea;
-			var quad = new Quad(new RectangleF((float)area.Left, (float)area.Top, (float)area.Width, (float)area.Height), Color.White, textureArea);
+			var quad = new Quad(VisualArea, Color.White, textureArea);
 			spriteBatch.Draw(ref quad, _outputTexture);
 		}
 

@@ -5,6 +5,7 @@
 	/// <summary>
 	///     Represents an effect that provides shaders for drawing operations.
 	/// </summary>
+	[UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
 	public abstract class Effect
 	{
 		/// <summary>

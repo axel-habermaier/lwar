@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.Framework.UserInterface
 {
 	using System;
+	using Math;
 
 	/// <summary>
 	///     Describes the thickness of a rectangular frame.
@@ -10,28 +11,28 @@
 		/// <summary>
 		///     The width of the lower side of the rectangle.
 		/// </summary>
-		public readonly double Bottom;
+		public readonly float Bottom;
 
 		/// <summary>
 		///     The width of the left side of the rectangle.
 		/// </summary>
-		public readonly double Left;
+		public readonly float Left;
 
 		/// <summary>
 		///     The width of the right side of the rectangle.
 		/// </summary>
-		public readonly double Right;
+		public readonly float Right;
 
 		/// <summary>
 		///     The width of the upper side of the rectangle.
 		/// </summary>
-		public readonly double Top;
+		public readonly float Top;
 
 		/// <summary>
 		///     Initializes a new instance that has a uniform width on each side.
 		/// </summary>
 		/// <param name="width">The width of the left, right, upper, and lower sides of the rectangle.</param>
-		public Thickness(double width)
+		public Thickness(float width)
 		{
 			Left = width;
 			Right = width;
@@ -46,7 +47,7 @@
 		/// <param name="top">The width of the upper side of the rectangle.</param>
 		/// <param name="right">The width of the right side of the rectangle.</param>
 		/// <param name="bottom">The width of the lower side of the rectangle.</param>
-		public Thickness(double left, double top, double right, double bottom)
+		public Thickness(float left, float top, float right, float bottom)
 		{
 			Left = left;
 			Right = right;
@@ -57,7 +58,7 @@
 		/// <summary>
 		///     Gets the total width of the thickness.
 		/// </summary>
-		public double Width
+		public float Width
 		{
 			get { return Left + Right; }
 		}
@@ -65,7 +66,7 @@
 		/// <summary>
 		///     Gets the total height of the thickness.
 		/// </summary>
-		public double Height
+		public float Height
 		{
 			get { return Top + Bottom; }
 		}
@@ -76,7 +77,10 @@
 		/// <param name="other">An object to compare with this object.</param>
 		public bool Equals(Thickness other)
 		{
-			return Bottom.Equals(other.Bottom) && Left.Equals(other.Left) && Right.Equals(other.Right) && Top.Equals(other.Top);
+			return MathUtils.Equals(Left, other.Left) &&
+				   MathUtils.Equals(Right, other.Right) &&
+				   MathUtils.Equals(Top, other.Top) &&
+				   MathUtils.Equals(Bottom, other.Bottom);
 		}
 
 		/// <summary>

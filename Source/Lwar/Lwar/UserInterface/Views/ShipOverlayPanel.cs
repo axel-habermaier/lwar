@@ -154,8 +154,8 @@
 			var viewport = camera.Viewport;
 			var ship = _playerInfos[index].Player.Ship;
 			var radius = EntityTemplates.Ship.Radius;
-			var overlayWidth = (float)_playerInfos[index].Overlay.ActualWidth;
-			var overlayHeight = (float)_playerInfos[index].Overlay.ActualHeight;
+			var overlayWidth = _playerInfos[index].Overlay.ActualWidth;
+			var overlayHeight = _playerInfos[index].Overlay.ActualHeight;
 			var visualArea = VisualArea;
 
 			// Determine the screen-space size of the ship
@@ -164,17 +164,17 @@
 
 			// Map the positions to the actual screen positions, as the viewport size and the actual size of the render area
 			// can be different
-			topLeft = new Vector2(MathUtils.Scale(topLeft.X, viewport.Width, (float)visualArea.Width),
-				MathUtils.Scale(topLeft.Y, viewport.Height, (float)visualArea.Height));
-			bottomRight = new Vector2(MathUtils.Scale(bottomRight.X, viewport.Width, (float)visualArea.Width),
-				MathUtils.Scale(bottomRight.Y, viewport.Height, (float)visualArea.Height));
+			topLeft = new Vector2(MathUtils.Scale(topLeft.X, viewport.Width, visualArea.Width),
+				MathUtils.Scale(topLeft.Y, viewport.Height, visualArea.Height));
+			bottomRight = new Vector2(MathUtils.Scale(bottomRight.X, viewport.Width, visualArea.Width),
+				MathUtils.Scale(bottomRight.Y, viewport.Height, visualArea.Height));
 
 			var shipWidth = bottomRight.X - topLeft.X;
 			var shipHeight = bottomRight.Y - topLeft.Y;
 
 			// Position the overlay centered below the ship
-			var position = new Vector2d(topLeft.X + shipWidth / 2.0f - overlayWidth / 2.0f, visualArea.Height - bottomRight.Y + shipHeight);
-			var area = new RectangleD(position.X, position.Y, overlayWidth, overlayHeight);
+			var position = new Vector2(topLeft.X + shipWidth / 2.0f - overlayWidth / 2.0f, visualArea.Height - bottomRight.Y + shipHeight);
+			var area = new Rectangle(position.X, position.Y, overlayWidth, overlayHeight);
 
 			// If the ship is outside the viewport, calculate the intersection of the line connecting the player to the current player
 			// and the viewport and show the name there
@@ -182,16 +182,16 @@
 				area.Right > visualArea.Right || area.Bottom > visualArea.Bottom)
 			{
 				// The line segments defining the viewport; make the line segments slightly larger to account for rounding errors
-				var left = new LineSegment(new Vector2d(0, -1), new Vector2d(0, visualArea.Height + 1));
-				var top = new LineSegment(new Vector2d(-1, 0), new Vector2d(visualArea.Width + 1, 0));
-				var right = new LineSegment(new Vector2d(visualArea.Width, -1), new Vector2d(visualArea.Width, visualArea.Height + 1));
-				var bottom = new LineSegment(new Vector2d(-1, visualArea.Height), new Vector2d(visualArea.Width + 1, visualArea.Height));
+				var left = new LineSegment(new Vector2(0, -1), new Vector2(0, visualArea.Height + 1));
+				var top = new LineSegment(new Vector2(-1, 0), new Vector2(visualArea.Width + 1, 0));
+				var right = new LineSegment(new Vector2(visualArea.Width, -1), new Vector2(visualArea.Width, visualArea.Height + 1));
+				var bottom = new LineSegment(new Vector2(-1, visualArea.Height), new Vector2(visualArea.Width + 1, visualArea.Height));
 
 				// The line segment from the center of the viewport to the ship's screen space position to 
-				var line = new LineSegment(new Vector2d(visualArea.Width / 2.0f, visualArea.Height / 2.0f),
-					new Vector2d(area.Left, area.Top) + new Vector2d(area.Width / 2.0f, area.Height / 2.0f));
+				var line = new LineSegment(new Vector2(visualArea.Width / 2.0f, visualArea.Height / 2.0f),
+					new Vector2(area.Left, area.Top) + new Vector2(area.Width / 2.0f, area.Height / 2.0f));
 
-				Vector2d intersection;
+				Vector2 intersection;
 				if (line.Intersects(left, out intersection) || line.Intersects(top, out intersection) ||
 					line.Intersects(right, out intersection) || line.Intersects(bottom, out intersection))
 				{
@@ -203,8 +203,8 @@
 				position.Y = MathUtils.Clamp(position.Y, 0, visualArea.Height - overlayHeight);
 			}
 
-			SetLeft(_playerInfos[index].Overlay, Math.Round(position.X));
-			SetTop(_playerInfos[index].Overlay, Math.Round(position.Y));
+			SetLeft(_playerInfos[index].Overlay, MathUtils.Round(position.X));
+			SetTop(_playerInfos[index].Overlay, MathUtils.Round(position.Y));
 		}
 
 		/// <summary>

@@ -18,24 +18,24 @@
 		/// <summary>
 		///     The horizontal scroll speed.
 		/// </summary>
-		public static readonly DependencyProperty<double> HorizontalScrollStepProperty =
-			new DependencyProperty<double>(defaultValue: 10, validationCallback: ValidateScrollStep);
+		public static readonly DependencyProperty<float> HorizontalScrollStepProperty =
+			new DependencyProperty<float>(defaultValue: 10, validationCallback: ValidateScrollStep);
 
 		/// <summary>
 		///     The vertical scroll speed.
 		/// </summary>
-		public static readonly DependencyProperty<double> VerticalScrollStepProperty =
-			new DependencyProperty<double>(defaultValue: 10, validationCallback: ValidateScrollStep);
+		public static readonly DependencyProperty<float> VerticalScrollStepProperty =
+			new DependencyProperty<float>(defaultValue: 10, validationCallback: ValidateScrollStep);
 
 		/// <summary>
 		///     The size of the arranged scrolled content.
 		/// </summary>
-		private SizeD _arrangedContentSize;
+		private Size _arrangedContentSize;
 
 		/// <summary>
 		///     The measured size of the scrolled content.
 		/// </summary>
-		private SizeD _measuredContentSize;
+		private Size _measuredContentSize;
 
 		/// <summary>
 		///     The scroll aware child of the scroll viewer, if any.
@@ -45,7 +45,7 @@
 		/// <summary>
 		///     The current scroll offset.
 		/// </summary>
-		private Vector2d _scrollOffset;
+		private Vector2 _scrollOffset;
 
 		/// <summary>
 		///     The scrolled child.
@@ -72,7 +72,7 @@
 		/// <summary>
 		///     Gets or sets the horizontal scroll speed.
 		/// </summary>
-		public double HorizontalScrollStep
+		public float HorizontalScrollStep
 		{
 			get { return GetValue(HorizontalScrollStepProperty); }
 			set { SetValue(HorizontalScrollStepProperty, value); }
@@ -81,7 +81,7 @@
 		/// <summary>
 		///     Gets or sets the vertical scroll speed.
 		/// </summary>
-		public double VerticalScrollStep
+		public float VerticalScrollStep
 		{
 			get { return GetValue(VerticalScrollStepProperty); }
 			set { SetValue(VerticalScrollStepProperty, value); }
@@ -99,7 +99,7 @@
 		/// <summary>
 		///     Gets or sets the scroll offset, taking the alignment of the scroll child into account.
 		/// </summary>
-		private Vector2d ScrollOffset
+		private Vector2 ScrollOffset
 		{
 			get
 			{
@@ -118,9 +118,9 @@
 		/// <summary>
 		///     Gets the area the scrolled content is presented in.
 		/// </summary>
-		public RectangleD ScrollArea
+		public Rectangle ScrollArea
 		{
-			get { return new RectangleD(VisualOffset + ScrollOffset, ActualWidth, ActualHeight); }
+			get { return new Rectangle(VisualOffset + ScrollOffset, ActualWidth, ActualHeight); }
 		}
 
 		/// <summary>
@@ -128,18 +128,18 @@
 		///     content fits into its scroll area, possibly resulting in the scroll viewer displaying nothing if the scroll offset
 		///     is not reclamped to the new size.
 		/// </summary>
-		private static void OnSizeChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<double> args)
+		private static void OnSizeChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<float> args)
 		{
 			var scrollViewer = obj as ScrollViewer;
 			if (scrollViewer != null)
-				scrollViewer.Scroll(Vector2d.Zero);
+				scrollViewer.Scroll(Vector2.Zero);
 		}
 
 		/// <summary>
 		///     Validates a scroll step value.
 		/// </summary>
 		/// <param name="value">The value that should be checked.</param>
-		private static bool ValidateScrollStep(double value)
+		private static bool ValidateScrollStep(float value)
 		{
 			return value > 0;
 		}
@@ -166,7 +166,7 @@
 		///     Scrolls the content by the given delta.
 		/// </summary>
 		/// <param name="delta">The delta in the scrolling position.</param>
-		private void Scroll(Vector2d delta)
+		private void Scroll(Vector2 delta)
 		{
 			if (_scrolledChild != null && _scrolledChild.VerticalAlignment == VerticalAlignment.Bottom)
 				delta.Y *= -1;
@@ -214,7 +214,7 @@
 		/// </summary>
 		/// <param name="position">The position that should be checked for a hit.</param>
 		/// <returns>Returns true if the UI element is hit; false, otherwise.</returns>
-		protected override bool HitTestCore(Vector2d position)
+		protected override bool HitTestCore(Vector2 position)
 		{
 			return true;
 		}
@@ -227,7 +227,7 @@
 		///     to size itself to its contents. The computed desired size is allowed to exceed the available space; the parent UI
 		///     element might be able to use scrolling in this case.
 		/// </param>
-		protected override SizeD MeasureCore(SizeD availableSize)
+		protected override Size MeasureCore(Size availableSize)
 		{
 			_measuredContentSize = base.MeasureCore(availableSize);
 			return availableSize;
@@ -242,7 +242,7 @@
 		///     The final area allocated by the UI element's parent that the UI element should use to arrange
 		///     itself and its children.
 		/// </param>
-		protected override SizeD ArrangeCore(SizeD finalSize)
+		protected override Size ArrangeCore(Size finalSize)
 		{
 			_arrangedContentSize = base.ArrangeCore(_measuredContentSize);
 			return finalSize;
@@ -299,7 +299,7 @@
 			/// </summary>
 			public void ScrollUp()
 			{
-				_viewer.Scroll(new Vector2d(0, -_viewer.VerticalScrollStep));
+				_viewer.Scroll(new Vector2(0, -_viewer.VerticalScrollStep));
 			}
 
 			/// <summary>
@@ -307,7 +307,7 @@
 			/// </summary>
 			public void ScrollDown()
 			{
-				_viewer.Scroll(new Vector2d(0, _viewer.VerticalScrollStep));
+				_viewer.Scroll(new Vector2(0, _viewer.VerticalScrollStep));
 			}
 
 			/// <summary>
@@ -315,7 +315,7 @@
 			/// </summary>
 			public void ScrollLeft()
 			{
-				_viewer.Scroll(new Vector2d(-_viewer.HorizontalScrollStep, 0));
+				_viewer.Scroll(new Vector2(-_viewer.HorizontalScrollStep, 0));
 			}
 
 			/// <summary>
@@ -323,7 +323,7 @@
 			/// </summary>
 			public void ScrollRight()
 			{
-				_viewer.Scroll(new Vector2d(_viewer.HorizontalScrollStep, 0));
+				_viewer.Scroll(new Vector2(_viewer.HorizontalScrollStep, 0));
 			}
 
 			/// <summary>
@@ -331,7 +331,7 @@
 			/// </summary>
 			public void ScrollToTop()
 			{
-				_viewer.Scroll(new Vector2d(0, Double.NegativeInfinity));
+				_viewer.Scroll(new Vector2(0, Single.NegativeInfinity));
 			}
 
 			/// <summary>
@@ -339,7 +339,7 @@
 			/// </summary>
 			public void ScrollToBottom()
 			{
-				_viewer.Scroll(new Vector2d(0, Double.PositiveInfinity));
+				_viewer.Scroll(new Vector2(0, Single.PositiveInfinity));
 			}
 
 			/// <summary>
@@ -347,7 +347,7 @@
 			/// </summary>
 			public void ScrollToLeft()
 			{
-				_viewer.Scroll(new Vector2d(Double.NegativeInfinity, 0));
+				_viewer.Scroll(new Vector2(Single.NegativeInfinity, 0));
 			}
 
 			/// <summary>
@@ -355,7 +355,7 @@
 			/// </summary>
 			public void ScrollToRight()
 			{
-				_viewer.Scroll(new Vector2d(Double.PositiveInfinity, 0));
+				_viewer.Scroll(new Vector2(Single.PositiveInfinity, 0));
 			}
 		}
 	}

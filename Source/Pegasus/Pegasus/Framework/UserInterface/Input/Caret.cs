@@ -237,7 +237,7 @@
 		/// <param name="position">The position of the caret's top left corner.</param>
 		/// <param name="lineHeight">The height of a line.</param>
 		/// <param name="color">The color the caret should be drawn in.</param>
-		public void Draw(SpriteBatch spriteBatch, Vector2i position, int lineHeight, Color color)
+		public void Draw(SpriteBatch spriteBatch, Vector2 position, int lineHeight, Color color)
 		{
 			Assert.ArgumentNotNull(spriteBatch);
 

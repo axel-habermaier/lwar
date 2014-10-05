@@ -22,7 +22,7 @@
 		/// <summary>
 		///     Sets the height of the console's layout root to half of the height of the console itself.
 		/// </summary>
-		private void OnHeightChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<double> args)
+		private void OnHeightChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<float> args)
 		{
 			_layoutRoot.Height = args.NewValue / 2;
 		}

@@ -26,7 +26,7 @@
 		/// <summary>
 		///     The screen position of the window's left upper corner.
 		/// </summary>
-		public static readonly DependencyProperty<Vector2i> PositionProperty = new DependencyProperty<Vector2i>(isReadOnly: true);
+		public static readonly DependencyProperty<Vector2> PositionProperty = new DependencyProperty<Vector2>(isReadOnly: true);
 
 		/// <summary>
 		///     The size of the window's rendering area.
@@ -75,7 +75,7 @@
 		///     Initializes a new instance.
 		/// </summary>
 		public Window()
-			: this(String.Empty, Vector2i.Zero, new Size(1024, 768), WindowMode.Normal)
+			: this(String.Empty, Vector2.Zero, new Size(1024, 768), WindowMode.Normal)
 		{
 		}
 
@@ -86,7 +86,7 @@
 		/// <param name="position">The screen position of the window's top left corner.</param>
 		/// <param name="size">The size of the window's rendering area.</param>
 		/// <param name="mode">Indicates the window mode.</param>
-		public Window(string title, Vector2i position, Size size, WindowMode mode)
+		public Window(string title, Vector2 position, Size size, WindowMode mode)
 		{
 			Assert.ArgumentNotNull(title);
 
@@ -203,7 +203,7 @@
 		/// <summary>
 		///     Gets the screen position of the window's left upper corner.
 		/// </summary>
-		public Vector2i Position
+		public Vector2 Position
 		{
 			get { return GetValue(PositionProperty); }
 		}
@@ -249,7 +249,7 @@
 		/// <param name="position">The screen position of the window's top left corner.</param>
 		/// <param name="size">The size of the window's rendering area.</param>
 		/// <param name="mode">Indicates the window mode.</param>
-		private void UpdateDependencyProperties(WindowMode mode, Vector2i position, Size size)
+		private void UpdateDependencyProperties(WindowMode mode, Vector2 position, Size size)
 		{
 			// The mode must always be set first.
 			SetReadOnlyValue(WindowModeProperty, mode);
@@ -331,10 +331,10 @@
 			Width = size.Width;
 			Height = size.Height;
 
-			var availableSize = new SizeD(size.Width, size.Height);
+			var availableSize = new Size(size.Width, size.Height);
 			Measure(availableSize);
-			Arrange(new RectangleD(0, 0, availableSize));
-			UpdateVisualOffsets(Vector2d.Zero);
+			Arrange(new Rectangle(0, 0, availableSize));
+			UpdateVisualOffsets(Vector2.Zero);
 		}
 
 		/// <summary>

@@ -20,7 +20,7 @@
 		/// <summary>
 		///     The size of the UI element that has been computed by the last measure pass of the layout engine.
 		/// </summary>
-		private SizeD _desiredSize;
+		private Size _desiredSize;
 
 		/// <summary>
 		///     Stores the handlers of the UI element's routed events.
@@ -40,22 +40,22 @@
 		/// <summary>
 		///     The available size allocated for the UI element during the last measure phase.
 		/// </summary>
-		private SizeD _previousAvailableSize;
+		private Size _previousAvailableSize;
 
 		/// <summary>
 		///     The final rectangle allocated for the UI element during the last arrange phase.
 		/// </summary>
-		private RectangleD _previousFinalRect;
+		private Rectangle _previousFinalRect;
 
 		/// <summary>
 		///     The visual offset that has previously been applied to this UI element.
 		/// </summary>
-		private Vector2d _previousVisualOffset;
+		private Vector2 _previousVisualOffset;
 
 		/// <summary>
 		///     The relative visual offset of the UI element for drawing.
 		/// </summary>
-		private Vector2d _relativeVisualOffset;
+		private Vector2 _relativeVisualOffset;
 
 		/// <summary>
 		///     The resources used by the UI element.
@@ -273,28 +273,28 @@
 		///     Checks whether the given value is a valid width or height value.
 		/// </summary>
 		/// <param name="value">The value that should be validated.</param>
-		private static bool ValidateWidthHeight(double value)
+		private static bool ValidateWidthHeight(float value)
 		{
 			// NaN is used to represent Xaml's 'auto' value
-			return Double.IsNaN(value) || (value >= 0.0 && !Double.IsPositiveInfinity(value));
+			return Single.IsNaN(value) || (value >= 0.0 && !Single.IsPositiveInfinity(value));
 		}
 
 		/// <summary>
 		///     Checks whether the given value is a valid minimum width or height value.
 		/// </summary>
 		/// <param name="value">The value that should be validated.</param>
-		private static bool ValidateMinWidthHeight(double value)
+		private static bool ValidateMinWidthHeight(float value)
 		{
-			return !Double.IsNaN(value) && value >= 0.0 && !Double.IsPositiveInfinity(value);
+			return !Single.IsNaN(value) && value >= 0.0 && !Single.IsPositiveInfinity(value);
 		}
 
 		/// <summary>
 		///     Checks whether the given value is a valid maximum width or height value.
 		/// </summary>
 		/// <param name="value">The value that should be validated.</param>
-		private static bool ValidateMaxWidthHeight(double value)
+		private static bool ValidateMaxWidthHeight(float value)
 		{
-			return !Double.IsNaN(value) && value >= 0.0;
+			return !Single.IsNaN(value) && value >= 0.0;
 		}
 
 		/// <summary>
@@ -716,7 +716,7 @@
 		/// </summary>
 		/// <param name="position">The position that should be checked for a hit.</param>
 		/// <param name="boundsTestOnly">A value indicating whether only the bounds of the UI elements should be checked.</param>
-		internal UIElement HitTest(Vector2d position, bool boundsTestOnly)
+		internal UIElement HitTest(Vector2 position, bool boundsTestOnly)
 		{
 			// If the element isn't visible or hit test visible, there can be no hit.
 			if (!IsVisible || !IsHitTestVisible)
@@ -760,7 +760,7 @@
 		/// </summary>
 		/// <param name="position">The position that should be checked for a hit.</param>
 		/// <returns>Returns true if the UI element is hit; false, otherwise.</returns>
-		protected virtual bool HitTestCore(Vector2d position)
+		protected virtual bool HitTestCore(Vector2 position)
 		{
 			return Background.HasValue;
 		}
@@ -774,7 +774,7 @@
 		///     to size itself to its contents. The computed desired size is allowed to exceed the available space; the parent UI
 		///     element might be able to use scrolling in this case.
 		/// </param>
-		public void Measure(SizeD availableSize)
+		public void Measure(Size availableSize)
 		{
 			if (!IsMeasureDataDirty && _previousAvailableSize == availableSize)
 				return;
@@ -782,7 +782,7 @@
 			if (Visibility == Visibility.Collapsed)
 			{
 				IsMeasureDataDirty = false;
-				_desiredSize = new SizeD();
+				_desiredSize = new Size();
 				return;
 			}
 
@@ -792,8 +792,8 @@
 
 			_desiredSize = MeasureCore(DecreaseByMargin(availableSize));
 
-			Assert.That(!Double.IsInfinity(_desiredSize.Width) && !Double.IsNaN(_desiredSize.Width), "MeasureCore returned invalid width.");
-			Assert.That(!Double.IsInfinity(_desiredSize.Height) && !Double.IsNaN(_desiredSize.Height), "MeasureCore returned invalid height.");
+			Assert.That(!Single.IsInfinity(_desiredSize.Width) && !Single.IsNaN(_desiredSize.Width), "MeasureCore returned invalid width.");
+			Assert.That(!Single.IsInfinity(_desiredSize.Height) && !Single.IsNaN(_desiredSize.Height), "MeasureCore returned invalid height.");
 
 			_desiredSize = RestrictSize(_desiredSize);
 			_desiredSize = IncreaseByMargin(_desiredSize);
@@ -807,7 +807,7 @@
 		///     account.
 		/// </summary>
 		/// <param name="size">The size that should be restricted.</param>
-		private SizeD RestrictSize(SizeD size)
+		private Size RestrictSize(Size size)
 		{
 			if (_layoutInfo.HasExplicitWidth)
 				size.Width = _layoutInfo.Width;
@@ -829,7 +829,7 @@
 		///     to size itself to its contents. The computed desired size is allowed to exceed the available space; the parent UI
 		///     element might be able to use scrolling in this case.
 		/// </param>
-		protected abstract SizeD MeasureCore(SizeD availableSize);
+		protected abstract Size MeasureCore(Size availableSize);
 
 		/// <summary>
 		///     Determines the size and position of the UI element and all of its children. This method should be called from a
@@ -841,7 +841,7 @@
 		///     triggered by some changes to the UI element's state might only call Arrange if the UI element's measurement remained
 		///     unaffected by the state change.
 		/// </remarks>
-		public void Arrange(RectangleD finalRect)
+		public void Arrange(Rectangle finalRect)
 		{
 			if (!IsArrangeDataDirty && _previousFinalRect == finalRect)
 				return;
@@ -849,8 +849,8 @@
 			if (Visibility == Visibility.Collapsed)
 			{
 				IsArrangeDataDirty = false;
-				VisualOffset = Vector2d.Zero;
-				RenderSize = new SizeD();
+				VisualOffset = Vector2.Zero;
+				RenderSize = new Size();
 				ActualWidth = 0;
 				ActualHeight = 0;
 
@@ -865,7 +865,7 @@
 			var width = Math.Min(desiredSize.Width, availableSize.Width);
 			var height = Math.Min(desiredSize.Height, availableSize.Height);
 
-			var finalSize = new SizeD(width, height);
+			var finalSize = new Size(width, height);
 			AdaptSize(ref finalSize, availableSize);
 
 			var size = ArrangeCore(finalSize);
@@ -891,7 +891,7 @@
 		///     Updates the visual offsets of this UI element and all of its children.
 		/// </summary>
 		/// <param name="visualOffset">The visual offset that should be applied to the UI element.</param>
-		internal void UpdateVisualOffsets(Vector2d visualOffset)
+		internal void UpdateVisualOffsets(Vector2 visualOffset)
 		{
 			if (!IsVisualOffsetDirty && visualOffset == _previousVisualOffset)
 				return;
@@ -912,9 +912,9 @@
 		/// <summary>
 		///     Gets the additional offset that should be applied to the visual offset of the UI element's children.
 		/// </summary>
-		protected virtual Vector2d GetAdditionalChildrenOffset()
+		protected virtual Vector2 GetAdditionalChildrenOffset()
 		{
-			return Vector2d.Zero;
+			return Vector2.Zero;
 		}
 
 		/// <summary>
@@ -922,7 +922,7 @@
 		/// </summary>
 		/// <param name="size">The size that should be adapted.</param>
 		/// <param name="availableSize">The size that is available to this UI element.</param>
-		private void AdaptSize(ref SizeD size, SizeD availableSize)
+		private void AdaptSize(ref Size size, Size availableSize)
 		{
 			// When stretching horizontally, fill all available width
 			if (_layoutInfo.HorizontalAlignment == HorizontalAlignment.Stretch)
@@ -933,11 +933,11 @@
 				size.Height = availableSize.Height;
 
 			// Use the requested width if one is set
-			if (!Double.IsNaN(_layoutInfo.Width))
+			if (!Single.IsNaN(_layoutInfo.Width))
 				size.Width = _layoutInfo.Width;
 
 			// Use the requested height if one is set
-			if (!Double.IsNaN(_layoutInfo.Height))
+			if (!Single.IsNaN(_layoutInfo.Height))
 				size.Height = _layoutInfo.Height;
 
 			// Clamp the width and the height to the minimum and maximum values
@@ -954,15 +954,15 @@
 		///     The final area allocated by the UI element's parent that the UI element should use to arrange
 		///     itself and its children.
 		/// </param>
-		protected abstract SizeD ArrangeCore(SizeD finalSize);
+		protected abstract Size ArrangeCore(Size finalSize);
 
 		/// <summary>
 		///     Computes the alignment offset based on the available size and the actual size of the UI element.
 		/// </summary>
 		/// <param name="availableSize">The available size the UI element should be aligned in.</param>
-		private Vector2d ComputeAlignmentOffset(SizeD availableSize)
+		private Vector2 ComputeAlignmentOffset(Size availableSize)
 		{
-			var offset = Vector2d.Zero;
+			var offset = Vector2.Zero;
 
 			switch (HorizontalAlignment)
 			{
@@ -1006,9 +1006,9 @@
 		///     3, the returned size has a width of 10 + 2 + 3 = 15.
 		/// </summary>
 		/// <param name="size">The size the margin should be added to.</param>
-		private SizeD IncreaseByMargin(SizeD size)
+		private Size IncreaseByMargin(Size size)
 		{
-			return new SizeD(size.Width + _layoutInfo.Margin.Left + _layoutInfo.Margin.Right,
+			return new Size(size.Width + _layoutInfo.Margin.Left + _layoutInfo.Margin.Right,
 				size.Height + _layoutInfo.Margin.Top + _layoutInfo.Margin.Bottom);
 		}
 
@@ -1017,9 +1017,9 @@
 		///     3, the returned size has a width of 10 - 2 - 3 = 5.
 		/// </summary>
 		/// <param name="size">The size the margin should be added to.</param>
-		private SizeD DecreaseByMargin(SizeD size)
+		private Size DecreaseByMargin(Size size)
 		{
-			return new SizeD(size.Width - _layoutInfo.Margin.Left - _layoutInfo.Margin.Right,
+			return new Size(size.Width - _layoutInfo.Margin.Left - _layoutInfo.Margin.Right,
 				size.Height - _layoutInfo.Margin.Top - _layoutInfo.Margin.Bottom);
 		}
 
@@ -1056,7 +1056,7 @@
 		/// </summary>
 		/// <param name="oldSize">The old size of the UI element.</param>
 		/// <param name="newSize">The new size of the UI element.</param>
-		protected virtual void OnSizeChanged(SizeD oldSize, SizeD newSize)
+		protected virtual void OnSizeChanged(Size oldSize, Size newSize)
 		{
 		}
 

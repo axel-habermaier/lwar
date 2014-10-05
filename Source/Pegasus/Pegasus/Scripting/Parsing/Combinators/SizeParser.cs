@@ -13,9 +13,9 @@ namespace Pegasus.Scripting.Parsing.Combinators
 		/// </summary>
 		public SizeParser()
 		{
-			var int32 = Parsers.Int32;
+			var float32 = Parsers.Float32;
 			var ws = ~Parsers.WhiteSpaces;
-			Parser = Pipe(int32, ws + String("x") + ws, int32, (width, _, height) => new Size(width, height));
+			Parser = Pipe(float32, ws + String("x") + ws, float32, (width, _, height) => new Size(width, height));
 		}
 	}
 }

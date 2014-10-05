@@ -10,6 +10,10 @@
 #include <limits.h>
 #include <string.h>
 
+#ifdef _MSC_VER
+	#define strndup(s, n) _strdup(s)
+#endif
+
 size_t id_pack(char *out, Id id) {
     uint16_pack(out,   id.gen);
     uint16_pack(out+2, id.n);

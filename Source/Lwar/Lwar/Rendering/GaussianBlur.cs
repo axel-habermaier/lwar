@@ -108,7 +108,7 @@
 			foreach (var size in _sizes)
 			{
 				_output.RenderTarget = _renderTargets[i];
-				_output.Viewport = new Rectangle(Vector2i.Zero, size);
+				_output.Viewport = new Rectangle(Vector2.Zero, size);
 
 				_fullscreenQuad.Draw(_output, _blurEffect.Gaussian);
 
@@ -119,7 +119,7 @@
 			--i;
 			--i;
 
-			_output.Viewport = new Rectangle(Vector2i.Zero, _sizes[0]);
+			_output.Viewport = new Rectangle(Vector2.Zero, _sizes[0]);
 			_output.RenderTarget = _renderTargets[0];
 			_output.ClearColor(new Color(0, 0, 0, 0));
 			BlendState.Premultiplied.Bind();
