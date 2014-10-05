@@ -35,7 +35,6 @@
 		{
 			var results = new List<TResult>();
 
-			var state = inputStream.State;
 			var reply = _parser.Parse(inputStream);
 
 			// The parser must be successful at least once
@@ -47,7 +46,7 @@
 			// Parse the remaining occurrences, if any	
 			while (!inputStream.EndOfInput)
 			{
-				state = inputStream.State;
+				var state = inputStream.State;
 				reply = _parser.Parse(inputStream);
 
 				if (reply.Status == ReplyStatus.Success)

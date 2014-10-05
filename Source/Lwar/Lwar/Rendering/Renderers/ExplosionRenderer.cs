@@ -39,7 +39,7 @@
 		public override void Draw(SpriteBatch spriteBatch)
 		{
 			var numFrames = FrameCount * FrameCount;
-			var frameSize = new SizeF(1.0f / FrameCount, 1.0f / FrameCount);
+			var frameSize = new Size(1.0f / FrameCount, 1.0f / FrameCount);
 
 			foreach (var explosion in Elements)
 			{
@@ -47,12 +47,12 @@
 				var frameX = currentFrame % FrameCount;
 				var frameY = currentFrame / FrameCount;
 
-				var size = new SizeF((float)_texture.Width / FrameCount * 2, (float)_texture.Height / FrameCount * 2);
+				var size = new Size(_texture.Width / FrameCount * 2, _texture.Height / FrameCount * 2);
 				var position = new Vector2(explosion.Transform.Position2D.X - size.Width / 2.0f, explosion.Transform.Position2D.Y - size.Height / 2.0f);
-				var texCoords = new RectangleF(frameX * frameSize.Width, frameY * frameSize.Height, frameSize.Width, frameSize.Height);
+				var texCoords = new Rectangle(frameX * frameSize.Width, frameY * frameSize.Height, frameSize.Width, frameSize.Height);
 
 				spriteBatch.BlendState = BlendState.Premultiplied;
-				spriteBatch.Draw(new RectangleF(position, size), _texture, Color.White, texCoords);
+				spriteBatch.Draw(new Rectangle(position, size), _texture, Color.White, texCoords);
 			}
 		}
 

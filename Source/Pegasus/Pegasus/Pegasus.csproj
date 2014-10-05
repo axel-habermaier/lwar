@@ -269,7 +269,9 @@
     <Compile Include="Framework\UserInterface\IScrollController.cs" />
     <Compile Include="Framework\UserInterface\IScrollHandler.cs" />
     <Compile Include="Framework\UserInterface\MessageBox.cs" />
+    <Compile Include="Framework\UserInterface\NativeWindow.cs" />
     <Compile Include="Framework\UserInterface\RoutedEventBinding.cs" />
+    <Compile Include="Math\Size.cs" />
     <Compile Include="Framework\UserInterface\ViewModels\AppWindowViewModel.cs" />
     <Compile Include="Framework\UserInterface\ViewModels\ConsolePromptViewModel.cs" />
     <Compile Include="Framework\UserInterface\ViewModels\ConsoleViewModel.cs" />
@@ -334,8 +336,11 @@
     <Compile Include="Framework\UserInterface\ViewModels\StackedViewModel.cs" />
     <Compile Include="Framework\UserInterface\Views\ConsoleView.cs" />
     <Compile Include="Framework\UserInterface\Visibility.cs" />
+    <Compile Include="Math\Circle.cs" />
     <Compile Include="Math\LineSegment.cs" />
     <Compile Include="Assets\HashCollisions.cs" />
+    <Compile Include="Math\Rectangle.cs" />
+    <Compile Include="Math\Vector2.cs" />
     <Compile Include="Platform\FileSystem.cs" />
     <Compile Include="Platform\Graphics\ShaderProgram.cs" />
     <Compile Include="Platform\FileSystemException.cs" />
@@ -416,31 +421,6 @@
     <Compile Include="Platform\Graphics\VertexPositionNormal.cs" />
     <Compile Include="Platform\Graphics\DebugCamera.cs" />
     <Compile Include="Platform\Graphics\VertexPositionNormalTexture.cs" />
-    <Compile Include="Math\Circle.cs">
-      <DependentUpon>Circle.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Math\Size.cs">
-      <DependentUpon>Size.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="Math\Fixed.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Fixed.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Math\Rectangle.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Rectangle.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Math\Vector2.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Vector2.tt</DependentUpon>
-    </Compile>
     <Compile Include="Platform\Network\UdpSocket.cs" />
     <Compile Include="Platform\Memory\BufferReader.cs" />
     <Compile Include="Platform\Memory\BufferWriter.cs" />
@@ -474,7 +454,6 @@
     <Compile Include="Scripting\ConfigurationLine.cs" />
     <Compile Include="Scripting\Parsing\Combinators\ConfigurableInputParser.cs" />
     <Compile Include="Scripting\Parsing\Combinators\SizeParser.cs" />
-    <Compile Include="Scripting\Parsing\Combinators\Vector2IParser.cs" />
     <Compile Include="Scripting\Parsing\Combinators\Vector2Parser.cs" />
     <Compile Include="Scripting\Parsing\Parsers.cs" />
     <Compile Include="Scripting\SystemOnlyAttribute.cs" />
@@ -589,7 +568,6 @@
     <Compile Include="Framework\UserInterface\TextTokenStream.cs" />
     <Compile Include="Framework\UserInterface\TextTokenType.cs" />
     <Compile Include="Math\Vector4.cs" />
-    <Compile Include="Framework\UserInterface\NativeWindow.cs" />
     <Compile Include="Assert.cs" />
     <Compile Include="Framework\Application.cs" />
     <Compile Include="Platform\Memory\DisposableObject.cs" />
@@ -639,26 +617,6 @@
     <Compile Include="Scripting\Validators\WindowSizeAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Math\Circle.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Circle.cs</LastGenOutput>
-    </None>
-    <None Include="Math\Size.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Size.cs</LastGenOutput>
-    </None>
-    <None Include="Math\Fixed.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Fixed.cs</LastGenOutput>
-    </None>
-    <None Include="Math\Rectangle.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Rectangle.cs</LastGenOutput>
-    </None>
-    <None Include="Math\Vector2.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Vector2.cs</LastGenOutput>
-    </None>
     <None Include="Scripting\Commands.tt">
       <DependentUpon>ICommands.cs</DependentUpon>
       <Generator>TextTemplatingFileGenerator</Generator>

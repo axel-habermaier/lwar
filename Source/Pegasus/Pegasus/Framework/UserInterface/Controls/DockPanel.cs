@@ -70,19 +70,19 @@
 		///     to size itself to its contents. The computed desired size is allowed to exceed the available space; the parent UI
 		///     element might be able to use scrolling in this case.
 		/// </param>
-		protected override SizeD MeasureCore(SizeD availableSize)
+		protected override Size MeasureCore(Size availableSize)
 		{
 			// The desired size of the dock panel itself
-			var dockSize = new SizeD();
+			var dockSize = new Size();
 
 			// The accumulated sizes of the children in the direction they actually take up space
-			var accumulatedSize = new SizeD();
+			var accumulatedSize = new Size();
 
 			foreach (var child in Children)
 			{
 				// The available size for the child is what we've got left after allocating some of the available space to
 				// the previously enumerated children
-				var availableChildSize = new SizeD(
+				var availableChildSize = new Size(
 					Math.Max(0, availableSize.Width - accumulatedSize.Width),
 					Math.Max(0, availableSize.Height - accumulatedSize.Height));
 
@@ -108,7 +108,7 @@
 				}
 			}
 
-			return new SizeD(
+			return new Size(
 				Math.Max(dockSize.Width, accumulatedSize.Width),
 				Math.Max(dockSize.Height, accumulatedSize.Height));
 		}
@@ -122,23 +122,23 @@
 		///     The final area allocated by the UI element's parent that the UI element should use to arrange
 		///     itself and its children.
 		/// </param>
-		protected override SizeD ArrangeCore(SizeD finalSize)
+		protected override Size ArrangeCore(Size finalSize)
 		{
-			var accumulatedLeft = 0.0;
-			var accumulatedTop = 0.0;
-			var accumulatedRight = 0.0;
-			var accumulatedBottom = 0.0;
+			var accumulatedLeft = 0.0f;
+			var accumulatedTop = 0.0f;
+			var accumulatedRight = 0.0f;
+			var accumulatedBottom = 0.0f;
 
 			var count = Children.Count;
 			var i = 0;
 			foreach (var child in Children)
 			{
 				var desiredChildSize = child.DesiredSize;
-				var childArea = new RectangleD(
+				var childArea = new Rectangle(
 					accumulatedLeft,
 					accumulatedTop,
-					Math.Max(0.0, finalSize.Width - (accumulatedLeft + accumulatedRight)),
-					Math.Max(0.0, finalSize.Height - (accumulatedTop + accumulatedBottom)));
+					Math.Max(0.0f, finalSize.Width - (accumulatedLeft + accumulatedRight)),
+					Math.Max(0.0f, finalSize.Height - (accumulatedTop + accumulatedBottom)));
 
 				if (i != count - 1 || LastChildFill)
 				{
@@ -150,7 +150,7 @@
 							break;
 						case Dock.Bottom:
 							accumulatedBottom += desiredChildSize.Height;
-							childArea.Top = Math.Max(0.0, finalSize.Height - accumulatedBottom);
+							childArea.Top = Math.Max(0.0f, finalSize.Height - accumulatedBottom);
 							childArea.Height = desiredChildSize.Height;
 							break;
 						case Dock.Left:
@@ -160,7 +160,7 @@
 
 						case Dock.Right:
 							accumulatedRight += desiredChildSize.Width;
-							childArea.Left = Math.Max(0.0, finalSize.Width - accumulatedRight);
+							childArea.Left = Math.Max(0.0f, finalSize.Width - accumulatedRight);
 							childArea.Width = desiredChildSize.Width;
 							break;
 					}

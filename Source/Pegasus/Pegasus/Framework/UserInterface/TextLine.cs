@@ -10,7 +10,7 @@
 		/// <summary>
 		///     Gets the with of the text line.
 		/// </summary>
-		public int Width { get; private set; }
+		public float Width { get; private set; }
 
 		/// <summary>
 		///     Gets the index of the first character of the text line. A value of -1 indicates that the index has not yet
@@ -49,7 +49,7 @@
 		/// </summary>
 		/// <param name="sequence">The sequence that should be appended.</param>
 		/// <param name="width">The new width of the line.</param>
-		public void Append(TextSequence sequence, int width)
+		public void Append(TextSequence sequence, float width)
 		{
 			if (FirstCharacter == -1)
 				FirstCharacter = sequence.FirstCharacter;

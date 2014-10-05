@@ -28,8 +28,8 @@ namespace Pegasus.Framework.UserInterface.Input
 		{
 			Assert.ArgumentNotNull(assets);
 
-			Arrow = new Cursor(assets.Load(Textures.PointerCursor), Vector2i.Zero, Color.White);
-			Text = new Cursor(assets.Load(Textures.TextCursor), new Vector2i(7, 7), Color.White);
+			Arrow = new Cursor(assets.Load(Textures.PointerCursor), Vector2.Zero, Color.White);
+			Text = new Cursor(assets.Load(Textures.TextCursor), new Vector2(7, 7), Color.White);
 		}
 	}
 }

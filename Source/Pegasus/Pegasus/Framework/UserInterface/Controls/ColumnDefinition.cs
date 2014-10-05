@@ -11,26 +11,26 @@
 		///     The width of the column. Can be NaN to indicate that the column should automatically size itself to the
 		///     width of its children.
 		/// </summary>
-		public static readonly DependencyProperty<double> WidthProperty =
-			new DependencyProperty<double>(defaultValue: Double.NaN, affectsMeasure: true);
+		public static readonly DependencyProperty<float> WidthProperty =
+			new DependencyProperty<float>(defaultValue: Single.NaN, affectsMeasure: true);
 
 		/// <summary>
 		///     The minimum width of the column.
 		/// </summary>
-		public static readonly DependencyProperty<double> MinWidthProperty =
-			new DependencyProperty<double>(affectsMeasure: true);
+		public static readonly DependencyProperty<float> MinWidthProperty =
+			new DependencyProperty<float>(affectsMeasure: true);
 
 		/// <summary>
 		///     The maximum width of the column.
 		/// </summary>
-		public static readonly DependencyProperty<double> MaxWidthProperty =
-			new DependencyProperty<double>(defaultValue: Double.PositiveInfinity, affectsMeasure: true);
+		public static readonly DependencyProperty<float> MaxWidthProperty =
+			new DependencyProperty<float>(defaultValue: Single.PositiveInfinity, affectsMeasure: true);
 
 		/// <summary>
 		///     Gets or sets the width of the column. Can be NaN to indicate that the column should automatically size itself to the
 		///     width of its children.
 		/// </summary>
-		public double Width
+		public float Width
 		{
 			get { return GetValue(WidthProperty); }
 			set { SetValue(WidthProperty, value); }
@@ -39,7 +39,7 @@
 		/// <summary>
 		///     Gets or sets the minimum width of the column.
 		/// </summary>
-		public double MinWidth
+		public float MinWidth
 		{
 			get { return GetValue(MinWidthProperty); }
 			set { SetValue(MinWidthProperty, value); }
@@ -48,7 +48,7 @@
 		/// <summary>
 		///     Gets or sets the maximum width of the column.
 		/// </summary>
-		public double MaxWidth
+		public float MaxWidth
 		{
 			get { return GetValue(MaxWidthProperty); }
 			set { SetValue(MaxWidthProperty, value); }
@@ -57,16 +57,16 @@
 		/// <summary>
 		///     Gets the actual width of the column.
 		/// </summary>
-		internal double ActualWidth { get; private set; }
+		internal float ActualWidth { get; private set; }
 
 		/// <summary>
 		///     Gets the effective maximum width of the column, depending on whether a width has explicitly been set.
 		/// </summary>
-		internal double EffectiveMaxWidth
+		internal float EffectiveMaxWidth
 		{
 			get
 			{
-				if (Double.IsNaN(Width))
+				if (Single.IsNaN(Width))
 					return MaxWidth;
 
 				return Width;
@@ -76,7 +76,7 @@
 		/// <summary>
 		///     Gets or sets the horizontal offset of the column.
 		/// </summary>
-		internal double Offset { get; set; }
+		internal float Offset { get; set; }
 
 		/// <summary>
 		///     Resets the actual width to the default value as if the column contained no children.
@@ -85,9 +85,9 @@
 		{
 			Assert.That(MinWidth >= 0, "Column has invalid negative minimum width.");
 			Assert.That(MaxWidth >= 0, "Column has invalid negative maximum width.");
-			Assert.That(Width >= 0 || Double.IsNaN(Width), "Column has invalid negative width.");
+			Assert.That(Width >= 0 || Single.IsNaN(Width), "Column has invalid negative width.");
 
-			if (Double.IsNaN(Width))
+			if (Single.IsNaN(Width))
 				ActualWidth = MinWidth;
 			else
 				ActualWidth = Width;
@@ -97,9 +97,9 @@
 		///     Registers the child width on the column. If possible, the column resizes itself to the accommodate the child.
 		/// </summary>
 		/// <param name="width">The width of the child UI element that should be taken into account.</param>
-		internal void RegisterChildWidth(double width)
+		internal void RegisterChildWidth(float width)
 		{
-			if (!Double.IsNaN(Width))
+			if (!Single.IsNaN(Width))
 				return;
 
 			if (width > ActualWidth)

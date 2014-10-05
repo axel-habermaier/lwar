@@ -114,7 +114,7 @@
 		/// </summary>
 		protected override void UpdateProjectionMatrixCore()
 		{
-			_projection = Matrix.CreatePerspectiveFieldOfView(FieldOfView, Viewport.Width / (float)Viewport.Height, _nearDistance, _farDistance);
+			_projection = Matrix.CreatePerspectiveFieldOfView(FieldOfView, Viewport.Width / Viewport.Height, _nearDistance, _farDistance);
 		}
 
 		/// <summary>

@@ -99,7 +99,7 @@
 		/// <param name="allowedWidth">The maximum allowed with for the first split part.</param>
 		/// <param name="part1">Returns the token for the first split part.</param>
 		/// <param name="part2">Returns the token for the second split part.</param>
-		public void Split(Font font, TextString text, int allowedWidth, out TextToken part1, out TextToken part2)
+		public void Split(Font font, TextString text, float allowedWidth, out TextToken part1, out TextToken part2)
 		{
 			Assert.That(Type == TextTokenType.Word, "Wrong token type.");
 

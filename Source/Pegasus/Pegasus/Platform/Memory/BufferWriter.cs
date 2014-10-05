@@ -3,7 +3,6 @@
 	using System;
 	using System.Diagnostics;
 	using System.Text;
-	using Math;
 
 	/// <summary>
 	///     Wraps a byte buffer, providing methods for writing fundamental data types to the buffer.
@@ -254,58 +253,6 @@
 			Append((byte)(value >> 48));
 			Append((byte)(value >> 56));
 		}
-
-		/// <summary>
-		///     Writes a 4 byte signed fixed-point value with 8 bits for the fractional part.
-		/// </summary>
-		/// <param name="value">The value that should be written.</param>
-		public void WriteFixed8(Fixed8 value)
-		{
-			WriteInt32(value.RawValue);
-		}
-
-		/// <summary>
-		///     Writes a 4 byte signed fixed-point value with 16 bits for the fractional part.
-		/// </summary>
-		/// <param name="value">The value that should be written.</param>
-		public void WriteFixed16(Fixed16 value)
-		{
-			WriteInt32(value.RawValue);
-		}
-
-		// ReSharper disable InconsistentNaming
-
-		/// <summary>
-		///     Writes a two-component vector of Fixed8.
-		/// </summary>
-		/// <param name="value">The value that should be written.</param>
-		public void WriteVector2f8(Vector2f8 value)
-		{
-			WriteFixed8(value.X);
-			WriteFixed8(value.Y);
-		}
-
-		/// <summary>
-		///     Writes a two-component vector of Fixed16.
-		/// </summary>
-		/// <param name="value">The value that should be written.</param>
-		public void WriteVector2f16(Vector2f16 value)
-		{
-			WriteFixed16(value.X);
-			WriteFixed16(value.Y);
-		}
-
-		/// <summary>
-		///     Writes a two-component vector of integers.
-		/// </summary>
-		/// <param name="value">The value that should be written.</param>
-		public void WriteVector2i(Vector2i value)
-		{
-			WriteInt32(value.X);
-			WriteInt32(value.Y);
-		}
-
-		// ReSharper restore InconsistentNaming
 
 		/// <summary>
 		///     Writes an UTF8 string.

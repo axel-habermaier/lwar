@@ -3,7 +3,6 @@
 	using System;
 	using System.Diagnostics;
 	using System.Text;
-	using Math;
 
 	/// <summary>
 	///     Wraps a byte buffer, providing methods for reading fundamental data types from the buffer.
@@ -295,50 +294,6 @@
 
 			return value;
 		}
-
-		/// <summary>
-		///     Reads a 4 byte signed fixed-point value with 8 bits for the fractional part.
-		/// </summary>
-		public Fixed8 ReadFixed8()
-		{
-			return new Fixed8 { RawValue = ReadInt32() };
-		}
-
-		/// <summary>
-		///     Reads a 4 byte signed fixed-point value with 16 bits for the fractional part.
-		/// </summary>
-		public Fixed16 ReadFixed16()
-		{
-			return new Fixed16 { RawValue = ReadInt32() };
-		}
-
-		// ReSharper disable InconsistentNaming
-
-		/// <summary>
-		///     Reads a two-component vector of Fixed8.
-		/// </summary>
-		public Vector2f8 ReadVector2f8()
-		{
-			return new Vector2f8(ReadFixed8(), ReadFixed8());
-		}
-
-		/// <summary>
-		///     Reads a two-component vector of Fixed16.
-		/// </summary>
-		public Vector2f16 ReadVector2f16()
-		{
-			return new Vector2f16(ReadFixed16(), ReadFixed16());
-		}
-
-		/// <summary>
-		///     Reads a two-component vector of integers.
-		/// </summary>
-		public Vector2i ReadVector2i()
-		{
-			return new Vector2i(ReadInt32(), ReadInt32());
-		}
-
-		// ReSharper restore InconsistentNaming
 
 		/// <summary>
 		///     Reads an UTF8 string.

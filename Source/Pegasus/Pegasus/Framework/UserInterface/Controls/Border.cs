@@ -60,13 +60,13 @@
 		///     to size itself to its contents. The computed desired size is allowed to exceed the available space; the parent UI
 		///     element might be able to use scrolling in this case.
 		/// </param>
-		protected override SizeD MeasureCore(SizeD availableSize)
+		protected override Size MeasureCore(Size availableSize)
 		{
 			var padding = Padding;
-			availableSize = new SizeD(availableSize.Width - padding.Width, availableSize.Height - padding.Height);
+			availableSize = new Size(availableSize.Width - padding.Width, availableSize.Height - padding.Height);
 			availableSize = base.MeasureCore(availableSize);
 
-			return new SizeD(availableSize.Width + padding.Width, availableSize.Height + padding.Height);
+			return new Size(availableSize.Width + padding.Width, availableSize.Height + padding.Height);
 		}
 
 		/// <summary>
@@ -78,22 +78,22 @@
 		///     The final area allocated by the UI element's parent that the UI element should use to arrange
 		///     itself and its children.
 		/// </param>
-		protected override SizeD ArrangeCore(SizeD finalSize)
+		protected override Size ArrangeCore(Size finalSize)
 		{
 			var padding = Padding;
-			finalSize = new SizeD(finalSize.Width - padding.Width, finalSize.Height - padding.Height);
+			finalSize = new Size(finalSize.Width - padding.Width, finalSize.Height - padding.Height);
 			finalSize = base.ArrangeCore(finalSize);
 
-			return new SizeD(finalSize.Width + padding.Width, finalSize.Height + padding.Height);
+			return new Size(finalSize.Width + padding.Width, finalSize.Height + padding.Height);
 		}
 
 		/// <summary>
 		///     Gets the additional offset that should be applied to the visual offset of the UI element's children.
 		/// </summary>
-		protected override Vector2d GetAdditionalChildrenOffset()
+		protected override Vector2 GetAdditionalChildrenOffset()
 		{
 			var padding = Padding;
-			return new Vector2d(padding.Left, padding.Top);
+			return new Vector2(padding.Left, padding.Top);
 		}
 
 		/// <summary>
@@ -115,9 +115,9 @@
 
 			// Make sure there is no overdraw at the corners
 			spriteBatch.DrawLine(area.TopLeft, area.TopRight, color, thickness.Top);
-			spriteBatch.DrawLine(area.BottomLeft + new Vector2d(1, -1), area.TopLeft + new Vector2d(1, 1), color, thickness.Left);
-			spriteBatch.DrawLine(area.TopRight + new Vector2d(0, 1), area.BottomRight - new Vector2d(0, 1), color, thickness.Right);
-			spriteBatch.DrawLine(area.BottomLeft - new Vector2d(0, 1), area.BottomRight - new Vector2d(0, 1), color, thickness.Bottom);
+			spriteBatch.DrawLine(area.BottomLeft + new Vector2(1, -1), area.TopLeft + new Vector2(1, 1), color, thickness.Left);
+			spriteBatch.DrawLine(area.TopRight + new Vector2(0, 1), area.BottomRight - new Vector2(0, 1), color, thickness.Right);
+			spriteBatch.DrawLine(area.BottomLeft - new Vector2(0, 1), area.BottomRight - new Vector2(0, 1), color, thickness.Bottom);
 		}
 	}
 }

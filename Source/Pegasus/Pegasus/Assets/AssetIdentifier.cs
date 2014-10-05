@@ -20,9 +20,9 @@
 
 			AssetType = assetType;
 			AssetName = assetName;
-			HashCode = assetName.GetHashCode();
+			Hash = assetName.GetHashCode();
 
-			HashCollisions.Validate(AssetName, HashCode);
+			HashCollisions.Validate(AssetName, Hash);
 		}
 
 		/// <summary>
@@ -31,9 +31,9 @@
 		internal byte AssetType { get; private set; }
 
 		/// <summary>
-		///     The application-wide unique hash code of the asset.
+		///     The application-wide unique hash of the asset.
 		/// </summary>
-		internal int HashCode { get; private set; }
+		internal int Hash { get; private set; }
 
 		/// <summary>
 		///     Gets the name of the asset.
@@ -46,7 +46,7 @@
 		/// <param name="other">An object to compare with this object.</param>
 		public bool Equals(AssetIdentifier<T> other)
 		{
-			return HashCode == other.HashCode;
+			return Hash == other.Hash;
 		}
 
 		/// <summary>
@@ -65,7 +65,7 @@
 		/// </summary>
 		public override int GetHashCode()
 		{
-			return HashCode;
+			return Hash;
 		}
 
 		/// <summary>

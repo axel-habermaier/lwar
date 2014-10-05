@@ -66,14 +66,14 @@
 		/// <summary>
 		///     Gets the position of the mouse.
 		/// </summary>
-		public Vector2i Position
+		public Vector2 Position
 		{
 			get
 			{
 				int x, y;
 				NativeMethods.GetMousePosition(Window.NativeWindow.NativePtr, out x, out y);
 
-				return new Vector2i(x, y);
+				return new Vector2(x, y);
 			}
 		}
 
@@ -95,7 +95,7 @@
 		///     Normalizes the given mouse position relative to size of the mouse's window such that both directions lie within the
 		///     range -1..1, with the origin lying at the center of the window.
 		/// </summary>
-		internal Vector2 NormalizePosition(Vector2i position)
+		internal Vector2 NormalizePosition(Vector2 position)
 		{
 			var size = Window.Size;
 			var x = position.X - size.Width / 2;
@@ -105,7 +105,7 @@
 			// there would be some drift if the width or height of the window is uneven.
 			// This implementation matches what the platform library does when resetting the cursor to the
 			// center of the window when the cursor is captured.
-			return new Vector2(x / (float)size.Width, y / (float)size.Height);
+			return new Vector2(x / size.Width, y / size.Height);
 		}
 
 		/// <summary>
@@ -114,7 +114,7 @@
 		/// <param name="button">Identifies the mouse button that has been pressed.</param>
 		/// <param name="doubleClick">Indicates whether the event represents a double click.</param>
 		/// <param name="position">The position of the mouse at the time of the button press.</param>
-		private void OnButtonPressed(MouseButton button, bool doubleClick, Vector2i position)
+		private void OnButtonPressed(MouseButton button, bool doubleClick, Vector2 position)
 		{
 			Assert.ArgumentInRange(button);
 
@@ -134,7 +134,7 @@
 		/// </summary>
 		/// <param name="button">Identifies the mouse button that has been pressed.</param>
 		/// <param name="position">The position of the mouse at the time of the button press.</param>
-		private void OnButtonReleased(MouseButton button, Vector2i position)
+		private void OnButtonReleased(MouseButton button, Vector2 position)
 		{
 			Assert.ArgumentInRange(button);
 			_states[(int)button].Released();
@@ -165,7 +165,7 @@
 		///     Invoked when the mouse has been moved.
 		/// </summary>
 		/// <param name="position">The new position of the mouse.</param>
-		private void OnMove(Vector2i position)
+		private void OnMove(Vector2 position)
 		{
 			UpdateHoveredElement(position);
 
@@ -181,12 +181,12 @@
 		///     Updates the hovered UI element, if necessary.
 		/// </summary>
 		/// <param name="position">The position of the mouse.</param>
-		private void UpdateHoveredElement(Vector2i position)
+		private void UpdateHoveredElement(Vector2 position)
 		{
 			Assert.That((_hoveredElement == null && _hoveredElements.Count == 0) ||
 						(_hoveredElement != null && _hoveredElements.Count != 0), "Invalid hovered elements state.");
 
-			var hoveredElement = Window.HitTest(new Vector2d(position.X, position.Y), boundsTestOnly: false);
+			var hoveredElement = Window.HitTest(new Vector2(position.X, position.Y), boundsTestOnly: false);
 			if (hoveredElement == _hoveredElement)
 				return;
 
@@ -340,7 +340,7 @@
 
 			// Check if the hovered element or any of its parents override the default cursor
 			Cursor cursor = null;
-			var element = Window.HitTest(new Vector2d(Position.X, Position.Y), boundsTestOnly: true);
+			var element = Window.HitTest(new Vector2(Position.X, Position.Y), boundsTestOnly: true);
 
 			while (element != null)
 			{

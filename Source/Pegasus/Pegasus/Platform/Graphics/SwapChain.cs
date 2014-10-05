@@ -29,7 +29,8 @@
 		{
 			Assert.ArgumentNotNull(window);
 
-			_swapChain = NativeMethods.CreateSwapChain(graphicsDevice.NativePtr, window.NativePtr, resolution.Width, resolution.Height);
+			_swapChain = NativeMethods.CreateSwapChain(graphicsDevice.NativePtr, window.NativePtr,
+				resolution.IntegralWidth, resolution.IntegralHeight);
 			BackBuffer = new RenderTarget(graphicsDevice, NativeMethods.GetBackBuffer(_swapChain));
 
 			BackBuffer.Bind();

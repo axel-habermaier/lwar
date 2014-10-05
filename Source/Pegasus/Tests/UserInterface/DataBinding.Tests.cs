@@ -22,9 +22,9 @@
 		private readonly Thickness _margin1 = new Thickness(2);
 		private readonly Thickness _margin2 = new Thickness(4);
 		private readonly Thickness _margin3 = new Thickness(8);
-		private const double Width1 = 4;
-		private const double Width2 = 66;
-		private const double Width3 = 128;
+		private const float Width1 = 4;
+		private const float Width2 = 66;
+		private const float Width3 = 128;
 
 		private TestViewModel _viewModel;
 		private TestControl _control;
@@ -242,8 +242,7 @@
 			_viewModel.Model.Model.Integer = 17;
 			_control.CreateDataBinding(_viewModel, TestControl.IntegerTestProperty1, BindingMode.OneWayToSource, "Model", "Model", "Integer");
 
-			var model = new TestViewModel();
-			model.Integer = 7777;
+			var model = new TestViewModel { Integer = 7777 };
 			_viewModel.Model.Model = model;
 
 			_control.IntegerTest1.Should().Be(0);
@@ -252,8 +251,7 @@
 			_viewModel.Model.Model.Integer.Should().Be(42);
 			_control.IntegerTest1.Should().Be(42);
 
-			model = new TestViewModel();
-			model.Integer = 7777;
+			model = new TestViewModel { Integer = 7777 };
 			_viewModel.Model.Model = model;
 			_viewModel.Model.Model.Integer.Should().Be(42);
 			_control.IntegerTest1.Should().Be(42);
@@ -413,8 +411,7 @@
 			_viewModel.Model.Model.Integer = 17;
 			_control.CreateDataBinding(_viewModel, TestControl.IntegerTestProperty1, BindingMode.TwoWay, "Model", "Model", "Integer");
 
-			var model = new TestViewModel();
-			model.Integer = 7777;
+			var model = new TestViewModel { Integer = 7777 };
 			_viewModel.Model.Model = model;
 
 			_control.IntegerTest1.Should().Be(7777);
@@ -430,8 +427,8 @@
 		[Test]
 		public void ChainedDataContextBinding_InheritedOverwrite_DifferentTypes()
 		{
-			_viewModel.Width = 77.0;
-			_viewModel.Object = new UntypedViewModelA { Value = 33.0 };
+			_viewModel.Width = 77.0f;
+			_viewModel.Object = new UntypedViewModelA { Value = 33.0f };
 
 			_control.Button3.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWay, "Value");
 			_control.Canvas2.CreateDataBinding(UIElement.DataContextProperty, BindingMode.OneWay, "Object");
@@ -547,45 +544,45 @@
 		}
 
 		[Test]
-		public void DoubleToString_ValueConversion_OneWay()
+		public void SingleToString_ValueConversion_OneWay()
 		{
 			_viewModel.InitializeRecursively(1);
 			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.OneWay, "Width",
-				converter: new DoubleToStringConverter());
+				converter: new SingleToStringConverter());
 
 			_control.StringTest.Should().Be("0");
 
-			_viewModel.Width = 21.5;
+			_viewModel.Width = 21.5f;
 			_control.StringTest.Should().Be("21.5");
 		}
 
 		[Test]
-		public void DoubleToString_ValueConversion_OneWayToSource()
+		public void SingleToString_ValueConversion_OneWayToSource()
 		{
 			_viewModel.InitializeRecursively(1);
 			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.OneWayToSource, "Width",
-				converter: new DoubleToStringConverter());
+				converter: new SingleToStringConverter());
 
 			_viewModel.Width.Should().Be(0);
 
 			_control.StringTest = "21.5";
-			_viewModel.Width.Should().Be(21.5);
+			_viewModel.Width.Should().Be(21.5f);
 		}
 
 		[Test]
-		public void DoubleToString_ValueConversion_TwoWay()
+		public void SingleToString_ValueConversion_TwoWay()
 		{
 			_viewModel.InitializeRecursively(1);
 			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.TwoWay, "Width",
-				converter: new DoubleToStringConverter());
+				converter: new SingleToStringConverter());
 
 			_viewModel.Width.Should().Be(0);
 			_control.StringTest.Should().Be("0");
 
 			_control.StringTest = "21.5";
-			_viewModel.Width.Should().Be(21.5);
+			_viewModel.Width.Should().Be(21.5f);
 
-			_viewModel.Width = 0.5;
+			_viewModel.Width = 0.5f;
 			_control.StringTest.Should().Be("0.5");
 		}
 

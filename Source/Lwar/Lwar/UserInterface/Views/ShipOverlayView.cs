@@ -5,7 +5,7 @@
 
 	partial class ShipOverlayView
 	{
-		public double Health
+		public float Health
 		{
 			get { return _health.Width; }
 			set

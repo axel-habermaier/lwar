@@ -74,7 +74,7 @@
 		/// <summary>
 		///     Not supported by root UI elements.
 		/// </summary>
-		protected override SizeD MeasureCore(SizeD availableSize)
+		protected override Size MeasureCore(Size availableSize)
 		{
 			throw new NotSupportedException("Call UpdateLayout() instead.");
 		}
@@ -82,7 +82,7 @@
 		/// <summary>
 		///     Not supported by root UI elements.
 		/// </summary>
-		protected override SizeD ArrangeCore(SizeD finalSize)
+		protected override Size ArrangeCore(Size finalSize)
 		{
 			throw new NotSupportedException("Call UpdateLayout() instead.");
 		}

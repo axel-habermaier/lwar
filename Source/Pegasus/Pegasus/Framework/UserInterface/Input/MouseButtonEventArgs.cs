@@ -47,7 +47,7 @@
 		/// <param name="button">The mouse button that was pressed or released.</param>
 		/// <param name="doubleClick">Indicates whether the mouse press was a double click.</param>
 		/// <param name="modifiers">The key modifiers that were pressed when the event was raised.</param>
-		internal static MouseButtonEventArgs Create(Mouse mouse, Vector2i position, InputState[] inputStates, MouseButton button, bool doubleClick,
+		internal static MouseButtonEventArgs Create(Mouse mouse, Vector2 position, InputState[] inputStates, MouseButton button, bool doubleClick,
 													KeyModifiers modifiers)
 		{
 			Assert.ArgumentNotNull(mouse);

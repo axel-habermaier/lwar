@@ -59,48 +59,48 @@
 		/// <summary>
 		///     The width of the UI element, measured in pixels.
 		/// </summary>
-		public static readonly DependencyProperty<double> WidthProperty =
-			new DependencyProperty<double>(defaultValue: Double.NaN, affectsMeasure: true, validationCallback: ValidateWidthHeight);
+		public static readonly DependencyProperty<float> WidthProperty =
+			new DependencyProperty<float>(defaultValue: Single.NaN, affectsMeasure: true, validationCallback: ValidateWidthHeight);
 
 		/// <summary>
 		///     The height of the UI element, measured in pixels.
 		/// </summary>
-		public static readonly DependencyProperty<double> HeightProperty =
-			new DependencyProperty<double>(defaultValue: Double.NaN, affectsMeasure: true, validationCallback: ValidateWidthHeight);
+		public static readonly DependencyProperty<float> HeightProperty =
+			new DependencyProperty<float>(defaultValue: Single.NaN, affectsMeasure: true, validationCallback: ValidateWidthHeight);
 
 		/// <summary>
 		///     The minimum width constraint of the UI element, measured in pixels.
 		/// </summary>
-		public static readonly DependencyProperty<double> MinWidthProperty =
-			new DependencyProperty<double>(defaultValue: 0.0, affectsMeasure: true, validationCallback: ValidateMinWidthHeight);
+		public static readonly DependencyProperty<float> MinWidthProperty =
+			new DependencyProperty<float>(defaultValue: 0.0f, affectsMeasure: true, validationCallback: ValidateMinWidthHeight);
 
 		/// <summary>
 		///     The minimum height constraint of the UI element, measured in pixels.
 		/// </summary>
-		public static readonly DependencyProperty<double> MinHeightProperty =
-			new DependencyProperty<double>(defaultValue: 0.0, affectsMeasure: true, validationCallback: ValidateMinWidthHeight);
+		public static readonly DependencyProperty<float> MinHeightProperty =
+			new DependencyProperty<float>(defaultValue: 0.0f, affectsMeasure: true, validationCallback: ValidateMinWidthHeight);
 
 		/// <summary>
 		///     The maximum width constraint of the UI element, measured in pixels.
 		/// </summary>
-		public static readonly DependencyProperty<double> MaxWidthProperty =
-			new DependencyProperty<double>(defaultValue: Double.PositiveInfinity, affectsMeasure: true, validationCallback: ValidateMaxWidthHeight);
+		public static readonly DependencyProperty<float> MaxWidthProperty =
+			new DependencyProperty<float>(defaultValue: Single.PositiveInfinity, affectsMeasure: true, validationCallback: ValidateMaxWidthHeight);
 
 		/// <summary>
 		///     The maximum height constraint of the UI element, measured in pixels.
 		/// </summary>
-		public static readonly DependencyProperty<double> MaxHeightProperty =
-			new DependencyProperty<double>(defaultValue: Double.PositiveInfinity, affectsMeasure: true, validationCallback: ValidateMaxWidthHeight);
+		public static readonly DependencyProperty<float> MaxHeightProperty =
+			new DependencyProperty<float>(defaultValue: Single.PositiveInfinity, affectsMeasure: true, validationCallback: ValidateMaxWidthHeight);
 
 		/// <summary>
 		///     The actual width of the UI element, measured in pixels, as determined by the layouting system.
 		/// </summary>
-		public static readonly DependencyProperty<double> ActualWidthProperty = new DependencyProperty<double>();
+		public static readonly DependencyProperty<float> ActualWidthProperty = new DependencyProperty<float>();
 
 		/// <summary>
 		///     The actual height of the UI element, measured in pixels, as determined by the layouting system.
 		/// </summary>
-		public static readonly DependencyProperty<double> ActualHeightProperty = new DependencyProperty<double>();
+		public static readonly DependencyProperty<float> ActualHeightProperty = new DependencyProperty<float>();
 
 		/// <summary>
 		///     The outer margin of the UI element.
@@ -232,7 +232,7 @@
 		/// <summary>
 		///     Gets or sets the width of the UI element, measured in pixels.
 		/// </summary>
-		public double Width
+		public float Width
 		{
 			get { return GetValue(WidthProperty); }
 			set { SetValue(WidthProperty, value); }
@@ -241,7 +241,7 @@
 		/// <summary>
 		///     Gets or sets the height of the UI element, measured in pixels.
 		/// </summary>
-		public double Height
+		public float Height
 		{
 			get { return GetValue(HeightProperty); }
 			set { SetValue(HeightProperty, value); }
@@ -250,7 +250,7 @@
 		/// <summary>
 		///     Gets or sets the minimum width constraint of the UI element, measured in pixels.
 		/// </summary>
-		public double MinWidth
+		public float MinWidth
 		{
 			get { return GetValue(MinWidthProperty); }
 			set { SetValue(MinWidthProperty, value); }
@@ -259,7 +259,7 @@
 		/// <summary>
 		///     Gets or sets the minimum height constraint of the UI element, measured in pixels.
 		/// </summary>
-		public double MinHeight
+		public float MinHeight
 		{
 			get { return GetValue(MinHeightProperty); }
 			set { SetValue(MinHeightProperty, value); }
@@ -268,7 +268,7 @@
 		/// <summary>
 		///     Gets or sets the maximum width constraint of the UI element, measured in pixels.
 		/// </summary>
-		public double MaxWidth
+		public float MaxWidth
 		{
 			get { return GetValue(MaxWidthProperty); }
 			set { SetValue(MaxWidthProperty, value); }
@@ -277,7 +277,7 @@
 		/// <summary>
 		///     Gets or sets the maximum height constraint of the UI element, measured in pixels.
 		/// </summary>
-		public double MaxHeight
+		public float MaxHeight
 		{
 			get { return GetValue(MaxHeightProperty); }
 			set { SetValue(MaxHeightProperty, value); }
@@ -286,7 +286,7 @@
 		/// <summary>
 		///     Gets  the actual width of the UI element, measured in pixels, as determined by the layouting system.
 		/// </summary>
-		public double ActualWidth
+		public float ActualWidth
 		{
 			get { return GetValue(ActualWidthProperty); }
 			private set { SetValue(ActualWidthProperty, value); }
@@ -295,7 +295,7 @@
 		/// <summary>
 		///     Gets the actual height of the UI element, measured in pixels, as determined by the layouting system.
 		/// </summary>
-		public double ActualHeight
+		public float ActualHeight
 		{
 			get { return GetValue(ActualHeightProperty); }
 			private set { SetValue(ActualHeightProperty, value); }
@@ -375,7 +375,7 @@
 		/// <summary>
 		///     Gets the size of the UI element that has been computed by the last measure pass of the layout engine.
 		/// </summary>
-		public SizeD DesiredSize
+		public Size DesiredSize
 		{
 			get { return _desiredSize; }
 		}
@@ -448,12 +448,12 @@
 		/// <summary>
 		///     Gets the final render size of the UI element.
 		/// </summary>
-		public SizeD RenderSize { get; internal set; }
+		public Size RenderSize { get; internal set; }
 
 		/// <summary>
 		///     Gets the absolute visual offset of the UI element for drawing.
 		/// </summary>
-		protected internal Vector2d VisualOffset { get; private set; }
+		protected internal Vector2 VisualOffset { get; private set; }
 
 		/// <summary>
 		///     Gets the number of visual children for this UI element.
@@ -583,16 +583,16 @@
 		/// <summary>
 		///     Gets the rectangle encompassing the UI element's visual area.
 		/// </summary>
-		protected RectangleD VisualArea
+		protected Rectangle VisualArea
 		{
 			get
 			{
-				var x = Math.Round(VisualOffset.X);
-				var y = Math.Round(VisualOffset.Y);
-				var width = Math.Round(ActualWidth);
-				var height = Math.Round(ActualHeight);
+				var x = MathUtils.Round(VisualOffset.X);
+				var y = MathUtils.Round(VisualOffset.Y);
+				var width = MathUtils.Round(ActualWidth);
+				var height = MathUtils.Round(ActualHeight);
 
-				return new RectangleD(x, y, width, height);
+				return new Rectangle(x, y, width, height);
 			}
 		}
 	}

@@ -11,20 +11,20 @@ namespace Pegasus.Framework.UserInterface.Controls
 		/// <summary>
 		///     The width of the column.
 		/// </summary>
-		public static readonly DependencyProperty<double> WidthProperty =
-			new DependencyProperty<double>(defaultValue: Double.NaN, affectsMeasure: true);
+		public static readonly DependencyProperty<float> WidthProperty =
+			new DependencyProperty<float>(defaultValue: Single.NaN, affectsMeasure: true);
 
 		/// <summary>
 		///     The minimum width of the column.
 		/// </summary>
-		public static readonly DependencyProperty<double> MinWidthProperty =
-			new DependencyProperty<double>(affectsMeasure: true);
+		public static readonly DependencyProperty<float> MinWidthProperty =
+			new DependencyProperty<float>(affectsMeasure: true);
 
 		/// <summary>
 		///     The maximum width of the column.
 		/// </summary>
-		public static readonly DependencyProperty<double> MaxWidthProperty =
-			new DependencyProperty<double>(defaultValue: Double.MaxValue, affectsMeasure: true);
+		public static readonly DependencyProperty<float> MaxWidthProperty =
+			new DependencyProperty<float>(defaultValue: Single.MaxValue, affectsMeasure: true);
 
 		/// <summary>
 		///     The content of the column header.
@@ -67,7 +67,7 @@ namespace Pegasus.Framework.UserInterface.Controls
 		/// <summary>
 		///     Gets or sets the width of the column.
 		/// </summary>
-		public double Width
+		public float Width
 		{
 			get { return GetValue(WidthProperty); }
 			set { SetValue(WidthProperty, value); }
@@ -76,7 +76,7 @@ namespace Pegasus.Framework.UserInterface.Controls
 		/// <summary>
 		///     Gets or sets the minimum width of the column.
 		/// </summary>
-		public double MinWidth
+		public float MinWidth
 		{
 			get { return GetValue(MinWidthProperty); }
 			set { SetValue(MinWidthProperty, value); }
@@ -85,7 +85,7 @@ namespace Pegasus.Framework.UserInterface.Controls
 		/// <summary>
 		///     Gets or sets the maximum width of the column.
 		/// </summary>
-		public double MaxWidth
+		public float MaxWidth
 		{
 			get { return GetValue(MaxWidthProperty); }
 			set { SetValue(MaxWidthProperty, value); }

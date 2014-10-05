@@ -31,16 +31,16 @@
 		///     to size itself to its contents. The computed desired size is allowed to exceed the available space; the parent UI
 		///     element might be able to use scrolling in this case.
 		/// </param>
-		protected override SizeD MeasureCore(SizeD availableSize)
+		protected override Size MeasureCore(Size availableSize)
 		{
-			var size = new SizeD();
+			var size = new Size();
 			var isHorizontallyOriented = Orientation == Orientation.Horizontal;
 
 			// The stack panel's size is not limited in the direction that it stacks
 			if (isHorizontallyOriented)
-				availableSize.Width = Double.PositiveInfinity;
+				availableSize.Width = Single.PositiveInfinity;
 			else
-				availableSize.Height = Double.PositiveInfinity;
+				availableSize.Height = Single.PositiveInfinity;
 
 			// Compute the stack panel's actual size, depending on its orientation
 			foreach (var child in Children)
@@ -72,22 +72,22 @@
 		///     The final area allocated by the UI element's parent that the UI element should use to arrange
 		///     itself and its children.
 		/// </param>
-		protected override SizeD ArrangeCore(SizeD finalSize)
+		protected override Size ArrangeCore(Size finalSize)
 		{
 			var isHorizontallyOriented = Orientation == Orientation.Horizontal;
-			var offset = 0.0;
+			var offset = 0.0f;
 
 			// Arrange the children such that they're stacked either horizontally or vertically
 			foreach (var child in Children)
 			{
 				if (isHorizontallyOriented)
 				{
-					child.Arrange(new RectangleD(offset, 0, child.DesiredSize.Width, finalSize.Height));
+					child.Arrange(new Rectangle(offset, 0, child.DesiredSize.Width, finalSize.Height));
 					offset += child.DesiredSize.Width;
 				}
 				else
 				{
-					child.Arrange(new RectangleD(0, offset, finalSize.Width, child.DesiredSize.Height));
+					child.Arrange(new Rectangle(0, offset, finalSize.Width, child.DesiredSize.Height));
 					offset += child.DesiredSize.Height;
 				}
 			}

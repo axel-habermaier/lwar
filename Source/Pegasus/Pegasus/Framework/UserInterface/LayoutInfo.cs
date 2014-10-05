@@ -25,8 +25,8 @@
 			MaxWidth = element.MaxWidth;
 			MaxHeight = element.MaxHeight;
 			Margin = element.Margin;
-			HasExplicitWidth = !Double.IsNaN(Width);
-			HasExplicitHeight = !Double.IsNaN(Height);
+			HasExplicitWidth = !Single.IsNaN(Width);
+			HasExplicitHeight = !Single.IsNaN(Height);
 		}
 
 		/// <summary>
@@ -52,32 +52,32 @@
 		/// <summary>
 		///     Gets the width of the UI element.
 		/// </summary>
-		public double Width { get; private set; }
+		public float Width { get; private set; }
 
 		/// <summary>
 		///     Gets the minimum width of the UI element.
 		/// </summary>
-		public double MinWidth { get; private set; }
+		public float MinWidth { get; private set; }
 
 		/// <summary>
 		///     Gets the maximum width of the UI element.
 		/// </summary>
-		public double MaxWidth { get; private set; }
+		public float MaxWidth { get; private set; }
 
 		/// <summary>
 		///     Gets the height of the UI element.
 		/// </summary>
-		public double Height { get; private set; }
+		public float Height { get; private set; }
 
 		/// <summary>
 		///     Gets the minimum height of the UI element.
 		/// </summary>
-		public double MinHeight { get; private set; }
+		public float MinHeight { get; private set; }
 
 		/// <summary>
 		///     Gets the maximum height of the UI element.
 		/// </summary>
-		public double MaxHeight { get; private set; }
+		public float MaxHeight { get; private set; }
 
 		/// <summary>
 		///     Gets the margin of the UI element.

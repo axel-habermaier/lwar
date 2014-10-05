@@ -251,7 +251,7 @@
 				if (!TryGetPropertyType(property.Value, out xamlProperty))
 					Log.Die("Unable to get type of property '{0}'.", property.Value);
 
-				var content = value.HasElements ? (object)value.Elements() : (object)value.Value;
+				var content = value.HasElements ? value.Elements() : (object)value.Value;
 
 				setter.Add(new XElement(DefaultNamespace + "TypeParameter", xamlProperty.Type.FullName));
 				setter.Add(new XElement(DefaultNamespace + "Parameter",
@@ -280,7 +280,7 @@
 			var propertyName = split[1];
 
 			var isAttached = typeName != split[0];
-			var content = element.HasElements ? (object)element.Elements() : (object)element.Value;
+			var content = element.HasElements ? element.Elements() : (object)element.Value;
 
 			if (isAttached)
 				parentType = GetClrType(element.Name.Namespace + split[0]).FullName;

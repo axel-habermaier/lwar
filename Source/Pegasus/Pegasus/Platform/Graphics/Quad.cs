@@ -103,7 +103,7 @@
 		///     The area of the texture that contains the quad's image data. If not given, the whole texture
 		///     is placed onto the rectangle.
 		/// </param>
-		public Quad(RectangleF rectangle, Color color, RectangleF? textureArea = null)
+		public Quad(Rectangle rectangle, Color color, Rectangle? textureArea = null)
 			: this()
 		{
 			_bottomLeft.Position = new Vector2(rectangle.Left, rectangle.Bottom);
@@ -116,7 +116,7 @@
 			_topLeft.Color = color;
 			_topRight.Color = color;
 
-			var texture = textureArea ?? new RectangleF(0, 0, 1, 1);
+			var texture = textureArea ?? new Rectangle(0, 0, 1, 1);
 			_bottomLeft.TextureCoordinates = new Vector2(texture.Left, texture.Top);
 			_bottomRight.TextureCoordinates = new Vector2(texture.Right, texture.Top);
 			_topLeft.TextureCoordinates = new Vector2(texture.Left, texture.Bottom);

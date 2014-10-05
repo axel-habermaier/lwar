@@ -81,9 +81,9 @@
 			var height = _effect.TextureAtlas.Texture.Height;
 
 			// Generate the texture coordinates
-			var texCoords = new RectangleF[StarTypeCount];
+			var texCoords = new Rectangle[StarTypeCount];
 			for (var i = 0; i < StarTypeCount; ++i)
-				texCoords[i] = new RectangleF(i * scaledWidth, 0, scaledWidth, 1);
+				texCoords[i] = new Rectangle(i * scaledWidth, 0, scaledWidth, 1);
 
 			// Generate the stars
 			var idx = 0;
@@ -96,7 +96,7 @@
 				var textureIdx = random.Next(0, StarTypeCount);
 
 				// Store the positions of the vertices of the star
-				var rectangle = new RectangleF(position, width * (1 - distance), height * (1 - distance));
+				var rectangle = new Rectangle(position, width * (1 - distance), height * (1 - distance));
 				vertices[vertexIndex + 0].Position = new Vector4(rectangle.Left, StarLayer, rectangle.Bottom);
 				vertices[vertexIndex + 1].Position = new Vector4(rectangle.Right, StarLayer, rectangle.Bottom);
 				vertices[vertexIndex + 2].Position = new Vector4(rectangle.Left, StarLayer, rectangle.Top);

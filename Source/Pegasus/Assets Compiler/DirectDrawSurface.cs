@@ -121,7 +121,7 @@
 		///     Serializes the DDS image into the given buffer.
 		/// </summary>
 		/// <param name="writer">The writer the DDS image should be serialized into.</param>
-		internal unsafe void Write(BinaryWriter writer)
+		internal void Write(BinaryWriter writer)
 		{
 			writer.WriteUInt32(Description.Width);
 			writer.WriteUInt32(Description.Height);
@@ -535,6 +535,7 @@
 			/// <summary>
 			///     Unused data that is only required to ensure that the Header struct has the correct unmanaged size.
 			/// </summary>
+			[UsedImplicitly]
 			private fixed uint _unused [16];
 
 			/// <summary>

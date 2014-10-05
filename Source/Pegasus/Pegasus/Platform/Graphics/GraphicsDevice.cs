@@ -129,7 +129,7 @@
 				Assert.NotDisposed(this);
 
 				_viewport = value;
-				NativeMethods.SetViewport(_device, value);
+				NativeMethods.SetViewport(_device, new NativeMethods.Rect(value));
 			}
 		}
 
@@ -148,7 +148,7 @@
 				Assert.NotDisposed(this);
 
 				_scissor = value;
-				NativeMethods.SetScissorArea(_device, value);
+				NativeMethods.SetScissorArea(_device, new NativeMethods.Rect(value));
 			}
 		}
 
@@ -280,10 +280,10 @@
 			public static extern void DestroyGraphicsDevice(IntPtr device);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetViewport")]
-			public static extern void SetViewport(IntPtr device, Rectangle viewport);
+			public static extern void SetViewport(IntPtr device, Rect viewport);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetScissorArea")]
-			public static extern void SetScissorArea(IntPtr device, Rectangle scissorArea);
+			public static extern void SetScissorArea(IntPtr device, Rect scissorArea);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetPrimitiveType")]
 			public static extern void SetPrimitiveType(IntPtr device, PrimitiveType primitiveType);
@@ -293,6 +293,23 @@
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDrawIndexed")]
 			public static extern void DrawIndexed(IntPtr device, int indexCount, int indexOffset, int vertexOffset);
+
+			[StructLayout(LayoutKind.Sequential), UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
+			public struct Rect
+			{
+				public int Left;
+				public int Top;
+				public int Width;
+				public int Height;
+
+				public Rect(Rectangle rectangle)
+				{
+					Left = MathUtils.RoundIntegral(rectangle.Left);
+					Top = MathUtils.RoundIntegral(rectangle.Top);
+					Width = MathUtils.RoundIntegral(rectangle.Width);
+					Height = MathUtils.RoundIntegral(rectangle.Height);
+				}
+			}
 		}
 	}
 }

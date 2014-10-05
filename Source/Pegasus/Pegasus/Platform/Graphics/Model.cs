@@ -100,8 +100,8 @@
 		{
 			Assert.ArgumentNotNull(graphicsDevice);
 
-			var rectangle = new RectangleF(-width / 2.0f + offset.X, -height / 2.0f + offset.Y, width, height);
-			var texture = new RectangleF(0, 0, 1, 1);
+			var rectangle = new Rectangle(-width / 2.0f + offset.X, -height / 2.0f + offset.Y, width, height);
+			var texture = new Rectangle(0, 0, 1, 1);
 
 			var vertices = new[]
 			{
@@ -158,7 +158,7 @@
 			const int flip = -1;
 #endif
 				
-			var texture = new RectangleF(0, 0, 1, 1);
+			var texture = new Rectangle(0, 0, 1, 1);
 			var vertices = new[]
 			{
 				new VertexPositionNormalTexture

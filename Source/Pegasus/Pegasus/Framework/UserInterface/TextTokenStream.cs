@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.Framework.UserInterface
 {
 	using System;
+	using Math;
 	using Platform;
 	using Platform.Graphics;
 
@@ -18,7 +19,7 @@
 		/// <summary>
 		///     The maximum width of a line.
 		/// </summary>
-		private readonly int _maxLineWidth;
+		private readonly float _maxLineWidth;
 
 		/// <summary>
 		///     The text that should be wrapped.
@@ -28,7 +29,7 @@
 		/// <summary>
 		///     The width of the current line.
 		/// </summary>
-		private int _lineWidth;
+		private float _lineWidth;
 
 		/// <summary>
 		///     The current text token.
@@ -41,7 +42,7 @@
 		/// <param name="font">The font that should be used to determine the width of the text's characters.</param>
 		/// <param name="text">The text that should be wrapped.</param>
 		/// <param name="maxLineWidth">The maximum width of a line.</param>
-		public TextTokenStream(Font font, TextString text, int maxLineWidth)
+		public TextTokenStream(Font font, TextString text, float maxLineWidth)
 			: this()
 		{
 			Assert.ArgumentNotNull(font);
@@ -121,7 +122,7 @@
 			// If allowedWidth is zero, this means that either the line already is perfectly full or
 			// we're about to add the second part of a previously split word; in any case, return a wrap token and
 			// deal with the word on the next iteration
-			if (allowedWidth == 0)
+			if (MathUtils.Equals(allowedWidth,0))
 			{
 				_lineWidth = 0;
 				return TextToken.Wrap;

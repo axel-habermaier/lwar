@@ -15,7 +15,7 @@
 		private object _object;
 		private string _string;
 		private Thickness _thickness;
-		private double _width;
+		private float _width;
 
 		public Thickness Thickness
 		{
@@ -23,7 +23,7 @@
 			set { ChangePropertyValue(ref _thickness, value); }
 		}
 
-		public double Width
+		public float Width
 		{
 			get { return _width; }
 			set { ChangePropertyValue(ref _width, value); }

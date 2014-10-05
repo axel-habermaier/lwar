@@ -42,9 +42,9 @@
 		public override bool Validate(object value)
 		{
 			Assert.ArgumentNotNull(value);
-			Assert.ArgumentSatisfies(value is Vector2i, "The value is not of type 'Vector2i'.");
+			Assert.ArgumentSatisfies(value is Vector2, "The value is not of type 'Vector2'.");
 
-			var position = (Vector2i)value;
+			var position = (Vector2)value;
 			return -NativeWindow.MaximumSize.Width <= position.X && -NativeWindow.MaximumSize.Height <= position.Y &&
 				   NativeWindow.MaximumSize.Width >= position.X && NativeWindow.MaximumSize.Height >= position.Y;
 		}

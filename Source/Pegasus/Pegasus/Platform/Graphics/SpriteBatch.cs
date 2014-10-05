@@ -248,7 +248,7 @@
 		/// </summary>
 		/// <param name="rectangle">The rectangle that should be drawn.</param>
 		/// <param name="color">The color of the outline.</param>
-		public void DrawOutline(RectangleF rectangle, Color color)
+		public void DrawOutline(Rectangle rectangle, Color color)
 		{
 			DrawLine(rectangle.TopLeft, rectangle.TopRight, color, 1);
 			DrawLine(rectangle.BottomLeft, rectangle.BottomRight, color, 1);
@@ -272,35 +272,11 @@
 		/// <param name="rectangle">The rectangle that should be drawn.</param>
 		/// <param name="texture">The texture that should be used to draw the quad.</param>
 		/// <param name="color">The color of the quad.</param>
-		public void Draw(Rectangle rectangle, Texture2D texture, Color color)
-		{
-			Draw(new RectangleF(rectangle.Left, rectangle.Top, rectangle.Width, rectangle.Height), texture, color);
-		}
-
-		/// <summary>
-		///     Draws the given rectangle.
-		/// </summary>
-		/// <param name="rectangle">The rectangle that should be drawn.</param>
-		/// <param name="texture">The texture that should be used to draw the quad.</param>
-		/// <param name="color">The color of the quad.</param>
 		/// <param name="texCoords">The texture coordinates that should be used.</param>
-		public void Draw(RectangleF rectangle, Texture2D texture, Color color, RectangleF? texCoords = null)
+		public void Draw(Rectangle rectangle, Texture2D texture, Color color, Rectangle? texCoords = null)
 		{
 			var quad = new Quad(rectangle, color, texCoords);
 			Draw(ref quad, texture);
-		}
-
-		/// <summary>
-		///     Draws the given rectangle.
-		/// </summary>
-		/// <param name="rectangle">The rectangle that should be drawn.</param>
-		/// <param name="texture">The texture that should be used to draw the quad.</param>
-		/// <param name="color">The color of the quad.</param>
-		/// <param name="texCoords">The texture coordinates that should be used.</param>
-		public void Draw(RectangleD rectangle, Texture2D texture, Color color, RectangleF? texCoords = null)
-		{
-			var area = new RectangleF((float)rectangle.Left, (float)rectangle.Top, (float)rectangle.Width, (float)rectangle.Height);
-			Draw(area, texture, color, texCoords);
 		}
 
 		/// <summary>
@@ -313,7 +289,7 @@
 		/// <param name="rotation">The rotation (in radians) that should be applied to the quad before it is drawn.</param>
 		public void Draw(Vector2 position, Size size, Texture2D texture, Color color, float rotation)
 		{
-			var rectangle = new RectangleF(-size.Width / 2.0f, -size.Height / 2.0f, size.Width, size.Height);
+			var rectangle = new Rectangle(-size.Width / 2.0f, -size.Height / 2.0f, size.Width, size.Height);
 			var quad = new Quad(rectangle, color);
 
 			var rotationMatrix = Matrix.CreateRotationZ(rotation);
@@ -334,9 +310,9 @@
 		/// <param name="color">The color of the quad.</param>
 		public void Draw(Texture2D texture, Vector2 position, Color color)
 		{
-			var size = new SizeF(texture.Size.Width, texture.Size.Height);
+			var size = new Size(texture.Width, texture.Height);
 
-			var quad = new Quad(new RectangleF(position, size), color);
+			var quad = new Quad(new Rectangle(position, size), color);
 			Draw(ref quad, texture);
 		}
 
@@ -349,9 +325,9 @@
 		/// <param name="color">The color of the quad.</param>
 		public void Draw(Texture2D texture, Vector2 position, float angle, Color color)
 		{
-			var size = new SizeF(texture.Size.Width, texture.Size.Height);
+			var size = new Size(texture.Width, texture.Height);
 			var shift = new Vector2(- size.Width, - size.Height) * 0.5f;
-			var quad = new Quad(new RectangleF(shift, size), color);
+			var quad = new Quad(new Rectangle(shift, size), color);
 
 			var rotation = Matrix.CreateRotationZ(angle);
 			Quad.Transform(ref quad, ref rotation);
@@ -389,7 +365,7 @@
 		/// <param name="text">The text that should be drawn.</param>
 		/// <param name="color">The color that should be used to draw the text.</param>
 		/// <param name="position">The position of the text's top left corner.</param>
-		public void DrawText(Font font, string text, Color color, Vector2i position)
+		public void DrawText(Font font, string text, Color color, Vector2 position)
 		{
 			using (var textString = new TextString(text))
 				DrawText(font, textString, color, position);
@@ -402,7 +378,7 @@
 		/// <param name="text">The text that should be drawn.</param>
 		/// <param name="color">The color that should be used to draw the text.</param>
 		/// <param name="position">The position of the text's top left corner.</param>
-		public void DrawText(Font font, TextString text, Color color, Vector2i position)
+		public void DrawText(Font font, TextString text, Color color, Vector2 position)
 		{
 			Assert.ArgumentNotNull(font);
 
@@ -426,7 +402,7 @@
 		/// <param name="color">The color of the outline.</param>
 		/// <param name="width">The width of the outline.</param>
 		/// <param name="precision">The number of lines that are used to approximate the circle.</param>
-		public void DrawOutline(CircleF circle, Color color, int width, int precision)
+		public void DrawOutline(Circle circle, Color color, int width, int precision)
 		{
 			Assert.ArgumentInRange(precision, 5, Int16.MaxValue);
 			Assert.ArgumentInRange(width, 1, Int16.MaxValue);
@@ -458,30 +434,18 @@
 		/// <param name="end">The end of the line.</param>
 		/// <param name="color">The color of the line.</param>
 		/// <param name="width">The width of the line.</param>
-		public void DrawLine(Vector2d start, Vector2d end, Color color, double width)
-		{
-			DrawLine(new Vector2((float)start.X, (float)start.Y), new Vector2((float)end.X, (float)end.Y), color, (int)Math.Round(width));
-		}
-
-		/// <summary>
-		///     Draws a line.
-		/// </summary>
-		/// <param name="start">The start of the line.</param>
-		/// <param name="end">The end of the line.</param>
-		/// <param name="color">The color of the line.</param>
-		/// <param name="width">The width of the line.</param>
-		public void DrawLine(Vector2 start, Vector2 end, Color color, int width)
+		public void DrawLine(Vector2 start, Vector2 end, Color color, float width)
 		{
 			Assert.ArgumentSatisfies(width >= 0, "Invalid width.");
 			Assert.That(start != end, "Start and end must differ from each other.");
 
-			if (width == 0)
+			if (MathUtils.Equals(width, 0))
 				return;
 
 			// We first define a default quad to draw a line that goes from left to right. The center of the 
 			// rectangle lies on the start point of the line.
 			var length = (end - start).Length;
-			var rectangle = new RectangleF(0, -width / 2.0f, length, width);
+			var rectangle = new Rectangle(0, -width / 2.0f, length, width);
 			var quad = new Quad(rectangle, color);
 
 			// The rotation is computed relative to the unit vector in X direction.

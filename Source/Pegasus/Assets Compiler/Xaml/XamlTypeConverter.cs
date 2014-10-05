@@ -20,7 +20,7 @@
 			{ "string", s => String.Format("\"{0}\"", s.Replace("\"", "\\\"")) },
 			{ "object", s => String.Format("\"{0}\"", s.Replace("\"", "\\\"")) },
 			{ "double", s => s.ToLower() == "auto" ? "Double.NaN" : s },
-			{ "float", s => s },
+			{ "float", s => s.ToLower() == "auto" ? "Single.NaN" : s },
 			{ "byte", s => s },
 			{ "char", s => s },
 			{ "short", s => s },
@@ -37,7 +37,7 @@
 			{ "Pegasus.Framework.UserInterface.Input.KeyModifiers", ConvertKeyModifiers },
 			{ "Pegasus.Scripting.Cvar", s => s },
 			{ "Pegasus.Platform.Graphics.Texture2D", s => String.Format("Pegasus.Framework.Application.Current.Assets.Load({0})", s) },
-			{ "Pegasus.Math.Vector2i", s => String.Format("new Pegasus.Math.Vector2i({0})", s) },
+			{ "Pegasus.Math.Vector2", s => String.Format("new Pegasus.Math.Vector2({0})", s) },
 			{ "Pegasus.Framework.UserInterface.Input.Cursor", s => String.Format("Pegasus.Framework.UserInterface.Input.Cursors.{0}", s) }
 		};
 

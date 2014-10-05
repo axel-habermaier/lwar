@@ -112,7 +112,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 				var pair = r.Split(new[] { "-" }, StringSplitOptions.RemoveEmptyEntries);
 				Assert.That(pair.Length == 2, "Invalid character range '{0}'.", range);
 
-				var begin = 0;
+				int begin;
 				var end = 0;
 				if (!Int32.TryParse(pair[0], out begin) || !Int32.TryParse(pair[1], out end))
 					Log.Die("Invalid character range '{0}'.", range);

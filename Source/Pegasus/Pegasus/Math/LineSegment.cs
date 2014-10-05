@@ -10,19 +10,19 @@
 		/// <summary>
 		///     The end point of the line segment.
 		/// </summary>
-		public Vector2d End;
+		public Vector2 End;
 
 		/// <summary>
 		///     The start point of the line segment.
 		/// </summary>
-		public Vector2d Start;
+		public Vector2 Start;
 
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="start">The start point of the line segment.</param>
 		/// <param name="end">The end point of the line segment.</param>
-		public LineSegment(Vector2d start, Vector2d end)
+		public LineSegment(Vector2 start, Vector2 end)
 		{
 			Start = start;
 			End = end;
@@ -33,9 +33,9 @@
 		/// </summary>
 		/// <param name="other">The other line segment.</param>
 		/// <param name="intersection">Returns the intersection point if an intersection was found.</param>
-		public bool Intersects(LineSegment other, out Vector2d intersection)
+		public bool Intersects(LineSegment other, out Vector2 intersection)
 		{
-			intersection = Vector2d.Zero;
+			intersection = Vector2.Zero;
 
 			var directionThis = End - Start;
 			var directionOther = other.End - other.Start;

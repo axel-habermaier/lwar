@@ -34,27 +34,27 @@
 		/// <summary>
 		///     The format of the data.
 		/// </summary>
-		internal VertexDataFormat Format;
+		internal readonly VertexDataFormat Format;
 
 		/// <summary>
 		///     A value indicating the usage scenario of the vertex data.
 		/// </summary>
-		internal DataSemantics Semantics;
+		internal readonly DataSemantics Semantics;
 
 		/// <summary>
 		///     The stride in bytes between each data element.
 		/// </summary>
-		internal int Stride;
+		internal readonly int Stride;
 
 		/// <summary>
 		///     The offset in bytes. The offset should point to the first byte of
 		///     the first data value in the associated vertex buffer.
 		/// </summary>
-		internal int Offset;
+		internal readonly int Offset;
 
 		/// <summary>
 		///     The vertex buffer that stores the data.
 		/// </summary>
-		internal IntPtr VertexBuffer;
+		internal readonly IntPtr VertexBuffer;
 	}
 }

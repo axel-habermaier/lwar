@@ -18,7 +18,7 @@
 
 	<Class Name="Pegasus.Framework.UserInterface.Input.Cursor">
 		<Property Type="Pegasus.Platform.Graphics.Texture2D" Name="Texture"/>
-		<Property Type="Pegasus.Math.Vector2i" Name="HotSpot"/>
+		<Property Type="Pegasus.Math.Vector2" Name="HotSpot"/>
 		<Property Type="Pegasus.Platform.Graphics.Color" Name="Color"/>
 		<Property Type="Pegasus.Framework.UserInterface.Input.Cursor" Name="Cursor"/>
 	</Class>
@@ -26,7 +26,7 @@
 	<Class Name="Pegasus.Framework.UserInterface.Controls.DataTemplate">
 	</Class>
 
-	<Class Name="Pegasus.Math.Vector2i">
+	<Class Name="Pegasus.Math.Vector2">
 	</Class>
 
 	<Class Name="Pegasus.Math.Size">
@@ -98,23 +98,23 @@
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.DataGridTemplateColumn">
-		<Property Type="double" Name="MinWidth" />
-		<Property Type="double" Name="MaxWidth" />
-		<Property Type="double" Name="Width" />
+		<Property Type="float" Name="MinWidth" />
+		<Property Type="float" Name="MaxWidth" />
+		<Property Type="float" Name="Width" />
 		<Property Type="object" Name="Header" />
 		<Property Type="Pegasus.Framework.UserInterface.Controls.DataTemplate" Name="CellTemplate" />
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.ColumnDefinition">
-		<Property Type="double" Name="MinWidth" />
-		<Property Type="double" Name="MaxWidth" />
-		<Property Type="double" Name="Width" />
+		<Property Type="float" Name="MinWidth" />
+		<Property Type="float" Name="MaxWidth" />
+		<Property Type="float" Name="Width" />
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.RowDefinition">
-		<Property Type="double" Name="MinHeight" />
-		<Property Type="double" Name="MaxHeight" />
-		<Property Type="double" Name="Height" />
+		<Property Type="float" Name="MinHeight" />
+		<Property Type="float" Name="MaxHeight" />
+		<Property Type="float" Name="Height" />
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.ResourceDictionary" IsDictionary="true">
@@ -153,14 +153,14 @@
 		<Property Type="bool" Name="IsHitTestVisible" />
 		<Property Type="bool" Name="Focusable" />
 		<Property Type="Pegasus.Framework.UserInterface.ResourceDictionary" Name="Resources" />
-		<Property Type="double" Name="Width" />
-		<Property Type="double" Name="Height" />
-		<Property Type="double" Name="MinWidth" />
-		<Property Type="double" Name="MinHeight" />
-		<Property Type="double" Name="MaxWidth" />
-		<Property Type="double" Name="MaxHeight" />
-		<Property Type="double" Name="ActualWidth" />
-		<Property Type="double" Name="ActualHeight" />
+		<Property Type="float" Name="Width" />
+		<Property Type="float" Name="Height" />
+		<Property Type="float" Name="MinWidth" />
+		<Property Type="float" Name="MinHeight" />
+		<Property Type="float" Name="MaxWidth" />
+		<Property Type="float" Name="MaxHeight" />
+		<Property Type="float" Name="ActualWidth" />
+		<Property Type="float" Name="ActualHeight" />
 		<Property Type="Pegasus.Framework.UserInterface.Input.InputBindingCollection" Name="InputBindings" />
 		<Property Type="Pegasus.Framework.UserInterface.Thickness" Name="Margin" />
 		<Property Type="Pegasus.Framework.UserInterface.HorizontalAlignment" Name="HorizontalAlignment" />
@@ -214,8 +214,8 @@
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.ScrollViewer" Inherits="Pegasus.Framework.UserInterface.Controls.ContentControl">
 		<Property Type="Pegasus.Framework.UserInterface.IScrollController" Name="ScrollController"/>
-		<Property Type="double" Name="HorizontalScrollStep"/>
-		<Property Type="double" Name="VerticalScrollStep"/>
+		<Property Type="float" Name="HorizontalScrollStep"/>
+		<Property Type="float" Name="VerticalScrollStep"/>
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.DataGridColumnHeader"
@@ -241,10 +241,10 @@
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.Canvas" Inherits="Pegasus.Framework.UserInterface.Controls.Panel">
-		<Property Type="double" Name="Left" />
-		<Property Type="double" Name="Right" />
-		<Property Type="double" Name="Top" />
-		<Property Type="double" Name="Bottom" />
+		<Property Type="float" Name="Left" />
+		<Property Type="float" Name="Right" />
+		<Property Type="float" Name="Top" />
+		<Property Type="float" Name="Bottom" />
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.DockPanel" Inherits="Pegasus.Framework.UserInterface.Controls.Panel">
@@ -288,7 +288,7 @@
 	<Class Name="Pegasus.Framework.UserInterface.Controls.Window" Inherits="Pegasus.Framework.UserInterface.Controls.Decorator">
 		<Property Type="string" Name="Title" />
 		<Property Type="bool" Name="Fullscreen" />
-		<Property Type="Pegasus.Math.Vector2i" Name="Position"/>
+		<Property Type="Pegasus.Math.Vector2" Name="Position"/>
 		<Property Type="Pegasus.Math.Size" Name="Size"/>
 		<Property Type="Pegasus.Framework.UserInterface.Controls.WindowMode" Name="Mode"/>
 	</Class>

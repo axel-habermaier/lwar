@@ -78,7 +78,7 @@
 			if (String.IsNullOrWhiteSpace(Import))
 				return new Registry();
 
-			using (var project = new RegistryProject { CSharpFiles = new[] { new CSharpFile("", Import), } })
+			using (var project = new RegistryProject { CSharpFiles = new[] { new CSharpFile("", Import) } })
 			{
 				RegistryFile[] file;
 				project.TryGetValidatedFiles(out file);

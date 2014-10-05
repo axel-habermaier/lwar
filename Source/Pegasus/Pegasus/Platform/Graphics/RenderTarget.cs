@@ -91,7 +91,12 @@
 		/// </summary>
 		public int Width
 		{
-			get { return Size.Width; }
+			get
+			{
+				int width, height;
+				NativeMethods.GetRenderTargetSize(_renderTarget, out width, out height);
+				return width;
+			}
 		}
 
 		/// <summary>
@@ -99,7 +104,12 @@
 		/// </summary>
 		public int Height
 		{
-			get { return Size.Height; }
+			get
+			{
+				int width, height;
+				NativeMethods.GetRenderTargetSize(_renderTarget, out width, out height);
+				return height;
+			}
 		}
 
 		/// <summary>

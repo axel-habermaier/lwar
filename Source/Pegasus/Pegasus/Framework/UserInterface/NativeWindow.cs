@@ -63,7 +63,7 @@
 		/// <param name="position">The screen position of the window's top left corner.</param>
 		/// <param name="size">The size of the window's rendering area.</param>
 		/// <param name="mode">Indicates the window mode.</param>
-		internal NativeWindow(string title, Vector2i position, Size size, WindowMode mode)
+		internal NativeWindow(string title, Vector2 position, Size size, WindowMode mode)
 		{
 			Log.Info("Initializing window...");
 
@@ -84,10 +84,10 @@
 			_placement = new NativeMethods.Placement
 			{
 				Mode = mode,
-				X = position.X,
-				Y = position.Y,
-				Width = size.Width,
-				Height = size.Height
+				X = position.IntegralX,
+				Y = position.IntegralY,
+				Width = size.IntegralWidth,
+				Height = size.IntegralHeight
 			};
 
 			_window = NativeMethods.OpenWindow(title, _placement, _callbacks);
@@ -135,12 +135,12 @@
 		/// <summary>
 		///     Gets the screen position of the window's left upper corner.
 		/// </summary>
-		public Vector2i Position
+		public Vector2 Position
 		{
 			get
 			{
 				Assert.NotDisposed(this);
-				return new Vector2i(_placement.X, _placement.Y);
+				return new Vector2(_placement.X, _placement.Y);
 			}
 		}
 
@@ -316,7 +316,7 @@
 		/// <summary>
 		///     Raised when a mouse button was pressed.
 		/// </summary>
-		public event Action<MouseButton, bool, Vector2i> MousePressed;
+		public event Action<MouseButton, bool, Vector2> MousePressed;
 
 		/// <summary>
 		///     Raises the mouse pressed event.
@@ -328,13 +328,13 @@
 		private void OnMousePressed(MouseButton button, bool doubleClick, int x, int y)
 		{
 			if (MousePressed != null)
-				MousePressed(button, doubleClick, new Vector2i(x, y));
+				MousePressed(button, doubleClick, new Vector2(x, y));
 		}
 
 		/// <summary>
 		///     Raised when a mouse button was released.
 		/// </summary>
-		public event Action<MouseButton, Vector2i> MouseReleased;
+		public event Action<MouseButton, Vector2> MouseReleased;
 
 		/// <summary>
 		///     Raises the mouse released event.
@@ -345,13 +345,13 @@
 		private void OnMouseReleased(MouseButton button, int x, int y)
 		{
 			if (MouseReleased != null)
-				MouseReleased(button, new Vector2i(x, y));
+				MouseReleased(button, new Vector2(x, y));
 		}
 
 		/// <summary>
 		///     Raised when the mouse was moved inside the window.
 		/// </summary>
-		public event Action<Vector2i> MouseMoved;
+		public event Action<Vector2> MouseMoved;
 
 		/// <summary>
 		///     Raises the mouse moved event.
@@ -361,7 +361,7 @@
 		private void OnMouseMoved(int x, int y)
 		{
 			if (MouseMoved != null)
-				MouseMoved(new Vector2i(x, y));
+				MouseMoved(new Vector2(x, y));
 		}
 
 		/// <summary>

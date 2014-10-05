@@ -102,7 +102,7 @@
 		/// <summary>
 		///     The screen position of the application window's top left corner in non-fullscreen mode.
 		/// </summary>
-		public static Cvar<Vector2i> WindowPositionCvar { get; private set; }
+		public static Cvar<Vector2> WindowPositionCvar { get; private set; }
 
 		/// <summary>
 		///     The width of the application's window in non-fullscreen mode.
@@ -355,7 +355,7 @@
 		/// <summary>
 		///     The screen position of the application window's top left corner in non-fullscreen mode.
 		/// </summary>
-		public static Vector2i WindowPosition
+		public static Vector2 WindowPosition
 		{
 			get { return WindowPositionCvar.Value; }
 			[DebuggerHidden]
@@ -703,7 +703,7 @@
 		/// <summary>
 		///     Raised when the 'WindowPosition' cvar is changing. The new value is passed to the event handler.
 		/// </summary>
-		public static event Action<Vector2i> WindowPositionChanging
+		public static event Action<Vector2> WindowPositionChanging
 		{
 			add { WindowPositionCvar.Changing += value; }
 			remove { WindowPositionCvar.Changing -= value; }
@@ -712,7 +712,7 @@
 		/// <summary>
 		///     Raised when the 'WindowPosition' cvar is changed. The previous value is passed to the event handler.
 		/// </summary>
-		public static event Action<Vector2i> WindowPositionChanged
+		public static event Action<Vector2> WindowPositionChanged
 		{
 			add { WindowPositionCvar.Changed += value; }
 			remove { WindowPositionCvar.Changed -= value; }
@@ -798,7 +798,7 @@
 			TimeScaleCvar = CvarRegistry.Resolve<double>("time_scale");
 			ResolutionCvar = CvarRegistry.Resolve<Size>("resolution");
 			WindowSizeCvar = CvarRegistry.Resolve<Size>("window_size");
-			WindowPositionCvar = CvarRegistry.Resolve<Vector2i>("window_position");
+			WindowPositionCvar = CvarRegistry.Resolve<Vector2>("window_position");
 			WindowModeCvar = CvarRegistry.Resolve<WindowMode>("window_mode");
 			ShowDebugOverlayCvar = CvarRegistry.Resolve<bool>("show_debug_overlay");
 		}

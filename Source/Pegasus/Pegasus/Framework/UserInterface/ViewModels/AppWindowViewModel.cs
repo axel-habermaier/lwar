@@ -3,7 +3,6 @@
 	using System;
 	using Controls;
 	using Math;
-	using Platform.Logging;
 	using Platform.Memory;
 	using Scripting;
 	using Views;
@@ -64,7 +63,7 @@
 		/// <summary>
 		///     Gets or sets the position of the window.
 		/// </summary>
-		public Vector2i Position
+		public Vector2 Position
 		{
 			get { return Cvars.WindowPosition; }
 			set

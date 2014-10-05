@@ -53,7 +53,7 @@
 		/// <summary>
 		///     The draw position of the text.
 		/// </summary>
-		private Vector2i _position;
+		private Vector2 _position;
 
 		/// <summary>
 		///     The quads of the text.
@@ -82,7 +82,7 @@
 			if (_measured.SizeOutdated(font, text, desiredSize, lineSpacing, alignment, wrapping))
 			{
 				_lineCount = 0;
-				_position = Vector2i.Zero;
+				_position = Vector2.Zero;
 
 				if (wrapping == TextWrapping.NoWrap)
 					_measured.ActualSize = new Size(font.MeasureWidth(text), font.LineHeight + lineSpacing);
@@ -121,7 +121,7 @@
 			if (_arranged.SizeOutdated(font, text, desiredSize, lineSpacing, alignment, wrapping))
 			{
 				_lineCount = 0;
-				_position = Vector2i.Zero;
+				_position = Vector2.Zero;
 				_dirty = true;
 
 				ComputeCharacterAreasAndLines(ref _arranged);
@@ -136,12 +136,12 @@
 		///     Computes the physical position of the caret at the given logical caret position.
 		/// </summary>
 		/// <param name="position">The logical position of the caret.</param>
-		public Vector2i ComputeCaretPosition(int position)
+		public Vector2 ComputeCaretPosition(int position)
 		{
 			// The caret 'origin' is at the top left corner of the desired area; 
 			// non-left/top aligned layouts are not supported
 			if (position == 0 || String.IsNullOrEmpty(_arranged.Text))
-				return Vector2i.Zero;
+				return Vector2.Zero;
 
 			// Find the line that contains the caret
 			var lineIndex = 0;
@@ -156,7 +156,7 @@
 
 			// The caret position is relative to the line 'origin'
 			var lineY = lineIndex * _arranged.Font.LineHeight + Math.Max(0, lineIndex - 1) * _arranged.LineSpacing;
-			var result = new Vector2i(0, lineY);
+			var result = new Vector2(0, lineY);
 
 			// Calculate the caret's offset from the line's left edge
 			if (!_lines[lineIndex].IsInvalid)
@@ -169,7 +169,7 @@
 		///     Gets the index of the character closest to the given position.
 		/// </summary>
 		/// <param name="position">The position the closest character should be returned for.</param>
-		internal int GetCharacterIndexAt(Vector2i position)
+		internal int GetCharacterIndexAt(Vector2 position)
 		{
 			if (String.IsNullOrEmpty(_arranged.Text))
 				return 0;
@@ -209,7 +209,7 @@
 		/// <param name="spriteBatch">The sprite batch that should be used for drawing.</param>
 		/// <param name="position">The position of the top left corner of the text's drawing area.</param>
 		/// <param name="color">The default color that should be used to draw the text.</param>
-		public void Draw(SpriteBatch spriteBatch, Vector2i position, Color color)
+		public void Draw(SpriteBatch spriteBatch, Vector2 position, Color color)
 		{
 			Assert.ArgumentNotNull(spriteBatch);
 
@@ -253,7 +253,7 @@
 		private void ComputeCharacterAreasAndLines(ref LayoutInfo layoutInfo)
 		{
 			// The offset that is applied to all character positions
-			var offset = Vector2i.Zero;
+			var offset = Vector2.Zero;
 
 			// The current line of text; the first line starts at the top left corner of the desired area
 			var line = TextLine.Create();
@@ -344,7 +344,7 @@
 		/// <param name="layoutInfo">The layout info the layouting information should be obtained from.</param>
 		/// <param name="line">The predecessor of the new line.</param>
 		/// <param name="offset">The position offset.</param>
-		private void StartNewLine(ref LayoutInfo layoutInfo, ref TextLine line, ref Vector2i offset)
+		private void StartNewLine(ref LayoutInfo layoutInfo, ref TextLine line, ref Vector2 offset)
 		{
 			// Store the current line in the lines array and create a new one
 			AddLine(line);
@@ -362,7 +362,7 @@
 		/// <param name="text">The text that is layouted.</param>
 		/// <param name="sequence">The sequence whose character areas should be computed.</param>
 		/// <param name="offset">The offset of the character position.</param>
-		private void ComputeCharacterAreas(ref LayoutInfo layoutInfo, TextString text, TextSequence sequence, ref Vector2i offset)
+		private void ComputeCharacterAreas(ref LayoutInfo layoutInfo, TextString text, TextSequence sequence, ref Vector2 offset)
 		{
 			for (var i = sequence.FirstCharacter; i < sequence.LastCharacter; ++i)
 				_characterAreas[i] = layoutInfo.Font.GetGlyphArea(text, sequence.FirstCharacter, i, ref offset);
@@ -381,7 +381,7 @@
 			for (var i = 0; i < _lineCount; ++i)
 			{
 				// Move each quad of the line by the given deltas
-				var delta = Vector2i.Zero;
+				var delta = Vector2.Zero;
 
 				if (layoutInfo.Alignment == TextAlignment.Right)
 					delta.X = layoutInfo.DesiredSize.Width - _lines[i].Width;
@@ -389,7 +389,7 @@
 					delta.X = (layoutInfo.DesiredSize.Width - _lines[i].Width) / 2;
 
 				// Move the line, if necessary
-				if (delta != Vector2i.Zero)
+				if (delta != Vector2.Zero)
 				{
 					for (var j = _lines[i].FirstCharacter; j < _lines[i].LastCharacter; ++j)
 						_characterAreas[j] = _characterAreas[j].Offset(delta);
@@ -404,7 +404,7 @@
 		/// <param name="layoutInfo">The layout info the layouting information should be obtained from.</param>
 		private Size ComputeActualSize(ref LayoutInfo layoutInfo)
 		{
-			var width = 0;
+			var width = 0.0f;
 
 			for (var i = 0; i < _lineCount; ++i)
 			{
@@ -430,7 +430,7 @@
 		///     Performs hit test for the given position.
 		/// </summary>
 		/// <param name="position">The position that should be checked for a hit.</param>
-		internal bool HitTest(Vector2d position)
+		internal bool HitTest(Vector2 position)
 		{
 			// Check if the position lies within the text's bounding box. If not, there can be no hit.
 			var horizontalHit = position.X >= _position.X && position.X <= _position.X + _arranged.ActualSize.Width;

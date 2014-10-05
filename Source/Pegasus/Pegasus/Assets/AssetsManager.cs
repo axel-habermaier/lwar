@@ -292,7 +292,7 @@
 			where T : class, IDisposable
 		{
 			// Check if we've loaded the requested asset before
-			var asset = Find(assetIdentifier.HashCode);
+			var asset = Find(assetIdentifier.Hash);
 			if (asset != null)
 				return (T)asset;
 
@@ -376,7 +376,7 @@
 				return new AssetInfo
 				{
 					Path = identifier.AssetName,
-					HashCode = identifier.HashCode,
+					HashCode = identifier.Hash,
 					Type = identifier.AssetType,
 					Asset = asset
 				};

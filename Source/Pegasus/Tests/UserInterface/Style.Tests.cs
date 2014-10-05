@@ -15,17 +15,10 @@
 		{
 			_control1 = new TestControl();
 			_control2 = new TestControl();
-
-			_root1 = new UserControl { Content = _control1, IsAttachedToRoot = true };
-			_root2 = new UserControl { Content = _control2, IsAttachedToRoot = true };
 		}
 
 		private TestControl _control1;
 		private TestControl _control2;
-
-		// The root elements are required as the styles are not set before the controls have a logical parent
-		private UserControl _root1;
-		private UserControl _root2;
 
 		[Test]
 		public void ImplicitStyle_ShouldBeOverridenByExplicitStyle()
@@ -460,9 +453,8 @@
 		{
 			var style1 = new Style();
 			var style2 = new Style();
-			var button = new Button();
+			var button = new Button { Style = style1 };
 
-			button.Style = style1;
 			button.Style.Should().Be(style1);
 
 			button.Resources.Add(typeof(TestControl), style2);

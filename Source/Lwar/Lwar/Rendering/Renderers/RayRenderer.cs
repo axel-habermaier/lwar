@@ -44,7 +44,7 @@
 		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
 		public override void Initialize(GraphicsDevice graphicsDevice)
 		{
-			_model = Model.CreateQuad(graphicsDevice, _texture.Size, new Vector2(_texture.Size.Width / 2.0f, 0));
+			_model = Model.CreateQuad(graphicsDevice, _texture.Size, new Vector2(_texture.Width / 2.0f, 0));
 		}
 
 		/// <summary>

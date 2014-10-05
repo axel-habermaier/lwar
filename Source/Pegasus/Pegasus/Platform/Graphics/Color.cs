@@ -12,22 +12,22 @@
 		/// <summary>
 		///     The red component of the color.
 		/// </summary>
-		public byte Red;
+		public readonly byte Red;
 
 		/// <summary>
 		///     The green component of the color.
 		/// </summary>
-		public byte Green;
+		public readonly byte Green;
 
 		/// <summary>
 		///     The blue component of the color.
 		/// </summary>
-		public byte Blue;
+		public readonly byte Blue;
 
 		/// <summary>
 		///     The alpha component of the color.
 		/// </summary>
-		public byte Alpha;
+		public readonly byte Alpha;
 
 		/// <summary>
 		///     Initializes a new instance.
