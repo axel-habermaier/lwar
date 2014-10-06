@@ -31,7 +31,7 @@ int server_init() {
     if(!conn_bind(&server->conn_clients)) return 0;
 
     if(!conn_init(&server->conn_discovery)) return 0;
-	if(!conn_multicast(&server->conn_discovery)) return 0;
+	if(!conn_multicast(&server->conn_discovery)) { /* return 0; */ }
 
     queue_init();
     physics_init();

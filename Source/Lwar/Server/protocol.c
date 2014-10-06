@@ -168,10 +168,18 @@ static void message_handle(Client *c, Address *adr, Message *m, size_t seqno) {
 }
 
 static void packet_scan(Packet *p) {
+    Header h;
     Message m;
+
+    int ok = packet_get(p, header_unpack, &h);
+    if(!ok) return;
+
+    if((uint32_t)(h.app_id) != APP_ID)
+        return;
+
     Client *c = client_lookup(&p->adr);
     if(c) {
-        c->last_in_ack   = max(p->ack, c->last_in_ack);
+        c->last_in_ack   = max(h.ack, c->last_in_ack);
         c->last_activity = max(server->cur_clock, c->last_activity);
     }
 
@@ -262,9 +270,9 @@ static void send_discovery() {
     };
 
     packet_put(&p, discovery_pack, &d);
-    bool ok = packet_send(&p);
+    /* bool ok = */ packet_send(&p);
 
-    assert(ok);
+    // assert(ok);
 }
 
 

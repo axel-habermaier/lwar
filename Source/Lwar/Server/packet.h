@@ -31,8 +31,10 @@ struct Packet {
     size_t  start, end;
 
     /* temp storage for incoming packets */
+    /*
     size_t  ack;
     size_t  time;
+    */
 
     Connection *conn;
     /* connection failed */

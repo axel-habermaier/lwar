@@ -21,13 +21,12 @@ size_t str_unpack(const char *in, Str *out) {
     return i + out->n;
 }
 
-size_t header_unpack(const char *s, size_t *app_id, size_t *ack) {
+size_t header_unpack(const char *s, void *p) {
+    Header *h = (Header*)p;
     size_t i=0;
-    uint32_t _app_id,_ack;
-    i += uint32_unpack(s+i, &_app_id);
-    i += uint32_unpack(s+i, &_ack);
-    *app_id = _app_id;
-    *ack    = _ack;
+    i += uint32_unpack(s+i, &h->app_id);
+    i += uint32_unpack(s+i, &h->ack);
+    // i += uint32_unpack(s+i, &h->time);
     return i;
 }
 
