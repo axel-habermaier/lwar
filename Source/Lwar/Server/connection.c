@@ -129,6 +129,12 @@ void conn_shutdown(Connection* connection)
 	if (numConnections == 0)
 		WSACleanup();
 #endif
+
+    memset(connection, 0, sizeof(Connection));
+}
+
+bool conn_isup(Connection *connection) {
+    return !memchk(connection, 0, sizeof(Connection));
 }
 
 bool conn_bind(Connection* connection)

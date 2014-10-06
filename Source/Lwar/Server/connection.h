@@ -6,6 +6,8 @@
 bool conn_init(Connection* connection);
 void conn_shutdown(Connection* connection);
 
+bool conn_isup(Connection *connection);
+
 bool conn_multicast(Connection* connection);
 bool conn_bind(Connection* connection);
 
