@@ -91,7 +91,7 @@ pgChar* pgTrim(pgChar* message)
 	return message;
 }
 
-pgString pgFormat(pgString message, ...)
+pgString pgFormat(PG_FORMAT pgString message, ...)
 {
 	static char buffer[4096];
 	va_list vl;
@@ -112,7 +112,7 @@ pgVoid pgNoReturn()
 	// A dummy non-returning function that is needed by the PG_DIE macro. Visual studio does not try to verify
 	// whether the function actually returns, whereas GCC and clang do.
 
-#ifndef PG_SYSTEM_WINDOWS
+#ifndef PG_COMPILER_VISUAL_STUDIO
 	for(;;) {}
 #endif
 }
@@ -172,6 +172,9 @@ pgVoid pgAllocated(pgVoid* ptr, pgString type, pgString file, pgInt32 line)
 		file, line, info->type, info->file, info->line);
 
 	info = (pgMemoryInfo*)malloc(sizeof(pgMemoryInfo));
+	if (info == NULL)
+		return;
+
 	info->ptr = ptr;
 	info->type = type;
 	info->file = file;

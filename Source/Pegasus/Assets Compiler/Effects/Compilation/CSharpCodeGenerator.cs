@@ -186,11 +186,7 @@
 			_writer.AppendLine("/// <param name=\"graphicsDevice\">The graphics device this instance belongs to.</param>");
 			_writer.AppendLine("/// <param name=\"assets\">The assets manager that should be used to load required assets.</param>");
 
-			_writer.Append("public ");
-			if (ConstantBuffers.Any())
-				_writer.Append("unsafe ");
-
-			_writer.AppendLine("{0}(GraphicsDevice graphicsDevice, AssetsManager assets)", _effect.Name);
+			_writer.AppendLine("public {0}(GraphicsDevice graphicsDevice, AssetsManager assets)", _effect.Name);
 			_writer.AppendLine("\t: base(graphicsDevice, assets)");
 			_writer.AppendBlockStatement(() =>
 			{

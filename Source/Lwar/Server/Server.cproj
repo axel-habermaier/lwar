@@ -9,10 +9,12 @@
     </Compiler>
     <Language>C</Language>
     <Target>Bin</Target>
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
-    <OutputPath>..\..\Binaries x64\Debug OpenGL3\</OutputPath>
+    <OutputPath>..\..\..\Binaries x64\Debug OpenGL3\</OutputPath>
     <OutputName>lwar-server</OutputName>
     <CompileTarget>SharedLibrary</CompileTarget>
     <DefineSymbols>DEBUG</DefineSymbols>
@@ -29,7 +31,7 @@
     </Includes>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>..\..\Binaries x64\Release OpenGL3\</OutputPath>
+    <OutputPath>..\..\..\Binaries x64\Release OpenGL3\</OutputPath>
     <OutputName>lwar-server</OutputName>
     <CompileTarget>SharedLibrary</CompileTarget>
     <OptimizationLevel>3</OptimizationLevel>
@@ -102,10 +104,6 @@
     <None Include="protocol.h" />
     <None Include="queue.h" />
     <None Include="real.h" />
-    <None Include="Server.cproj" />
-    <None Include="Server.md.pc" />
-    <None Include="Server.vcxproj" />
-    <None Include="Server.vcxproj.filters" />
     <None Include="str.h" />
     <None Include="types.h" />
     <None Include="templates.h" />
@@ -113,7 +111,6 @@
     <None Include="attributes.h" />
     <None Include="pack.h" />
     <None Include="server.h" />
-    <None Include="tags" />
     <None Include="unpack.h" />
   </ItemGroup>
 </Project>

@@ -407,9 +407,9 @@
 			Assert.ArgumentInRange(precision, 5, Int16.MaxValue);
 			Assert.ArgumentInRange(width, 1, Int16.MaxValue);
 
-			var theta = 2d * 3.1415926f / precision;
-			var cosine = (float)Math.Cos(theta);
-			var sine = (float)Math.Sin(theta);
+			var theta = MathUtils.TwoPi / precision;
+			var cosine = MathUtils.Cos(theta);
+			var sine = MathUtils.Sin(theta);
 
 			var current = new Vector2(circle.Radius, 0);
 

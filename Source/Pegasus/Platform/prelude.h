@@ -95,7 +95,7 @@
 	PG_MULTILINE_MACRO_BEGIN \
 	(ptr) = (type*)malloc(sizeof(type)); \
 	if ((ptr) == NULL) \
-		PG_DIE("Out of memory: Failed to allocate %d bytes for an object of type '" #type "'.", sizeof(type)); \
+		PG_DIE("Out of memory: Failed to allocate %d bytes for an object of type '" #type "'.", (pgUInt32)sizeof(type)); \
 	memset((void*)(ptr), 0, sizeof(type)); \
 	PG_ALLOCATED(ptr, type); \
 	PG_MULTILINE_MACRO_END
@@ -106,7 +106,7 @@
 	PG_MULTILINE_MACRO_BEGIN \
 	(ptr) = (type*)malloc(sizeof(type) * length); \
 	if ((ptr) == NULL) \
-		PG_DIE("Out of memory: Failed to allocate %d bytes for an array of type '" #type "'.", sizeof(type) * length); \
+		PG_DIE("Out of memory: Failed to allocate %d bytes for an array of type '" #type "'.", (pgUInt32)(sizeof(type) * length)); \
 	memset((void*)(ptr), 0, sizeof(type) * length); \
 	PG_ALLOCATED(ptr, type); \
 	PG_MULTILINE_MACRO_END
@@ -181,7 +181,16 @@ extern pgLibraryState pgState;
 
 pgChar* pgTrim(pgChar* message);
 pgString pgGetOsErrorMessage();
-pgString pgFormat(pgString message, ...);
+
+#ifdef PG_COMPILER_VISUAL_STUDIO
+	#include <sal.h>
+	#define PG_FORMAT _Printf_format_string_
+	pgString pgFormat(PG_FORMAT pgString message, ...);
+#else
+	#define PG_FORMAT
+	__attribute__ ((format(printf,1,2))) pgString pgFormat(pgString message, ...);
+#endif
+
 PG_NORETURN pgVoid pgNoReturn();
 
 #define PG_DIE(fmt, ...)													\

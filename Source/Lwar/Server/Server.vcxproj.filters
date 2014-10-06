@@ -62,9 +62,6 @@
     <ClCompile Include="debug.c">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="event.c">
-      <Filter>Gameplay</Filter>
-    </ClCompile>
     <ClCompile Include="id.c">
       <Filter>Gameplay</Filter>
     </ClCompile>
@@ -76,6 +73,12 @@
     </ClCompile>
     <ClCompile Include="str.c">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="pack.c">
+      <Filter>Network</Filter>
+    </ClCompile>
+    <ClCompile Include="unpack.c">
+      <Filter>Network</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -149,9 +152,6 @@
     <ClInclude Include="debug.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="event.h">
-      <Filter>Gameplay</Filter>
-    </ClInclude>
     <ClInclude Include="id.h">
       <Filter>Gameplay</Filter>
     </ClInclude>
@@ -178,6 +178,12 @@
     </ClInclude>
     <ClInclude Include="types.h">
       <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="pack.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="unpack.h">
+      <Filter>Network</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

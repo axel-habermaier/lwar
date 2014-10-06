@@ -52,7 +52,7 @@ void pool_init(Pool *pool, void *p, size_t n, size_t size,
 }
 
 void pool_shutdown(Pool *pool) {
-    assert(pool->i == 0);
+    //assert(pool->i == 0);
 
     if(pool->dynamic) {
         free(pool->mem);

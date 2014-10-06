@@ -50,12 +50,12 @@ pgChar* pgGetWin32ErrorMessage(DWORD error)
 	return buffer;
 }
 
-pgVoid pgWin32Error(pgString message) 
+pgVoid pgWin32Die(pgString message)
 { 
-	pgDieWin32Error(message, GetLastError());
+	pgWin32DieWithError(message, GetLastError());
 }
 
-pgVoid pgDieWin32Error(pgString message, DWORD error)
+pgVoid pgWin32DieWithError(pgString message, DWORD error)
 {
 	PG_DIE("%s %s", message, pgGetWin32ErrorMessage(error));
 }
@@ -69,13 +69,13 @@ pgVoid pgInitializeCore()
 	WSADATA wsaData;
 
 	if (WSAStartup(MAKEWORD(1, 1), &wsaData) != 0)
-		pgWin32Error("Winsock initialization failed.");
+		pgWin32Die("Winsock initialization failed.");
 }
 
 pgVoid pgShutdownCore()
 {
 	if (WSACleanup() != 0)
-		pgWin32Error("Failed to shut down Winsock.");
+		pgWin32Die("Failed to shut down Winsock.");
 }
 
 //====================================================================================================================

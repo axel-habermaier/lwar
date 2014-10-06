@@ -71,6 +71,16 @@
 		}
 
 		/// <summary>
+		///     Hits the shield at the given position, resetting its time to live.
+		/// </summary>
+		/// <param name="impactPosition"></param>
+		public void Hit(Vector2 impactPosition)
+		{
+			ImpactPosition = impactPosition;
+			_remainingTime = FadeOutTime;
+		}
+
+		/// <summary>
 		///     Creates a new instance.
 		/// </summary>
 		/// <param name="gameSession">The game session the instance should be created for.</param>

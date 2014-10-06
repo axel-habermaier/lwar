@@ -76,9 +76,9 @@
 				_indices = new List<ushort>();
 			}
 
-			var theta = 2d * Math.PI / precision;
-			var cosine = (float)Math.Cos(theta);
-			var sine = (float)Math.Sin(theta);
+			var theta = MathUtils.TwoPi / precision;
+			var cosine = MathUtils.Cos(theta);
+			var sine = MathUtils.Sin(theta);
 
 			var current = new Vector2(radius, 0);
 			var startOffset = _vertices.Count;

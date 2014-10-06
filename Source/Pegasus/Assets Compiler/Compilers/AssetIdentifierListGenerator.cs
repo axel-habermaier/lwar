@@ -104,8 +104,16 @@
 			{
 				var currentAssets = assets.Where(asset => !asset.Name.Contains("/")).ToArray();
 				foreach (var asset in currentAssets)
-					writer.AppendLine("public static AssetIdentifier<{0}> {1} {{ get; private set; }}",
+				{
+					writer.AppendLine("public static readonly AssetIdentifier<{0}> {1} =",
 						asset.IdentifierType, EscapeName(asset.Asset.IdentifierName));
+
+					writer.IncreaseIndent();
+					writer.AppendLine("new AssetIdentifier<{0}>({4}, \"{1}.{2}{3}\");",
+						asset.IdentifierType, asset.Asset.RelativePathWithoutExtension,
+						Configuration.AssetsProject.Name, PlatformInfo.AssetExtension, asset.Asset.AssetType);
+					writer.DecreaseIndent();
+				}
 
 				var groups = assets.Where(asset => asset.Name.Contains("/")).GroupBy(asset => asset.Name.Split('/')[0]).ToArray();
 				if (groups.Length > 0 && currentAssets.Length > 0)
@@ -118,20 +126,6 @@
 
 					if (i + 1 < groups.Length)
 						writer.NewLine();
-				}
-
-				if (encloseWithClass)
-				{
-					writer.NewLine();
-					writer.AppendLine("static {0}()", className);
-					writer.AppendBlockStatement(() =>
-					{
-						foreach (var asset in currentAssets)
-							writer.AppendLine("{0} = new AssetIdentifier<{1}>({5}, \"{2}.{3}{4}\");",
-								EscapeName(asset.Asset.IdentifierName), asset.IdentifierType,
-								asset.Asset.RelativePathWithoutExtension, Configuration.AssetsProject.Name,
-								PlatformInfo.AssetExtension, asset.Asset.AssetType);
-					});
 				}
 			};
 

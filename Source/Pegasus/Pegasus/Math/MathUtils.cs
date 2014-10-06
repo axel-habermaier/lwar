@@ -144,5 +144,32 @@
 		{
 			return (int)Math.Round(value);
 		}
+
+		/// <summary>
+		///     Returns the cosine of the given angle.
+		/// </summary>
+		/// <param name="value">The angle, measured in radians.</param>
+		public static float Cos(float value)
+		{
+			return (float)Math.Cos(value);
+		}
+
+		/// <summary>
+		///     Returns the sine of the given angle.
+		/// </summary>
+		/// <param name="value">The angle, measured in radians.</param>
+		public static float Sin(float value)
+		{
+			return (float)Math.Sin(value);
+		}
+
+		/// <summary>
+		///     Returns the tangent of the given angle.
+		/// </summary>
+		/// <param name="value">The angle, measured in radians.</param>
+		public static float Tan(float value)
+		{
+			return (float)Math.Tan(value);
+		}
 	}
 }

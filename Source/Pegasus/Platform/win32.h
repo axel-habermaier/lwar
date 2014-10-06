@@ -63,8 +63,8 @@
 //====================================================================================================================
 
 pgChar* pgGetWin32ErrorMessage(DWORD error);
-pgVoid pgWin32Error(pgString message);
-pgVoid pgDieWin32Error(pgString message, DWORD error);
+PG_NORETURN pgVoid pgWin32Die(pgString message);
+PG_NORETURN pgVoid pgWin32DieWithError(pgString message, DWORD error);
 
 //====================================================================================================================
 // Window-specific data types

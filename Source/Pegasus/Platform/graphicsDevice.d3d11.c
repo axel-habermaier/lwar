@@ -47,8 +47,7 @@ pgVoid pgCreateGraphicsDeviceCore(pgGraphicsDevice* device)
 	UINT flags;
 
 	PG_D3DCALL(CreateDXGIFactory(&IID_IDXGIFactory, &device->factory), "Failed to create DXGI factory.");
-	if (IDXGIFactory_EnumAdapters(device->factory, 0, &device->adapter) == DXGI_ERROR_NOT_FOUND)
-		PG_DIE("Failed to get DXGI adapter.");
+	PG_D3DCALL(IDXGIFactory_EnumAdapters(device->factory, 0, &device->adapter), "Failed to get DXGI adapter.");
 	
 	flags = D3D11_CREATE_DEVICE_SINGLETHREADED;
 #ifdef DEBUG

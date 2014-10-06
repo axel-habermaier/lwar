@@ -202,7 +202,7 @@
 			up = up.Normalize();
 
 			// Map the viewport plane into world space
-			var height = (float)Math.Tan(FieldOfView / 2.0f) * NearDistance;
+			var height = MathUtils.Tan(FieldOfView / 2.0f) * NearDistance;
 			var width = height * Viewport.Width / Viewport.Height;
 
 			left *= width;

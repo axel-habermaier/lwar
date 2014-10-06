@@ -1,14 +1,21 @@
 ﻿namespace Lwar.Gameplay.Entities
 {
 	using System;
+	using Actors;
 	using Pegasus;
 	using Pegasus.Math;
+	using Pegasus.Platform.Logging;
 
 	/// <summary>
 	///     Represents a ray.
 	/// </summary>
 	public class Ray : Entity<Ray>
 	{
+		/// <summary>
+		///     The shield effect that is shown when the ray hits a ship.
+		/// </summary>
+		private Shield _shield;
+
 		/// <summary>
 		///     Gets the length of the ray.
 		/// </summary>
@@ -31,7 +38,22 @@
 			Position = origin;
 			Rotation = MathUtils.DegToRad(direction);
 			Length = length;
-			Target = target;
+			
+			var ship = target as Ship;
+			if (ship == null)
+				return;
+
+			var angle = MathUtils.DegToRad(direction);
+			var impactPosition = origin + new Vector2(MathUtils.Cos(angle), MathUtils.Sin(angle)) * length;
+
+			if (ship != Target || _shield == null)
+			{
+				Target = target;
+				_shield = Shield.Create(GameSession, ship, impactPosition);
+				GameSession.Actors.Add(_shield);
+			}
+			else
+				_shield.Hit(impactPosition);
 		}
 
 		/// <summary>
@@ -46,6 +68,7 @@
 			var ray = gameSession.Allocate<Ray>();
 			ray.Identifier = id;
 			ray.Template = EntityTemplates.Ray;
+			ray._shield = null;
 			return ray;
 		}
 	}

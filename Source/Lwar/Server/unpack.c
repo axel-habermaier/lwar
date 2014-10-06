@@ -8,6 +8,10 @@
 
 #include <string.h>
 
+#ifdef _MSC_VER
+	#define strndup(s, n) _strdup(s)
+#endif
+
 size_t id_unpack(const char *out, Id *id) {
     uint16_unpack(out,   &id->gen);
     uint16_unpack(out+2, &id->n);

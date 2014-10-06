@@ -310,7 +310,7 @@
 		public static Matrix CreatePerspectiveFieldOfView(float fieldOfView, float aspect, float znear, float zfar)
 		{
 			var depth = znear - zfar;
-			var f = 1.0f / (float)Math.Tan(fieldOfView * 0.5);
+			var f = 1.0f / MathUtils.Tan(fieldOfView * 0.5f);
 
 			return new Matrix
 			{
@@ -407,8 +407,8 @@
 		public static Matrix CreateRotationX(float angle)
 		{
 			var matrix = Identity;
-			var cos = (float)Math.Cos(angle);
-			var sin = (float)Math.Sin(angle);
+			var cos = MathUtils.Cos(angle);
+			var sin = MathUtils.Sin(angle);
 
 			matrix.M22 = cos;
 			matrix.M23 = -sin;
@@ -425,8 +425,8 @@
 		public static Matrix CreateRotationY(float angle)
 		{
 			var matrix = Identity;
-			var cos = (float)Math.Cos(angle);
-			var sin = (float)Math.Sin(angle);
+			var cos = MathUtils.Cos(angle);
+			var sin = MathUtils.Sin(angle);
 
 			matrix.M11 = cos;
 			matrix.M13 = sin;
@@ -443,8 +443,8 @@
 		public static Matrix CreateRotationZ(float angle)
 		{
 			var matrix = Identity;
-			var cos = (float)Math.Cos(angle);
-			var sin = (float)Math.Sin(angle);
+			var cos = MathUtils.Cos(angle);
+			var sin = MathUtils.Sin(angle);
 
 			matrix.M11 = cos;
 			matrix.M12 = -sin;
