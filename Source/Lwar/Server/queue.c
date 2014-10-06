@@ -246,7 +246,7 @@ void queue_stats()
 		r->stats.info[r->stats.n].player_id = c->player.id;
 		r->stats.info[r->stats.n].kills = c->player.kills;
 		r->stats.info[r->stats.n].deaths = c->player.deaths;
-		r->stats.info[r->stats.n].ping = 0; // TODO
+		r->stats.info[r->stats.n].ping = c->ping;
 		++r->stats.n;
 	}
 }

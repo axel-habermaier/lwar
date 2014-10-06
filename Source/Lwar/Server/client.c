@@ -17,6 +17,7 @@ static void client_ctor(size_t i, void *p) {
     c->misbehavior                = 0;
     c->hasleft                    = 0;
     c->dead                       = 0;
+    c->ping                       = 0;
 
     player_init(&c->player, i);
 }

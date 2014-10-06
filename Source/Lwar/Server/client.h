@@ -11,6 +11,7 @@ struct Client {
 
     Player player;
     Address adr;
+    size_t ping;   /* TODO: implement */
 
     bool remote;   /* adr is valid */
     bool hasleft;  /* has actively disconnected */
