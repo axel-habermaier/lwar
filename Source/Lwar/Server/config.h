@@ -10,6 +10,7 @@ enum {
 	MULTICAST_PORT      = SERVER_PORT + 1,
 	MULTICAST_TTL		= 1,
 
+    UPDATE_INTERVAL     = 30        /*ms*/, /* only used if server_update is called with force == false */
 	DISCOVERY_INTERVAL  =  5 * 1000 /*ms*/, /* send discovery every 5 seconds   */
     TIMEOUT_INTERVAL    = 15 * 1000 /*ms*/, /* drop connection after 15 seconds */
     RETRANSMIT_INTERVAL =       100 /*ms*/,
