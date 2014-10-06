@@ -8,9 +8,22 @@
 typedef enum   MessageType MessageType;
 typedef struct Discovery Discovery;
 typedef struct Header Header;
-typedef struct Message Message;
+
+typedef enum   LeaveReason LeaveReason;
+typedef enum   RejectReason RejectReason;
 
 bool is_reliable(Message *m);
+
+void message_add(Message *m, Entity *e);
+void message_collision(Message *m, Collision *c);
+void message_join(Message *m, Client *c);
+void message_kill(Message *m, Player *k, Player *v);
+void message_leave(Message *m, Client *c, LeaveReason reason);
+void message_reject(Message *m, RejectReason reason);
+void message_remove(Message *m, Entity *e);
+void message_stats(Message *m);
+void message_synced(Message *m);
+void message_update(Message *m, MessageType type, size_t n); /* TODO: use data structure, e.g. Format. */
 
 enum MessageType {
     MESSAGE_CONNECT			  =   1,
@@ -45,16 +58,16 @@ enum {
 	MESSAGE_DISCOVERY		  = 200,
 };
 
-typedef enum {
+enum LeaveReason {
 	LEAVE_QUIT			= 1,
 	LEAVE_DROPPED		= 2,
 	LEAVE_MISBEHAVED	= 3,
-} LeaveReason;
+};
 
-typedef enum {
+enum RejectReason {
 	REJECT_FULL				= 1,
 	REJECT_VERSION_MISMATCH = 2,
-} RejectReason;
+};
 
 struct Header {
     uint32_t app_id;
