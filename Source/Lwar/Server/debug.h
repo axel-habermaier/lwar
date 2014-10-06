@@ -12,6 +12,8 @@
 #define assert(test) (void)(test)
 #endif
 
+bool memchk(const void *p, char c, size_t n);
+
 void debug_assert(bool test, const char *what, const char *file, size_t line);
 
 typedef struct FailedAssertion FailedAssertion;

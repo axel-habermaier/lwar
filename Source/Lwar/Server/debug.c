@@ -11,7 +11,7 @@
 jmp_buf assert_handler;
 FailedAssertion failed_assertion;
 
-static bool memchk(const void *p, char c, size_t n) {
+bool memchk(const void *p, char c, size_t n) {
     const char *s = (const char*)p;
     size_t i;
     for(i=0; i<n; i++) {
