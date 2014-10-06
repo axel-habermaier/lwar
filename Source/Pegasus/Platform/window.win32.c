@@ -43,7 +43,7 @@ pgVoid pgOpenWindowCore(pgWindow* window, pgString title)
 	rect.bottom = window->placement.height;
 
 	if (!AdjustWindowRect(&rect, style, PG_FALSE))
-		pgWin32Error("Failed to adjust window rectangle.");
+		pgWin32Die("Failed to adjust window rectangle.");
 
 	width = rect.right - rect.left;
 	height = rect.bottom - rect.top;
@@ -53,7 +53,7 @@ pgVoid pgOpenWindowCore(pgWindow* window, pgString title)
 		width, height, NULL, NULL, GetModuleHandle(NULL), window);
 
 	if (window->hwnd == NULL)
-		pgWin32Error("Failed to open window.");
+		pgWin32Die("Failed to open window.");
 
 	if (window->placement.mode == PG_WINDOW_MAXIMIZED)
 		ShowWindow(window->hwnd, SW_SHOWMAXIMIZED);
@@ -70,7 +70,7 @@ pgVoid pgCloseWindowCore(pgWindow* window)
 	ShowCursor(PG_TRUE);
 
 	if (window->hwnd != NULL && !DestroyWindow(window->hwnd))
-		pgWin32Error("Failed to destroy window.");
+		pgWin32Die("Failed to destroy window.");
 
 	if (--state.openWindows == 0)
 		Shutdown();
@@ -109,7 +109,7 @@ pgVoid pgGetWindowPlacementCore(pgWindow* window)
 		return;
 
 	if (!GetClientRect(window->hwnd, &rect))
-		pgWin32Error("Failed to get window size.");
+		pgWin32Die("Failed to get window size.");
 
     window->placement.width = rect.right - rect.left;
 	window->placement.height = rect.bottom - rect.top;
@@ -119,7 +119,7 @@ pgVoid pgGetWindowPlacementCore(pgWindow* window)
 		return;
 
 	if (!GetWindowRect(window->hwnd, &rect))
-		pgWin32Error("Failed to get window position.");
+		pgWin32Die("Failed to get window position.");
 	
 	window->placement.x = rect.left;
 	window->placement.y = rect.top;
@@ -131,7 +131,7 @@ pgVoid pgChangeToFullscreenModeCore(pgWindow* window)
 	style &= ~(WS_CAPTION | WS_THICKFRAME | WS_SYSMENU | WS_OVERLAPPEDWINDOW);
 
 	if (!SetWindowLongPtr(window->hwnd, GWL_STYLE, style))
-		pgWin32Error("Failed to set fullscreen window style.");
+		pgWin32Die("Failed to set fullscreen window style.");
 
 	if (window->placement.mode == PG_WINDOW_MAXIMIZED)
 	{
@@ -139,7 +139,7 @@ pgVoid pgChangeToFullscreenModeCore(pgWindow* window)
 		MONITORINFO monitorInfo = { sizeof(MONITORINFO) };
 
 		if (!GetMonitorInfo(monitor, &monitorInfo)) 
-			pgWin32Error("Failed to get monitor info.");
+			pgWin32Die("Failed to get monitor info.");
 
 		LONG x = monitorInfo.rcMonitor.left;
 		LONG y = monitorInfo.rcMonitor.top;
@@ -147,10 +147,10 @@ pgVoid pgChangeToFullscreenModeCore(pgWindow* window)
 		LONG height = monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top;
 
 		if (!SetWindowPos(window->hwnd, NULL, x, y, width, height, SWP_FRAMECHANGED | SWP_SHOWWINDOW))
-			pgWin32Error("Failed to change fullscreen window style.");
+			pgWin32Die("Failed to change fullscreen window style.");
 	}
 	else if (!ShowWindow(window->hwnd, SW_SHOWMAXIMIZED))
-		pgWin32Error("Failed to maximize fullscreen window.");	
+		pgWin32Die("Failed to maximize fullscreen window.");
 }
 
 pgVoid pgChangeToWindowedModeCore(pgWindow* window)
@@ -159,16 +159,16 @@ pgVoid pgChangeToWindowedModeCore(pgWindow* window)
 	style |= WS_CAPTION | WS_THICKFRAME | WS_SYSMENU | WS_OVERLAPPEDWINDOW;
 
 	if (!SetWindowLongPtr(window->hwnd, GWL_STYLE, style))
-		pgWin32Error("Failed to set new window style.");
+		pgWin32Die("Failed to set new window style.");
 
 	if (!ShowWindow(window->hwnd, SW_RESTORE))
-		pgWin32Error("Failed to get window into normal mode.");
+		pgWin32Die("Failed to get window into normal mode.");
 }
 
 pgVoid pgSetWindowTitleCore(pgWindow* window, pgString title)
 {
 	if (!SetWindowText(window->hwnd, title))
-		pgWin32Error("Failed to set window title.");
+		pgWin32Die("Failed to set window title.");
 }
 
 pgVoid pgCaptureMouseCore(pgWindow* window)
@@ -187,15 +187,15 @@ pgVoid pgClipCursor(pgWindow* window, pgBool clip)
 	{
 		RECT rect;
 		if (!GetWindowRect(window->hwnd, &rect))
-			pgWin32Error("Failed to get window position.");
+			pgWin32Die("Failed to get window position.");
 		
 		if (!ClipCursor(&rect))
-			pgWin32Error("Failed to clip cursor to window bounds.");
+			pgWin32Die("Failed to clip cursor to window bounds.");
 	}
 	else
 	{
 		if (!ClipCursor(NULL))
-			pgWin32Error("Failed to release cursor.");
+			pgWin32Die("Failed to release cursor.");
 	}
 }
 
@@ -220,7 +220,7 @@ pgRectangle pgGetDesktopArea()
 	pgRectangle rectangle;
 
 	if (!GetClientRect(GetDesktopWindow(), &rect))
-		pgWin32Error("Failed to get desktop size.");
+		pgWin32Die("Failed to get desktop size.");
 
 	rectangle.left = rect.left;
 	rectangle.top = rect.top;
@@ -235,7 +235,7 @@ pgVoid pgCancelDeadCharacter()
 	BYTE keyState[256];
 	WCHAR buffer[8];
 	if (!GetKeyboardState(keyState))
-		pgWin32Error("Failed to get keyboard state.");
+		pgWin32Die("Failed to get keyboard state.");
 
 	// Clear the internal keyboard buffer so that the next WM_CHAR message is not influenced by the dead key
 	ToUnicode(VK_SPACE, 39, keyState, buffer, sizeof(buffer) / sizeof(WCHAR), 0);
@@ -258,7 +258,7 @@ static pgVoid Initialize()
 	device.hwndTarget = NULL;
 
 	if (!RegisterRawInputDevices(&device, 1, sizeof(RAWINPUTDEVICE)))
-		pgWin32Error("Failed to register keyboard raw input device.");
+		pgWin32Die("Failed to register keyboard raw input device.");
 }
 
 static pgVoid Shutdown()
@@ -266,7 +266,7 @@ static pgVoid Shutdown()
 	PG_ASSERT(state.openWindows == 0, "There should be no open windows left.");
 
 	if (!UnregisterClass(WndClassName, GetModuleHandle(NULL)))
-		pgWin32Error("Unable to unregister window class.");
+		pgWin32Die("Unable to unregister window class.");
 }
 
 static pgVoid RegisterWindowClass(pgString className, WNDPROC wndProc)
@@ -286,7 +286,7 @@ static pgVoid RegisterWindowClass(pgString className, WNDPROC wndProc)
 	wndClass.lpszClassName = (LPCSTR)className;
 
 	if (RegisterClass(&wndClass) == 0)
-		pgWin32Error("Unable to register window class.");
+		pgWin32Die("Unable to register window class.");
 }
 
 static pgVoid HandleWindowMessages(HWND hwnd)
@@ -343,10 +343,10 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 			RECT maxRect = { 0, 0, PG_WINDOW_MAX_WIDTH, PG_WINDOW_MAX_HEIGHT };
 
 			if (!AdjustWindowRect(&minRect, (DWORD)GetWindowLongPtr(window->hwnd, GWL_STYLE), PG_FALSE))
-				pgWin32Error("Unable to get minimum window size.");
+				pgWin32Die("Unable to get minimum window size.");
 
 			if (!AdjustWindowRect(&maxRect, (DWORD)GetWindowLongPtr(window->hwnd, GWL_STYLE), PG_FALSE))
-				pgWin32Error("Unable to get maximum window size.");
+				pgWin32Die("Unable to get maximum window size.");
 
 			// Set the minimum and maximum allowed window sizes
 			info->ptMaxTrackSize.x = maxRect.right - maxRect.left;
@@ -513,7 +513,7 @@ static LRESULT HandleKeyboardInput(LPARAM lParam)
 	outSize = GetRawInputData((HRAWINPUT)lParam, RID_INPUT, &input, &size, sizeof(RAWINPUTHEADER));
 
 	if (outSize == -1)
-		pgWin32Error("Failed to read raw keyboard input.");
+		pgWin32Die("Failed to read raw keyboard input.");
 
 	// Extract keyboard raw input data; see also http://molecularmusings.wordpress.com/2011/09/05/properly-handling-keyboard-input/
 	if (input.header.dwType == RIM_TYPEKEYBOARD)

@@ -31,7 +31,7 @@ pgVoid pgCreateContext(pgContext* context)
 
 	context->hrc = wglCreateContextAttribsARB(context->hdc, NULL, attributes);
 	if (context->hrc == NULL)
-		pgWin32Error("Failed to initialize the OpenGL context.");
+		pgWin32Die("Failed to initialize the OpenGL context.");
 }
 
 pgVoid pgDestroyContext(pgContext* context)
@@ -39,10 +39,10 @@ pgVoid pgDestroyContext(pgContext* context)
 	PG_ASSERT_NOT_NULL(context->hrc);
 
 	if (!wglMakeCurrent(NULL, NULL))
-		pgWin32Error("Unable to unset the current OpenGL context.");
+		pgWin32Die("Unable to unset the current OpenGL context.");
 
 	if (context->hrc != NULL && !wglDeleteContext(context->hrc))
-		pgWin32Error("Unable to destroy the OpenGL context.");
+		pgWin32Die("Unable to destroy the OpenGL context.");
 
 	context->hrc = NULL;
 }
@@ -54,13 +54,13 @@ pgVoid pgBindContext(pgContext* context, pgGraphicsDevice* device, pgWindow* win
 
 	context->hdc = GetDC(context->hwnd);
 	if (context->hdc == NULL)
-		pgWin32Error("Failed to get the device context of the swap chain window.");
+		pgWin32Die("Failed to get the device context of the swap chain window.");
 }
 
 pgVoid pgDestroyBoundContext(pgContext* context)
 {
 	if (context->hdc != NULL && !ReleaseDC(context->hwnd, context->hdc))
-		pgWin32Error("Failed to release the device context of the swap chain window.");
+		pgWin32Die("Failed to release the device context of the swap chain window.");
 }
 
 pgVoid pgCreateContextWindow(pgContext* context)
@@ -69,22 +69,22 @@ pgVoid pgCreateContextWindow(pgContext* context)
 		NULL, NULL, GetModuleHandle(NULL), NULL);
 
 	if (context->hwnd == NULL)
-		pgWin32Error("Failed to initialize the OpenGL initialization window.");
+		pgWin32Die("Failed to initialize the OpenGL initialization window.");
 
 	ShowWindow(context->hwnd, SW_HIDE);
 
 	context->hdc = GetDC(context->hwnd);
 	if (context->hdc == NULL)
-		pgWin32Error("Failed to get the device context of the OpenGL initialization window.");
+		pgWin32Die("Failed to get the device context of the OpenGL initialization window.");
 }
 
 pgVoid pgDestroyContextWindow(pgContext* context)
 {
 	if (context->hdc != NULL && !ReleaseDC(context->hwnd, context->hdc))
-		pgWin32Error("Failed to release the device context of the OpenGL initialization window.");
+		pgWin32Die("Failed to release the device context of the OpenGL initialization window.");
 
 	if (context->hwnd != NULL && !DestroyWindow(context->hwnd))
-		pgWin32Error("Failed to destroy the OpenGL initialization window.");
+		pgWin32Die("Failed to destroy the OpenGL initialization window.");
 
 	context->hwnd = NULL;
 }
@@ -116,11 +116,11 @@ pgVoid pgSetPixelFormat(pgContext* context)
 	// Get the pixel format that best matches our requirements
 	bestMatch = ChoosePixelFormat(context->hdc, &descriptor);
 	if (bestMatch == 0)
-		pgWin32Error("Failed to find a suitable pixel format.");
+		pgWin32Die("Failed to find a suitable pixel format.");
 
 	// Check whether the chosen pixel format is acceptable
 	if (DescribePixelFormat(context->hdc, bestMatch, sizeof(PIXELFORMATDESCRIPTOR), &descriptor) == 0)
-		pgWin32Error("Failed to get pixel format description.");
+		pgWin32Die("Failed to get pixel format description.");
 
 	if (descriptor.cColorBits != colorBits)
 		PG_DIE("Chosen pixel format has a %d bits per color; expected %d bits.", descriptor.cColorBits, colorBits);
@@ -136,7 +136,7 @@ pgVoid pgSetPixelFormat(pgContext* context)
 
 	// Set the chosen pixel format
 	if (!SetPixelFormat(context->hdc, bestMatch, &descriptor))
-		pgWin32Error("Failed to set pixel format.");
+		pgWin32Die("Failed to set pixel format.");
 }
 
 pgVoid pgInitializeContextExtensions(pgContext* context)
@@ -147,10 +147,10 @@ pgVoid pgInitializeContextExtensions(pgContext* context)
 	// In order to initialize OpenGL and the extensions, we have to create a legacy OpenGL 1.1 context
 	context->hrc = wglCreateContext(context->hdc);
 	if (context->hrc == NULL)
-		pgWin32Error("Failed to create the OpenGL legacy context.");
+		pgWin32Die("Failed to create the OpenGL legacy context.");
 
 	if (!wglMakeCurrent(context->hdc, context->hrc))
-		pgWin32Error("Failed to make the legacy OpenGL context current.");
+		pgWin32Die("Failed to make the legacy OpenGL context current.");
 
 	if (wgl_LoadFunctions(context->hdc) == wgl_LOAD_FAILED)
 		PG_DIE("WGL initialization failed.");
@@ -178,7 +178,7 @@ pgVoid pgMakeCurrent(pgContext* context)
 
 	current = context;
 	if (!wglMakeCurrent(context->hdc, context->hrc))
-		pgWin32Error("Failed to make the OpenGL context current.");
+		pgWin32Die("Failed to make the OpenGL context current.");
 }
 
 pgVoid pgSwapBuffers(pgContext* context)
@@ -186,7 +186,7 @@ pgVoid pgSwapBuffers(pgContext* context)
 	PG_ASSERT_NOT_NULL(context->hdc);
 
 	if (!SwapBuffers(context->hdc))
-		pgWin32Error("Failed to swap buffers.");
+		pgWin32Die("Failed to swap buffers.");
 }
 
 //====================================================================================================================

@@ -181,7 +181,16 @@ extern pgLibraryState pgState;
 
 pgChar* pgTrim(pgChar* message);
 pgString pgGetOsErrorMessage();
-pgString pgFormat(pgString message, ...);
+
+#ifdef PG_COMPILER_VISUAL_STUDIO
+	#include <sal.h>
+	#define PG_FORMAT _Printf_format_string_
+	pgString pgFormat(PG_FORMAT pgString message, ...);
+#else
+	#define PG_FORMAT
+	__attribute__ ((format(printf,1,2))) pgString pgFormat(pgString message, ...);
+#endif
+
 PG_NORETURN pgVoid pgNoReturn();
 
 #define PG_DIE(fmt, ...)													\

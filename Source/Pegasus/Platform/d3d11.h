@@ -26,10 +26,10 @@
 #define PG_CONTEXT(obj) (obj)->device->context
 
 #define PG_D3DCALL(call, msg)			\
-	PG_MULTILINE_MACRO_BEGIN		\
-	HRESULT hr = (call);			\
-	if (FAILED(hr))					\
-		pgDieWin32Error(msg, hr);	\
+	PG_MULTILINE_MACRO_BEGIN			\
+	HRESULT hr = (call);				\
+	if (FAILED(hr))						\
+		pgWin32DieWithError(msg, hr);	\
 	PG_MULTILINE_MACRO_END
 
 #define PG_SAFE_RELEASE(type, obj)  \

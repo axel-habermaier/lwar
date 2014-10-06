@@ -45,6 +45,8 @@ pgVoid pgGetQueryDataCore(pgQuery* query, pgVoid* data, pgInt32 size)
 		pgTimestampDisjointQueryData* pgResult = (pgTimestampDisjointQueryData*)data;
 
 		hr = ID3D11DeviceContext_GetData(PG_CONTEXT(query), (ID3D11Asynchronous*)query->ptr, &result, sizeof(D3D11_QUERY_DATA_TIMESTAMP_DISJOINT), 0);
+		PG_ASSERT(hr == S_OK, "Timestamp disjoint query failed.");
+
 		pgResult->frequency = result.Frequency;
 		pgResult->valid = !result.Disjoint;
 		break;
@@ -63,7 +65,7 @@ pgBool pgIsQueryDataAvailableCore(pgQuery* query)
 {
 	HRESULT hr = ID3D11DeviceContext_GetData(PG_CONTEXT(query), (ID3D11Asynchronous*)query->ptr, NULL, 0, 0);
 	if (hr != S_OK && hr != S_FALSE)
-		pgDieWin32Error("Failed to check availability of query result.", hr);
+		pgWin32DieWithError("Failed to check availability of query result.", hr);
 
 	return hr == S_OK;
 }
