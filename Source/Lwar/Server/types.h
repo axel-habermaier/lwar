@@ -12,6 +12,7 @@ typedef struct Connection Connection;
 typedef struct Entity Entity;
 typedef struct EntityType EntityType;
 typedef struct Format Format;
+typedef struct Message Message;
 typedef struct Player Player;
 typedef struct Slot Slot;
 typedef struct SlotType SlotType;
