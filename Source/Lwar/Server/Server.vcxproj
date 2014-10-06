@@ -363,10 +363,10 @@
     <ClCompile Include="connection.c" />
     <ClCompile Include="debug.c" />
     <ClCompile Include="entity.c" />
-    <ClCompile Include="event.c" />
     <ClCompile Include="id.c" />
     <ClCompile Include="log.c" />
     <ClCompile Include="message.c" />
+    <ClCompile Include="pack.c" />
     <ClCompile Include="packet.c" />
     <ClCompile Include="performance.c" />
     <ClCompile Include="physics.c" />
@@ -381,6 +381,7 @@
     <ClCompile Include="str.c" />
     <ClCompile Include="templates.c" />
     <ClCompile Include="uint.c" />
+    <ClCompile Include="unpack.c" />
     <ClCompile Include="update.c" />
   </ItemGroup>
   <ItemGroup>
@@ -395,11 +396,11 @@
     <ClInclude Include="coroutine.h" />
     <ClInclude Include="debug.h" />
     <ClInclude Include="entity.h" />
-    <ClInclude Include="event.h" />
     <ClInclude Include="id.h" />
     <ClInclude Include="list.h" />
     <ClInclude Include="log.h" />
     <ClInclude Include="message.h" />
+    <ClInclude Include="pack.h" />
     <ClInclude Include="packet.h" />
     <ClInclude Include="performance.h" />
     <ClInclude Include="physics.h" />
@@ -416,6 +417,7 @@
     <ClInclude Include="templates.h" />
     <ClInclude Include="types.h" />
     <ClInclude Include="uint.h" />
+    <ClInclude Include="unpack.h" />
     <ClInclude Include="update.h" />
     <ClInclude Include="vector.h" />
   </ItemGroup>

@@ -278,10 +278,9 @@ static void send_discovery() {
 
 static void send_reject(Address *adr, size_t ack, RejectReason reason) {
     Packet p;
-    Client c = {
-        .adr = *adr,
-        .last_in_reliable_seqno = ack,
-    };
+	Client c;
+	c.adr = *adr;
+	c.last_in_reliable_seqno = ack;
     packet_init_header(&c, &p);
 
     Message m;

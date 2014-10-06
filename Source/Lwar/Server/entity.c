@@ -4,9 +4,9 @@
 
 #include "debug.h"
 #include "update.h"
-#include "event.h"
 #include "log.h"
 #include "performance.h"
+#include "protocol.h"
 #include "physics.h"
 #include "server.h"
 

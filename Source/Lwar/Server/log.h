@@ -4,6 +4,7 @@
 #include "attributes.h"
 
 #ifdef _MSC_VER
+	#include "sal.h"
     NORETURN void log_die(_Printf_format_string_ const char* message, ...);
     void log_error(_Printf_format_string_ const char* message, ...);
     void log_warn(_Printf_format_string_ const char* message, ...);
