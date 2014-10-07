@@ -16,16 +16,21 @@ bool is_reliable(Message *m) {
     return m->type < 100;
 }
 
+bool is_update(Message *m) {
+    return    m->type > MESSAGE_UPDATE
+           && m->type < MESSAGE_UPDATE_SHIP;
+}
+
 void message_join(Message *m, Client *c) {
     m->type = MESSAGE_JOIN;
     m->join.player_id = c->player.id;
-	m->join.nick = c->player.name;
+    m->join.nick = c->player.name;
 }
 
 void message_leave(Message *m, Client *c, LeaveReason reason) {
     m->type = MESSAGE_LEAVE;
     m->leave.player_id = c->player.id;
-	m->leave.reason = reason;
+    m->leave.reason = reason;
 }
 
 void message_collision(Message *m, Collision *c) {
