@@ -27,6 +27,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lwar Server", "Lwar\Server\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{C4621122-D07F-4FD1-A423-0283770B2A69}"
 	ProjectSection(SolutionItems) = preProject
+		..\Documentation\gameplay ideas.txt = ..\Documentation\gameplay ideas.txt
 		..\Documentation\gameplay.txt = ..\Documentation\gameplay.txt
 		..\Documentation\network.txt = ..\Documentation\network.txt
 		..\Documentation\todo.txt = ..\Documentation\todo.txt

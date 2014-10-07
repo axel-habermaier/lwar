@@ -62,6 +62,8 @@ void entity_hit(Entity *e, Real damage, Player *k) {
     }
 
     e->health -= damage;
+	if (e->health <= 0)
+		entity_remove(e);
 }
 
 static void act(Entity *e) {
@@ -71,9 +73,6 @@ static void act(Entity *e) {
         if(e->health > 0 && e->type->act)
             e->type->act(e);
     }
-
-    if(e->health <= 0)
-        entity_remove(e);
 }
 
 void entities_notify_collision(Collision *c) {
@@ -169,6 +168,15 @@ Entity *entity_create(EntityType *t, Player *p, Vec x, Vec v) {
     protocol_notify_entity(e);
     log_debug("+ entity %d (%s), pos = (%.1f,%.1f) v = (%.1f,%.1f)", e->id.n, e->type->name, e->x.x, e->x.y, e->v.x, e->v.y);
     return e;
+}
+
+void entities_remove_for(Player *p) {
+	Entity *e;
+
+	entities_foreach(e)	{
+		if(e->player == p)
+			entity_remove(e);
+	}
 }
 
 void entity_remove(Entity *e) {

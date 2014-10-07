@@ -17,11 +17,6 @@ namespace Lwar.Network.Messages
 		public Identifier Entity;
 
 		/// <summary>
-		///     The new entity health.
-		/// </summary>
-		public int Health;
-
-		/// <summary>
 		///     The new entity position.
 		/// </summary>
 		public Vector2 Position;

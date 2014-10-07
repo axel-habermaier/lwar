@@ -1,0 +1,21 @@
+Gameplay Ideas
+=====================
+
+- Let user choose a shield color (maybe 6 to 8 presets)
+- Give ships weapons energy that, when depleted, prevents further weapon firing
+  (forces player to stop shooting all the time)
+- Split ship health into shield energy and hull integrity, some weapons do more
+  damage to one or the other
+  (allows more variation in ship design and more tactical weapons selection;
+  shield energy regenerates over time)
+- Restrict ammunition of certain weapons (notably: rockets)
+- Add nebulae that have negative or positive effects when flying through
+  (i.e.: damage ship, drain/reload shields, drain/reload weapon energy, ...)
+- Invisible mines
+- BLACK HOLES! (time dilation)
+- Asteroidz
+- Power Ups
+- EMP (deactivates shields and propulsions)
+- AI controlled aliens - they kill everyone
+- Alien motherships - instant death
+- Tractor beam

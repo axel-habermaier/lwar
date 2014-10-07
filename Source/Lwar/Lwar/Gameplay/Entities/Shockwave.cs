@@ -19,7 +19,7 @@
 		/// </summary>
 		/// <param name="center">The updated circle center.</param>
 		/// <param name="radius">The updated circle radius.</param>
-		public override void RemoteUpdate(Vector2 center, float radius)
+		public override void RemoteCircleUpdate(Vector2 center, float radius)
 		{
 			Position = center;
 			Radius = radius;

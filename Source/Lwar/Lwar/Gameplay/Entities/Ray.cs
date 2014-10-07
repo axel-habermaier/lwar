@@ -33,7 +33,7 @@
 		/// <param name="direction">The updated ray direction.</param>
 		/// <param name="length">The updated ray length.</param>
 		/// <param name="target">The current ray target or null if no target is hit.</param>
-		public override void RemoteUpdate(Vector2 origin, float direction, float length, IEntity target)
+		public override void RemoteRayUpdate(Vector2 origin, float direction, float length, IEntity target)
 		{
 			Position = origin;
 			Rotation = MathUtils.DegToRad(direction);

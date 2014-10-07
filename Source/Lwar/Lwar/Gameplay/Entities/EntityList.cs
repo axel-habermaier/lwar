@@ -130,20 +130,21 @@
 			switch (message.Type)
 			{
 				case MessageType.Update:
-					entity.RemoteUpdate(message.Update.Position, message.Update.Rotation, message.Update.Health);
+					entity.RemotePositionUpdate(message.Update.Position);
+					entity.RemoteRotationUpdate(message.Update.Rotation);
 					break;
 				case MessageType.UpdatePosition:
-					entity.RemoteUpdate(message.UpdatePosition.Position);
+					entity.RemotePositionUpdate(message.UpdatePosition.Position);
 					break;
 				case MessageType.UpdateRay:
 					IEntity target = null;
 					if (message.UpdateRay.Target != Specification.ReservedEntityIdentifier)
 						target = _entityMap[message.UpdateRay.Target];
 
-					entity.RemoteUpdate(message.UpdateRay.Origin, message.UpdateRay.Direction, message.UpdateRay.Length, target);
+					entity.RemoteRayUpdate(message.UpdateRay.Origin, message.UpdateRay.Direction, message.UpdateRay.Length, target);
 					break;
 				case MessageType.UpdateCircle:
-					entity.RemoteUpdate(message.UpdateCircle.Center, message.UpdateCircle.Radius);
+					entity.RemoteCircleUpdate(message.UpdateCircle.Center, message.UpdateCircle.Radius);
 					break;
 				default:
 					throw new InvalidOperationException("Unsupported entity update message type.");

@@ -99,6 +99,7 @@ Message Types
 	111		UpdatePos		no			server			Restricted updates for different kinds of entities
 	112		UpdateRay		no			server			
 	113		UpdateCircle	no			server			
+	114		UpdateShip		no			server
 
 	200	    Discovery		no			server			Repreatedly sent by the server to allow automatic server discovery
 	
@@ -221,6 +222,19 @@ Messages Payload Data
 		uint16		kills		The player's kills
 		uint16		deaths		The player's deaths
 		uint16		ping		The player's ping
+
+	UpdateShip
+		Type		Name 		Description
+		---------	----------	------------------------------------------------------------
+		uint8		num			The number of ship updates that follow
+		[for i < num, ++i]
+		uint32(Id)	entityId	The generational identifier of the ship that is updated
+		uint8		health		The new health (range [0,100])
+		uint8		shield		The new shield (range [0,100])
+		uint8		energy1		The new energy/ammo of weapon 1 (range [0,100])
+		uint8		energy2		The new energy/ammo of weapon 2 (range [0,100])
+		uint8		energy3		The new energy/ammo of weapon 3 (range [0,100])
+		uint8		energy4		The new energy/ammo of weapon 4 (range [0,100])
 		
 	Update
 		Type		Name 		Description
@@ -231,7 +245,6 @@ Messages Payload Data
 		int16		x			The new x position
 		int16		y			The new y position
 		uint16		orientation	New orientation angle, in degrees, scaled by the Angle Scale Factor
-		uint8		health		The new health
 
 	UpdatePos
 		Type		Name 		Description
@@ -377,6 +390,7 @@ Automatic server discovery
 Revision History
     Rev.    Date    Author		Changes
     ----  --------  ----------	-------------------------------------------------------------------
+	22    14-10-07  Axel/Gidon  Removed health from Update message; added new UpdateShip message
 	21	  14-08-20  Axel		Removed timestamp from message header; fixed unreliable message header
 								size; removed reference to EntityTemplates.fsx that no longer exists
 	20    13-08-16  Axel/Gidon	Added sequence number for unreliable messages

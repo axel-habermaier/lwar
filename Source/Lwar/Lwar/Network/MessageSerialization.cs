@@ -201,7 +201,6 @@
 						message.Update.Entity = buffer.ReadIdentifier();
 						message.Update.Position = new Vector2(buffer.ReadInt16(), buffer.ReadInt16());
 						message.Update.Rotation = buffer.ReadUInt16() / Specification.AngleFactor;
-						message.Update.Health = buffer.ReadByte();
 
 						Messages.Add(message);
 					}

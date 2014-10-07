@@ -146,14 +146,14 @@ size_t message_pack(char *s, void *p) {
     return i;
 }
 
-size_t update_ship_pack(char *s, void *p) {
+size_t update_pos_rotation_pack(char *s, void *p) {
     Entity *e = (Entity*)p;
     size_t i=0;
     i += id_pack(s+i, e->id);
     i += int16_pack(s+i, e->x.x);
     i += int16_pack(s+i, e->x.y);
     i += uint16_pack(s+i, deg100(e->phi));
-    i += uint8_pack(s+i, 100 * e->health / e->type->init_health);
+    //i += uint8_pack(s+i, 100 * e->health / e->type->init_health);
     return i;
 }
 

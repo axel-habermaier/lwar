@@ -49,7 +49,7 @@
 		///     Applies the update message sent by the server to the entity's state.
 		/// </summary>
 		/// <param name="position">The updated entity position.</param>
-		public virtual void RemoteUpdate(Vector2 position)
+		public virtual void RemotePositionUpdate(Vector2 position)
 		{
 			Position = position;
 		}
@@ -57,12 +57,9 @@
 		/// <summary>
 		///     Applies the update message sent by the server to the entity's state.
 		/// </summary>
-		/// <param name="position">The updated entity position.</param>
 		/// <param name="rotation">The updated entity rotation.</param>
-		/// <param name="health">The updated entity health.</param>
-		public virtual void RemoteUpdate(Vector2 position, float rotation, int health)
+		public virtual void RemoteRotationUpdate(float rotation)
 		{
-			Position = position;
 			Rotation = MathUtils.DegToRad(rotation);
 		}
 
@@ -71,7 +68,7 @@
 		/// </summary>
 		/// <param name="center">The updated circle center.</param>
 		/// <param name="radius">The updated circle radius.</param>
-		public virtual void RemoteUpdate(Vector2 center, float radius)
+		public virtual void RemoteCircleUpdate(Vector2 center, float radius)
 		{
 			Assert.That(false, "Circle updates are not supported by the entity.");
 		}
@@ -83,7 +80,7 @@
 		/// <param name="direction">The updated ray direction.</param>
 		/// <param name="length">The updated ray length.</param>
 		/// <param name="target">The current ray target or null if no target is hit.</param>
-		public virtual void RemoteUpdate(Vector2 origin, float direction, float length, IEntity target)
+		public virtual void RemoteRayUpdate(Vector2 origin, float direction, float length, IEntity target)
 		{
 			Assert.That(false, "Ray updates are not supported by the entity.");
 		}

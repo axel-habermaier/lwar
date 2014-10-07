@@ -20,17 +20,17 @@
 		/// </summary>
 		public int Health { get; private set; }
 
-		/// <summary>
-		///     Applies the update message sent by the server to the entity's state.
-		/// </summary>
-		/// <param name="position">The updated entity position.</param>
-		/// <param name="rotation">The updated entity rotation.</param>
-		/// <param name="health">The updated entity health.</param>
-		public override void RemoteUpdate(Vector2 position, float rotation, int health)
-		{
-			base.RemoteUpdate(position, rotation, health);
-			Health = health;
-		}
+		///// <summary>
+		/////     Applies the update message sent by the server to the entity's state.
+		///// </summary>
+		///// <param name="position">The updated entity position.</param>
+		///// <param name="rotation">The updated entity rotation.</param>
+		///// <param name="health">The updated entity health.</param>
+		//public override void RemoteRotationUpdate(Vector2 position, float rotation, int health)
+		//{
+		//	base.RemoteRotationUpdate(position, rotation, health);
+		//	Health = health;
+		//}
 
 		/// <summary>
 		///     Invoked when the entity collided another entity.

@@ -31,7 +31,7 @@ void player_init(Player *p, size_t id) {
 }
 
 void player_clear(Player *p) {
-    entity_remove(p->ship.entity);
+	entities_remove_for(p);
 }
 
 void player_input(Player *p,

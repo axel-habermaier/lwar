@@ -37,6 +37,7 @@ enum MessageType {
     MESSAGE_UPDATE_POS		  = 111,
     MESSAGE_UPDATE_RAY		  = 112,
     MESSAGE_UPDATE_CIRCLE	  = 113,
+	MESSAGE_UPDATE_SHIP		  = 114,
 
 };
 

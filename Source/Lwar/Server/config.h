@@ -4,7 +4,7 @@
 enum {
     /* network */
     APP_ID              = 0xf27087c5,
-	NETWORK_REVISION    =   21,
+	NETWORK_REVISION    =   22,
 
 	SERVER_PORT			= 32422,
 	MULTICAST_PORT      = SERVER_PORT + 1,
