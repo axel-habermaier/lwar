@@ -24,6 +24,10 @@ bool packet_hasdata(Packet *p) {
     return (p->start + HEADER_LENGTH < p->end);
 }
 
+bool packet_isempty(Packet *p) {
+    return p->start == 0 && p->end == 0;
+}
+
 size_t packet_update_n(Packet *p, size_t s) {
     size_t i = p->end + UPDATE_HEADER_LENGTH;
     if(i < MAX_PACKET_LENGTH)
@@ -84,15 +88,7 @@ bool packet_recv(Packet *p) {
     p->end = MAX_PACKET_LENGTH;
 	p->adr = address_none;
 
-    if(!conn_recv(p->conn, p->p, &p->end, &p->adr)) {
-        p->io_failed = true;
-        return false;
-    }
-
-    p->io_failed = false;
-    if(p->end == 0) return false; /* EAGAIN */
-
-    return true;
+    return conn_recv(p->conn, p->p, &p->end, &p->adr);
 }
 
 bool packet_send(Packet *p) {
@@ -101,12 +97,5 @@ bool packet_send(Packet *p) {
     assert(p->adr.ip   != 0);
     assert(p->adr.port != 0);
 
-    if(!conn_send(p->conn, p->p, p->end - p->start, &p->adr)) {
-        p->io_failed = true;
-        return false;
-    }
-
-    p->io_failed = false;
-
-    return true;
+    return conn_send(p->conn, p->p, p->end - p->start, &p->adr);
 }
