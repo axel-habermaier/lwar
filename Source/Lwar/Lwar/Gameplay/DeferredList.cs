@@ -13,6 +13,11 @@
 		where T : class, IDisposable
 	{
 		/// <summary>
+		///     A cached list that is used when the actual items are retrieved from the list.
+		/// </summary>
+		private readonly List<T> _actualItems = new List<T>();
+
+		/// <summary>
 		///     The items that will be added to the list.
 		/// </summary>
 		private readonly List<T> _addedItems = new List<T>();
@@ -69,6 +74,28 @@
 
 				return _items[index];
 			}
+		}
+
+		/// <summary>
+		///     Gets the items actually contained in the list as if all deferred removals and additions already had their effect on the
+		///     list.
+		/// </summary>
+		public List<T> GetActualItems()
+		{
+			_actualItems.Clear();
+
+			// Don't use AddRange here (it allocates)
+			foreach (var item in _addedItems)
+				_actualItems.Add(item);
+
+			// Don't use Linq + AddRange here (high allocation cost)
+			foreach (var item in _items)
+			{
+				if (!_removedItems.Contains(item))
+					_actualItems.Add(item);
+			}
+
+			return _actualItems;
 		}
 
 		/// <summary>

@@ -26,6 +26,7 @@
 		UpdatePosition = 111,
 		UpdateRay = 112,
 		UpdateCircle = 113,
+		UpdateShip = 114,
 		Discovery = 200
 	}
 }

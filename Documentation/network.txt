@@ -38,8 +38,8 @@ Network-related constants
 	Constant						  Value 			Comment
 	-------------------------------	  ----------		---------------------------------------------------------
 	Application Id:					  0xf27087c5 
-	Reserved Entity Id:		          65535				A special entity id reserved by the server
-	Server Player Id:				      0				The default player that represents the server
+	Reserved Entity Id:		          65535				A special entity id reserved by the server; gen 0
+	Server Player Id:				      0				The default player that represents the server; gen 0
 	Angle Scale Factor				    100				Angles sent over the network are scaled by this factor
 	Max Packet Size: 				    512 bytes 		Including the packet and message headers
 	Packet Header Size:			 	      8 bytes	    
@@ -390,6 +390,7 @@ Automatic server discovery
 Revision History
     Rev.    Date    Author		Changes
     ----  --------  ----------	-------------------------------------------------------------------
+	23    14-10-07	Axel		Reserved server/entity identifiers must have generation 0
 	22    14-10-07  Axel/Gidon  Removed health from Update message; added new UpdateShip message
 	21	  14-08-20  Axel		Removed timestamp from message header; fixed unreliable message header
 								size; removed reference to EntityTemplates.fsx that no longer exists

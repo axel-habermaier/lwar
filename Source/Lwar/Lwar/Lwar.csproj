@@ -188,6 +188,7 @@
     <Optimize>false</Optimize>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Network\Messages\UpdateShipMessage.cs" />
     <Compile Include="Network\ServerConnection.cs" />
     <Compile Include="Rendering\CircleOutline.cs" />
     <Compile Include="Rendering\Renderers\BoundaryRenderer.cs" />
@@ -267,7 +268,6 @@
     <Compile Include="Network\BufferExtensions.cs" />
     <Compile Include="Gameplay\InputManager.cs" />
     <Compile Include="Gameplay\Entities\Ship.cs" />
-    <Compile Include="Gameplay\IGenerationalIdentity.cs" />
     <Compile Include="Gameplay\Transformation.cs" />
     <Compile Include="Scripting\ICommands.cs" />
     <Compile Include="Scripting\ICvars.cs" />

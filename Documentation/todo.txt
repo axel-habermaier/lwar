@@ -17,14 +17,11 @@ Client
 		* Configuration (graphics settings, input settings, ...)
 		* Menu transitions
 - GameCamera
-	- Camera zoom bug in very-low FPS situations
-	- Camera zoom bug: zooming when dead leads to strange camera behavior when respawning
 	- Let camera follow ship (sort of: attach the camera to the ship with a spring)
 - Add debugging capabilities and statistics to network
 	- Show server network statistics
 	- Collect and show client network statistics (avg number of times a reliable message was sent/received, # of incoming packets per second, etc.)
 - Fix respawn screen being displayed for a couple of frames after the player joined a new game session
-- Append client id if two clients have the same player name
 
 Pegasus.Framework
 ========
@@ -53,6 +50,10 @@ Assets Compiler
 
 Network
 ========
+- Order of players in stats message should determine their rank (at the moment, the client ranks them)
+- Add reliable GameEnd message with reason Victory/Tie/GalaxyChange (client can automatically determine (tied) winners
+  based on player ranks); should contain next galaxy name (so that client can show it and load the data)
+- Add reliable achievement message (see ideas.txt)
 
 Server
 ========
@@ -62,3 +63,6 @@ Server
 - figure out how to communicate amount of ammunition
 - BUG: assert(p->a <= p->b); packet.c:39 (?)
        assert(ship); rules.c:178
+- For an environmental kill, server sends a killer id of 0 with random generation in release builds on Windows (without attached debugger);
+  does not happen in release builds with debugger attached or in any debug builds -> probably some uninitialized variable
+  Network spec rev 23 requires the generation of reserved ids to be 0 in all cases

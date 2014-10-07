@@ -99,7 +99,7 @@ namespace Lwar.UserInterface.ViewModels
 			Players.AddRange(_players
 				.OrderByDescending(player => player.Kills)
 				.ThenBy(player => player.Deaths)
-				.ThenBy(player => player.Name));
+				.ThenBy(player => player.DisplayName));
 		}
 
 		/// <summary>

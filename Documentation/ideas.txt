@@ -1,7 +1,6 @@
 Gameplay Ideas
 =====================
 
-- Let user choose a shield color (maybe 6 to 8 presets)
 - Give ships weapons energy that, when depleted, prevents further weapon firing
   (forces player to stop shooting all the time)
 - Split ship health into shield energy and hull integrity, some weapons do more
@@ -14,8 +13,28 @@ Gameplay Ideas
 - (Invisible) mines
 - BLACK HOLES! (time dilation)
 - Asteroidz
-- Power Ups (QUAD DAMAGE!)
+- Power Ups (QUAD DAMAGE!, Speed, Invisibility, Invincibility, Infinite Ammo/Energy, Shield Recharge Boost, Hull Integrity Boost)
 - EMP (deactivates shields and propulsions)
 - AI controlled aliens - they kill everyone
 - Alien motherships - instant death
 - Tractor beam
+- Moons that orbit planets
+- Winning condition: Most frags
+- Game modes: Team Deathmatch, Tower Defense with objective "defend inhabited planet from AI controlled alien destroyers" (stationary defenses?)
+- Achievements, i.e. like in Unreal Tournament
+	* By fast fragging: These are achieved by killing as many players as possible, at a fast pace. 
+	  The reward level is reset, if the kill isn't made fast enough, or you get killed.
+        - Double Kill: When you kill two enemy bots quickly enough, or at a time
+        - Multi Kill: When you kill three enemy bots
+        - Ultra Kill: When you kill four bots
+        - MONSTER KILL!!!: When you kill five enemy bots.
+        - LUDICROUS KILL!!!: When you kill six enemy bots
+        - HOLY SHIT!: When you kill more than six enemy bots. The announcement is made after every fast-kill from here. 
+
+    * By fragging without getting killed in the middle: These are achieved by killing a certain number of enemies
+	  without you getting killed in the fragging process. The reward level is reset if you get killed.
+        - Killing Spree: You kill 5 enemy bots without yourself getting killed
+        - Rampage: You kill 10 enemy bots
+        - Dominating: You kill 15 enemy bots
+        - Unstoppable: You kill 20 enemy bots
+        - Godlike: You kill 25 enemy bots 

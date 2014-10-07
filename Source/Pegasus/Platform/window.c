@@ -73,34 +73,23 @@ pgVoid pgProcessWindowEvents(pgWindow* window)
 			break;
 		
 		case PG_MESSAGE_LOST_FOCUS:
-			window->focused = PG_FALSE;
-
-			// If we've lost the focus, make sure that all pressed keys are unpressed, because we'll miss the up event
-			// if we're not focused; of course, if a key is not released while the window is out of focus and focused again,
-			// the key state might be wrong; but this seems to be more acceptable than the alternative
+			
 			pgReleaseButtonsAndKeys(window);
 			pgClipCursor(window, PG_FALSE);
 			break;
 
 		case PG_MESSAGE_GAINED_FOCUS:
-			window->focused = PG_TRUE;
-
-			// We sometimes do not get the lost focus event, so make sure we're now releasing all pressed buttons and keys
-			pgReleaseButtonsAndKeys(window);
 			pgClipCursor(window, window->placement.mode == PG_WINDOW_FULLSCREEN);
 			break;
 
-		/* Activate the window on all input-related events to ensure that we haven't missed the focused event */
 		case PG_MESSAGE_CHARACTER_ENTERED:
 			window->callbacks.characterEntered(message.character, message.scanCode);
-			window->focused = PG_TRUE;
 			break;
 
 		case PG_MESSAGE_DEAD_CHARACTER_ENTERED:
 		{
 			pgBool cancel = PG_FALSE;
 			window->callbacks.deadCharacterEntered(message.character, message.scanCode, &cancel);
-			window->focused = PG_TRUE;
 
 			if (cancel)
 				pgCancelDeadCharacter();
@@ -110,7 +99,6 @@ pgVoid pgProcessWindowEvents(pgWindow* window)
 		case PG_MESSAGE_KEY_UP:
 			window->keyState[message.key] = PG_FALSE;
 			window->callbacks.keyReleased(message.key, message.scanCode);
-			window->focused = PG_TRUE;
 			break;
 
 		case PG_MESSAGE_KEY_DOWN:
@@ -121,34 +109,28 @@ pgVoid pgProcessWindowEvents(pgWindow* window)
 
 		case PG_MESSAGE_MOUSE_WHEEL:
 			window->callbacks.mouseWheel(message.delta);
-			window->focused = PG_TRUE;
 			break;
 
 		case PG_MESSAGE_MOUSE_DOWN:
 			window->buttonState[message.button] = PG_TRUE;
 			window->callbacks.mousePressed(message.button, message.doubleClick, message.x, message.y);
-			window->focused = PG_TRUE;
 			break;
 
 		case PG_MESSAGE_MOUSE_UP:
 			window->buttonState[message.button] = PG_FALSE;
 			window->callbacks.mouseReleased(message.button, message.x, message.y);
-			window->focused = PG_TRUE;
 			break;
 
 		case PG_MESSAGE_MOUSE_MOVED:
 			window->callbacks.mouseMoved(message.x, message.y);
-			window->focused = PG_TRUE;
 			break;
 
 		case PG_MESSAGE_MOUSE_ENTERED:
 			window->callbacks.mouseEntered();
-			window->focused = PG_TRUE;
 			break;
 
 		case PG_MESSAGE_MOUSE_LEFT:
 			window->callbacks.mouseLeft();
-			window->focused = PG_TRUE;
 			break;
 
 		default:
@@ -159,9 +141,18 @@ pgVoid pgProcessWindowEvents(pgWindow* window)
 		memset(&message, 0, sizeof(message));
 	}
 
+	if (window->focused && !pgIsWindowFocusedCore(window))
+	{
+		// If we've lost the focus, make sure that all pressed keys are unpressed, because we'll miss the up event
+		// if we're not focused; of course, if a key is not released while the window is out of focus and focused again,
+		// the key state might be wrong; but this seems to be more acceptable than the alternative
+		pgReleaseButtonsAndKeys(window);
+	}
+
 	// Update the window placement and check whether the size has changed
 	width = window->placement.width;
 	height = window->placement.height;
+	window->focused = pgIsWindowFocusedCore(window);
 	pgGetWindowPlacement(window, &window->placement);
 
 	if (width != window->placement.width || height != window->placement.height)

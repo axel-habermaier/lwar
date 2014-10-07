@@ -18,9 +18,9 @@
 		{
 			Players = new List<Player>
 			{
-				new Player { Name = "Player1", Kills = 12, Deaths = 3 },
-				new Player { Name = "Player2", Kills = 2, Deaths = 1 },
-				new Player { Name = "Player3", Kills = 0, Deaths = 0 },
+				new Player { DisplayName = "Player1", Kills = 12, Deaths = 3 },
+				new Player { DisplayName = "Player2", Kills = 2, Deaths = 1 },
+				new Player { DisplayName = "Player3", Kills = 0, Deaths = 0 },
 			};
 		}
 
@@ -28,7 +28,7 @@
 
 		public class Player
 		{
-			public string Name { get; set; }
+			public string DisplayName { get; set; }
 			public int Kills { get; set; }
 			public int Deaths { get; set; }
 		}

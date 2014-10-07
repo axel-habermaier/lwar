@@ -125,6 +125,11 @@ pgVoid pgGetWindowPlacementCore(pgWindow* window)
 	window->placement.y = rect.top;
 }
 
+pgBool pgIsWindowFocusedCore(pgWindow* window)
+{
+	return GetForegroundWindow() == window->hwnd;
+}
+
 pgVoid pgChangeToFullscreenModeCore(pgWindow* window)
 {
 	LONG_PTR style = GetWindowLongPtr(window->hwnd, GWL_STYLE);

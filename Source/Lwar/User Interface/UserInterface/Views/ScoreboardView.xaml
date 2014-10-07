@@ -34,7 +34,7 @@
 			<DataGridTemplateColumn MinWidth="200" Header="Player">
 				<DataGridTemplateColumn.CellTemplate>
 					<DataTemplate>
-						<TextBlock Margin="2" Text="{Binding Name}" />
+						<TextBlock Margin="2" Text="{Binding DisplayName}" />
 					</DataTemplate>
 				</DataGridTemplateColumn.CellTemplate>
 			</DataGridTemplateColumn>

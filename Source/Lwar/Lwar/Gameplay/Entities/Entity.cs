@@ -41,7 +41,7 @@
 		}
 
 		/// <summary>
-		///     Gets or sets the generational identifier of the entity.
+		///     Gets the generational identifier of the entity.
 		/// </summary>
 		public Identifier Identifier { get; protected set; }
 

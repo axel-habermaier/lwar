@@ -69,7 +69,7 @@
 			Assert.That(_entityMap[entity.Identifier] == null, "An entity with the same id has already been added.");
 
 			_entities.Add(entity);
-			_entityMap.Add(entity);
+			_entityMap.Add(entity, entity.Identifier);
 
 			entity.Added(_gameSession, _renderContext);
 		}
@@ -84,7 +84,7 @@
 			Assert.NotNull(entity, "Cannot remove unknown entity.");
 
 			_entities.Remove(entity);
-			_entityMap.Remove(entity);
+			_entityMap.Remove(entity.Identifier);
 
 			entity.Removed();
 		}
@@ -145,6 +145,17 @@
 					break;
 				case MessageType.UpdateCircle:
 					entity.RemoteCircleUpdate(message.UpdateCircle.Center, message.UpdateCircle.Radius);
+					break;
+				case MessageType.UpdateShip:
+					var ship = entity as Ship;
+					Assert.NotNull(ship);
+
+					ship.HullIntegrity = message.UpdateShip.HullIntegrity;
+					ship.Shields = message.UpdateShip.Shields;
+					ship.Energy1 = message.UpdateShip.Energy1;
+					ship.Energy2 = message.UpdateShip.Energy2;
+					ship.Energy3 = message.UpdateShip.Energy3;
+					ship.Energy4 = message.UpdateShip.Energy4;
 					break;
 				default:
 					throw new InvalidOperationException("Unsupported entity update message type.");

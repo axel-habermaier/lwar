@@ -106,6 +106,7 @@
 		public Vector2 Position2D
 		{
 			get { return new Vector2(Position.X, Position.Z); }
+			set { Position = new Vector3(value.X, Position.Y, value.Y); }
 		}
 
 		/// <summary>
@@ -129,7 +130,7 @@
 		/// </summary>
 		public void Update()
 		{
-			if (_localPlayer.Ship == null || !IsActive)
+			if (!IsActive)
 				return;
 
 			// Scale to [0,1] range
@@ -137,7 +138,7 @@
 			var targetZoom = _targetZoom / MaxZoom;
 
 			// Compute the time-sensitive slow down factor
-			var slowDownFactor = ZoomChangeSpeed / (float)_clock.Milliseconds;
+			var slowDownFactor = ZoomChangeSpeed / Math.Min((float)_clock.Milliseconds, 100);
 
 			// Compute the weighted average
 			_zoom = ((zoom * (slowDownFactor - 1)) + targetZoom) / slowDownFactor;

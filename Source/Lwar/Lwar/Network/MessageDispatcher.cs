@@ -41,9 +41,11 @@
 					if (message.Name.Player == Specification.ServerPlayerIdentifier)
 						break;
 
-					// Add the event message first, otherwise the player name will already have been changed
-					_gameSession.EventMessages.AddNameChangeMessage(message.Name.Player, message.Name.Name);
+					var player = _gameSession.Players[message.Name.Player];
+					Assert.NotNull(player);
+					var previousName = player.DisplayName;
 					_gameSession.Players.ChangeName(message.Name.Player, message.Name.Name);
+					_gameSession.EventMessages.AddNameChangeMessage(message.Name.Player, previousName);
 					break;
 				case MessageType.Selection:
 					break;
@@ -97,6 +99,7 @@
 				case MessageType.UpdatePosition:
 				case MessageType.UpdateRay:
 				case MessageType.UpdateCircle:
+				case MessageType.UpdateShip:
 					_gameSession.Entities.RemoteUpdate(ref message);
 					break;
 				default:

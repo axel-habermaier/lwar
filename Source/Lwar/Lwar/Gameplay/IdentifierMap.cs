@@ -8,12 +8,12 @@
 	/// </summary>
 	/// <typeparam name="T">The type of the mapped objects.</typeparam>
 	public sealed class IdentifierMap<T>
-		where T : class, IGenerationalIdentity
+		where T : class
 	{
 		/// <summary>
 		///     Maps each identifier to the corresponding object.
 		/// </summary>
-		private readonly T[] _map = new T[UInt16.MaxValue];
+		private readonly ObjectIdentity[] _map = new ObjectIdentity[UInt16.MaxValue];
 
 		/// <summary>
 		///     Gets the object that corresponds to the given identifier. Returns null if no object with the given identifier could
@@ -25,10 +25,10 @@
 			get
 			{
 				var obj = _map[identifier.Identity];
-				if (obj == null)
+				if (obj.Object == null)
 					return null;
 
-				return obj.Identifier.Generation == identifier.Generation ? obj : null;
+				return obj.Identifier.Generation == identifier.Generation ? obj.Object : null;
 			}
 		}
 
@@ -36,26 +36,42 @@
 		///     Adds a mapping for the given object.
 		/// </summary>
 		/// <param name="obj">The object that should be mapped.</param>
-		public void Add(T obj)
+		/// <param name="identifier">The identifier of the object.</param>
+		public void Add(T obj, Identifier identifier)
 		{
 			Assert.ArgumentNotNull(obj);
-			Assert.That(_map[obj.Identifier.Identity] == null, "There already is a mapping for the object's identifier.");
+			Assert.That(_map[identifier.Identity].Object == null, "There already is a mapping for the object's identifier.");
 
-			_map[obj.Identifier.Identity] = obj;
+			_map[identifier.Identity] = new ObjectIdentity { Object = obj, Identifier = identifier };
 		}
 
 		/// <summary>
 		///     Removes the mapping for the given object.
 		/// </summary>
-		/// <param name="obj">The object whose mapping should be removed.</param>
-		public void Remove(T obj)
+		/// <param name="identifier">The identifier of the object whose mapping should be removed.</param>
+		public void Remove(Identifier identifier)
 		{
-			Assert.ArgumentNotNull(obj);
-			Assert.That(_map[obj.Identifier.Identity] != null, "The object is not mapped.");
-			Assert.That(_map[obj.Identifier.Identity].Identifier.Generation == obj.Identifier.Generation,
+			Assert.That(_map[identifier.Identity].Object != null, "The object is not mapped.");
+			Assert.That(_map[identifier.Identity].Identifier.Generation == identifier.Generation,
 				"Attempted to unmap an object of a different generation.");
 
-			_map[obj.Identifier.Identity] = null;
+			_map[identifier.Identity] = new ObjectIdentity();
+		}
+
+		/// <summary>
+		///     Associates an object with its identifier.
+		/// </summary>
+		private struct ObjectIdentity
+		{
+			/// <summary>
+			///     The generational identity of the object.
+			/// </summary>
+			public Identifier Identifier;
+
+			/// <summary>
+			///     The object with the generational identity.
+			/// </summary>
+			public T Object;
 		}
 	}
 }

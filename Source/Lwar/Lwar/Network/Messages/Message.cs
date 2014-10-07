@@ -139,5 +139,11 @@
 		/// </summary>
 		[FieldOffset(PayloadOffset)]
 		public UpdateCircleMessage UpdateCircle;
+
+		/// <summary>
+		///     The payload of an UpdateShip message.
+		/// </summary>
+		[FieldOffset(PayloadOffset)]
+		public UpdateShipMessage UpdateShip;
 	}
 }

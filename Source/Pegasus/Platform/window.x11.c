@@ -168,6 +168,14 @@ pgVoid pgGetWindowPlacementCore(pgWindow* window)
     XFree(propertyValue);
 }
 
+pgBool pgIsWindowFocusedCore(pgWindow* window)
+{
+	int revert; 
+	Window wnd;
+	XGetInputFocus(x11.display, &wnd, &revert);
+	return wnd == window->handle;
+}
+
 pgVoid pgChangeToFullscreenModeCore(pgWindow* window)
 {
 	pgSetFullscreen(window, PG_TRUE);

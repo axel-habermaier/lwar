@@ -87,34 +87,34 @@
 			switch (Type)
 			{
 				case EventType.Chat:
-					DisplayString = String.Format("{0}\\\0: \\yellow{1}", Player.Name, Message);
+					DisplayString = String.Format("{0}\\\0: \\yellow{1}", Player.DisplayName, Message);
 					break;
 				case EventType.Join:
-					DisplayString = String.Format("{0}\\\0 has joined the game.", Player.Name);
+					DisplayString = String.Format("{0}\\\0 has joined the game.", Player.DisplayName);
 					break;
 				case EventType.Kicked:
 					if (String.IsNullOrWhiteSpace(Message))
-						DisplayString = String.Format("{0}\\\0 has been kicked.", Player.Name);
+						DisplayString = String.Format("{0}\\\0 has been kicked.", Player.DisplayName);
 					else
-						DisplayString = String.Format("{0}\\\0 has been kicked: {1}.", Player.Name, Message);
+						DisplayString = String.Format("{0}\\\0 has been kicked: {1}.", Player.DisplayName, Message);
 					break;
 				case EventType.Leave:
-					DisplayString = String.Format("{0}\\\0 has left the game.", Player.Name);
+					DisplayString = String.Format("{0}\\\0 has left the game.", Player.DisplayName);
 					break;
 				case EventType.Suicide:
-					DisplayString = String.Format("{0}\\\0 got himself killed.", Vicitim.Name);
+					DisplayString = String.Format("{0}\\\0 got himself killed.", Vicitim.DisplayName);
 					break;
 				case EventType.EnvironmentKill:
-					DisplayString = String.Format("{0}\\\0 was not afraid of environmental hazards. Then he died.", Vicitim.Name);
+					DisplayString = String.Format("{0}\\\0 was not afraid of environmental hazards. Then he died.", Vicitim.DisplayName);
 					break;
 				case EventType.Timeout:
-					DisplayString = String.Format("The connection to {0}\\\0 has been lost.", Player.Name);
+					DisplayString = String.Format("The connection to {0}\\\0 has been lost.", Player.DisplayName);
 					break;
 				case EventType.Name:
-					DisplayString = String.Format("{0}\\\0 was renamed to {1}\\\0.", Player.Name, Message);
+					DisplayString = String.Format("{0}\\\0 was renamed to {1}\\\0.", Message, Player.DisplayName);
 					break;
 				case EventType.Kill:
-					DisplayString = String.Format("{0}\\\0 killed {1}\\\0.", Player.Name, Vicitim.Name);
+					DisplayString = String.Format("{0}\\\0 killed {1}\\\0.", Player.DisplayName, Vicitim.DisplayName);
 					break;
 				default:
 					throw new InvalidOperationException("Unsupported event message type.");

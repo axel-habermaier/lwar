@@ -132,6 +132,23 @@
 		}
 
 		/// <summary>
+		///     Checks whether this text is equal to the given one, ignoring all color specifiers.
+		/// </summary>
+		public bool Equals(TextString other)
+		{
+			if (_text.Length != other._text.Length)
+				return false;
+
+			for (var i = 0; i < _text.Length; ++i)
+			{
+				if (_text[i] != other._text[i])
+					return false;
+			}
+
+			return true;
+		}
+
+		/// <summary>
 		///     Processes the source text: Removes all color specifiers, using them to build up the color range list.
 		/// </summary>
 		private void ProcessSourceText()

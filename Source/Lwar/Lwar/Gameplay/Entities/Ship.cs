@@ -16,21 +16,34 @@
 		public Player Player { get; private set; }
 
 		/// <summary>
-		///     The health of the ship.
+		///     Gets or sets the hull integrity of the ship in the range [0,100].
 		/// </summary>
-		public int Health { get; private set; }
+		public int HullIntegrity { get; set; }
 
-		///// <summary>
-		/////     Applies the update message sent by the server to the entity's state.
-		///// </summary>
-		///// <param name="position">The updated entity position.</param>
-		///// <param name="rotation">The updated entity rotation.</param>
-		///// <param name="health">The updated entity health.</param>
-		//public override void RemoteRotationUpdate(Vector2 position, float rotation, int health)
-		//{
-		//	base.RemoteRotationUpdate(position, rotation, health);
-		//	Health = health;
-		//}
+		/// <summary>
+		///     Gets or sets the shield energy level of the ship in the range [0,100].
+		/// </summary>
+		public int Shields { get; set; }
+
+		/// <summary>
+		///     Gets or sets the energy level of the ship's first weapon slot in the range [0,100].
+		/// </summary>
+		public int Energy1 { get; set; }
+
+		/// <summary>
+		///     Gets or sets the energy level of the ship's second weapon slot in the range [0,100].
+		/// </summary>
+		public int Energy2 { get; set; }
+
+		/// <summary>
+		///     Gets or sets theenergy level of the ship's third weapon slot in the range [0,100].
+		/// </summary>
+		public int Energy3 { get; set; }
+
+		/// <summary>
+		///     Gets or sets the energy level of the ship's fourth weapon slot in the range [0,100].
+		/// </summary>
+		public int Energy4 { get; set; }
 
 		/// <summary>
 		///     Invoked when the entity collided another entity.

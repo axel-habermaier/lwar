@@ -84,6 +84,7 @@
 				case MessageType.UpdatePosition:
 				case MessageType.UpdateRay:
 				case MessageType.UpdateCircle:
+				case MessageType.UpdateShip:
 					Assert.That(false, "The client is not allowed to send a message of type '{0}'.", message.Type);
 					break;
 				default:
@@ -235,6 +236,21 @@
 						message.UpdateCircle.Entity = buffer.ReadIdentifier();
 						message.UpdateCircle.Center = new Vector2(buffer.ReadInt16(), buffer.ReadInt16());
 						message.UpdateCircle.Radius = buffer.ReadUInt16();
+
+						Messages.Add(message);
+					}
+					break;
+				case MessageType.UpdateShip:
+					count = buffer.ReadByte();
+					for (var i = 0; i < count; ++i)
+					{
+						message.UpdateShip.Ship = buffer.ReadIdentifier();
+						message.UpdateShip.HullIntegrity = buffer.ReadByte();
+						message.UpdateShip.Shields = buffer.ReadByte();
+						message.UpdateShip.Energy1 = buffer.ReadByte();
+						message.UpdateShip.Energy2 = buffer.ReadByte();
+						message.UpdateShip.Energy3 = buffer.ReadByte();
+						message.UpdateShip.Energy4 = buffer.ReadByte();
 
 						Messages.Add(message);
 					}

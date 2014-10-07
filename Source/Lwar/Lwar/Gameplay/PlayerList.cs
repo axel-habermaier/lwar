@@ -6,6 +6,7 @@
 	using Network;
 	using Network.Messages;
 	using Pegasus;
+	using Pegasus.Platform;
 	using Pegasus.Platform.Memory;
 
 	/// <summary>
@@ -37,7 +38,7 @@
 			Assert.ArgumentNotNull(gameSession);
 
 			ServerPlayer = Player.Create(gameSession, Specification.ServerPlayerIdentifier, "<Server>");
-			_playerMap.Add(ServerPlayer);
+			_playerMap.Add(ServerPlayer, ServerPlayer.Identifier);
 			_gameSession = gameSession;
 		}
 
@@ -94,7 +95,7 @@
 
 			var player = Player.Create(_gameSession, playerId, name);
 			_players.Add(player);
-			_playerMap.Add(player);
+			_playerMap.Add(player, player.Identifier);
 
 			if (isLocalPlayer)
 			{
@@ -104,6 +105,8 @@
 
 			if (PlayerAdded != null)
 				PlayerAdded(player);
+
+			UpdatePlayerNameUniqueness();
 		}
 
 		/// <summary>
@@ -119,10 +122,12 @@
 			Assert.NotNull(player, "Cannot remove unknown player.");
 
 			_players.Remove(player);
-			_playerMap.Remove(player);
+			_playerMap.Remove(player.Identifier);
 
 			if (PlayerRemoved != null)
 				PlayerRemoved(player);
+
+			UpdatePlayerNameUniqueness();
 		}
 
 		/// <summary>
@@ -178,6 +183,7 @@
 			Assert.NotNull(player, "Cannot change the name of an unknown player.");
 
 			player.Name = name;
+			UpdatePlayerNameUniqueness();
 		}
 
 		/// <summary>
@@ -203,6 +209,34 @@
 
 			if (PlayerStatsUpdated != null)
 				PlayerStatsUpdated(player);
+		}
+
+		/// <summary>
+		///     Updates the players' name uniqueness states.
+		/// </summary>
+		private void UpdatePlayerNameUniqueness()
+		{
+			// We have to use the actual player instances here, disregarding deferred additions and removals
+			var players = _players.GetActualItems();
+
+			foreach (var player in players)
+				player.HasUniqueName = true;
+
+			for (var i = 0; i < players.Count; ++i)
+			{
+				for (var j = i + 1; j < players.Count; ++j)
+				{
+					using (var name1 = new TextString(players[i].Name))
+					using (var name2 = new TextString(players[j].Name))
+					{
+						if (!name1.Equals(name2))
+							continue;
+					}
+
+					players[i].HasUniqueName = false;
+					players[j].HasUniqueName = false;
+				}
+			}
 		}
 	}
 }

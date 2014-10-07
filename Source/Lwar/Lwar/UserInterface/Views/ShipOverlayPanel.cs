@@ -6,12 +6,11 @@
 	using Network;
 	using Pegasus;
 	using Pegasus.Framework.UserInterface;
-	using Pegasus.Framework.UserInterface.Controls;
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
 	using Rendering;
 
-	internal partial class ShipOverlayPanel : Canvas
+	internal partial class ShipOverlayPanel
 	{
 		/// <summary>
 		///     The list of players taking part in the game session.
@@ -147,8 +146,8 @@
 		/// <param name="index">The index of the player that should be updated.</param>
 		private void Update(int index)
 		{
-			_playerInfos[index].Overlay.PlayerName = _playerInfos[index].Player.Name;
-			_playerInfos[index].Overlay.Health = _playerInfos[index].Player.Ship.Health;
+			_playerInfos[index].Overlay.PlayerName = _playerInfos[index].Player.DisplayName;
+			_playerInfos[index].Overlay.Health = _playerInfos[index].Player.Ship.HullIntegrity;
 
 			var camera = Camera;
 			var viewport = camera.Viewport;

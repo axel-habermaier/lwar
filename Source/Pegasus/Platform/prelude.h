@@ -310,6 +310,7 @@ pgVoid pgCloseWindowCore(pgWindow* window);
 pgBool pgProcessWindowEvent(pgWindow* window, pgMessage* message);
 pgVoid pgSetWindowTitleCore(pgWindow* window, pgString title);
 pgVoid pgGetWindowPlacementCore(pgWindow* window);
+pgBool pgIsWindowFocusedCore(pgWindow* window);
 
 pgVoid pgChangeToFullscreenModeCore(pgWindow* window);
 pgVoid pgChangeToWindowedModeCore(pgWindow* window);

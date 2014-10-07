@@ -136,15 +136,15 @@
 		///     Adds a player name change message to the event list.
 		/// </summary>
 		/// <param name="player">The identifier of the player that has changed the name.</param>
-		/// <param name="name">The new player name.</param>
-		public void AddNameChangeMessage(Identifier player, string name)
+		/// <param name="previousName">The previous player name.</param>
+		public void AddNameChangeMessage(Identifier player, string previousName)
 		{
-			Assert.ArgumentNotNullOrWhitespace(name);
+			Assert.ArgumentNotNullOrWhitespace(previousName);
 
-			var message = new EventMessage(EventType.Name, name);
+			var message = new EventMessage(EventType.Name, previousName);
 			if (TryGetPlayer(player, out message.Player))
 			{
-				if (!String.IsNullOrWhiteSpace(message.Player.Name) && message.Player.Name != name)
+				if (!String.IsNullOrWhiteSpace(message.Player.Name) && message.Player.DisplayName != previousName)
 					Add(message);
 			}
 

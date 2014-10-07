@@ -35,6 +35,12 @@
 
 			var generation = buffer.ReadUInt16();
 			var id = buffer.ReadUInt16();
+
+			Assert.That(id != Specification.ReservedEntityIdentifier.Identity || generation == 0,
+				"Generation of reserved entity identifier must be 0.");
+			Assert.That(id != Specification.ServerPlayerIdentifier.Identity || generation == 0,
+				"Generation of reserved server player identifier must be 0.");
+
 			return new Identifier(id, generation);
 		}
 

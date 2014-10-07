@@ -8,7 +8,7 @@
 	/// <summary>
 	///     Represents a player.
 	/// </summary>
-	public class Player : PooledNotifyPropertyChanged, IGenerationalIdentity
+	public class Player : PooledNotifyPropertyChanged
 	{
 		/// <summary>
 		///     The number of deaths.
@@ -26,9 +26,30 @@
 		private string _name;
 
 		/// <summary>
+		///     A value indicating whether the name of the player is unique.
+		/// </summary>
+		private bool _hasUniqueName;
+
+		/// <summary>
 		///     The player's ping.
 		/// </summary>
 		private int _ping;
+
+		/// <summary>
+		///     Gets or sets a value indicating whether the name of the player is unique.
+		/// </summary>
+		public bool HasUniqueName
+		{
+			get { return _hasUniqueName; }
+			set
+			{
+				if (_hasUniqueName == value)
+					return;
+
+				_hasUniqueName = value;
+				OnPropertyChanged("DisplayName");
+			}
+		}
 
 		/// <summary>
 		///     Gets or sets the name of the player.
@@ -36,7 +57,25 @@
 		public string Name
 		{
 			get { return _name; }
-			set { ChangePropertyValue(ref _name, value); }
+			set
+			{
+				ChangePropertyValue(ref _name, value);
+				OnPropertyChanged("DisplayName");
+			}
+		}
+
+		/// <summary>
+		///     Gets the display name of the player, with an optional numeric suffix to make the player name unique.
+		/// </summary>
+		public string DisplayName
+		{
+			get
+			{
+				if (!HasUniqueName)
+					return String.Format("{0}\\\0 ({1})", Name, Identifier.Identity);
+
+				return Name;
+			}
 		}
 
 		/// <summary>
@@ -96,6 +135,7 @@
 			player.Identifier = id;
 			player.Ship = null;
 			player.Name = name;
+			player.HasUniqueName = true;
 			return player;
 		}
 
@@ -104,7 +144,7 @@
 		/// </summary>
 		public override string ToString()
 		{
-			return String.Format("'{0}' ({1})", Name, Identifier);
+			return String.Format("'{0}' ({1})", DisplayName, Identifier);
 		}
 	}
 }

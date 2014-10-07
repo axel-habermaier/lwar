@@ -7,8 +7,13 @@
 	/// <summary>
 	///     Represents an entity, a special form of an actor that is synchronized with and under control of the server.
 	/// </summary>
-	public interface IEntity : IActor, IGenerationalIdentity
+	public interface IEntity : IActor
 	{
+		/// <summary>
+		///     Gets the generational identifier of the entity.
+		/// </summary>
+		Identifier Identifier { get; }
+
 		/// <summary>
 		///     Applies the update message sent by the server to the entity's state.
 		/// </summary>
