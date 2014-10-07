@@ -11,10 +11,10 @@ Gameplay Ideas
 - Restrict ammunition of certain weapons (notably: rockets)
 - Add nebulae that have negative or positive effects when flying through
   (i.e.: damage ship, drain/reload shields, drain/reload weapon energy, ...)
-- Invisible mines
+- (Invisible) mines
 - BLACK HOLES! (time dilation)
 - Asteroidz
-- Power Ups
+- Power Ups (QUAD DAMAGE!)
 - EMP (deactivates shields and propulsions)
 - AI controlled aliens - they kill everyone
 - Alien motherships - instant death
