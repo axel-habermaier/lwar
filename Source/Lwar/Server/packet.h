@@ -37,11 +37,10 @@ struct Packet {
     */
 
     Connection *conn;
-    /* connection failed */
-    bool    io_failed;
 };
 
 bool packet_hasdata(Packet *p);
+bool packet_isempty(Packet *p);
 
 /* return how many updates + 1 header still fit into p */
 size_t packet_update_n(Packet *p, size_t len);
