@@ -11,7 +11,7 @@ typedef struct Packet Packet;
 enum {
     UPDATE_HEADER_LENGTH = sizeof(uint32_t) + 2 * sizeof(uint8_t),  /* msg type, n */
     HEADER_LENGTH        = 3 * sizeof(uint32_t), /* app_id, ack, time */
-	MAX_PACKET_LENGTH    = 512,
+    MAX_PACKET_LENGTH    = 512,
 };
 
 enum PacketType {

@@ -11,7 +11,7 @@
 #include <string.h>
 
 #ifdef _MSC_VER
-	#define strndup(s, n) _strdup(s)
+    #define strndup(s, n) _strdup(s)
 #endif
 
 size_t id_pack(char *out, Id id) {
@@ -59,18 +59,18 @@ size_t message_pack(char *s, void *p) {
 
     switch(m->type) {
     case MESSAGE_CONNECT:
-		i += uint8_pack(s+i, m->connect.rev);
-		i += str_pack(s+i, m->connect.nick);
+        i += uint8_pack(s+i, m->connect.rev);
+        i += str_pack(s+i, m->connect.nick);
         break;
     case MESSAGE_DISCONNECT:
         break;
     case MESSAGE_JOIN:
         i += id_pack(s+i, m->join.player_id);
-		i += str_pack(s+i, m->join.nick);
+        i += str_pack(s+i, m->join.nick);
         break;
     case MESSAGE_LEAVE:
         i += id_pack(s+i, m->leave.player_id);
-		i += uint8_pack(s+i, (uint8_t)m->leave.reason);
+        i += uint8_pack(s+i, (uint8_t)m->leave.reason);
         break;
     case MESSAGE_CHAT:
         i += id_pack(s+i, m->chat.player_id);
@@ -96,14 +96,14 @@ size_t message_pack(char *s, void *p) {
         i += id_pack(s+i, m->name.player_id);
         i += str_pack(s+i, m->name.nick);
         break;
-	case MESSAGE_KILL:
-		i += id_pack(s+i, m->kill.killer_id);
-		i += id_pack(s+i, m->kill.victim_id);
-		break;
+    case MESSAGE_KILL:
+        i += id_pack(s+i, m->kill.killer_id);
+        i += id_pack(s+i, m->kill.victim_id);
+        break;
     case MESSAGE_SYNCED:
         break;
-	case MESSAGE_REJECT:
-		i += uint8_pack(s+i, (uint8_t)m->reject.reason);
+    case MESSAGE_REJECT:
+        i += uint8_pack(s+i, (uint8_t)m->reject.reason);
         break;
     case MESSAGE_UPDATE:
     case MESSAGE_UPDATE_POS:
@@ -127,15 +127,15 @@ size_t message_pack(char *s, void *p) {
         i += int16_pack(s+i, m->input.aim_x);
         i += int16_pack(s+i, m->input.aim_y);
         break;
-	case MESSAGE_STATS:
-		i += uint8_pack(s+i, m->stats.n);
-		for (j = 0; j < m->stats.n; ++j) {
-			i += id_pack(s+i, m->stats.info[j].player_id);
-			i += uint16_pack(s+i, m->stats.info[j].kills);
-			i += uint16_pack(s+i, m->stats.info[j].deaths);
-			i += uint16_pack(s+i, m->stats.info[j].ping);
-		}
-		break;
+    case MESSAGE_STATS:
+        i += uint8_pack(s+i, m->stats.n);
+        for (j = 0; j < m->stats.n; ++j) {
+            i += id_pack(s+i, m->stats.info[j].player_id);
+            i += uint16_pack(s+i, m->stats.info[j].kills);
+            i += uint16_pack(s+i, m->stats.info[j].deaths);
+            i += uint16_pack(s+i, m->stats.info[j].ping);
+        }
+        break;
     case MESSAGE_COLLISION:
         i += id_pack(s+i, m->collision.entity_id[0]);
         i += id_pack(s+i, m->collision.entity_id[1]);
@@ -168,14 +168,14 @@ size_t update_pos_pack(char *s, void *p) {
 
 size_t update_ray_pack(char *s, void *p) {
     Entity *e = (Entity*)p;
-	Id none = { 0, USHRT_MAX };
+    Id none = { 0, USHRT_MAX };
     size_t i=0;
     i += id_pack(s+i, e->id);
     i += int16_pack(s+i, e->x.x);
     i += int16_pack(s+i, e->x.y);
     i += uint16_pack(s+i, deg100(e->phi));
     i += uint16_pack(s+i, e->len);
-	i += id_pack(s+i, !e->target ? none : e->target->id);
+    i += id_pack(s+i, !e->target ? none : e->target->id);
     return i;
 }
 
