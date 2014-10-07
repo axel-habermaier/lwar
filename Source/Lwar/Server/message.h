@@ -1,15 +1,14 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H
 
+#include "address.h"
 #include "id.h"
 #include "str.h"
 #include "config.h"
 
-typedef enum   MessageType MessageType;
-typedef struct Discovery Discovery;
-typedef struct Header Header;
-
+typedef enum   HeaderState HeaderState;
 typedef enum   LeaveReason LeaveReason;
+typedef enum   MessageType MessageType;
 typedef enum   RejectReason RejectReason;
 
 bool is_reliable(Message *m);
@@ -69,10 +68,18 @@ enum RejectReason {
 	REJECT_VERSION_MISMATCH = 2,
 };
 
+enum HeaderState {
+    HEADER_OK,
+    HEADER_APP_ID_MISMATCH,
+    HEADER_IO_FAILED,
+};
+
 struct Header {
     uint32_t app_id;
     uint32_t ack;
     uint32_t time;
+    Address  adr;
+    HeaderState state;
 };
 
 struct Discovery {
@@ -142,6 +149,7 @@ struct Message {
 
         struct {
             uint8_t n;
+            Format *f; /* Note: not directly serialized, needs special case in stream. */
         } update;
 
         struct {
