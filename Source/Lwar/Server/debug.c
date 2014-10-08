@@ -136,6 +136,7 @@ void debug_message(Message *m, const char *s) {
     case MESSAGE_UPDATE_POS:
     case MESSAGE_UPDATE_RAY:
     case MESSAGE_UPDATE_CIRCLE:
+    case MESSAGE_UPDATE_SHIP:
         log_debug("%supdate #%d", s, m->update.n);
         break;
     case MESSAGE_INPUT:

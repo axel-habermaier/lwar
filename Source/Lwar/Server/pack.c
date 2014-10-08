@@ -109,6 +109,7 @@ size_t message_pack(char *s, void *p) {
     case MESSAGE_UPDATE_POS:
     case MESSAGE_UPDATE_RAY:
     case MESSAGE_UPDATE_CIRCLE:
+    case MESSAGE_UPDATE_SHIP:
         i += uint8_pack(s+i, m->update.n);
         break;
     case MESSAGE_INPUT:

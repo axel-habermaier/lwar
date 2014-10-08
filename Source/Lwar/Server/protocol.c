@@ -66,27 +66,27 @@ static bool check_behavior_id(Client *c, Id id) {
     return check_behavior(c, !id_eq(c->player.id, id), "wrong player id");
 }
 
-static bool check_seqno(Client *c, Message *m, size_t seqno) {
+static bool check_seqno(Client *c, Message *m) {
 	if (!c) return true;
 
     if(is_reliable(m)) {
-        if(seqno != c->last_in_reliable_seqno + 1) return false;
-        c->last_in_reliable_seqno = seqno;
+        if(m->seqno != c->last_in_reliable_seqno + 1) return false;
+        c->last_in_reliable_seqno = m->seqno;
     }
 	else {
-        if(seqno <= c->last_in_unreliable_seqno) return false;
-        c->last_in_unreliable_seqno = seqno;
+        if(m->seqno <= c->last_in_unreliable_seqno) return false;
+        c->last_in_unreliable_seqno = m->seqno;
     }
     return true;
 }
 
-void message_handle(Client *c, Address *adr, Message *m, size_t seqno) {
+void message_handle(Client *c, Address *adr, Message *m) {
     Message r;
 
     switch(m->type) {
     case MESSAGE_CONNECT:
 		if (m->connect.rev != NETWORK_REVISION) { 
-			send_reject(adr, seqno, REJECT_VERSION_MISMATCH);
+			send_reject(adr, m->seqno, REJECT_VERSION_MISMATCH);
 			break;
 		}
 
@@ -94,7 +94,7 @@ void message_handle(Client *c, Address *adr, Message *m, size_t seqno) {
         if(check_behavior(c, c != 0, "reconnect")) return;
         c = client_create(adr);
         if(c) {
-            check_seqno(c, m, seqno);
+            check_seqno(c, m);
             c->last_activity = server->cur_clock;
 
 			player_rename(&c->player, m->connect.nick);
@@ -282,6 +282,25 @@ static void send_queue_for(Client *c) {
 
         if(!stream_send(&ss, &h, m))
             longjmp(io_error_handler,1);
+    }
+}
+
+void protocol_recv() {
+    cr_t ss = {0};
+
+    Header h;
+    Message m;
+
+    while(stream_recv(&ss, &h, &m)) {
+        Client *c = client_lookup(&h.adr);
+        if(c) {
+            c->last_in_ack   = max(h.ack, c->last_in_ack);
+            c->last_activity = max(server->cur_clock, c->last_activity);
+        }
+
+        if(check_seqno(c, &m)) {
+            message_handle(c, &h.adr, &m);
+        }
     }
 }
 
