@@ -17,7 +17,7 @@ static struct {
 */
 
 static bool packet_scan_header(Packet *p, Header *h) {
-    int ok = packet_get(p, header_unpack, &h);
+    int ok = packet_get(p, header_unpack, h);
     if(!ok) return false;
 
     if((uint32_t)(h->app_id) != APP_ID)
@@ -34,6 +34,9 @@ bool stream_recv(cr_t *state, Header *h, Message *m) {
     packet_init_recv(&p);
 
     while(packet_recv(&p)) {
+        if(p.end == 0) /* EAGAIN */
+            cr_yield(state, false);
+
         int ok = packet_scan_header(&p, h);
         if(!ok) continue;
 
