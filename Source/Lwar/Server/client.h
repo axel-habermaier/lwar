@@ -14,7 +14,7 @@ struct Client {
     size_t ping;   /* TODO: implement */
 
     bool remote;   /* adr is valid */
-    bool hasleft;  /* has actively disconnected */
+    // bool hasleft;  /* has actively disconnected */
     bool dead;     /* memory will be released, don't use any more */
 
     size_t next_out_reliable_seqno;
