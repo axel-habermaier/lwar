@@ -216,7 +216,7 @@ bool conn_recv(Connection* connection, char *buf, size_t* size, Address* adr)
 		*size = 0;
 		return true;
 	}
-	
+
 	switch (from.ss_family)
 	{
 	case AF_INET:
