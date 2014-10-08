@@ -102,8 +102,7 @@ void message_handle(Client *c, Address *adr, Message *m) {
             queue_broadcast(&r);
             queue_gamestate_for(c);
         } else {
-            message_reject(&r, REJECT_FULL);
-            // XXX: send_reject(adr, seqno, REJECT_FULL);
+            send_reject(adr, m->seqno, REJECT_FULL);
         }
         break;
 
@@ -237,6 +236,15 @@ static void queue_stats() {
     queue_broadcast(&m);
 }
 
+static void queue_updates() {
+    Message m;
+    Format *f;
+    formats_foreach(f) {
+        message_update(&m, f);
+        queue_broadcast(&m);
+    }
+}
+
 /* Note: already enqueued add messages won't be duplicated,
  *       since these are not marked for client cn in qm->dest
  */
@@ -283,6 +291,8 @@ static void send_queue_for(Client *c) {
         if(!stream_send(&ss, &h, m))
             longjmp(io_error_handler,1);
     }
+
+    stream_flush(&ss);
 }
 
 void protocol_recv() {
@@ -317,6 +327,7 @@ void protocol_send(bool force) {
     // stats.nresend = 0;
 
     queue_stats();
+    queue_updates();
 
     Client *c;
     clients_foreach(c) {

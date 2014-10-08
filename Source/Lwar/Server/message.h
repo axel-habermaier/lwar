@@ -23,7 +23,7 @@ void message_reject(Message *m, RejectReason reason);
 void message_remove(Message *m, Entity *e);
 void message_stats(Message *m);
 void message_synced(Message *m);
-void message_update(Message *m, MessageType type, size_t n); /* TODO: use data structure, e.g. Format. */
+void message_update(Message *m, Format *f); /* TODO: use data structure, e.g. Format. */
 
 enum MessageType {
     MESSAGE_CONNECT         =   1,
