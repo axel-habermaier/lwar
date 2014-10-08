@@ -108,6 +108,7 @@ size_t message_unpack(const char *s, void *p) {
     case MESSAGE_UPDATE_POS:
     case MESSAGE_UPDATE_RAY:
     case MESSAGE_UPDATE_CIRCLE:
+    case MESSAGE_UPDATE_SHIP:
         i += uint8_unpack(s+i, &m->update.n);
         break;
     case MESSAGE_INPUT:
