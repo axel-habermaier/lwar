@@ -38,14 +38,12 @@ static Discovery discovery = {
     SERVER_PORT,
 };
 
-/*
 static const char *src_fmt(Client *c) {
     static char s[16];
     if(c) { snprintf(s,sizeof(s),"%d> ",c->player.id.n);
             return s; }
     else    return "?> ";
 }
-*/
 
 static const char *dest_fmt(Client *c) {
     static char s[16];
@@ -283,7 +281,7 @@ static void send_queue_for(Client *c) {
 
     Message *m;
     while((m = queue_next(&qs, c, &tries))) {
-        if(tries > 0)
+        // if(tries > 0)
             // stats.nresend ++;
         if(tries == 0 && is_reliable(m))
             debug_message(m, dest_fmt(c));
@@ -309,6 +307,8 @@ void protocol_recv() {
         }
 
         if(check_seqno(c, &m)) {
+            if(is_reliable(&m))
+                debug_message(&m, src_fmt(c));
             message_handle(c, &h.adr, &m);
         }
     }

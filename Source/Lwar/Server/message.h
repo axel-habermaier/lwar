@@ -6,7 +6,6 @@
 #include "str.h"
 #include "config.h"
 
-typedef enum   HeaderState HeaderState;
 typedef enum   LeaveReason LeaveReason;
 typedef enum   MessageType MessageType;
 typedef enum   RejectReason RejectReason;
