@@ -67,7 +67,6 @@ static void server_update_internal(Clock time, int force) {
     entities_update();
     physics_update();
 
-    queue_stats();
     protocol_send(force);
     
     /* remove obsolete messages, clients, and entities

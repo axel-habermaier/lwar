@@ -97,26 +97,29 @@ static void packet_init_send_header(Packet *p, Header *h) {
     packet_put(p, header_pack, h);
 }
 
-static void packet_flush(Packet *p) {
+static bool packet_flush(Packet *p) {
     if(packet_hasdata(p))
-        packet_send(p);
+        return packet_send(p);
+    return true;
 }
 
-static void send_message(Packet *p, Header *h, Message *m) {
+static bool send_message(Packet *p, Header *h, Message *m) {
     while(!packet_put(p, message_pack, m)) {
-        packet_send(p);
+        if(!packet_send(p))
+            return false;
         packet_init_send_header(p, h);
     }
+    return true;
 }
 
-static void send_update_messate(Packet *p, Header *h, Message *m) {
+static bool send_update_message(Packet *p, Header *h, Message *m) {
     Entity *e;
     Format *f = m->update.f;
     size_t k = 0;
     size_t n = f->n;
 
     updates_foreach(f,e) {
-        if(e->dead) { n --; continue; }
+        if(e->dead) { n --; continue; } /* TODO: actually shouldn't happen */
     retry:
         if(!k) {
             k = min(n, packet_update_n(p,f->len));
@@ -124,7 +127,8 @@ static void send_update_messate(Packet *p, Header *h, Message *m) {
                 m->update.n = k;
                 packet_put(p, message_pack, m);
             } else {
-                packet_send(p);
+                if(!packet_send(p))
+                    return false;
                 packet_init_send_header(p, h);
             }
             goto retry;
@@ -136,26 +140,43 @@ static void send_update_messate(Packet *p, Header *h, Message *m) {
     }
     assert(k == 0);
     assert(n == 0);
+    return true;
 }
 
-void stream_send(cr_t *state, Header *h, Message *m) {
+bool stream_send(cr_t *state, Header *h, Message *m) {
     static Packet p;
+    bool ok = true;
 
     cr_begin(state);
 
     packet_init_send_header(&p, h);
 
-    while(m) {
+    while(m && ok) {
         if(is_update(m)) {
-            send_update_messate(&p, h, m);
+            ok = send_update_message(&p, h, m);
         } else {
-            send_message(&p, h, m);
+            ok = send_message(&p, h, m);
         }
 
-        cr_pause(state);
+        cr_yield(state, ok);
     }
     
-    packet_flush(&p);
+    ok = packet_flush(&p);
 
-    cr_end(state);
+    cr_return(state, ok);
 }
+
+bool stream_send_flush(Header *h, Message *m) {
+    Packet p;
+    packet_init_send_header(&p, h);
+    packet_put(&p, message_pack, m);
+    return packet_send(&p);
+}
+
+bool stream_send_discovery(Discovery *d) {
+    Packet p;
+    packet_init_discovery(&p);
+    packet_put(&p, discovery_pack, d);
+    return packet_send(&p);
+}
+

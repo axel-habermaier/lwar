@@ -69,18 +69,11 @@ enum RejectReason {
     REJECT_VERSION_MISMATCH = 2,
 };
 
-enum HeaderState {
-    HEADER_OK,
-    HEADER_APP_ID_MISMATCH,
-    HEADER_IO_FAILED,
-};
-
 struct Header {
     uint32_t app_id;
     uint32_t ack;
     uint32_t time;
     Address  adr;
-    HeaderState state;
 };
 
 struct Discovery {

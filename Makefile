@@ -28,6 +28,7 @@ physics.c       \
 queue.c         \
 protocol.c      \
 server.c        \
+stream.c        \
 rules.c         \
 templates.c     \
 unpack.c        \

@@ -15,7 +15,6 @@ static void client_ctor(size_t i, void *p) {
     c->last_in_frameno            = 0;
     c->last_activity              = 0;
     c->misbehavior                = 0;
-    c->hasleft                    = 0;
     c->dead                       = 0;
     c->ping                       = 0;
 
