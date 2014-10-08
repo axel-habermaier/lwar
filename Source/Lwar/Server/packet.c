@@ -97,5 +97,7 @@ bool packet_send(Packet *p) {
     assert(p->adr.ip   != 0);
     assert(p->adr.port != 0);
 
+    debug_packet(p);
+
     return conn_send(p->conn, p->p, p->end - p->start, &p->adr);
 }

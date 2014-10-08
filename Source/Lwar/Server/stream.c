@@ -74,6 +74,9 @@ static bool send_update_message(Packet *p, Header *h, Message *m) {
     size_t k = 0;
     size_t n = f->n;
 
+    if(n == 0)
+        return true;
+
     updates_foreach(f,e) {
         if(e->dead) { n --; continue; } /* TODO: actually shouldn't happen */
     retry:
