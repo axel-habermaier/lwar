@@ -51,6 +51,7 @@ void packet_init_discovery(Packet *p);
 
 bool packet_put(Packet *p, Pack *pack, void *u);
 bool packet_get(Packet *p, Unpack *unpack, void *u);
+bool packet_peek(Packet *p, size_t *pos, Unpack *unpack, void *u);
 
 bool packet_recv(Packet *p);
 bool packet_send(Packet *p);

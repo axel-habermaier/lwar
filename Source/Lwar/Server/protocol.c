@@ -238,6 +238,8 @@ static void queue_updates() {
     Message m;
     Format *f;
     formats_foreach(f) {
+        if(f->n == 0)
+            continue;
         message_update(&m, f);
         queue_broadcast(&m);
     }
