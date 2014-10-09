@@ -163,33 +163,27 @@ void debug_header(Header *h, const char *s) {
 }
 
 void debug_packet(Packet *p) {
-    size_t type = p->type;
-    size_t start = p->start;
-    size_t end = p->end;
-    p->type = PACKET_RECV;
     Header h;
     Message m;
+    size_t pos = 0;
 
     log_debug("packet {");
-    packet_get(p,header_unpack, &h);
+    packet_peek(p,&pos,header_unpack, &h);
     debug_header(&h, "  ");
-    while(packet_get(p,message_unpack,&m)) {
+    while(packet_peek(p,&pos,message_unpack,&m)) {
         debug_message(&m, "  ");
         if(is_update(&m)) {
-            size_t i;
-            for(i=0; i<m.update.n; i++) {
-                Format *f;
-                formats_foreach(f) {
-                    if(f->id == m.type) {
-                        p->start += f->len;
-                        break;
-                    }
+            Format *f;
+            formats_foreach(f) {
+                if(f->id != m.type)
+                    continue;
+                size_t i;
+                for(i=0; i<m.update.n; i++) {
+                    pos += f->len;
+                    break;
                 }
             }
         }
     }
     log_debug("}");
-    p->start = start;
-    p->end = end;
-    p->type = type;
 }

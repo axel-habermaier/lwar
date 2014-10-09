@@ -17,8 +17,8 @@ bool is_reliable(Message *m) {
 }
 
 bool is_update(Message *m) {
-    return    m->type > MESSAGE_UPDATE
-           && m->type < MESSAGE_UPDATE_SHIP;
+    return    m->type >= MESSAGE_UPDATE
+           && m->type <= MESSAGE_UPDATE_SHIP;
 }
 
 void message_join(Message *m, Client *c) {

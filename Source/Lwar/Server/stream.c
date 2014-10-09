@@ -78,7 +78,7 @@ static bool send_update_message(Packet *p, Header *h, Message *m) {
         return true;
 
     updates_foreach(f,e) {
-        if(e->dead) { n --; continue; } /* TODO: actually shouldn't happen */
+        assert(!e->dead); // { n --; continue; } /* TODO: actually shouldn't happen */
     retry:
         if(!k) {
             k = min(n, packet_update_n(p,f->len));

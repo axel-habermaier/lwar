@@ -81,6 +81,19 @@ bool packet_get(Packet *p, Unpack *unpack, void *u) {
     }
 }
 
+bool packet_peek(Packet *p, size_t *pos, Unpack *unpack, void *u) {
+    assert(*pos <= p->end);
+    if(*pos == p->end) return false;
+
+    size_t n = unpack(p->p + *pos, u);
+    if(n != 0 && *pos + n <= p->end) {
+        *pos += n;
+        return true;
+    } else {
+        return false;
+    }
+}
+
 bool packet_recv(Packet *p) {
     assert(p->type == PACKET_RECV);
 
