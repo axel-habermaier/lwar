@@ -29,6 +29,7 @@ static bool packet_scan_header(Packet *p, Header *h) {
 
 bool stream_recv(cr_t *state, Header *h, Message *m) {
     static Packet p;
+	bool ok;
 
     cr_begin(state);
     packet_init_recv(&p);
@@ -37,7 +38,7 @@ bool stream_recv(cr_t *state, Header *h, Message *m) {
         if(p.end == 0) /* EAGAIN */
             cr_yield(state, false);
 
-        int ok = packet_scan_header(&p, h);
+        ok = packet_scan_header(&p, h);
         if(!ok) continue;
 
         while(packet_get(&p, message_unpack, m)) {
