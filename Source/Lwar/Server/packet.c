@@ -10,6 +10,8 @@
 
 #include <string.h>
 
+void debug_packet(Packet *p);
+
 static bool check_put(Packet *p,size_t n) {
     return    n != 0
            && p->end + n <= MAX_PACKET_LENGTH;
