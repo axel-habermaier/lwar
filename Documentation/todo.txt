@@ -9,6 +9,7 @@ Client
 - Entity network synchronization
 	- Entity interpolation
 	- Ignore new entities until at least one update message has been received
+    - Check whether to keep assumption that packets contain at least one message
 - UI
 	- Ship/Weapon selection
 	- Minimap
