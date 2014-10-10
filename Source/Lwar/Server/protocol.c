@@ -108,6 +108,7 @@ void message_handle(Client *c, Address *adr, Message *m) {
         if(!c) return;
         message_leave(&r, c, LEAVE_QUIT);
         queue_broadcast(&r);
+        client_remove(c);
         break;
 
     case MESSAGE_CHAT:
@@ -285,7 +286,7 @@ static void send_queue_for(Client *c) {
     while((m = queue_next(&qs, c, &tries))) {
         // if(tries > 0)
             // stats.nresend ++;
-        if(tries == 0 && is_reliable(m))
+        if(tries == 0) // && is_reliable(m))
             debug_message(m, dest_fmt(c));
 
         if(!stream_send(&ss, &h, m))
@@ -321,8 +322,10 @@ void protocol_send(bool force) {
     if(!force && !clock_periodic(&server->update_periodic, UPDATE_INTERVAL))
         return;
 
+    /*
     if(clock_periodic(&server->discovery_periodic, DISCOVERY_INTERVAL))
         stream_send_discovery(&discovery);
+    */
 
     // timer_start(TIMER_SEND);
     // stats.nsend   = 0;

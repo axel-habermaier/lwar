@@ -88,7 +88,7 @@ void message_reject(Message *m, RejectReason reason) {
 }
 
 void message_update(Message *m, Format *f) {
-    m->type = (MessageType)f->id;
-    m->update.n = 0;
+    m->type = f->type;
+    m->update.n = f->n;
     m->update.f = f;
 }

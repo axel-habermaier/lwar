@@ -175,13 +175,9 @@ void debug_packet(Packet *p) {
         if(is_update(&m)) {
             Format *f;
             formats_foreach(f) {
-                if(f->id != m.type)
+                if(f->type != m.type)
                     continue;
-                size_t i;
-                for(i=0; i<m.update.n; i++) {
-                    pos += f->len;
-                    break;
-                }
+                pos += f->len * m.update.n;
             }
         }
     }

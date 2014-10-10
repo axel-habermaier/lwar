@@ -3,10 +3,11 @@
 
 #include "types.h"
 #include "list.h"
+#include "message.h"
 
 struct Format {
     List _l;
-    size_t id;
+    MessageType type;
 
     Pack *pack;
     Unpack *unpack;
