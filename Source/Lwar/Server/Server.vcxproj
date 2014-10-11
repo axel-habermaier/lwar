@@ -379,6 +379,7 @@
     <ClCompile Include="server.c" />
     <ClCompile Include="pool.c" />
     <ClCompile Include="str.c" />
+    <ClCompile Include="stream.c" />
     <ClCompile Include="templates.c" />
     <ClCompile Include="uint.c" />
     <ClCompile Include="unpack.c" />
@@ -414,6 +415,7 @@
     <ClInclude Include="server_export.h" />
     <ClInclude Include="pool.h" />
     <ClInclude Include="str.h" />
+    <ClInclude Include="stream.h" />
     <ClInclude Include="templates.h" />
     <ClInclude Include="types.h" />
     <ClInclude Include="uint.h" />

@@ -80,6 +80,9 @@
     <ClCompile Include="unpack.c">
       <Filter>Network</Filter>
     </ClCompile>
+    <ClCompile Include="stream.c">
+      <Filter>Network</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="address.h">
@@ -183,6 +186,9 @@
       <Filter>Network</Filter>
     </ClInclude>
     <ClInclude Include="unpack.h">
+      <Filter>Network</Filter>
+    </ClInclude>
+    <ClInclude Include="stream.h">
       <Filter>Network</Filter>
     </ClInclude>
   </ItemGroup>
