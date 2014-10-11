@@ -51,7 +51,7 @@ void rules_init() {
     server->self = client_create_local();
     player_rename(&server->self->player, self_name);
 
-    format_register(&format_ship);
+    // format_register(&format_ship);
     format_register(&format_pos);
     format_register(&format_pos_rot);
     format_register(&format_ray);
