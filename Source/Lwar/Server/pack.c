@@ -3,6 +3,7 @@
 #include "pack.h"
 
 #include "debug.h"
+#include "player.h"
 #include "message.h"
 #include "entity.h"
 #include "uint.h"
@@ -154,7 +155,6 @@ size_t update_pos_rotation_pack(char *s, void *p) {
     i += int16_pack(s+i, e->x.x);
     i += int16_pack(s+i, e->x.y);
     i += uint16_pack(s+i, deg100(e->phi));
-    //i += uint8_pack(s+i, 100 * e->health / e->type->init_health);
     return i;
 }
 
@@ -190,4 +190,20 @@ size_t update_circle_pack(char *s, void *p) {
     return i;
 }
 
+size_t update_ship_pack(char *s, void *p) {
+    Entity *e = (Entity*)p;
+    size_t i=0;
+    i += id_pack(s+i, e->id);
+    
+    i += uint8_pack(s+i, 100 * e->health / e->type->init_health);
+    i += uint8_pack(s+i, 100 * e->health / e->type->init_health); /* TODO: actually use some shield */
 
+    Slot *sl;
+    SlotType *st;
+    slots_foreach(e->player,sl,st) {
+        Entity *r = sl->entity;
+        i += uint8_pack(s+i, 100 * r->energy / r->type->init_energy);
+    }
+
+    return i;
+}

@@ -3,6 +3,7 @@
 #include "rules.h"
 
 #include "debug.h"
+#include "entity.h"
 #include "templates.h"
 #include "server.h"
 #include "vector.h"
@@ -52,6 +53,7 @@ void rules_init() {
 
     format_register(&format_ship);
     format_register(&format_pos);
+    format_register(&format_pos_rot);
     format_register(&format_ray);
     format_register(&format_circle);
 

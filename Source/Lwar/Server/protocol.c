@@ -286,7 +286,7 @@ static void send_queue_for(Client *c) {
     while((m = queue_next(&qs, c, &tries))) {
         // if(tries > 0)
             // stats.nresend ++;
-        if(tries == 0) // && is_reliable(m))
+        if(tries == 0 && is_reliable(m))
             debug_message(m, dest_fmt(c));
 
         if(!stream_send(&ss, &h, m))

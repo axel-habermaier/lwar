@@ -21,6 +21,8 @@ struct SlotType {
     BitSet possible_types;
 };
 
+#define slots_foreach(p,s,st)    for(s = p->weapons, st = (p->ship.entity ? p->ship.entity->type->slots : 0); s<p->weapons+NUM_SLOTS; s++, st = (p->ship.entity ? st + 1 : 0))
+
 /* Entities have a physical appearance in the world */
 struct Entity {
     List _l;

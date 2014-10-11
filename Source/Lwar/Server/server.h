@@ -48,6 +48,5 @@ struct Server {
 #define collisions_foreach(c)    pq_foreach(&server->collisions, c, Collision)
 #define formats_foreach(f)       list_for_each_entry(f, Format, &server->formats, _l)
 #define updates_foreach(t,e)     list_for_each_entry(e, Entity, &t->all, _u)
-#define slots_foreach(p,s,st)    for(s = p->weapons, st = (p->ship.entity ? p->ship.entity->type->slots : 0); s<p->weapons+NUM_SLOTS; s++, st = (p->ship.entity ? st + 1 : 0))
 
 #endif
