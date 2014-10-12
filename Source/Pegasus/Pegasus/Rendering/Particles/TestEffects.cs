@@ -98,11 +98,11 @@
 		{
 			particleEffect.Emitters.Add(new Emitter
 			{
-				Capacity = 10000,
+				Capacity = 4000,
 				InitialColor = new Range<Color>(new Color(0f, 0, 0, 0), new Color(1f, 1, 1, 1)),
 				InitialPosition = new Range<Vector3>(new Vector3(0, 0, 0), new Vector3(100, 100, 0)),
 				InitialVelocity = new Range<Vector3>(new Vector3(-100, -230, -10), new Vector3(100, 230, 10)),
-				InitialScale = new Range<float>(10, 100),
+				InitialScale = new Range<float>(20, 100),
 				InitialLifetime = new Range<float>(1, 5),
 				EmissionRate = 2000,
 				Duration = 5,
@@ -115,7 +115,7 @@
 				Modifiers = new ModifierCollection
 				{
 					new FadeOutModifier(),
-					new ScaleModifier{ Delta = -10 }
+					new ScaleModifier(-5)
 				}
 			});
 		}

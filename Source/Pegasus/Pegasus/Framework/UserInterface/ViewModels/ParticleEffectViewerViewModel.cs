@@ -170,8 +170,17 @@
 		/// </summary>
 		public void Close()
 		{
-			Application.Current.Window.LayoutRoot.Remove(_view);
-			Application.Current.Window.MouseCaptured = _mouseWasCaptured;
+			if (!IsDisposing)
+				Application.Current.Window.MouseCaptured = _mouseWasCaptured;
+
+			if (Application.Current.Window.LayoutRoot.Children.Contains(_view))
+				Application.Current.Window.LayoutRoot.Remove(_view);
+
+			ParticleTemplates.SafeDisposeAll();
+			Camera.SafeDispose();
+
+			_inputDevice.SafeDispose();
+			_particleEffect.SafeDispose();
 		}
 
 		/// <summary>
@@ -179,14 +188,7 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			if (Application.Current.Window.LayoutRoot.Children.Contains(_view))
-				Close();
-
-			ParticleTemplates.SafeDisposeAll();
-			Camera.SafeDispose();
-
-			_inputDevice.SafeDispose();
-			_particleEffect.SafeDispose();
+			Close();
 		}
 	}
 }
