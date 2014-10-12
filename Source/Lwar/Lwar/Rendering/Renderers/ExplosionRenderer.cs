@@ -101,6 +101,7 @@
 					InitialColor = new Range<Color>(new Color(255, 156, 43, 255), new Color(255, 202, 30, 255)),
 					InitialPosition = new Range<Vector3>(Vector3.Zero),
 					InitialVelocity = new Range<Vector3>(new Vector3(-scale, 0, -scale), new Vector3(scale, 0, scale)),
+					InitialScale = new Range<float>(100),
 					EmissionRate = 3000,
 					Lifetime = 0.4f,
 					Duration = 0.2f,

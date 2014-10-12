@@ -374,6 +374,7 @@
     <Compile Include="Platform\TimeMeasurement.cs" />
     <Compile Include="Rendering\Particles\BillboardRenderer.cs" />
     <Compile Include="Rendering\Particles\Emitter.cs" />
+    <Compile Include="Rendering\Particles\Modifiers\ScaleModifier.cs" />
     <Compile Include="Rendering\Particles\TestEffects.cs" />
     <Compile Include="Rendering\Particles\Modifiers\FadeOutModifier.cs" />
     <Compile Include="Rendering\Particles\Modifiers\Modifier.cs" />

@@ -23,7 +23,7 @@
 		/// <summary>
 		///     The vertex buffer storing the particle colors.
 		/// </summary>
-		private DynamicVertexBuffer _colorBuffer;
+		private DynamicVertexBuffer _colorsBuffer;
 
 		/// <summary>
 		///     The input layout used to draw the particles.
@@ -33,7 +33,11 @@
 		/// <summary>
 		///     The vertex buffer storing the particle positions.
 		/// </summary>
-		private DynamicVertexBuffer _positionBuffer;
+		private DynamicVertexBuffer _positionsBuffer;
+		/// <summary>
+		/// The vertex buffer storing the particle scales.
+		/// </summary>
+		private DynamicVertexBuffer _scalesBuffer;
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -92,18 +96,22 @@
 				return;
 
 			var size = particleCount * 3 * sizeof(float);
-			using (var positions = _positionBuffer.MapRange(0, size))
+			using (var positions = _positionsBuffer.MapRange(0, size))
 				positions.Write(particles.Positions, 0, size);
 
 			size = particleCount * 4 * sizeof(byte);
-			using (var colors = _colorBuffer.MapRange(0, size))
+			using (var colors = _colorsBuffer.MapRange(0, size))
 				colors.Write(particles.Colors, 0, size);
+
+			size = particleCount * sizeof(float);
+			using (var scales = _scalesBuffer.MapRange(0, size))
+				scales.Write(particles.Scales, 0, size);
 
 			_inputLayout.Bind();
 			BlendState.Bind();
 
-			var instanceOffset = _positionBuffer.GetInstanceOffset(Capacity);
-			Assert.That(_colorBuffer.GetInstanceOffset(Capacity) == instanceOffset, "Buffer update cycle mismatch.");
+			var instanceOffset = _positionsBuffer.GetInstanceOffset(Capacity);
+			Assert.That(_colorsBuffer.GetInstanceOffset(Capacity) == instanceOffset, "Buffer update cycle mismatch.");
 			Draw(renderOutput, particles, particleCount, instanceOffset);
 		}
 
@@ -126,17 +134,19 @@
 		/// </summary>
 		private void InitializeVertexBuffers()
 		{
-			_positionBuffer.SafeDispose();
-			_colorBuffer.SafeDispose();
+			_positionsBuffer.SafeDispose();
+			_colorsBuffer.SafeDispose();
 
 			if (Capacity <= 0)
 				return;
 
-			_positionBuffer = DynamicVertexBuffer.Create<float>(_graphicsDevice, Capacity * 3, GraphicsDevice.FrameLag);
-			_colorBuffer = DynamicVertexBuffer.Create<byte>(_graphicsDevice, Capacity * 4, GraphicsDevice.FrameLag);
+			_positionsBuffer = DynamicVertexBuffer.Create<float>(_graphicsDevice, Capacity * 3, GraphicsDevice.FrameLag);
+			_colorsBuffer = DynamicVertexBuffer.Create<byte>(_graphicsDevice, Capacity * 4, GraphicsDevice.FrameLag);
+			_scalesBuffer = DynamicVertexBuffer.Create<float>(_graphicsDevice, Capacity , GraphicsDevice.FrameLag);
 
-			_positionBuffer.SetName("Particle Position Buffer");
-			_colorBuffer.SetName("Particle Color Buffer");
+			_positionsBuffer.SetName("Particle Positions Buffer");
+			_colorsBuffer.SetName("Particle Colors Buffer");
+			_scalesBuffer.SetName("Particle Scales Buffer");
 		}
 
 		/// <summary>
@@ -151,15 +161,18 @@
 			Assert.NotNull(particleBindings);
 			Assert.That(particleBindings.Length > 0, "Expected an input binding.");
 
-			var bindings = new VertexInputBinding[particleBindings.Length + 2];
+			var bindings = new VertexInputBinding[particleBindings.Length + 3];
 			for (var i = 0; i < particleBindings.Length; ++i)
 				bindings[i] = particleBindings[i];
 
 			bindings[particleBindings.Length] =
-				new VertexInputBinding(_positionBuffer.Buffer, VertexDataFormat.Vector3, DataSemantics.TexCoords0, sizeof(Vector3), 0, 1);
+				new VertexInputBinding(_positionsBuffer.Buffer, VertexDataFormat.Vector3, DataSemantics.TexCoords0, sizeof(Vector3), 0, 1);
 
 			bindings[particleBindings.Length + 1] =
-				new VertexInputBinding(_colorBuffer.Buffer, VertexDataFormat.Color, DataSemantics.Color0, sizeof(int), 0, 1);
+				new VertexInputBinding(_colorsBuffer.Buffer, VertexDataFormat.Color, DataSemantics.Color0, sizeof(int), 0, 1);
+
+			bindings[particleBindings.Length + 2] =
+				new VertexInputBinding(_scalesBuffer.Buffer, VertexDataFormat.Float, DataSemantics.TexCoords1, sizeof(float), 0, 1);
 
 			_inputLayout = new VertexInputLayout(_graphicsDevice, bindings);
 		}
@@ -170,8 +183,9 @@
 		protected override void OnDisposing()
 		{
 			_inputLayout.SafeDispose();
-			_positionBuffer.SafeDispose();
-			_colorBuffer.SafeDispose();
+			_positionsBuffer.SafeDispose();
+			_colorsBuffer.SafeDispose();
+			_scalesBuffer.SafeDispose();
 		}
 	}
 }

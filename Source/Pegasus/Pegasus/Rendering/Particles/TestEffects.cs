@@ -44,7 +44,8 @@
 				Capacity = 1000000,
 				InitialColor = new Range<Color>(new Color(0f, 0, 0, 1), new Color(1f, 1, 1, 1)),
 				InitialPosition = new Range<Vector3>(new Vector3(0, 0, 0), new Vector3(100, 100, 0)),
-				InitialVelocity = new Range<Vector3>(new Vector3(-100, -230, -10), new Vector3(100, 230, 10)),
+				InitialVelocity = new Range<Vector3>(new Vector3(-200, -300, -20), new Vector3(100, 230, 20)),
+				InitialScale = new Range<float>(10, 20),
 				EmissionRate = 200000,
 				Lifetime = 50,
 				Duration = 5,
@@ -98,9 +99,10 @@
 			particleEffect.Emitters.Add(new Emitter
 			{
 				Capacity = 10000,
-				InitialColor = new Range<Color>(new Color(0f, 0, 0, 1), new Color(1f, 1, 1, 1)),
+				InitialColor = new Range<Color>(new Color(0f, 0, 0, 0), new Color(1f, 1, 1, 1)),
 				InitialPosition = new Range<Vector3>(new Vector3(0, 0, 0), new Vector3(100, 100, 0)),
 				InitialVelocity = new Range<Vector3>(new Vector3(-100, -230, -10), new Vector3(100, 230, 10)),
+				InitialScale = new Range<float>(10, 100),
 				EmissionRate = 2000,
 				Lifetime = 5,
 				Duration = 5,
@@ -112,7 +114,8 @@
 				},
 				Modifiers = new ModifierCollection
 				{
-					new FadeOutModifier()
+					new FadeOutModifier(),
+					new ScaleModifier{ Delta = -10 }
 				}
 			});
 		}

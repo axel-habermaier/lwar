@@ -54,6 +54,7 @@
 		public Emitter()
 		{
 			Duration = Single.PositiveInfinity;
+			InitialScale = new Range<float>(1);
 		}
 
 		/// <summary>
@@ -121,6 +122,11 @@
 		///     Gets or sets the range of the initial particle colors.
 		/// </summary>
 		public Range<Color> InitialColor { get; set; }
+
+		/// <summary>
+		///     Gets or sets the range of the initial particle scales.
+		/// </summary>
+		public Range<float> InitialScale { get; set; }
 
 		/// <summary>
 		///     Gets or sets the range of the initial particle positions.
@@ -238,6 +244,7 @@
 			var positions = _particles.Positions + ParticleCount * 3;
 			var velocities = _particles.Velocities + ParticleCount * 3;
 			var colors = _particles.Colors + ParticleCount * 4;
+			var scales = _particles.Scales + ParticleCount;
 
 			_secondsSinceLastEmit = 0;
 			ParticleCount += count;
@@ -246,6 +253,7 @@
 			{
 				*lifetimes = Lifetime;
 				*age = 1;
+				*scales = RandomValues.NextSingle(InitialScale.LowerBound, InitialScale.UpperBound);
 
 				colors[0] = RandomValues.NextByte(InitialColor.LowerBound.Red, InitialColor.UpperBound.Red);
 				colors[1] = RandomValues.NextByte(InitialColor.LowerBound.Green, InitialColor.UpperBound.Green);
@@ -265,6 +273,7 @@
 				positions += 3;
 				velocities += 3;
 				colors += 4;
+				scales += 1;
 			}
 		}
 

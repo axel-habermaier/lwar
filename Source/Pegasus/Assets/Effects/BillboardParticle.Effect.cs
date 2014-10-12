@@ -6,8 +6,6 @@
 	[Effect]
 	public class BillboardParticleEffect : Effect
 	{
-		private const float SpriteSize = 100.5f;
-
 		public readonly Technique Default = new Technique
 		{
 			VertexShader = "VertexShader",
@@ -23,13 +21,14 @@
 		public void VertexShader([Position] Vector2 vertexPosition,
 								 [TexCoords] Vector3 particlePosition,
 								 [Color] Vector4 color,
+								 [TexCoords(1)] float scale,
 								 [Position] out Vector4 outPosition,
 								 [TexCoords] out Vector2 outTexCoords,
 								 [Color] out Vector4 outColor)
 		{
 			var position = World * new Vector4(particlePosition, 1);
 			position = View * position;
-			position.xy += SpriteSize * vertexPosition;
+			position.xy += scale * vertexPosition;
 
 			outPosition = Projection * position;
 			outTexCoords = vertexPosition + new Vector2(0.5f, 0.5f);

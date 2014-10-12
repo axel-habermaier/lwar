@@ -31,7 +31,8 @@
 									 sizeof(float) * 3 + // velocities
 									 sizeof(byte) * 4 + // colors
 									 sizeof(float) + // lifetimes
-									 sizeof(float); // age
+									 sizeof(float) + // age
+									 sizeof(float); // scales
 
 			_size = particleSize * Capacity;
 			_memory = Marshal.AllocHGlobal(_size).ToPointer();
@@ -52,6 +53,9 @@
 			pointer += sizeof(float) * Capacity;
 
 			Age = (float*)pointer;
+			pointer += sizeof(float) * Capacity;
+
+			Scales = (float*)pointer;
 		}
 
 		/// <summary>
@@ -64,6 +68,11 @@
 		///     end of the particle's life.
 		/// </summary>
 		public float* Age { get; private set; }
+
+		/// <summary>
+		///     Stores the scale of each particles as a floating-point value.
+		/// </summary>
+		public float* Scales { get; private set; }
 
 		/// <summary>
 		///     Stores the remaining life time time of each particle as a floating-point value in seconds.
@@ -103,6 +112,7 @@
 
 			Age[target] = Age[source];
 			Lifetimes[target] = Lifetimes[source];
+			Scales[target] = Scales[source];
 
 			Colors[(target * 4) + 0] = Colors[(source * 4) + 0];
 			Colors[(target * 4) + 1] = Colors[(source * 4) + 1];
