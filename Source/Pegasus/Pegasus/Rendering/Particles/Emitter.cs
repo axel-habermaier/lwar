@@ -282,8 +282,11 @@
 
 			while (count-- > 0)
 			{
-				*lifetimes = Math.Max(*lifetimes - elapsedSeconds, 0);
-				*age = *lifetimes / Lifetime;
+				var lifetime = *lifetimes - elapsedSeconds;
+				lifetime = lifetime < 0 ? 0 : lifetime;
+
+				*lifetimes = lifetime;
+				*age = lifetime / Lifetime;
 
 				positions[0] += velocities[0] * elapsedSeconds;
 				positions[1] += velocities[1] * elapsedSeconds;

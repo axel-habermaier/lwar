@@ -241,6 +241,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Textures\ParticleTest.png" />
     <Content Include="Textures\PointerCursor.png" />
     <Content Include="Textures\TextCursor.png" />
   </ItemGroup>

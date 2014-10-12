@@ -194,7 +194,6 @@
     <Compile Include="Network\Messages\UpdateShipMessage.cs" />
     <Compile Include="Network\ServerConnection.cs" />
     <Compile Include="Rendering\CircleOutline.cs" />
-    <Compile Include="Rendering\ParticleEffects\ExplosionEffectTemplate.cs" />
     <Compile Include="Rendering\Renderers\BoundaryRenderer.cs" />
     <Compile Include="UserInterface\ViewModels\ChatViewModel.cs" />
     <Compile Include="UserInterface\ViewModels\GameSessionViewModel.cs" />

@@ -1,15 +1,15 @@
-﻿namespace Lwar.Rendering.ParticleEffects
+﻿namespace Pegasus.Rendering.Particles
 {
 	using System;
 	using Assets;
-	using Pegasus.Math;
-	using Pegasus.Platform.Graphics;
-	using Pegasus.Rendering.Particles;
-	using Pegasus.Rendering.Particles.Modifiers;
+	using Math;
+	using Modifiers;
+	using Platform.Graphics;
 
-	
-
-	internal class ExplosionEffect3 : ParticleEffectTemplate
+	/// <summary>
+	///     A particle effect with a huge number of particles for testing.
+	/// </summary>
+	internal class HugeTestEffect : ParticleEffectTemplate
 	{
 		/// <summary>
 		///     The texture that is used to draw the particles.
@@ -19,8 +19,8 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		public ExplosionEffect3()
-			: base("Explosion 3")
+		public HugeTestEffect()
+			: base("Huge Test Effect")
 		{
 		}
 
@@ -30,7 +30,7 @@
 		protected override void Load()
 		{
 			BillboardRenderer.PreloadAssets(Assets);
-			_texture = Assets.Load(Textures.BulletGlow);
+			_texture = Assets.Load(Textures.ParticleTest);
 		}
 
 		/// <summary>
@@ -62,7 +62,10 @@
 		}
 	}
 
-	internal class ExplosionEffect2 : ParticleEffectTemplate
+	/// <summary>
+	///     A particle effect with a small number of particles for testing.
+	/// </summary>
+	internal class SmallTestEffect : ParticleEffectTemplate
 	{
 		/// <summary>
 		///     The texture that is used to draw the particles.
@@ -72,8 +75,8 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		public ExplosionEffect2()
-			: base("Fast Explosion")
+		public SmallTestEffect()
+			: base("Small Test Effect")
 		{
 		}
 
@@ -83,7 +86,7 @@
 		protected override void Load()
 		{
 			BillboardRenderer.PreloadAssets(Assets);
-			_texture = Assets.Load(Textures.BulletGlow);
+			_texture = Assets.Load(Textures.ParticleTest);
 		}
 
 		/// <summary>
@@ -94,13 +97,13 @@
 		{
 			particleEffect.Emitters.Add(new Emitter
 			{
-				Capacity = 200,
-				InitialColor = new Range<Color>(new Color(1f, 0, 0, 1)),
-				InitialPosition = new Range<Vector3>(new Vector3(0, 0, 0), new Vector3(0, 0, 0)),
-				InitialVelocity = new Range<Vector3>(new Vector3(100, -10, 0), new Vector3(100, 10, 0)),
-				EmissionRate = 100,
-				Lifetime = 2,
-				Duration = 1,
+				Capacity = 10000,
+				InitialColor = new Range<Color>(new Color(0f, 0, 0, 1), new Color(1f, 1, 1, 1)),
+				InitialPosition = new Range<Vector3>(new Vector3(0, 0, 0), new Vector3(100, 100, 0)),
+				InitialVelocity = new Range<Vector3>(new Vector3(-100, -230, -10), new Vector3(100, 230, 10)),
+				EmissionRate = 2000,
+				Lifetime = 5,
+				Duration = 5,
 				Renderer = new BillboardRenderer(GraphicsDevice, Assets)
 				{
 					BlendState = BlendState.Additive,
