@@ -72,7 +72,7 @@
 				if (_capacity == value)
 					return;
 
-				Assert.InRange(value, 1, UInt16.MaxValue);
+				Assert.InRange(value, 1, Int32.MaxValue);
 
 				_capacity = value;
 				_particles.SafeDispose();
@@ -233,27 +233,39 @@
 			if (count <= 0)
 				return;
 
+			var lifetimes = _particles.Lifetimes + ParticleCount;
+			var age = _particles.Age + ParticleCount;
+			var positions = _particles.Positions + ParticleCount * 3;
+			var velocities = _particles.Velocities + ParticleCount * 3;
+			var colors = _particles.Colors + ParticleCount * 4;
+
 			_secondsSinceLastEmit = 0;
-			for (var i = ParticleCount; i < ParticleCount + count; ++i)
-			{
-				_particles.Lifetimes[i] = Lifetime;
-				_particles.Age[i] = 1;
-
-				_particles.Colors[(i * 4) + 0] = RandomValues.NextByte(InitialColor.LowerBound.Red, InitialColor.UpperBound.Red);
-				_particles.Colors[(i * 4) + 1] = RandomValues.NextByte(InitialColor.LowerBound.Green, InitialColor.UpperBound.Green);
-				_particles.Colors[(i * 4) + 2] = RandomValues.NextByte(InitialColor.LowerBound.Blue, InitialColor.UpperBound.Blue);
-				_particles.Colors[(i * 4) + 3] = RandomValues.NextByte(InitialColor.LowerBound.Alpha, InitialColor.UpperBound.Alpha);
-
-				_particles.Positions[(i * 3) + 0] = RandomValues.NextSingle(InitialPosition.LowerBound.X, InitialPosition.UpperBound.X);
-				_particles.Positions[(i * 3) + 1] = RandomValues.NextSingle(InitialPosition.LowerBound.Y, InitialPosition.UpperBound.Y);
-				_particles.Positions[(i * 3) + 2] = RandomValues.NextSingle(InitialPosition.LowerBound.Z, InitialPosition.UpperBound.Z);
-
-				_particles.Velocities[(i * 3) + 0] = RandomValues.NextSingle(InitialVelocity.LowerBound.X, InitialVelocity.UpperBound.X);
-				_particles.Velocities[(i * 3) + 1] = RandomValues.NextSingle(InitialVelocity.LowerBound.Y, InitialVelocity.UpperBound.Y);
-				_particles.Velocities[(i * 3) + 2] = RandomValues.NextSingle(InitialVelocity.LowerBound.Z, InitialVelocity.UpperBound.Z);
-			}
-
 			ParticleCount += count;
+
+			while (count-- > 0)
+			{
+				*lifetimes = Lifetime;
+				*age = 1;
+
+				colors[0] = RandomValues.NextByte(InitialColor.LowerBound.Red, InitialColor.UpperBound.Red);
+				colors[1] = RandomValues.NextByte(InitialColor.LowerBound.Green, InitialColor.UpperBound.Green);
+				colors[2] = RandomValues.NextByte(InitialColor.LowerBound.Blue, InitialColor.UpperBound.Blue);
+				colors[3] = RandomValues.NextByte(InitialColor.LowerBound.Alpha, InitialColor.UpperBound.Alpha);
+
+				positions[0] = RandomValues.NextSingle(InitialPosition.LowerBound.X, InitialPosition.UpperBound.X);
+				positions[1] = RandomValues.NextSingle(InitialPosition.LowerBound.Y, InitialPosition.UpperBound.Y);
+				positions[2] = RandomValues.NextSingle(InitialPosition.LowerBound.Z, InitialPosition.UpperBound.Z);
+
+				velocities[0] = RandomValues.NextSingle(InitialVelocity.LowerBound.X, InitialVelocity.UpperBound.X);
+				velocities[1] = RandomValues.NextSingle(InitialVelocity.LowerBound.Y, InitialVelocity.UpperBound.Y);
+				velocities[2] = RandomValues.NextSingle(InitialVelocity.LowerBound.Z, InitialVelocity.UpperBound.Z);
+
+				lifetimes += 1;
+				age += 1;
+				positions += 3;
+				velocities += 3;
+				colors += 4;
+			}
 		}
 
 		/// <summary>
@@ -262,14 +274,25 @@
 		/// <param name="elapsedSeconds">The number of seconds that have elapsed since the last update.</param>
 		private unsafe void UpdateParticles(float elapsedSeconds)
 		{
-			for (var i = 0; i < ParticleCount; ++i)
-			{
-				_particles.Lifetimes[i] = Math.Max(_particles.Lifetimes[i] - elapsedSeconds, 0);
-				_particles.Age[i] = _particles.Lifetimes[i] / Lifetime;
+			var lifetimes = _particles.Lifetimes;
+			var age = _particles.Age;
+			var positions = _particles.Positions;
+			var velocities = _particles.Velocities;
+			var count = ParticleCount;
 
-				_particles.Positions[(i * 3) + 0] += _particles.Velocities[(i * 3) + 0] * elapsedSeconds;
-				_particles.Positions[(i * 3) + 1] += _particles.Velocities[(i * 3) + 1] * elapsedSeconds;
-				_particles.Positions[(i * 3) + 2] += _particles.Velocities[(i * 3) + 2] * elapsedSeconds;
+			while (count-- > 0)
+			{
+				*lifetimes = Math.Max(*lifetimes - elapsedSeconds, 0);
+				*age = *lifetimes / Lifetime;
+
+				positions[0] += velocities[0] * elapsedSeconds;
+				positions[1] += velocities[1] * elapsedSeconds;
+				positions[2] += velocities[2] * elapsedSeconds;
+
+				lifetimes += 1;
+				age += 1;
+				positions += 3;
+				velocities += 3;
 			}
 		}
 
@@ -279,8 +302,8 @@
 		[Conditional("DEBUG"), DebuggerHidden]
 		private void Validate()
 		{
-			Assert.InRange(EmissionRate, 1, UInt16.MaxValue);
-			Assert.InRange(Capacity, 1, UInt16.MaxValue);
+			Assert.InRange(EmissionRate, 1, Int32.MaxValue);
+			Assert.InRange(Capacity, 1, Int32.MaxValue);
 			Assert.That(Lifetime > 0, "Invalid particle life time.");
 			Assert.That(Duration > 0 || Single.IsPositiveInfinity(Duration), "Invalid duration.");
 			Assert.NotNull(Renderer);

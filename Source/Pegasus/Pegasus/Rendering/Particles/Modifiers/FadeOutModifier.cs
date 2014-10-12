@@ -15,8 +15,16 @@
 		/// <param name="elapsedSeconds">The number of seconds that have elapsed since the last update.</param>
 		public override unsafe void Execute(ParticleCollection particles, int count, float elapsedSeconds)
 		{
-			for (var i = 0; i < count; ++i)
-				particles.Colors[(i * 4) + 3] = (byte)(particles.Age[i] * 255);
+			var alpha = particles.Colors + 3;
+			var age = particles.Age;
+
+			while (count -- > 0)
+			{
+				*alpha = (byte)(*age * 255);
+
+				alpha += 4;
+				age += 1;
+			}
 		}
 	}
 }
