@@ -1,4 +1,4 @@
-﻿namespace Pegasus.Rendering.Particles
+﻿namespace Pegasus.Rendering.Particles.Emitteres
 {
 	using System;
 	using System.Diagnostics;
@@ -11,7 +11,7 @@
 	///     Emits, updates, and removes particles of a particle effect, with all particles sharing the same properties and
 	///     modifiers.
 	/// </summary>
-	public sealed class Emitter : DisposableObject
+	public abstract class Emitter : DisposableObject
 	{
 		/// <summary>
 		///     The number of times per second that the emitter searches for dead particles and removes them.
@@ -51,7 +51,7 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		public Emitter()
+		protected Emitter()
 		{
 			Duration = Single.PositiveInfinity;
 			InitialScale = new Range<float>(1);
@@ -134,14 +134,9 @@
 		public Range<float> InitialLifetime { get; set; }
 
 		/// <summary>
-		///     Gets or sets the range of the initial particle positions.
+		///     Gets or sets the range of the initial particle speeds.
 		/// </summary>
-		public Range<Vector3> InitialPosition { get; set; }
-
-		/// <summary>
-		///     Gets or sets the range of the initial particle velocities.
-		/// </summary>
-		public Range<Vector3> InitialVelocity { get; set; }
+		public Range<float> InitialSpeed { get; set; }
 
 		/// <summary>
 		///     Gets a value indicating whether the emitter is completed, i.e., there are no living particles and no new particles will
@@ -250,6 +245,8 @@
 			_secondsSinceLastEmit = 0;
 			ParticleCount += count;
 
+			InitializeParticles(positions, velocities, count);
+
 			while (count-- > 0)
 			{
 				*initialLifetimes = RandomValues.NextSingle(InitialLifetime.LowerBound, InitialLifetime.UpperBound);
@@ -262,19 +259,9 @@
 				colors[2] = RandomValues.NextByte(InitialColor.LowerBound.Blue, InitialColor.UpperBound.Blue);
 				colors[3] = RandomValues.NextByte(InitialColor.LowerBound.Alpha, InitialColor.UpperBound.Alpha);
 
-				positions[0] = RandomValues.NextSingle(InitialPosition.LowerBound.X, InitialPosition.UpperBound.X);
-				positions[1] = RandomValues.NextSingle(InitialPosition.LowerBound.Y, InitialPosition.UpperBound.Y);
-				positions[2] = RandomValues.NextSingle(InitialPosition.LowerBound.Z, InitialPosition.UpperBound.Z);
-
-				velocities[0] = RandomValues.NextSingle(InitialVelocity.LowerBound.X, InitialVelocity.UpperBound.X);
-				velocities[1] = RandomValues.NextSingle(InitialVelocity.LowerBound.Y, InitialVelocity.UpperBound.Y);
-				velocities[2] = RandomValues.NextSingle(InitialVelocity.LowerBound.Z, InitialVelocity.UpperBound.Z);
-
 				lifetimes += 1;
 				initialLifetimes += 1;
 				age += 1;
-				positions += 3;
-				velocities += 3;
 				colors += 4;
 				scales += 1;
 			}
@@ -324,6 +311,8 @@
 			Assert.That(InitialLifetime.LowerBound >= 0, "Invalid particle life time.");
 			Assert.That(InitialLifetime.UpperBound >= 0, "Invalid particle life time.");
 			Assert.That(Duration > 0 || Single.IsPositiveInfinity(Duration), "Invalid duration.");
+			Assert.That(InitialSpeed.LowerBound >= 0, "Invalid particle speed.");
+			Assert.That(InitialSpeed.UpperBound >= 0, "Invalid particle speed.");
 			Assert.NotNull(Renderer);
 		}
 
@@ -335,5 +324,13 @@
 			_particles.SafeDispose();
 			Renderer.SafeDispose();
 		}
+
+		/// <summary>
+		///     Initializes the position and velocity of the given number of newly emitted particles.
+		/// </summary>
+		/// <param name="positions">The positions of the particles.</param>
+		/// <param name="velocities">The velocities of the particles.</param>
+		/// <param name="count">The number of particles that should be initialized.</param>
+		protected abstract unsafe void InitializeParticles(float* positions, float* velocities, int count);
 	}
 }

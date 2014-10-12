@@ -171,5 +171,14 @@
 		{
 			return (float)Math.Tan(value);
 		}
+
+		/// <summary>
+		///     Returns the square root of the given value.
+		/// </summary>
+		/// <param name="value">The value the square root should be returned for.</param>
+		public static float Sqrt(float value)
+		{
+			return (float)Math.Sqrt(value);
+		}
 	}
 }

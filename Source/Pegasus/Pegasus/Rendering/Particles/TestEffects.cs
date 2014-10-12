@@ -2,6 +2,7 @@
 {
 	using System;
 	using Assets;
+	using Emitteres;
 	using Math;
 	using Modifiers;
 	using Platform.Graphics;
@@ -39,12 +40,11 @@
 		/// <param name="particleEffect">The particle effect that should be initialized.</param>
 		public override void Initialize(ParticleEffect particleEffect)
 		{
-			particleEffect.Emitters.Add(new Emitter
+			particleEffect.Emitters.Add(new PointEmitter
 			{
 				Capacity = 1000000,
 				InitialColor = new Range<Color>(new Color(0f, 0, 0, 1), new Color(1f, 1, 1, 1)),
-				InitialPosition = new Range<Vector3>(new Vector3(0, 0, 0), new Vector3(100, 100, 0)),
-				InitialVelocity = new Range<Vector3>(new Vector3(-200, -300, -20), new Vector3(100, 230, 20)),
+				InitialSpeed = new Range<float>(10, 400),
 				InitialScale = new Range<float>(10, 20),
 				InitialLifetime = new Range<float>(50),
 				EmissionRate = 200000,
@@ -96,12 +96,11 @@
 		/// <param name="particleEffect">The particle effect that should be initialized.</param>
 		public override void Initialize(ParticleEffect particleEffect)
 		{
-			particleEffect.Emitters.Add(new Emitter
+			particleEffect.Emitters.Add(new PointEmitter
 			{
 				Capacity = 4000,
 				InitialColor = new Range<Color>(new Color(0f, 0, 0, 0), new Color(1f, 1, 1, 1)),
-				InitialPosition = new Range<Vector3>(new Vector3(0, 0, 0), new Vector3(100, 100, 0)),
-				InitialVelocity = new Range<Vector3>(new Vector3(-100, -230, -10), new Vector3(100, 230, 10)),
+				InitialSpeed = new Range<float>(10, 200),
 				InitialScale = new Range<float>(20, 100),
 				InitialLifetime = new Range<float>(1, 5),
 				EmissionRate = 2000,

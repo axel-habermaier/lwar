@@ -8,6 +8,7 @@
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering.Particles;
+	using Pegasus.Rendering.Particles.Emitteres;
 	using Pegasus.Rendering.Particles.Modifiers;
 
 	/// <summary>
@@ -94,13 +95,11 @@
 			/// <param name="particleEffect">The particle effect that should be initialized.</param>
 			public override void Initialize(ParticleEffect particleEffect)
 			{
-				const float scale = 200f;
-				particleEffect.Emitters.Add(new Emitter
+				particleEffect.Emitters.Add(new PointEmitter
 				{
 					Capacity = 500,
 					InitialColor = new Range<Color>(new Color(255, 156, 43, 255), new Color(255, 202, 30, 255)),
-					InitialPosition = new Range<Vector3>(Vector3.Zero),
-					InitialVelocity = new Range<Vector3>(new Vector3(-scale, 0, -scale), new Vector3(scale, 0, scale)),
+					InitialSpeed = new Range<float>(200),
 					InitialScale = new Range<float>(100),
 					InitialLifetime = new Range<float>(0.3f, 0.5f),
 					EmissionRate = 3000,
