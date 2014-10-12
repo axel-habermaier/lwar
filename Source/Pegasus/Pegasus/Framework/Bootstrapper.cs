@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.Framework
 {
 	using System;
+	using System.Diagnostics;
 	using System.Globalization;
 	using System.Threading;
 	using System.Threading.Tasks;
@@ -101,12 +102,16 @@
 		/// <param name="entry">The log entry that should be written.</param>
 		private static void WriteToConsole(LogEntry entry)
 		{
+#if DEBUG
+			Debug.WriteLine("[{0}] {1}", entry.LogType.ToDisplayString(), entry.Message);
+#else
 			Console.Out.Write("[");
 			Console.Out.Write(entry.LogType.ToDisplayString());
 			Console.Out.Write("] ");
 
 			TextString.Write(Console.Out, entry.Message);
 			Console.Out.WriteLine();
+#endif
 		}
 	}
 }

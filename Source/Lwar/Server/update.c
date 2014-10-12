@@ -15,7 +15,7 @@ Format format_pos_rot = { {0,0}, MESSAGE_UPDATE,        update_pos_rotation_pack
 Format format_pos     = { {0,0}, MESSAGE_UPDATE_POS,    update_pos_pack,          0 };
 Format format_ray     = { {0,0}, MESSAGE_UPDATE_RAY,    update_ray_pack,          0 };
 Format format_circle  = { {0,0}, MESSAGE_UPDATE_CIRCLE, update_circle_pack,       0 };
-// Format format_ship    = { {0,0}, MESSAGE_UPDATE_SHIP,   update_ship_pack,         0 };
+Format format_ship    = { {0,0}, MESSAGE_UPDATE_SHIP,   update_ship_pack,         0 };
 
 void format_register(Format *f) {
     INIT_LIST_HEAD(&f->all);
