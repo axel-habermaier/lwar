@@ -138,11 +138,13 @@
 			if (_particleEffect.IsCompleted)
 				_particleEffect.Reset();
 
-			_particleEffect.Update((float)_clock.Seconds);
+			var elapsedSeconds = (float)_clock.Seconds;
+			_clock.Reset();
+
+			_particleEffect.Update(elapsedSeconds);
 			_particleEffect.Draw(renderOutput);
 
 			Camera.IsActive = _inputCaptured != 0;
-			_clock.Reset();
 		}
 
 		/// <summary>
