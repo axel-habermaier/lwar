@@ -86,23 +86,25 @@
 		/// <param name="renderOutput">The render output the particles should be drawn to.</param>
 		/// <param name="particles">The particles that should be drawn.</param>
 		/// <param name="particleCount">The number of particles that should be drawn.</param>
-		internal void Draw(RenderOutput renderOutput, ref ParticleCollection particles, int particleCount)
+		internal unsafe void Draw(RenderOutput renderOutput, ParticleCollection particles, int particleCount)
 		{
 			if (particleCount == 0)
 				return;
 
-			using (var positions = _positionBuffer.MapRange(0, particleCount * 3 * sizeof(float)))
-				positions.Write(particles.Position, 0, particleCount * 3);
+			var size = particleCount * 3 * sizeof(float);
+			using (var positions = _positionBuffer.MapRange(0, size))
+				positions.Write(particles.Positions, 0, size);
 
-			using (var colors = _colorBuffer.MapRange(0, particleCount * 4 * sizeof(byte)))
-				colors.Write(particles.Color, 0, particleCount * 4);
+			size = particleCount * 4 * sizeof(byte);
+			using (var colors = _colorBuffer.MapRange(0, size))
+				colors.Write(particles.Colors, 0, size);
 
 			_inputLayout.Bind();
 			BlendState.Bind();
 
 			var instanceOffset = _positionBuffer.GetInstanceOffset(Capacity);
 			Assert.That(_colorBuffer.GetInstanceOffset(Capacity) == instanceOffset, "Buffer update cycle mismatch.");
-			Draw(renderOutput, ref particles, particleCount, instanceOffset);
+			Draw(renderOutput, particles, particleCount, instanceOffset);
 		}
 
 		/// <summary>
@@ -112,7 +114,7 @@
 		/// <param name="particles">The particles that should be drawn.</param>
 		/// <param name="particleCount">The number of particles that should be drawn.</param>
 		/// <param name="instanceOffset">The offset that should be applied to the instanced vertex buffer.</param>
-		protected abstract void Draw(RenderOutput renderOutput, ref ParticleCollection particles, int particleCount, int instanceOffset);
+		protected abstract void Draw(RenderOutput renderOutput, ParticleCollection particles, int particleCount, int instanceOffset);
 
 		/// <summary>
 		///     Gets the input bindings required to draw a single particle instance.

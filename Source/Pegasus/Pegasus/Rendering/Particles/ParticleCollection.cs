@@ -1,45 +1,23 @@
 ﻿namespace Pegasus.Rendering.Particles
 {
 	using System;
+	using System.Runtime.InteropServices;
+	using Platform.Memory;
 
 	/// <summary>
 	///     Represents a collection of a particle emitter's live particles.
 	/// </summary>
-	public struct ParticleCollection
+	public sealed unsafe class ParticleCollection : DisposableObject
 	{
 		/// <summary>
-		///     Stores the age of each particle as a floating-point value in the range [0,1], starting at 1 and decreasing to 0 at the
-		///     end of the particle's life.
+		///     The pointer to the memory allocated for the particle collection.
 		/// </summary>
-		public readonly float[] Age;
+		private readonly void* _memory;
 
 		/// <summary>
-		///     Stores the remaining life time time of each particle as a floating-point value in seconds.
+		///     The size of the allocated memory in bytes.
 		/// </summary>
-		public readonly float[] Lifetime;
-
-		/// <summary>
-		///     The maximum number of particles that can be stored in the collection.
-		/// </summary>
-		internal readonly int Capacity;
-
-		/// <summary>
-		///     Stores the color of each particle as four-dimensional byte vector. The R, G, B, and A values of the n-th particle's
-		///     color are therefore stored at indices (n * 4), (n * 4) + 1, (n * 4) + 2, and (n * 4) + 3.
-		/// </summary>
-		public readonly byte[] Color;
-
-		/// <summary>
-		///     Stores the position of each particle as three-dimensional floating-point vector. The X, Y, and Z values of the n-th
-		///     particle's position are therefore stored at indices (n * 3), (n * 3) + 1, and (n * 3) + 2.
-		/// </summary>
-		public readonly float[] Position;
-
-		/// <summary>
-		///     Stores the velocity of each particle as three-dimensional floating-point vector. The X, Y, and Z values of the n-th
-		///     particle's velocity are therefore stored at indices (n * 3), (n * 3) + 1, and (n * 3) + 2.
-		/// </summary>
-		public readonly float[] Velocity;
+		private readonly int _size;
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -48,12 +26,67 @@
 		internal ParticleCollection(int capacity)
 		{
 			Capacity = capacity;
-			Color = new byte[capacity * 4];
-			Age = new float[capacity];
-			Lifetime = new float[capacity];
-			Position = new float[capacity * 3];
-			Velocity = new float[capacity * 3];
+
+			const int particleSize = sizeof(float) * 3 + // positions
+									 sizeof(float) * 3 + // velocities
+									 sizeof(byte) * 4 + // colors
+									 sizeof(float) + // lifetimes
+									 sizeof(float); // age
+
+			_size = particleSize * Capacity;
+			_memory = Marshal.AllocHGlobal(_size).ToPointer();
+
+			GC.AddMemoryPressure(_size);
+
+			var pointer = (byte*)_memory;
+			Positions = (float*)pointer;
+			pointer += sizeof(float) * 3 * Capacity;
+
+			Velocities = (float*)pointer;
+			pointer += sizeof(float) * 3 * Capacity;
+
+			Colors = pointer;
+			pointer += sizeof(byte) * 4 * Capacity;
+
+			Lifetimes = (float*)pointer;
+			pointer += sizeof(float) * Capacity;
+
+			Age = (float*)pointer;
 		}
+
+		/// <summary>
+		///     Gets the maximum number of particles that can be stored in the collection.
+		/// </summary>
+		internal int Capacity { get; private set; }
+
+		/// <summary>
+		///     Stores the age of each particle as a floating-point value in the range [0,1], starting at 1 and decreasing to 0 at the
+		///     end of the particle's life.
+		/// </summary>
+		public float* Age { get; private set; }
+
+		/// <summary>
+		///     Stores the remaining life time time of each particle as a floating-point value in seconds.
+		/// </summary>
+		public float* Lifetimes { get; private set; }
+
+		/// <summary>
+		///     Stores the color of each particle as four-dimensional byte vector. The R, G, B, and A values of the n-th particle's
+		///     color are therefore stored at indices (n * 4), (n * 4) + 1, (n * 4) + 2, and (n * 4) + 3.
+		/// </summary>
+		public byte* Colors { get; private set; }
+
+		/// <summary>
+		///     Stores the position of each particle as three-dimensional floating-point vector. The X, Y, and Z values of the n-th
+		///     particle's position are therefore stored at indices (n * 3), (n * 3) + 1, and (n * 3) + 2.
+		/// </summary>
+		public float* Positions { get; private set; }
+
+		/// <summary>
+		///     Stores the velocity of each particle as three-dimensional floating-point vector. The X, Y, and Z values of the n-th
+		///     particle's velocity are therefore stored at indices (n * 3), (n * 3) + 1, and (n * 3) + 2.
+		/// </summary>
+		public float* Velocities { get; private set; }
 
 		/// <summary>
 		///     Copies the particle at the source index to the target index.
@@ -69,39 +102,29 @@
 				return;
 
 			Age[target] = Age[source];
-			Lifetime[target] = Lifetime[source];
+			Lifetimes[target] = Lifetimes[source];
 
-			Color[(target * 4) + 0] = Color[(source * 4) + 0];
-			Color[(target * 4) + 1] = Color[(source * 4) + 1];
-			Color[(target * 4) + 2] = Color[(source * 4) + 2];
-			Color[(target * 4) + 3] = Color[(source * 4) + 3];
+			Colors[(target * 4) + 0] = Colors[(source * 4) + 0];
+			Colors[(target * 4) + 1] = Colors[(source * 4) + 1];
+			Colors[(target * 4) + 2] = Colors[(source * 4) + 2];
+			Colors[(target * 4) + 3] = Colors[(source * 4) + 3];
 
-			Position[(target * 3) + 0] = Position[(source * 3) + 0];
-			Position[(target * 3) + 1] = Position[(source * 3) + 1];
-			Position[(target * 3) + 2] = Position[(source * 3) + 2];
+			Positions[(target * 3) + 0] = Positions[(source * 3) + 0];
+			Positions[(target * 3) + 1] = Positions[(source * 3) + 1];
+			Positions[(target * 3) + 2] = Positions[(source * 3) + 2];
 
-			Velocity[(target * 3) + 0] = Velocity[(source * 3) + 0];
-			Velocity[(target * 3) + 1] = Velocity[(source * 3) + 1];
-			Velocity[(target * 3) + 2] = Velocity[(source * 3) + 2];
+			Velocities[(target * 3) + 0] = Velocities[(source * 3) + 0];
+			Velocities[(target * 3) + 1] = Velocities[(source * 3) + 1];
+			Velocities[(target * 3) + 2] = Velocities[(source * 3) + 2];
 		}
 
 		/// <summary>
-		///     Copies this particle collection to the given one. If this collection contains more particles than the given collection,
-		///     the particles that do not fit are not copied. If this collection contains fewer particles than the given collection, the
-		///     remaining particles are not modified.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
-		/// <param name="collection"></param>
-		public void CopyTo(ref ParticleCollection collection)
+		protected override void OnDisposing()
 		{
-			var capacity = Math.Min(Capacity, collection.Capacity);
-			if (capacity == 0)
-				return;
-
-			Array.Copy(Age, collection.Age, capacity);
-			Array.Copy(Lifetime, collection.Lifetime, capacity);
-			Array.Copy(Color, collection.Color, capacity * 4);
-			Array.Copy(Position, collection.Position, capacity * 3);
-			Array.Copy(Velocity, collection.Velocity, capacity * 3);
+			Marshal.FreeHGlobal(new IntPtr(_memory));
+			GC.RemoveMemoryPressure(_size);
 		}
 	}
 }

@@ -15,10 +15,10 @@
 		/// <param name="particles">The particles that should be updated.</param>
 		/// <param name="count">The number of particles that should be updated.</param>
 		/// <param name="elapsedSeconds">The number of seconds that have elapsed since the last update.</param>
-		internal void Execute(ref ParticleCollection particles, int count, float elapsedSeconds)
+		internal void Execute(ParticleCollection particles, int count, float elapsedSeconds)
 		{
 			foreach (var modifier in this)
-				modifier.Execute(ref particles, count, elapsedSeconds);
+				modifier.Execute(particles, count, elapsedSeconds);
 		}
 
 		/// <summary>

@@ -13,10 +13,10 @@
 		/// <param name="particles">The particles that should be updated.</param>
 		/// <param name="count">The number of particles that should be updated.</param>
 		/// <param name="elapsedSeconds">The number of seconds that have elapsed since the last update.</param>
-		public override void Execute(ref ParticleCollection particles, int count, float elapsedSeconds)
+		public override unsafe void Execute(ParticleCollection particles, int count, float elapsedSeconds)
 		{
 			for (var i = 0; i < count; ++i)
-				particles.Color[(i * 4) + 3] = (byte)(particles.Age[i] * 255);
+				particles.Colors[(i * 4) + 3] = (byte)(particles.Age[i] * 255);
 		}
 	}
 }

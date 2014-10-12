@@ -13,7 +13,7 @@
 		/// <param name="particles">The particles that should be updated.</param>
 		/// <param name="count">The number of particles that should be updated.</param>
 		/// <param name="elapsedSeconds">The number of seconds that have elapsed since the last update.</param>
-		public abstract void Execute(ref ParticleCollection particles, int count, float elapsedSeconds);
+		public abstract void Execute(ParticleCollection particles, int count, float elapsedSeconds);
 
 		/// <summary>
 		///     Resets the internal state of the modifier.

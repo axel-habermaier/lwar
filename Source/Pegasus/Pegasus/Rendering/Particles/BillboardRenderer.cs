@@ -76,7 +76,7 @@
 		/// <param name="particles">The particles that should be drawn.</param>
 		/// <param name="particleCount">The number of particles that should be drawn.</param>
 		/// <param name="instanceOffset">The offset that should be applied to the instanced vertex buffer.</param>
-		protected override void Draw(RenderOutput renderOutput, ref ParticleCollection particles, int particleCount, int instanceOffset)
+		protected override void Draw(RenderOutput renderOutput, ParticleCollection particles, int particleCount, int instanceOffset)
 		{
 			_effect.Texture = new Texture2DView(Texture, SamplerState);
 			renderOutput.DrawInstanced(_effect.Default, particleCount, 2, PrimitiveType.TriangleStrip, instanceOffset: instanceOffset);

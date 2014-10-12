@@ -73,13 +73,11 @@
 					return;
 
 				Assert.InRange(value, 1, UInt16.MaxValue);
-				var particles = _particles;
 
 				_capacity = value;
+				_particles.SafeDispose();
 				_particles = new ParticleCollection(_capacity);
 				ParticleCount = Math.Min(ParticleCount, _capacity);
-
-				particles.CopyTo(ref _particles);
 
 				if (Renderer != null)
 					Renderer.Capacity = _capacity;
@@ -182,7 +180,7 @@
 			EmitParticles(elapsedSeconds);
 
 			if (Modifiers != null && ParticleCount != 0)
-				Modifiers.Execute(ref _particles, ParticleCount, elapsedSeconds);
+				Modifiers.Execute(_particles, ParticleCount, elapsedSeconds);
 		}
 
 		/// <summary>
@@ -194,14 +192,14 @@
 			Assert.ArgumentNotNull(renderOutput);
 			Assert.NotNull(Renderer);
 
-			Renderer.Draw(renderOutput, ref _particles, ParticleCount);
+			Renderer.Draw(renderOutput, _particles, ParticleCount);
 		}
 
 		/// <summary>
 		///     Removes all dead particles.
 		/// </summary>
 		/// <param name="elapsedSeconds">The number of seconds that have elapsed since the last update.</param>
-		private void RemoveParticles(float elapsedSeconds)
+		private unsafe void RemoveParticles(float elapsedSeconds)
 		{
 			// We don't want to search for dead particles during each update for performance reasons.
 			_secondsSinceLastRemoval += elapsedSeconds;
@@ -211,7 +209,7 @@
 			_secondsSinceLastRemoval = 0;
 			for (var i = 0; i < ParticleCount; ++i)
 			{
-				if (_particles.Lifetime[i] > 0)
+				if (_particles.Lifetimes[i] > 0)
 					continue;
 
 				_particles.Copy(source: ParticleCount - 1, target: i);
@@ -223,7 +221,7 @@
 		///     Emits new particles, if necessary and appropriate.
 		/// </summary>
 		/// <param name="elapsedSeconds">The number of seconds that have elapsed since the last update.</param>
-		private void EmitParticles(float elapsedSeconds)
+		private unsafe void EmitParticles(float elapsedSeconds)
 		{
 			if (_totalSeconds > Duration)
 				return;
@@ -238,21 +236,21 @@
 			_secondsSinceLastEmit = 0;
 			for (var i = ParticleCount; i < ParticleCount + count; ++i)
 			{
-				_particles.Lifetime[i] = Lifetime;
+				_particles.Lifetimes[i] = Lifetime;
 				_particles.Age[i] = 1;
 
-				_particles.Color[(i * 4) + 0] = RandomValues.NextByte(InitialColor.LowerBound.Red, InitialColor.UpperBound.Red);
-				_particles.Color[(i * 4) + 1] = RandomValues.NextByte(InitialColor.LowerBound.Green, InitialColor.UpperBound.Green);
-				_particles.Color[(i * 4) + 2] = RandomValues.NextByte(InitialColor.LowerBound.Blue, InitialColor.UpperBound.Blue);
-				_particles.Color[(i * 4) + 3] = RandomValues.NextByte(InitialColor.LowerBound.Alpha, InitialColor.UpperBound.Alpha);
+				_particles.Colors[(i * 4) + 0] = RandomValues.NextByte(InitialColor.LowerBound.Red, InitialColor.UpperBound.Red);
+				_particles.Colors[(i * 4) + 1] = RandomValues.NextByte(InitialColor.LowerBound.Green, InitialColor.UpperBound.Green);
+				_particles.Colors[(i * 4) + 2] = RandomValues.NextByte(InitialColor.LowerBound.Blue, InitialColor.UpperBound.Blue);
+				_particles.Colors[(i * 4) + 3] = RandomValues.NextByte(InitialColor.LowerBound.Alpha, InitialColor.UpperBound.Alpha);
 
-				_particles.Position[(i * 3) + 0] = RandomValues.NextSingle(InitialPosition.LowerBound.X, InitialPosition.UpperBound.X);
-				_particles.Position[(i * 3) + 1] = RandomValues.NextSingle(InitialPosition.LowerBound.Y, InitialPosition.UpperBound.Y);
-				_particles.Position[(i * 3) + 2] = RandomValues.NextSingle(InitialPosition.LowerBound.Z, InitialPosition.UpperBound.Z);
+				_particles.Positions[(i * 3) + 0] = RandomValues.NextSingle(InitialPosition.LowerBound.X, InitialPosition.UpperBound.X);
+				_particles.Positions[(i * 3) + 1] = RandomValues.NextSingle(InitialPosition.LowerBound.Y, InitialPosition.UpperBound.Y);
+				_particles.Positions[(i * 3) + 2] = RandomValues.NextSingle(InitialPosition.LowerBound.Z, InitialPosition.UpperBound.Z);
 
-				_particles.Velocity[(i * 3) + 0] = RandomValues.NextSingle(InitialVelocity.LowerBound.X, InitialVelocity.UpperBound.X);
-				_particles.Velocity[(i * 3) + 1] = RandomValues.NextSingle(InitialVelocity.LowerBound.Y, InitialVelocity.UpperBound.Y);
-				_particles.Velocity[(i * 3) + 2] = RandomValues.NextSingle(InitialVelocity.LowerBound.Z, InitialVelocity.UpperBound.Z);
+				_particles.Velocities[(i * 3) + 0] = RandomValues.NextSingle(InitialVelocity.LowerBound.X, InitialVelocity.UpperBound.X);
+				_particles.Velocities[(i * 3) + 1] = RandomValues.NextSingle(InitialVelocity.LowerBound.Y, InitialVelocity.UpperBound.Y);
+				_particles.Velocities[(i * 3) + 2] = RandomValues.NextSingle(InitialVelocity.LowerBound.Z, InitialVelocity.UpperBound.Z);
 			}
 
 			ParticleCount += count;
@@ -262,16 +260,16 @@
 		///     Updates the life times and the positions of the particles.
 		/// </summary>
 		/// <param name="elapsedSeconds">The number of seconds that have elapsed since the last update.</param>
-		private void UpdateParticles(float elapsedSeconds)
+		private unsafe void UpdateParticles(float elapsedSeconds)
 		{
 			for (var i = 0; i < ParticleCount; ++i)
 			{
-				_particles.Lifetime[i] = Math.Max(_particles.Lifetime[i] - elapsedSeconds, 0);
-				_particles.Age[i] = _particles.Lifetime[i] / Lifetime;
+				_particles.Lifetimes[i] = Math.Max(_particles.Lifetimes[i] - elapsedSeconds, 0);
+				_particles.Age[i] = _particles.Lifetimes[i] / Lifetime;
 
-				_particles.Position[(i * 3) + 0] += _particles.Velocity[(i * 3) + 0] * elapsedSeconds;
-				_particles.Position[(i * 3) + 1] += _particles.Velocity[(i * 3) + 1] * elapsedSeconds;
-				_particles.Position[(i * 3) + 2] += _particles.Velocity[(i * 3) + 2] * elapsedSeconds;
+				_particles.Positions[(i * 3) + 0] += _particles.Velocities[(i * 3) + 0] * elapsedSeconds;
+				_particles.Positions[(i * 3) + 1] += _particles.Velocities[(i * 3) + 1] * elapsedSeconds;
+				_particles.Positions[(i * 3) + 2] += _particles.Velocities[(i * 3) + 2] * elapsedSeconds;
 			}
 		}
 
@@ -293,6 +291,7 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			_particles.SafeDispose();
 			Renderer.SafeDispose();
 		}
 	}
