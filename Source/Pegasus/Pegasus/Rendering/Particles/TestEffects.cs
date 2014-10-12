@@ -46,8 +46,8 @@
 				InitialPosition = new Range<Vector3>(new Vector3(0, 0, 0), new Vector3(100, 100, 0)),
 				InitialVelocity = new Range<Vector3>(new Vector3(-200, -300, -20), new Vector3(100, 230, 20)),
 				InitialScale = new Range<float>(10, 20),
+				InitialLifetime = new Range<float>(50),
 				EmissionRate = 200000,
-				Lifetime = 50,
 				Duration = 5,
 				Renderer = new BillboardRenderer(GraphicsDevice, Assets)
 				{
@@ -103,8 +103,8 @@
 				InitialPosition = new Range<Vector3>(new Vector3(0, 0, 0), new Vector3(100, 100, 0)),
 				InitialVelocity = new Range<Vector3>(new Vector3(-100, -230, -10), new Vector3(100, 230, 10)),
 				InitialScale = new Range<float>(10, 100),
+				InitialLifetime = new Range<float>(1, 5),
 				EmissionRate = 2000,
-				Lifetime = 5,
 				Duration = 5,
 				Renderer = new BillboardRenderer(GraphicsDevice, Assets)
 				{

@@ -102,8 +102,8 @@
 					InitialPosition = new Range<Vector3>(Vector3.Zero),
 					InitialVelocity = new Range<Vector3>(new Vector3(-scale, 0, -scale), new Vector3(scale, 0, scale)),
 					InitialScale = new Range<float>(100),
+					InitialLifetime = new Range<float>(0.3f, 0.5f),
 					EmissionRate = 3000,
-					Lifetime = 0.4f,
 					Duration = 0.2f,
 					Renderer = new BillboardRenderer(GraphicsDevice, Assets)
 					{

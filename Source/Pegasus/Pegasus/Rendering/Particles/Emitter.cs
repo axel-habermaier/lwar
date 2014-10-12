@@ -129,6 +129,11 @@
 		public Range<float> InitialScale { get; set; }
 
 		/// <summary>
+		///     Gets or sets the range of the initial particle life time.
+		/// </summary>
+		public Range<float> InitialLifetime { get; set; }
+
+		/// <summary>
 		///     Gets or sets the range of the initial particle positions.
 		/// </summary>
 		public Range<Vector3> InitialPosition { get; set; }
@@ -137,11 +142,6 @@
 		///     Gets or sets the range of the initial particle velocities.
 		/// </summary>
 		public Range<Vector3> InitialVelocity { get; set; }
-
-		/// <summary>
-		///     Gets or sets the life time of the particles.
-		/// </summary>
-		public float Lifetime { get; set; }
 
 		/// <summary>
 		///     Gets a value indicating whether the emitter is completed, i.e., there are no living particles and no new particles will
@@ -240,6 +240,7 @@
 				return;
 
 			var lifetimes = _particles.Lifetimes + ParticleCount;
+			var initialLifetimes = _particles.InitialLifetimes + ParticleCount;
 			var age = _particles.Age + ParticleCount;
 			var positions = _particles.Positions + ParticleCount * 3;
 			var velocities = _particles.Velocities + ParticleCount * 3;
@@ -251,7 +252,8 @@
 
 			while (count-- > 0)
 			{
-				*lifetimes = Lifetime;
+				*initialLifetimes = RandomValues.NextSingle(InitialLifetime.LowerBound, InitialLifetime.UpperBound);
+				*lifetimes = *initialLifetimes;
 				*age = 1;
 				*scales = RandomValues.NextSingle(InitialScale.LowerBound, InitialScale.UpperBound);
 
@@ -269,6 +271,7 @@
 				velocities[2] = RandomValues.NextSingle(InitialVelocity.LowerBound.Z, InitialVelocity.UpperBound.Z);
 
 				lifetimes += 1;
+				initialLifetimes += 1;
 				age += 1;
 				positions += 3;
 				velocities += 3;
@@ -284,6 +287,7 @@
 		private unsafe void UpdateParticles(float elapsedSeconds)
 		{
 			var lifetimes = _particles.Lifetimes;
+			var initialLifetime = _particles.InitialLifetimes;
 			var age = _particles.Age;
 			var positions = _particles.Positions;
 			var velocities = _particles.Velocities;
@@ -295,13 +299,14 @@
 				lifetime = lifetime < 0 ? 0 : lifetime;
 
 				*lifetimes = lifetime;
-				*age = lifetime / Lifetime;
+				*age = lifetime / *initialLifetime;
 
 				positions[0] += velocities[0] * elapsedSeconds;
 				positions[1] += velocities[1] * elapsedSeconds;
 				positions[2] += velocities[2] * elapsedSeconds;
 
 				lifetimes += 1;
+				initialLifetime += 1;
 				age += 1;
 				positions += 3;
 				velocities += 3;
@@ -316,7 +321,8 @@
 		{
 			Assert.InRange(EmissionRate, 1, Int32.MaxValue);
 			Assert.InRange(Capacity, 1, Int32.MaxValue);
-			Assert.That(Lifetime > 0, "Invalid particle life time.");
+			Assert.That(InitialLifetime.LowerBound >= 0, "Invalid particle life time.");
+			Assert.That(InitialLifetime.UpperBound >= 0, "Invalid particle life time.");
 			Assert.That(Duration > 0 || Single.IsPositiveInfinity(Duration), "Invalid duration.");
 			Assert.NotNull(Renderer);
 		}

@@ -30,7 +30,8 @@
 			const int particleSize = sizeof(float) * 3 + // positions
 									 sizeof(float) * 3 + // velocities
 									 sizeof(byte) * 4 + // colors
-									 sizeof(float) + // lifetimes
+									 sizeof(float) + // remaining lifetimes
+									 sizeof(float) + // initial lifetimes
 									 sizeof(float) + // age
 									 sizeof(float); // scales
 
@@ -50,6 +51,9 @@
 			pointer += sizeof(byte) * 4 * Capacity;
 
 			Lifetimes = (float*)pointer;
+			pointer += sizeof(float) * Capacity;
+
+			InitialLifetimes = (float*)pointer;
 			pointer += sizeof(float) * Capacity;
 
 			Age = (float*)pointer;
@@ -78,6 +82,11 @@
 		///     Stores the remaining life time time of each particle as a floating-point value in seconds.
 		/// </summary>
 		public float* Lifetimes { get; private set; }
+
+		/// <summary>
+		///     Stores the initial life time time of each particle as a floating-point value in seconds.
+		/// </summary>
+		public float* InitialLifetimes { get; private set; }
 
 		/// <summary>
 		///     Stores the color of each particle as four-dimensional byte vector. The R, G, B, and A values of the n-th particle's
@@ -112,6 +121,7 @@
 
 			Age[target] = Age[source];
 			Lifetimes[target] = Lifetimes[source];
+			InitialLifetimes[target] = InitialLifetimes[source];
 			Scales[target] = Scales[source];
 
 			Colors[(target * 4) + 0] = Colors[(source * 4) + 0];
