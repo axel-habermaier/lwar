@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.Framework.UserInterface.ViewModels
 {
 	using System;
+	using System.Collections.Generic;
 	using Platform.Logging;
 	using Platform.Memory;
 	using Scripting;
@@ -19,6 +20,12 @@
 		///     The maximum number of log entries that the console can display.
 		/// </summary>
 		private const int MaxEntries = 2048;
+
+		/// <summary>
+		///     The log entries that have been generated while the console was not shown. When the console becomes visible again, these
+		///     entries are added to the list of shown entries.
+		/// </summary>
+		private Queue<LogEntry> _cachedLogEntries = new Queue<LogEntry>(MaxEntries);
 
 		/// <summary>
 		///     Indicates whether the console is visible.
@@ -62,6 +69,9 @@
 			{
 				ChangePropertyValue(ref _isVisible, value);
 				Prompt.ClearInput();
+
+				if (IsVisible)
+					ShowCachedLogEntries();
 			}
 		}
 
@@ -177,10 +187,29 @@
 			if (entry.Message.Length > MaxLength)
 				entry = new LogEntry(entry.LogType, entry.Message.Substring(0, MaxLength - 3) + "...");
 
-			if (_logEntries.Count >= MaxEntries)
+			// If we exceed the maximum number of allowed log entries, remove the oldest one
+			if (_cachedLogEntries.Count >= MaxEntries)
+				_cachedLogEntries.Dequeue();
+
+			_cachedLogEntries.Enqueue(entry);
+
+			// If the console is visible, we have to show the new log entry immediately
+			if (IsVisible)
+				ShowCachedLogEntries();
+		}
+
+		/// <summary>
+		///     Shows the cached log entries on the console.
+		/// </summary>
+		private void ShowCachedLogEntries()
+		{
+			var removeCount = Math.Max((_cachedLogEntries.Count + _logEntries.Count) - MaxEntries, 0);
+
+			for (var i = 0; i < removeCount; ++i)
 				_logEntries.RemoveAt(0);
 
-			_logEntries.Add(entry);
+			_logEntries.AddRange(_cachedLogEntries);
+			_cachedLogEntries.Clear();
 		}
 	}
 }

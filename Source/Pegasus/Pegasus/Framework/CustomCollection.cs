@@ -57,6 +57,19 @@
 		/// </summary>
 		/// <param name="items">The items that should be added.</param>
 		/// <remarks>Performance optimization (foreach does not allocate an enumerator object on the heap).</remarks>
+		public void AddRange(Queue<T> items)
+		{
+			Assert.ArgumentNotNull(items);
+
+			foreach (var item in items)
+				Add(item);
+		}
+
+		/// <summary>
+		///     Adds the items to the collection.
+		/// </summary>
+		/// <param name="items">The items that should be added.</param>
+		/// <remarks>Performance optimization (foreach does not allocate an enumerator object on the heap).</remarks>
 		public void AddRange(T[] items)
 		{
 			Assert.ArgumentNotNull(items);
