@@ -251,7 +251,6 @@
     <Compile Include="Effects\SimpleVertex.Effect.cs" />
     <Compile Include="Effects\Skybox.Effect.cs" />
     <Compile Include="Effects\Sphere.Effect.cs" />
-    <Compile Include="Effects\Sprite.Effect.cs" />
     <Compile Include="Effects\Sun.Effect.cs" />
     <Compile Include="Effects\TexturedQuad.Effect.cs" />
     <Compile Include="EntityTemplates\Compilation\EntityTemplateAsset.cs" />

@@ -65,7 +65,7 @@
 		///     Marks the instance as allocated from the given pool.
 		/// </summary>
 		/// <param name="objectPool">The object pool the instance is allocated from.</param>
-		void IPooledObject.AllocatedFrom(ObjectPool objectPool)
+		internal void AllocatedFrom(ObjectPool objectPool)
 		{
 			Assert.ArgumentNotNull(objectPool);
 
@@ -77,6 +77,21 @@
 		///     Invoked when the pooled instance is returned to the pool.
 		/// </summary>
 		protected virtual void OnReturning()
+		{
+		}
+
+		/// <summary>
+		///     Marks the instance as freed, meaning that it is no longer pooled and will be garbage collected.
+		/// </summary>
+		internal void Free()
+		{
+			OnDisposing();
+		}
+
+		/// <summary>
+		///     Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected virtual void OnDisposing()
 		{
 		}
 

@@ -5,8 +5,9 @@
 	using Pegasus;
 	using Pegasus.Framework;
 	using Pegasus.Framework.UserInterface.Controls;
+	using Pegasus.Framework.UserInterface.Input;
 	using Pegasus.Platform.Memory;
-	using Pegasus.Platform.Graphics;
+	using Pegasus.Rendering;
 	using Scripting;
 
 	/// <summary>
@@ -33,12 +34,13 @@
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="localPlayer">The local player of the game session.</param>
-		public CameraManager(Player localPlayer)
+		/// <param name="inputDevice">The input device that should be used to control the cameras.</param>
+		public CameraManager(Player localPlayer, LogicalInputDevice inputDevice)
 		{
 			Assert.ArgumentNotNull(localPlayer);
+			Assert.ArgumentNotNull(inputDevice);
 
 			var graphicsDevice = Application.Current.GraphicsDevice;
-			var inputDevice = Application.Current.Window.InputDevice;
 
 			GameCamera = new GameCamera(graphicsDevice, inputDevice, localPlayer);
 			_debugCamera = new DebugCamera(graphicsDevice, inputDevice);

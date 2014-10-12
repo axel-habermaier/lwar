@@ -19,6 +19,11 @@
 		private readonly Bindings _bindings;
 
 		/// <summary>
+		///     The logical input device that is used to handle all of the global user input of this window.
+		/// </summary>
+		private readonly LogicalInputDevice _inputDevice;
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="dataContext">The data context that should be set on the window.</param>
@@ -29,19 +34,14 @@
 		internal AppWindow(object dataContext, string title, Vector2 position, Size size, WindowMode mode)
 			: base(title, position, size, mode)
 		{
-			InputDevice = new LogicalInputDevice(this);
-			_bindings = new Bindings(InputDevice);
+			_inputDevice = new LogicalInputDevice(this, usePreviewEvents: true);
+			_bindings = new Bindings(_inputDevice);
 
 			InputBindings.Add(new ScanCodeBinding(PlatformInfo.ConsoleKey, "ToggleConsole", triggerOnRepeat: false) { Preview = true });
 			DataContext = dataContext;
 
 			LoadContent();
 		}
-
-		/// <summary>
-		///     Gets the logical input device that is used to handle all of the user input of this window.
-		/// </summary>
-		public LogicalInputDevice InputDevice { get; private set; }
 
 		/// <summary>
 		///     Gets the layout root of the application window.
@@ -57,7 +57,7 @@
 		protected override void OnClosing()
 		{
 			_bindings.SafeDispose();
-			InputDevice.SafeDispose();
+			_inputDevice.SafeDispose();
 
 			base.OnClosing();
 		}
@@ -69,7 +69,7 @@
 		{
 			base.HandleInput();
 
-			InputDevice.Update();
+			_inputDevice.Update();
 			_bindings.Update();
 		}
 	}

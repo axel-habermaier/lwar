@@ -113,6 +113,12 @@ internal interface ICommands
 	void ShowConsole(bool show);
 
 	/// <summary>
+	///     Shows the particle effect viewer.
+	/// </summary>
+	[Command]
+	void ShowParticleEffectViewer();
+
+	/// <summary>
 	///     Reloads all currently loaded assets.
 	/// </summary>
 	[Command]

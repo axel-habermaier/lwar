@@ -175,15 +175,5 @@
 			var value = (int)(component * 255.0f);
 			return (byte)(value < 0 ? 0 : value > 255 ? 255 : value);
 		}
-
-		/// <summary>
-		///     Gets a predefined color instance representing 'black'.
-		/// </summary>
-		public static readonly Color Black = new Color(0, 0, 0, 255);
-
-		/// <summary>
-		///     Gets a predefined color instance representing 'white'.
-		/// </summary>
-		public static readonly Color White = new Color(255, 255, 255, 255);
 	}
 }

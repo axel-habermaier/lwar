@@ -213,6 +213,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Effects\BillboardParticle.Effect.cs" />
     <Compile Include="Textures\CompilationSettings.cs" />
     <Compile Include="Effects\Sprite.Effect.cs" />
   </ItemGroup>

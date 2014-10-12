@@ -1,9 +1,10 @@
-﻿namespace Pegasus.Platform.Graphics
+﻿namespace Pegasus.Rendering
 {
 	using System;
 	using System.Collections.Generic;
 	using Math;
-	using Memory;
+	using Platform.Graphics;
+	using Platform.Memory;
 
 	/// <summary>
 	///     Represents a 3D model.
@@ -11,14 +12,14 @@
 	public class Model : DisposableObject
 	{
 		/// <summary>
+		///     The number of indices in the index buffer or the number of primitives of the model, if no index buffer is used.
+		/// </summary>
+		private readonly int _count;
+
+		/// <summary>
 		///     The index buffer containing the model's indices.
 		/// </summary>
 		private readonly IndexBuffer _indexBuffer;
-
-		/// <summary>
-		///     The number of indices in the index buffer.
-		/// </summary>
-		private readonly int _indexCount;
 
 		/// <summary>
 		///     The layout of the vertex buffer.
@@ -43,11 +44,28 @@
 			Assert.ArgumentNotNull(vertexBuffer);
 			Assert.ArgumentNotNull(layout);
 			Assert.ArgumentNotNull(indexBuffer);
-			Assert.ArgumentInRange(indexCount, 0, Int32.MaxValue);
+			Assert.ArgumentInRange(indexCount, 1, Int32.MaxValue);
 
 			_vertexBuffer = vertexBuffer;
 			_indexBuffer = indexBuffer;
-			_indexCount = indexCount;
+			_count = indexCount;
+			_layout = layout;
+		}
+
+		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		/// <param name="vertexBuffer">The vertex buffer containing the vertex data of the model.</param>
+		/// <param name="layout">The layout of the vertex buffer.</param>
+		/// <param name="primitiveCount">The number of primivites of the model.</param>
+		public Model(VertexBuffer vertexBuffer, VertexInputLayout layout, int primitiveCount)
+		{
+			Assert.ArgumentNotNull(vertexBuffer);
+			Assert.ArgumentNotNull(layout);
+			Assert.ArgumentInRange(primitiveCount, 1, Int32.MaxValue);
+
+			_vertexBuffer = vertexBuffer;
+			_count = primitiveCount;
 			_layout = layout;
 		}
 
@@ -71,7 +89,11 @@
 			Assert.ArgumentNotNull(output);
 
 			_layout.Bind();
-			output.DrawIndexed(effect, _indexCount);
+
+			if (_indexBuffer == null)
+				output.Draw(effect, _count, PrimitiveType.TriangleStrip);
+			else
+				output.DrawIndexed(effect, _count);
 		}
 
 		/// <summary>
@@ -107,15 +129,15 @@
 			{
 				new VertexPositionNormalTexture
 				{
-					Position = new Vector4(rectangle.Left, 0, rectangle.Top),
-					Normal = new Vector3(0, 1, 0),
-					TextureCoordinates = new Vector2(texture.Left, texture.Bottom)
-				},
-				new VertexPositionNormalTexture
-				{
 					Position = new Vector4(rectangle.Left, 0, rectangle.Bottom),
 					Normal = new Vector3(0, 1, 0),
 					TextureCoordinates = new Vector2(texture.Left, texture.Top),
+				},
+				new VertexPositionNormalTexture
+				{
+					Position = new Vector4(rectangle.Left, 0, rectangle.Top),
+					Normal = new Vector3(0, 1, 0),
+					TextureCoordinates = new Vector2(texture.Left, texture.Bottom)
 				},
 				new VertexPositionNormalTexture
 				{
@@ -131,13 +153,10 @@
 				}
 			};
 
-			var indices = new ushort[] { 0, 2, 1, 0, 3, 2 };
-
 			var vertexBuffer = VertexBuffer.Create(graphicsDevice, vertices);
-			var indexBuffer = IndexBuffer.Create(graphicsDevice, indices);
-			var layout = VertexPositionNormalTexture.GetInputLayout(graphicsDevice, vertexBuffer, indexBuffer);
+			var layout = VertexPositionNormalTexture.GetInputLayout(graphicsDevice, vertexBuffer);
 
-			return new Model(vertexBuffer, layout, indexBuffer, indices.Length);
+			return new Model(vertexBuffer, layout, 2);
 		}
 
 		/// <summary>
@@ -157,7 +176,7 @@
 			var indices = new ushort[] { 0, 2, 1, 0, 3, 2 };
 			const int flip = -1;
 #endif
-				
+
 			var texture = new Rectangle(0, 0, 1, 1);
 			var vertices = new[]
 			{

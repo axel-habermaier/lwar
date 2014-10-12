@@ -37,7 +37,8 @@
 			Assert.ArgumentNotNull(data);
 			Assert.ArgumentSatisfies(data.Length > 0, "The data array must not be empty.");
 
-			return data.UsePointer(ptr => new VertexBuffer(graphicsDevice, usage, ptr, data.Size()));
+			using (var ptr = PinnedPointer.Create(data))
+				return new VertexBuffer(graphicsDevice, usage, ptr, Marshal.SizeOf(typeof(T)) * data.Length);
 		}
 
 		/// <summary>

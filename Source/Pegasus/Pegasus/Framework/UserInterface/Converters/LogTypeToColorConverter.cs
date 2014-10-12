@@ -48,7 +48,7 @@
 					return DebugInfoColor;
 				default:
 					Assert.NotReached("Unknown log type.");
-					return Color.White;
+					return Colors.White;
 			}
 		}
 

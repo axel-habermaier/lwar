@@ -51,6 +51,16 @@
 		private AveragedDouble _gpuFrameTime = new AveragedDouble(AverageSampleCount);
 
 		/// <summary>
+		///     The particle render time in milliseconds that is displayed by the debug overlay.
+		/// </summary>
+		private AveragedDouble _particleRenderTime = new AveragedDouble(AverageSampleCount);
+
+		/// <summary>
+		///     The particle update time in milliseconds that is displayed by the debug overlay.
+		/// </summary>
+		private AveragedDouble _particleUpdateTime = new AveragedDouble(AverageSampleCount);
+
+		/// <summary>
 		///     The timer that is used to periodically update the statistics.
 		/// </summary>
 		private Timer _timer = new Timer(1000.0 / UpdateFrequency);
@@ -67,28 +77,9 @@
 		}
 
 		/// <summary>
-		///     Sets the GPU frame time in milliseconds that is displayed by the debug overlay.
+		///     Gets the number of particles that are currently being updated and drawn.
 		/// </summary>
-		internal double GpuFrameTime
-		{
-			set { _gpuFrameTime.AddMeasurement(value); }
-		}
-
-		/// <summary>
-		///     Sets the CPU update time in milliseconds that is displayed by the debug overlay.
-		/// </summary>
-		internal double CpuUpdateTime
-		{
-			set { _cpuUpdateTime.AddMeasurement(value); }
-		}
-
-		/// <summary>
-		///     Sets the CPU render time in milliseconds that is displayed by the debug overlay.
-		/// </summary>
-		internal double CpuRenderTime
-		{
-			set { _cpuRenderTime.AddMeasurement(value); }
-		}
+		public int ParticleCount { get; internal set; }
 
 		/// <summary>
 		///     Gets or sets the visibility of the debug overlay.
@@ -137,6 +128,7 @@
 		public double GpuTime
 		{
 			get { return _gpuFrameTime.Average; }
+			internal set { _gpuFrameTime.AddMeasurement(value); }
 		}
 
 		/// <summary>
@@ -153,6 +145,7 @@
 		public double UpdateTime
 		{
 			get { return _cpuUpdateTime.Average; }
+			internal set { _cpuUpdateTime.AddMeasurement(value); }
 		}
 
 		/// <summary>
@@ -161,6 +154,25 @@
 		public double RenderTime
 		{
 			get { return _cpuRenderTime.Average; }
+			internal set { _cpuRenderTime.AddMeasurement(value); }
+		}
+
+		/// <summary>
+		///     Gets or sets the averaged CPU update time.
+		/// </summary>
+		public double ParticleUpdateTime
+		{
+			get { return _particleUpdateTime.Average; }
+			internal set { _particleUpdateTime.AddMeasurement(value); }
+		}
+
+		/// <summary>
+		///     Gets or sets the averaged CPU render time.
+		/// </summary>
+		public double ParticleRenderTime
+		{
+			get { return _particleRenderTime.Average; }
+			internal set { _particleRenderTime.AddMeasurement(value); }
 		}
 
 		/// <summary>
@@ -190,6 +202,9 @@
 			OnPropertyChanged("CpuTime");
 			OnPropertyChanged("UpdateTime");
 			OnPropertyChanged("RenderTime");
+			OnPropertyChanged("ParticleUpdateTime");
+			OnPropertyChanged("ParticleRenderTime");
+			OnPropertyChanged("ParticleCount");
 		}
 
 		/// <summary>
@@ -265,7 +280,7 @@
 				get
 				{
 					double average = 0;
-					var count = _averageIsFilled ? _values.Length : _averageIndex;
+					var count = _averageIsFilled ? _values.Length : Math.Max(_averageIndex, 1);
 
 					for (var i = 0; i < count; ++i)
 						average += _values[i];

@@ -25,10 +25,12 @@ packages
 *.sln.ide
 Source/Pegasus/Assets/AssetIdentifiers.cs
 Source/Pegasus/Assets/Effects/Effects.cs
+Source/Pegasus/Assets/Effects/ShaderSignatures.cs
 Source/Pegasus/Assets/Fonts/FontLoader.cs
 Source/Pegasus/User Interface/UserInterface.cs
 Source/Lwar/Assets/AssetIdentifiers.cs
 Source/Lwar/Assets/Effects/Effects.cs
+Source/Lwar/Assets/Effects/ShaderSignatures.cs
 Source/Lwar/Assets/Fonts/FontLoader.cs
 Source/Lwar/User Interface/UserInterface.cs
 Source/Lwar/Lwar/Gameplay/Entities/EntityType.cs

@@ -4,7 +4,7 @@
 // Exported functions
 //====================================================================================================================
 
-pgShader* pgCreateVertexShader(pgGraphicsDevice* device, pgVoid* shaderData, pgInt32 length, pgShaderInput* inputs, pgInt32 inputCount)
+pgShader* pgCreateVertexShader(pgGraphicsDevice* device, pgVoid* shaderData, pgInt32 length)
 {
 	pgShader* shader;
 	pgUInt8* data = (pgUInt8*)shaderData;
@@ -13,13 +13,11 @@ pgShader* pgCreateVertexShader(pgGraphicsDevice* device, pgVoid* shaderData, pgI
 	PG_ASSERT_NOT_NULL(device);
 	PG_ASSERT_NOT_NULL(shaderData);
 	PG_ASSERT_IN_RANGE(length, 0, INT32_MAX);
-	PG_ASSERT_NOT_NULL(inputs);
-	PG_ASSERT_IN_RANGE(inputCount, 0, INT32_MAX);
 
 	PG_ALLOC(pgShader, shader);
 	shader->device = device;
 	shader->type = PG_VERTEX_SHADER;
-	pgCreateVertexShaderCore(shader, data, end, inputs, inputCount);
+	pgCreateVertexShaderCore(shader, data, end);
 
 	return shader;
 }

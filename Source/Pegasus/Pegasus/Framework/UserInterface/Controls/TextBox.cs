@@ -5,6 +5,7 @@
 	using Math;
 	using Platform;
 	using Platform.Graphics;
+	using Rendering;
 
 	/// <summary>
 	///     Represents a control that can be used to edit text.

@@ -21,19 +21,25 @@
 		{
 			var ws = ~new WhiteSpacesParser();
 			var comma = ~(Character(',') + ws);
+			var quote = ~(Character('\'') + ws);
 			var openBrace = ~(Character('{') + ws);
 			var closeBrace = ~(Character('}') + ws);
 
 			var path = String(c => Char.IsLetter(c) || c == '_', c => Char.IsLetterOrDigit(c) || c == '_' || c == '.', "path");
-			var pathProperty = ~(String("Path") + ~ws + ~Character('=') + ws).Optional("") + path + ws;
+			var pathProperty = ~(String("Path") + ws + ~Character('=') + ws).Optional("") + path + ws;
 
 			var converter = Between(String(c => c != '}', "Converter"), openBrace, closeBrace);
-			var converterProperty = ~(String("Converter") + ~ws + ~Character('=') + ws) + converter + ws;
+			var converterProperty = ~(String("Converter") + ws + ~Character('=') + ws) + converter + ws;
 
 			var mode = String("OneWayToSource") | String("OneWay") | String("TwoWay");
-			var modeProperty = ~(String("Mode") + ~ws + ~Character('=') + ws) + mode + ws;
+			var modeProperty = ~(String("Mode") + ws + ~Character('=') + ws) + mode + ws;
 
-			var property = converterProperty.Apply(p => _dataBinding.Converter = p) |
+			var quotedString = Between(String(c => c != '\'', "quoted string").Apply(s => "\"" + s + "\""), quote, quote);
+			var fallback = String(Char.IsLetterOrDigit, "Number") | quotedString;
+			var fallbackProperty = ~(String("FallbackValue") + ws + ~Character('=') + ws) + fallback + ws;
+
+			var property = fallbackProperty.Apply(p => _dataBinding.FallbackValue = p) |
+						   converterProperty.Apply(p => _dataBinding.Converter = p) |
 						   modeProperty.Apply(p => _dataBinding.BindingMode = p) |
 						   pathProperty.Apply(p => _dataBinding.Path = p);
 

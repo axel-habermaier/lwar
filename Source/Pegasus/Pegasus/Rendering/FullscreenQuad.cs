@@ -1,7 +1,8 @@
-﻿namespace Pegasus.Platform.Graphics
+﻿namespace Pegasus.Rendering
 {
 	using System;
-	using Memory;
+	using Platform.Graphics;
+	using Platform.Memory;
 
 	/// <summary>
 	///     Represents a textured full-screen quad.

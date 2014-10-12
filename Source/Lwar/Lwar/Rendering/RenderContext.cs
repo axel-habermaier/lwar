@@ -1,13 +1,13 @@
 ﻿namespace Lwar.Rendering
 {
 	using System;
-	using Assets.Effects;
 	using Pegasus;
 	using Pegasus.Assets;
 	using Pegasus.Framework;
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
+	using Pegasus.Rendering;
 	using Renderers;
 
 	/// <summary>
@@ -41,11 +41,6 @@
 		private readonly SpriteBatch _spriteBatch;
 
 		/// <summary>
-		///     The sprite effect that is used to draw 2D sprites into the scene.
-		/// </summary>
-		private readonly SpriteEffect _spriteEffect;
-
-		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="assets">The assets manager that should be used to load all assets required by the render context.</param>
@@ -54,9 +49,7 @@
 			Assert.ArgumentNotNull(assets);
 
 			var graphicsDevice = Application.Current.GraphicsDevice;
-
-			_spriteEffect = new SpriteEffect(graphicsDevice, assets);
-			_spriteBatch = new SpriteBatch(graphicsDevice, assets);
+			_spriteBatch = new SpriteBatch(graphicsDevice);
 
 			foreach (var renderer in _renderers)
 				renderer.Load(graphicsDevice, assets);
@@ -149,7 +142,6 @@
 		{
 			_renderers.SafeDisposeAll();
 			_spriteBatch.SafeDispose();
-			_spriteEffect.SafeDispose();
 		}
 	}
 }

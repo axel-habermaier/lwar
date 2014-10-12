@@ -23,16 +23,13 @@
 		/// </summary>
 		/// <param name="shaderCode">The shader source code.</param>
 		/// <param name="length">The length of the shader code in bytes.</param>
-		/// <param name="inputs">The shader input data layout.</param>
-		internal unsafe void Reinitialize(byte* shaderCode, int length, ShaderInput[] inputs)
+		internal unsafe void Reinitialize(byte* shaderCode, int length)
 		{
 			Assert.ArgumentNotNull(new IntPtr(shaderCode));
 			Assert.ArgumentSatisfies(length > 0, "Invalid shader code length.");
-			Assert.ArgumentNotNull(inputs);
-			Assert.ArgumentSatisfies(inputs.Length > 0, "The shader must have at least one input.");
 
 			DestroyShader();
-			_shader = NativeMethods.CreateShader(GraphicsDevice.NativePtr, shaderCode, length, inputs, inputs.Length);
+			_shader = NativeMethods.CreateShader(GraphicsDevice.NativePtr, shaderCode, length);
 		}
 
 		/// <summary>
@@ -42,8 +39,7 @@
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateVertexShader")]
-			public static extern unsafe IntPtr CreateShader(IntPtr device, byte* shaderData, int length, ShaderInput[] inputs,
-															int inputCount);
+			public static extern unsafe IntPtr CreateShader(IntPtr device, byte* shaderData, int length);
 		}
 	}
 }

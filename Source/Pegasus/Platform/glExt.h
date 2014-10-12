@@ -185,6 +185,7 @@ extern "C" {
 
 extern int ogl_ext_ARB_sampler_objects;
 extern int ogl_ext_ARB_shading_language_420pack;
+extern int ogl_ext_ARB_base_instance;
 extern int ogl_ext_EXT_texture_filter_anisotropic;
 extern int ogl_ext_EXT_texture_compression_s3tc;
 
@@ -1175,6 +1176,16 @@ extern void (CODEGEN_FUNCPTR *_ptrc_glGetSamplerParameterfv)(GLuint , GLenum , G
 extern void (CODEGEN_FUNCPTR *_ptrc_glGetSamplerParameterIuiv)(GLuint , GLenum , GLuint *);
 #define glGetSamplerParameterIuiv _ptrc_glGetSamplerParameterIuiv
 #endif /*GL_ARB_sampler_objects*/ 
+
+#ifndef GL_ARB_base_instance
+#define GL_ARB_base_instance 1
+extern void (CODEGEN_FUNCPTR *_ptrc_glDrawArraysInstancedBaseInstance)(GLenum mode, GLint first, GLsizei count, GLsizei primcount, GLuint baseinstance);
+#define glDrawArraysInstancedBaseInstance _ptrc_glDrawArraysInstancedBaseInstance
+extern void (CODEGEN_FUNCPTR *_ptrc_glDrawElementsInstancedBaseInstance)(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, GLsizei primcount, GLuint baseinstance);
+#define glDrawElementsInstancedBaseInstance _ptrc_glDrawElementsInstancedBaseInstance
+extern void (CODEGEN_FUNCPTR *_ptrc_glDrawElementsInstancedBaseVertexBaseInstance)(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, GLsizei primcount, GLint basevertex, GLuint baseinstance);
+#define glDrawElementsInstancedBaseVertexBaseInstance _ptrc_glDrawElementsInstancedBaseVertexBaseInstance
+#endif /*GL_ARB_base_instance*/
 
 extern void (CODEGEN_FUNCPTR *_ptrc_glCullFace)(GLenum );
 #define glCullFace _ptrc_glCullFace

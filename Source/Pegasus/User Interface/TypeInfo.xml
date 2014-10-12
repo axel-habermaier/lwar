@@ -170,6 +170,18 @@
 		<Event Type="KeyEventArgs" Name="KeyDown" />
 		<Event Type="KeyEventArgs" Name="PreviewKeyUp" />
 		<Event Type="KeyEventArgs" Name="KeyUp" />
+		<Event Type="TextInputEventArgs" Name="TextInput" />
+		<Event Type="TextInputEventArgs" Name="PreviewTextInput" />
+		<Event Type="MouseButtonEventArgs" Name="MouseDown" />
+		<Event Type="MouseButtonEventArgs" Name="PreviewMouseDown" />
+		<Event Type="MouseButtonEventArgs" Name="MouseUp" />
+		<Event Type="MouseButtonEventArgs" Name="PreviewMouseUp" />
+		<Event Type="MouseWheelEventArgs" Name="MouseWheelEvent" />
+		<Event Type="MouseWheelEventArgs" Name="PreviewMouseWheelEvent" />
+		<Event Type="MouseEventArgs" Name="MouseMoveEvent" />
+		<Event Type="MouseEventArgs" Name="PreviewMouseMoveEvent" />
+		<Event Type="MouseEventArgs" Name="MouseEnterEvent" />
+		<Event Type="MouseEventArgs" Name="MouseLeaveEvent" />
 	</Class>
 
 	<!-- Controls ================================================================================================= -->
@@ -224,6 +236,14 @@
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.ItemsControl" Inherits="Pegasus.Framework.UserInterface.Controls.Control">
 		<Property Type="Pegasus.Framework.UserInterface.Controls.DataTemplate" Name="ItemTemplate" />
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.Controls.ListBox" Inherits="Pegasus.Framework.UserInterface.Controls.ItemsControl">
+		<Property Type="object" Name="SelectedItem" />
+	</Class>
+
+	<Class Name="Pegasus.Framework.UserInterface.Controls.ListBoxItem" Inherits="Pegasus.Framework.UserInterface.Controls.ContentControl">
+		<Property Type="bool" Name="IsSelected" />
 	</Class>
 
 	<Class Name="Pegasus.Framework.UserInterface.Controls.DataGrid" Inherits="Pegasus.Framework.UserInterface.Controls.ItemsControl">

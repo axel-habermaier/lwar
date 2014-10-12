@@ -30,7 +30,7 @@
 		///     Invoked when the application is initializing.
 		/// </summary>
 		protected override void Initialize()
-		{ 
+		{
 			RegisterFontLoader(new FontLoader(Assets));
 			Commands.Resolve();
 			Cvars.Resolve();
@@ -46,7 +46,8 @@
 			Commands.Bind(Key.F5.WentDown(), "reload_assets");
 
 			Commands.Bind(Key.C.WentDown(), "toggle_debug_camera");
-			Commands.Bind(Key.Escape.WentDown(), "exit");
+			Commands.Bind(Key.Escape.WentDown() & Key.LeftShift.IsPressed(), "exit");
+			Commands.Bind(Key.F9.WentDown(), "show_particle_effect_viewer");
 			Commands.Bind(Key.F10.WentDown(), "toggle show_debug_overlay");
 
 			_viewModelRoot.Child = new MainMenuViewModel();

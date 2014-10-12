@@ -6,7 +6,7 @@
 	/// <summary>
 	///     Represents a 2D texture associated with a sampler state that can be used by an effect.
 	/// </summary>
-	public struct Texture2DView
+	public struct Texture2DView : IEquatable<Texture2DView>
 	{
 		/// <summary>
 		///     Initializes a new instance.
@@ -72,6 +72,15 @@
 		public SamplerState Sampler { get; private set; }
 
 		/// <summary>
+		///     Indicates whether the current object is equal to another object of the same type.
+		/// </summary>
+		/// <param name="other">An object to compare with this object.</param>
+		public bool Equals(Texture2DView other)
+		{
+			return Equals(Texture, other.Texture) && Equals(Sampler, other.Sampler);
+		}
+
+		/// <summary>
 		///     Binds the texture and sampler state to the GPU.
 		/// </summary>
 		/// <param name="slot">The slot the texture and sampler state should be bound to.</param>
@@ -95,6 +104,48 @@
 
 			if (Texture.IsColorBuffer || Texture.IsDepthStencilBuffer)
 				Texture.Unbind(slot);
+		}
+
+		/// <summary>
+		///     Indicates whether this instance and a specified object are equal.
+		/// </summary>
+		/// <param name="obj">Another object to compare to. </param>
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(null, obj))
+				return false;
+			return obj is Texture2DView && Equals((Texture2DView)obj);
+		}
+
+		/// <summary>
+		///     Returns the hash code for this instance.
+		/// </summary>
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				return ((Texture != null ? Texture.GetHashCode() : 0) * 397) ^ (Sampler != null ? Sampler.GetHashCode() : 0);
+			}
+		}
+
+		/// <summary>
+		///     Checks whether the two texture views are equal.
+		/// </summary>
+		/// <param name="left">The first texture view to compare.</param>
+		/// <param name="right">The second texture view to compare.</param>
+		public static bool operator ==(Texture2DView left, Texture2DView right)
+		{
+			return left.Equals(right);
+		}
+
+		/// <summary>
+		///     Checks whether the two texture views are not equal.
+		/// </summary>
+		/// <param name="left">The first texture view to compare.</param>
+		/// <param name="right">The second texture view to compare.</param>
+		public static bool operator !=(Texture2DView left, Texture2DView right)
+		{
+			return !left.Equals(right);
 		}
 	}
 }

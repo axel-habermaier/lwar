@@ -71,7 +71,7 @@
 			else
 				obj = _pooledObjects.Pop();
 
-			var pooledObject = obj as IPooledObject;
+			var pooledObject = obj as PooledObject;
 			if (pooledObject != null)
 				pooledObject.AllocatedFrom(this);
 
@@ -121,6 +121,9 @@
 		{
 			ValidateThread();
 			Log.Debug("Releasing {1} pooled object(s) of type '{0}'...", typeof(T).FullName, _allocationCount);
+
+			foreach (var obj in _pooledObjects.OfType<PooledObject>())
+				obj.Free();
 
 #if DEBUG
 			var leakedObjects = _allocatedObjects.Except(_pooledObjects).ToArray();

@@ -207,6 +207,9 @@
     <Compile Include="..\Assets\Effects\Effects.cs">
       <Link>Assets\Effects.cs</Link>
     </Compile>
+    <Compile Include="..\Assets\Effects\ShaderSignatures.cs">
+      <Link>Assets\ShaderSignatures.cs</Link>
+    </Compile>
     <Compile Include="..\Assets\Fonts\FontLoader.cs">
       <Link>Assets\FontLoader.cs</Link>
     </Compile>
@@ -237,6 +240,8 @@
     <Compile Include="Framework\UserInterface\BindingMode.cs" />
     <Compile Include="Framework\UserInterface\Controls\Dock.cs" />
     <Compile Include="Framework\UserInterface\Controls\DockPanel.cs" />
+    <Compile Include="Framework\UserInterface\Controls\ListBox.cs" />
+    <Compile Include="Framework\UserInterface\Controls\ListBoxItem.cs" />
     <Compile Include="Framework\UserInterface\Controls\ScrollViewer.cs" />
     <Compile Include="Framework\UserInterface\Controls\TextBox.cs" />
     <Compile Include="Framework\UserInterface\Controls\TextChangedEventArgs.cs" />
@@ -271,6 +276,7 @@
     <Compile Include="Framework\UserInterface\MessageBox.cs" />
     <Compile Include="Framework\UserInterface\NativeWindow.cs" />
     <Compile Include="Framework\UserInterface\RoutedEventBinding.cs" />
+    <Compile Include="Framework\UserInterface\ViewModels\ParticleEffectViewerViewModel.cs" />
     <Compile Include="Math\Size.cs" />
     <Compile Include="Framework\UserInterface\ViewModels\AppWindowViewModel.cs" />
     <Compile Include="Framework\UserInterface\ViewModels\ConsolePromptViewModel.cs" />
@@ -342,11 +348,18 @@
     <Compile Include="Math\Rectangle.cs" />
     <Compile Include="Math\Vector2.cs" />
     <Compile Include="Platform\FileSystem.cs" />
+    <Compile Include="Platform\Graphics\Colors.cs" />
+    <Compile Include="Platform\Graphics\IShaderSignatureProvider.cs" />
+    <Compile Include="Platform\Graphics\BufferData.cs" />
+    <Compile Include="Platform\Graphics\ShaderInput.cs" />
     <Compile Include="Platform\Graphics\ShaderProgram.cs" />
     <Compile Include="Platform\FileSystemException.cs" />
+    <Compile Include="Platform\Graphics\ShaderSignature.cs" />
+    <Compile Include="Platform\Graphics\ShaderSignatureRegistry.cs" />
     <Compile Include="Platform\Memory\IPooledObject.cs" />
     <Compile Include="Platform\Memory\ObjectPool`1.cs" />
     <Compile Include="Platform\Memory\ObjectPool.cs" />
+    <Compile Include="Platform\Memory\PinnedPointer.cs" />
     <Compile Include="Platform\Memory\StringBuilderPool.cs" />
     <Compile Include="Platform\Network\ConnectionDroppedException.cs" />
     <Compile Include="Platform\Network\IPAddress.cs" />
@@ -358,6 +371,19 @@
     <Compile Include="Platform\Logging\LogExtensions.cs" />
     <Compile Include="Platform\Network\ProtocolMismatchException.cs" />
     <Compile Include="Platform\Network\ServerFullException.cs" />
+    <Compile Include="Platform\TimeMeasurement.cs" />
+    <Compile Include="Rendering\Particles\BillboardRenderer.cs" />
+    <Compile Include="Rendering\Particles\Emitter.cs" />
+    <Compile Include="Rendering\Particles\Modifiers\FadeOutModifier.cs" />
+    <Compile Include="Rendering\Particles\Modifiers\Modifier.cs" />
+    <Compile Include="Rendering\Particles\Modifiers\ModifierCollection.cs" />
+    <Compile Include="Rendering\Particles\ParticleEffect.cs" />
+    <Compile Include="Rendering\Particles\ParticleCollection.cs" />
+    <Compile Include="Rendering\Particles\ParticleEffectTemplate.cs" />
+    <Compile Include="Rendering\Particles\ParticleRenderer.cs" />
+    <Compile Include="Math\Range.cs" />
+    <Compile Include="Rendering\Particles\RandomValues.cs" />
+    <Compile Include="Rendering\Particles\ParticleStatistics.cs" />
     <Compile Include="ResharperAttributes.cs" />
     <Compile Include="Framework\Bootstrapper.cs" />
     <Compile Include="Framework\UserInterface\Controls\WindowMode.cs" />
@@ -398,7 +424,6 @@
     <Compile Include="Platform\Graphics\EffectContext.cs" />
     <Compile Include="Platform\Graphics\EffectTechnique.cs" />
     <Compile Include="Platform\Graphics\Shader.cs" />
-    <Compile Include="Platform\Graphics\ShaderInput.cs" />
     <Compile Include="Platform\Graphics\Texture2DView.cs" />
     <Compile Include="Platform\Memory\BufferPointer.cs" />
     <Compile Include="Platform\Memory\Endianess.cs" />
@@ -413,13 +438,13 @@
     <Compile Include="Platform\Logging\LogType.cs" />
     <Compile Include="Platform\Clock.cs" />
     <Compile Include="Platform\Timer.cs" />
-    <Compile Include="Platform\Graphics\Camera3D.cs" />
-    <Compile Include="Platform\Graphics\Camera2D.cs" />
-    <Compile Include="Platform\Graphics\FullscreenQuad.cs" />
-    <Compile Include="Platform\Graphics\Model.cs" />
+    <Compile Include="Rendering\Camera3D.cs" />
+    <Compile Include="Rendering\Camera2D.cs" />
+    <Compile Include="Rendering\FullscreenQuad.cs" />
+    <Compile Include="Rendering\Model.cs" />
     <Compile Include="Platform\Graphics\RenderOutput.cs" />
     <Compile Include="Platform\Graphics\VertexPositionNormal.cs" />
-    <Compile Include="Platform\Graphics\DebugCamera.cs" />
+    <Compile Include="Rendering\DebugCamera.cs" />
     <Compile Include="Platform\Graphics\VertexPositionNormalTexture.cs" />
     <Compile Include="Platform\Network\UdpSocket.cs" />
     <Compile Include="Platform\Memory\BufferReader.cs" />
@@ -432,7 +457,7 @@
     <Compile Include="Platform\Memory\PooledObject.cs" />
     <Compile Include="Platform\Graphics\BufferType.cs" />
     <Compile Include="Platform\Graphics\ShaderType.cs" />
-    <Compile Include="Platform\Graphics\Camera.cs" />
+    <Compile Include="Rendering\Camera.cs" />
     <Compile Include="Scripting\CommandAttribute.cs" />
     <Compile Include="Scripting\CommandParameter.cs" />
     <Compile Include="Scripting\Commands.cs">
@@ -549,7 +574,6 @@
     <Compile Include="Framework\UserInterface\Input\LogicalInputDevice.cs" />
     <Compile Include="Framework\UserInterface\Input\Mouse.cs" />
     <Compile Include="Scripting\Interpreter.cs" />
-    <Compile Include="Platform\Memory\NativeMemoryExtensions.cs" />
     <Compile Include="Math\MathUtils.cs" />
     <Compile Include="Math\Matrix.cs" />
     <Compile Include="Platform\Graphics\MapMode.cs" />
@@ -561,7 +585,7 @@
     <Compile Include="Platform\PlatformType.cs" />
     <Compile Include="Platform\PlatformInfo.cs" />
     <Compile Include="Platform\Graphics\Quad.cs" />
-    <Compile Include="Platform\Graphics\SpriteBatch.cs" />
+    <Compile Include="Rendering\SpriteBatch.cs" />
     <Compile Include="Framework\UserInterface\TextLine.cs" />
     <Compile Include="Framework\UserInterface\TextSequence.cs" />
     <Compile Include="Framework\UserInterface\TextToken.cs" />
@@ -636,5 +660,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

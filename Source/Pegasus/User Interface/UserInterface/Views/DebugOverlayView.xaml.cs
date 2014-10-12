@@ -57,5 +57,20 @@
 		{
 			get { return true; }
 		}
+
+		public int ParticleCount
+		{
+			get { return 101; }
+		}
+
+		public string ParticleUpdateTime
+		{
+			get { return "2.3"; }
+		}
+
+		public string ParticleRenderTime
+		{
+			get { return "0.1"; }
+		}
 	}
 }

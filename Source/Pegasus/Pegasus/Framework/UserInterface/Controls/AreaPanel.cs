@@ -3,6 +3,7 @@
 	using System;
 	using Math;
 	using Platform.Graphics;
+	using Rendering;
 
 	/// <summary>
 	///     Allows each child to take up the entire area of the panel.

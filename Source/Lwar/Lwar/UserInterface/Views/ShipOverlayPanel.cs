@@ -8,6 +8,7 @@
 	using Pegasus.Framework.UserInterface;
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
+	using Pegasus.Rendering;
 	using Rendering;
 
 	internal partial class ShipOverlayPanel

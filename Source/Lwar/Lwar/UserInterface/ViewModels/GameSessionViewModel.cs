@@ -57,6 +57,8 @@
 			Chat = new ChatViewModel();
 			View = new GameSessionView();
 
+			_gameSession.InputDevice.UIElement = View;
+
 			// TODO: Selection via UI
 			_gameSession.NetworkSession.Send(SelectionMessage.Create(_gameSession.LocalPlayer,
 				EntityType.Ship, EntityType.Gun, EntityType.Phaser, EntityType.Phaser, EntityType.Phaser));

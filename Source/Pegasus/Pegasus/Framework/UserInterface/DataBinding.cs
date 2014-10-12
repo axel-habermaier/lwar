@@ -25,6 +25,11 @@
 		private readonly IValueConverter _converter;
 
 		/// <summary>
+		///     The fallback value that is used when the binding fails or a null value is bound.
+		/// </summary>
+		private readonly T _fallbackValue;
+
+		/// <summary>
 		///     The number of member accesses in the source expression.
 		/// </summary>
 		private readonly int _memberAccessCount;
@@ -39,6 +44,12 @@
 		///     Indicates the direction of the data flow of the data binding.
 		/// </summary>
 		private BindingMode _bindingMode;
+
+		/// <summary>
+		///     Indicates whether there is an explicit fallback value for the binding. Otherwise, the default value of the dependency
+		///     property is used.
+		/// </summary>
+		private bool _hasFallbackValue;
 
 		/// <summary>
 		///     Provides information about the first member access (such as 'a.b') in a property path 'a.b.c.d'.
@@ -79,14 +90,46 @@
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="sourceObject">The source object that should provide the value that is bound.</param>
+		/// <param name="fallbackValue">The fallback value that should be used when the binding fails or a null value is bound.</param>
+		/// <param name="bindingMode">Indicates the direction of the data flow of the data binding.</param>
+		/// <param name="property1">The name of the first property in the property path.</param>
+		/// <param name="property2">The name of the second property in the property path.</param>
+		/// <param name="property3">The name of the third property in the property path.</param>
+		/// <param name="converter">The converter that should be used to convert the source value to the dependency property type.</param>
+		internal DataBinding(object sourceObject, T fallbackValue, BindingMode bindingMode,
+							 string property1, string property2 = null, string property3 = null, IValueConverter converter = null)
+			: this(sourceObject, bindingMode, fallbackValue, true, property1, property2, property3, converter)
+		{
+		}
+
+		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		/// <param name="sourceObject">The source object that should provide the value that is bound.</param>
 		/// <param name="bindingMode">Indicates the direction of the data flow of the data binding.</param>
 		/// <param name="property1">The name of the first property in the property path.</param>
 		/// <param name="property2">The name of the second property in the property path.</param>
 		/// <param name="property3">The name of the third property in the property path.</param>
 		/// <param name="converter">The converter that should be used to convert the source value to the dependency property type.</param>
 		internal DataBinding(object sourceObject, BindingMode bindingMode,
-							 string property1, string property2 = null, string property3 = null,
-							 IValueConverter converter = null)
+							 string property1, string property2 = null, string property3 = null, IValueConverter converter = null)
+			: this(sourceObject, bindingMode, default(T), false, property1, property2, property3, converter)
+		{
+		}
+
+		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		/// <param name="sourceObject">The source object that should provide the value that is bound.</param>
+		/// <param name="bindingMode">Indicates the direction of the data flow of the data binding.</param>
+		/// <param name="fallbackValue">The fallback value that should be used when the binding fails or a null value is bound.</param>
+		/// <param name="hasFallbackValue">Indicates whether the binding has an explicit fallback value.</param>
+		/// <param name="property1">The name of the first property in the property path.</param>
+		/// <param name="property2">The name of the second property in the property path.</param>
+		/// <param name="property3">The name of the third property in the property path.</param>
+		/// <param name="converter">The converter that should be used to convert the source value to the dependency property type.</param>
+		private DataBinding(object sourceObject, BindingMode bindingMode, T fallbackValue, bool hasFallbackValue,
+							string property1, string property2, string property3, IValueConverter converter)
 		{
 			Assert.ArgumentNotNull(sourceObject);
 			Assert.ArgumentInRange(bindingMode);
@@ -98,6 +141,8 @@
 			_bindingMode = bindingMode;
 			_memberAccessCount = property3 == null ? (property2 == null ? 1 : 2) : 3;
 			_boundToDataContext = sourceObject is UIElement && property1 == "DataContext";
+			_fallbackValue = fallbackValue;
+			_hasFallbackValue = hasFallbackValue;
 
 			_memberAccess1 = new MemberAccess(property1) { Changed = OnMember1Changed };
 
@@ -348,7 +393,7 @@
 			if (!_pathHasNullValue && !_sourceValueIsNull)
 				_targetObject.SetBoundValue(_targetProperty, _sourceFunc(SourceObject, _converter));
 			else
-				_targetObject.SetBoundValue(_targetProperty, _targetProperty.DefaultValue);
+				_targetObject.SetBoundValue(_targetProperty, _hasFallbackValue ? _fallbackValue : _targetProperty.DefaultValue);
 		}
 
 		/// <summary>
@@ -634,7 +679,13 @@
 				if (_propertyInfo == null)
 					return null;
 
-				return Expression.Assign(Expression.Property(objectExpression, _propertyInfo), valueExpression);
+				Expression castExpression;
+				if (_propertyInfo.PropertyType != valueExpression.Type)
+					castExpression = Expression.Convert(valueExpression, _propertyInfo.PropertyType);
+				else
+					castExpression = valueExpression;
+
+				return Expression.Assign(Expression.Property(objectExpression, _propertyInfo), castExpression);
 			}
 
 			/// <summary>

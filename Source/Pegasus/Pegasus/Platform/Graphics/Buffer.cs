@@ -16,6 +16,11 @@
 		private readonly IntPtr _buffer;
 
 		/// <summary>
+		///     Gets the size of the buffer in bytes.
+		/// </summary>
+		public int SizeInBytes { get; private set; }
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
@@ -27,6 +32,8 @@
 			: base(graphicsDevice)
 		{
 			Assert.ArgumentSatisfies(size > 0, "A buffer must have a size greater than 0.");
+
+			SizeInBytes = size;
 			_buffer = NativeMethods.CreateBuffer(graphicsDevice.NativePtr, type, usage, data, size);
 		}
 
@@ -43,10 +50,10 @@
 		///     returned pointer depend on the given map mode.
 		/// </summary>
 		/// <param name="mapMode">Indicates which CPU operations are allowed on the buffer memory.</param>
-		public IntPtr Map(MapMode mapMode)
+		public BufferData Map(MapMode mapMode)
 		{
 			Assert.NotDisposed(this);
-			return NativeMethods.MapBuffer(_buffer, mapMode);
+			return new BufferData(this, NativeMethods.MapBuffer(_buffer, mapMode));
 		}
 
 		/// <summary>
@@ -56,10 +63,10 @@
 		/// <param name="mapMode">Indicates which CPU operations are allowed on the buffer memory.</param>
 		/// <param name="offset">A zero-based index denoting the first byte of the buffer that should be mapped.</param>
 		/// <param name="byteCount">The number of bytes that should be mapped.</param>
-		public IntPtr MapRange(MapMode mapMode, int offset, int byteCount)
+		public BufferData MapRange(MapMode mapMode, int offset, int byteCount)
 		{
 			Assert.NotDisposed(this);
-			return NativeMethods.MapBufferRange(_buffer, mapMode, offset, byteCount);
+			return new BufferData(this, NativeMethods.MapBufferRange(_buffer, mapMode, offset, byteCount));
 		}
 
 		/// <summary>
@@ -90,9 +97,8 @@
 			Assert.ArgumentSatisfies(size >= 0, "Invalid size.");
 			Assert.NotDisposed(this);
 
-			var gpuData = Map(MapMode.WriteDiscard);
-			NativeLibrary.Copy(gpuData, data, size);
-			Unmap();
+			using (var gpuData = Map(MapMode.WriteDiscard))
+				gpuData.Write(data, 0, size);
 		}
 
 		/// <summary>

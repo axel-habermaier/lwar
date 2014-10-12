@@ -29,7 +29,7 @@
 						  select (AssetLoader)Activator.CreateInstance(type);
 
 			foreach (var loader in loaders)
-				RegisterAssetLoader(loader);
+				Register(loader);
 		}
 
 		/// <summary>
@@ -71,7 +71,7 @@
 		///     Registers an asset loader that assets manager can subsequently use to load assets.
 		/// </summary>
 		/// <param name="assetLoader">The asset loader that should be registered.</param>
-		private static void RegisterAssetLoader(AssetLoader assetLoader)
+		private static void Register(AssetLoader assetLoader)
 		{
 			Assert.ArgumentNotNull(assetLoader);
 			Assert.That(!Loaders.ContainsKey(assetLoader.AssetType), "An asset loader for this asset type has already been registered.");

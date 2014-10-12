@@ -81,6 +81,11 @@
 		public static Command<bool> ShowConsoleCommand { get; private set; }
 
 		/// <summary>
+		///     Shows the particle effect viewer.
+		/// </summary>
+		public static Command ShowParticleEffectViewerCommand { get; private set; }
+
+		/// <summary>
 		///     Reloads all currently loaded assets.
 		/// </summary>
 		public static Command ReloadAssetsCommand { get; private set; }
@@ -252,6 +257,15 @@
 		}
 
 		/// <summary>
+		///     Shows the particle effect viewer.
+		/// </summary>
+		[DebuggerHidden]
+		public static void ShowParticleEffectViewer()
+		{
+			ShowParticleEffectViewerCommand.Invoke();
+		}
+
+		/// <summary>
 		///     Reloads all currently loaded assets.
 		/// </summary>
 		[DebuggerHidden]
@@ -407,6 +421,15 @@
 		}
 
 		/// <summary>
+		///     Raised when the 'ShowParticleEffectViewer' command is invoked.
+		/// </summary>
+		public static event Action OnShowParticleEffectViewer
+		{
+			add { ShowParticleEffectViewerCommand.Invoked += value; }
+			remove { ShowParticleEffectViewerCommand.Invoked -= value; }
+		}
+
+		/// <summary>
 		///     Raised when the 'ReloadAssets' command is invoked.
 		/// </summary>
 		public static event Action OnReloadAssets
@@ -463,6 +486,7 @@
 			ListBindingsCommand = new Command("list_bindings", "Lists all active bindings.", false);
 			ShowConsoleCommand = new Command<bool>("show_console", "Shows or hides the console.", false, 
 				new CommandParameter("show", typeof(bool), false, default(bool), "A value of 'true' indicates that the console should be shown."));
+			ShowParticleEffectViewerCommand = new Command("show_particle_effect_viewer", "Shows the particle effect viewer.", false);
 			ReloadAssetsCommand = new Command("reload_assets", "Reloads all currently loaded assets.", false);
 			RestartGraphicsCommand = new Command("restart_graphics", "Restarts the graphics subsystem after a resolution or video mode change.", false);
 			ToggleCommand = new Command<string>("toggle", "Toggles the value of a Boolean console variable.", false, 
@@ -482,6 +506,7 @@
 			CommandRegistry.Register(UnbindAllCommand);
 			CommandRegistry.Register(ListBindingsCommand);
 			CommandRegistry.Register(ShowConsoleCommand);
+			CommandRegistry.Register(ShowParticleEffectViewerCommand);
 			CommandRegistry.Register(ReloadAssetsCommand);
 			CommandRegistry.Register(RestartGraphicsCommand);
 			CommandRegistry.Register(ToggleCommand);

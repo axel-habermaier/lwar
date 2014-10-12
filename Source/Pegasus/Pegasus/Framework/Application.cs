@@ -6,6 +6,7 @@
 	using Platform;
 	using Platform.Graphics;
 	using Platform.Logging;
+	using Rendering.Particles;
 	using Scripting;
 	using UserInterface;
 	using UserInterface.Controls;
@@ -147,7 +148,7 @@
 		/// </summary>
 		/// <param name="name">The name of the application.</param>
 		/// <param name="consoleViewModel">The view model that should be used for the in-game console.</param>
-		internal void Run(string name, ConsoleViewModel consoleViewModel)
+		internal unsafe void Run(string name, ConsoleViewModel consoleViewModel)
 		{
 			Assert.ArgumentNotNullOrWhitespace(name);
 			Assert.ArgumentNotNull(consoleViewModel);
@@ -167,31 +168,33 @@
 
 					while (_running)
 					{
-						var cpuStartTime = Clock.SystemTime;
+						// Update the input, application, and UI state
+						double updateTime, drawTime;
+						using (TimeMeasurement.Measure(&updateTime))
+						{
+							_root.HandleInput();
+							Update();
 
-						// Update
-						_root.HandleInput();
-						Update();
+							_appWindowViewModel.Update();
+							_root.UpdateLayout();
+						}
 
-						_appWindowViewModel.Update();
-						_root.UpdateLayout();
-
-						DebugOverlay.CpuUpdateTime = (Clock.SystemTime - cpuStartTime) * 1000;
-
-						// Draw the current frame
+						// Draw the frame
 						GraphicsDevice.BeginFrame();
-
-						cpuStartTime = Clock.SystemTime;
-
-						_root.Draw();
-
-						DebugOverlay.GpuFrameTime = GraphicsDevice.FrameTime;
-						DebugOverlay.CpuRenderTime = (Clock.SystemTime - cpuStartTime) * 1000;
-
-						// End the frame and present the contents of all windows' backbuffers.
+						using (TimeMeasurement.Measure(&drawTime))
+							_root.Draw();
 						GraphicsDevice.EndFrame();
+
+						// Update the debug overlay and particle statistics
+						DebugOverlay.GpuTime = GraphicsDevice.FrameTime;
+						DebugOverlay.RenderTime = drawTime;
+						DebugOverlay.UpdateTime = updateTime;
+						ParticleStatistics.UpdateDebugOverlay(DebugOverlay);
+
+						// Present the contents of all windows' backbuffers
 						_root.Present();
 
+						// Save CPU when there are no focused windows
 						if (!_root.HasFocusedWindows)
 							Thread.Sleep(50);
 					}

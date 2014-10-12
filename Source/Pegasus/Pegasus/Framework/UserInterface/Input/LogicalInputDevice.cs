@@ -20,11 +20,6 @@
 		private readonly bool[] _doubleClicked = new bool[Enum.GetValues(typeof(MouseButton)).Length];
 
 		/// <summary>
-		///     The UI element that is associated with this logical device.
-		/// </summary>
-		private readonly UIElement _element;
-
-		/// <summary>
 		///     The logical inputs that are currently registered on the device.
 		/// </summary>
 		private readonly List<LogicalInput> _inputs = new List<LogicalInput>(64);
@@ -38,6 +33,11 @@
 		///     The mouse button states.
 		/// </summary>
 		private readonly InputState[] _mouseButtonStates = new InputState[Enum.GetValues(typeof(MouseButton)).Length];
+
+		/// <summary>
+		///     Indicates whether the preview input events are used to check for user input.
+		/// </summary>
+		private readonly bool _usePreviewEvents;
 
 		/// <summary>
 		///     The keyboard providing the keyboard input.
@@ -60,20 +60,47 @@
 		private Vector2 _normalizedMousePosition;
 
 		/// <summary>
+		///     The UI element that is associated with this logical device.
+		/// </summary>
+		private UIElement _uiElement;
+
+		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		/// <param name="usePreviewEvents">Indicates whether the preview input events should be used to check for user input.</param>
+		public LogicalInputDevice(bool usePreviewEvents = false)
+		{
+			_usePreviewEvents = usePreviewEvents;
+		}
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="element">The UI element that should be associated with this logical device.</param>
-		public LogicalInputDevice(UIElement element)
+		/// <param name="usePreviewEvents">Indicates whether the preview input events should be used to check for user input.</param>
+		public LogicalInputDevice(UIElement element, bool usePreviewEvents = false)
 		{
 			Assert.ArgumentNotNull(element);
 
-			_element = element;
-			_element.KeyDown += OnKeyDown;
-			_element.KeyUp += OnKeyUp;
-			_element.MouseDown += OnMouseDown;
-			_element.MouseUp += OnMouseUp;
-			_element.MouseWheel += OnMouseWheel;
-			_element.MouseMove += OnMouseMoved;
+			_usePreviewEvents = usePreviewEvents;
+			UIElement = element;
+		}
+
+		/// <summary>
+		///     Gets or sets the UI element that is associated with this logical device.
+		/// </summary>
+		public UIElement UIElement
+		{
+			get { return _uiElement; }
+			set
+			{
+				if (_uiElement == value)
+					return;
+
+				CleanupEvents();
+				_uiElement = value;
+				SetupEvents();
+			}
 		}
 
 		/// <summary>
@@ -110,7 +137,11 @@
 		/// </summary>
 		private Keyboard Keyboard
 		{
-			get { return (_keyboard ?? (_keyboard = _element.ParentWindow.Keyboard)); }
+			get
+			{
+				Assert.NotNull(UIElement);
+				return _keyboard ?? (_keyboard = UIElement.ParentWindow.Keyboard);
+			}
 		}
 
 		/// <summary>
@@ -118,7 +149,11 @@
 		/// </summary>
 		private Mouse Mouse
 		{
-			get { return (_mouse ?? (_mouse = _element.ParentWindow.Mouse)); }
+			get
+			{
+				Assert.NotNull(UIElement);
+				return _mouse ?? (_mouse = UIElement.ParentWindow.Mouse);
+			}
 		}
 
 		/// <summary>
@@ -127,6 +162,56 @@
 		internal bool TextInputEnabled
 		{
 			get { return Keyboard.FocusedElement is ITextInputControl; }
+		}
+
+		/// <summary>
+		///     Sets up the input event handling.
+		/// </summary>
+		private void SetupEvents()
+		{
+			if (UIElement != null && _usePreviewEvents)
+			{
+				UIElement.PreviewKeyDown += OnKeyDown;
+				UIElement.PreviewKeyUp += OnKeyUp;
+				UIElement.PreviewMouseDown += OnMouseDown;
+				UIElement.PreviewMouseUp += OnMouseUp;
+				UIElement.PreviewMouseWheel += OnMouseWheel;
+				UIElement.PreviewMouseMove += OnMouseMoved;
+			}
+			else if (UIElement != null)
+			{
+				UIElement.KeyDown += OnKeyDown;
+				UIElement.KeyUp += OnKeyUp;
+				UIElement.MouseDown += OnMouseDown;
+				UIElement.MouseUp += OnMouseUp;
+				UIElement.MouseWheel += OnMouseWheel;
+				UIElement.MouseMove += OnMouseMoved;
+			}
+		}
+
+		/// <summary>
+		///     Cleans up the input event handling.
+		/// </summary>
+		private void CleanupEvents()
+		{
+			if (UIElement != null && _usePreviewEvents)
+			{
+				UIElement.PreviewKeyDown -= OnKeyDown;
+				UIElement.PreviewKeyUp -= OnKeyUp;
+				UIElement.PreviewMouseDown -= OnMouseDown;
+				UIElement.PreviewMouseUp -= OnMouseUp;
+				UIElement.PreviewMouseWheel -= OnMouseWheel;
+				UIElement.PreviewMouseMove -= OnMouseMoved;
+			}
+			else if (UIElement != null)
+			{
+				UIElement.KeyDown -= OnKeyDown;
+				UIElement.KeyUp -= OnKeyUp;
+				UIElement.MouseDown -= OnMouseDown;
+				UIElement.MouseUp -= OnMouseUp;
+				UIElement.MouseWheel -= OnMouseWheel;
+				UIElement.MouseMove -= OnMouseMoved;
+			}
 		}
 
 		/// <summary>
@@ -254,6 +339,9 @@
 		/// </summary>
 		public void Update()
 		{
+			if (UIElement == null)
+				return;
+
 			// Update all logical inputs
 			foreach (var input in _inputs)
 				input.Update(this);
@@ -284,12 +372,7 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_element.KeyDown -= OnKeyDown;
-			_element.KeyUp -= OnKeyUp;
-			_element.MouseDown -= OnMouseDown;
-			_element.MouseUp -= OnMouseUp;
-			_element.MouseWheel -= OnMouseWheel;
-			_element.MouseMove -= OnMouseMoved;
+			CleanupEvents();
 		}
 
 		/// <summary>

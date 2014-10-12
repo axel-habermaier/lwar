@@ -85,6 +85,30 @@ pgVoid pgDrawIndexed(pgGraphicsDevice* device, pgInt32 indexCount, pgInt32 index
 	pgDrawIndexedCore(device, indexCount, indexOffset, vertexOffset);
 }
 
+pgVoid pgDrawInstanced(pgGraphicsDevice* device, pgInt32 primitiveCountPerInstance, pgInt32 instanceCount, 
+					   pgInt32 vertexOffset, pgInt32 instanceOffset)
+{
+	PG_ASSERT_NOT_NULL(device);
+	PG_ASSERT_IN_RANGE(primitiveCountPerInstance, 0, INT32_MAX);
+	PG_ASSERT_IN_RANGE(instanceCount, 0, INT32_MAX);
+	PG_ASSERT_IN_RANGE(vertexOffset, 0, INT32_MAX);
+
+	pgValidateDeviceState(device);
+	pgDrawInstancedCore(device, primitiveCountPerInstance, instanceCount, vertexOffset, instanceOffset);
+}
+
+pgVoid pgDrawIndexedInstanced(pgGraphicsDevice* device, pgInt32 indexCountPerInstance, pgInt32 instanceCount, 
+							  pgInt32 indexOffset, pgInt32 vertexOffset, pgInt32 instanceOffset)
+{
+	PG_ASSERT_NOT_NULL(device);
+	PG_ASSERT_IN_RANGE(indexCountPerInstance, 0, INT32_MAX);
+	PG_ASSERT_IN_RANGE(instanceCount, 0, INT32_MAX);
+	PG_ASSERT_IN_RANGE(indexOffset, 0, INT32_MAX);
+
+	pgValidateDeviceState(device);
+	pgDrawIndexedInstancedCore(device, indexCountPerInstance, instanceCount, indexOffset, vertexOffset, instanceOffset);
+}
+
 //====================================================================================================================
 // Helper functions
 //====================================================================================================================

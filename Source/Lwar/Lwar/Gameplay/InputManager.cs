@@ -5,7 +5,6 @@
 	using Network;
 	using Network.Messages;
 	using Pegasus;
-	using Pegasus.Framework;
 	using Pegasus.Framework.UserInterface.Input;
 	using Pegasus.Platform;
 	using Pegasus.Platform.Memory;
@@ -20,11 +19,6 @@
 		///     The game session the input is provided for.
 		/// </summary>
 		private readonly GameSession _gameSession;
-
-		/// <summary>
-		///     The input device that provides the input by the user.
-		/// </summary>
-		private readonly LogicalInputDevice _inputDevice;
 
 		/// <summary>
 		///     When triggered, causes the player to respawn after death.
@@ -63,7 +57,6 @@
 			Assert.ArgumentNotNull(gameSession);
 
 			_gameSession = gameSession;
-			_inputDevice = Application.Current.Window.InputDevice;
 
 			_forward.Input = new LogicalInput(Cvars.InputForwardCvar, KeyTriggerType.Pressed, MouseTriggerType.Pressed);
 			_backward.Input = new LogicalInput(Cvars.InputBackwardCvar, KeyTriggerType.Pressed, MouseTriggerType.Pressed);
@@ -74,15 +67,15 @@
 			_shooting3.Input = new LogicalInput(Cvars.InputTertiaryWeaponCvar, KeyTriggerType.Pressed, MouseTriggerType.Pressed);
 			_shooting4.Input = new LogicalInput(Cvars.InputQuaternaryWeaponCvar, KeyTriggerType.Pressed, MouseTriggerType.Pressed);
 
-			_inputDevice.Add(_respawn);
-			_inputDevice.Add(_forward.Input);
-			_inputDevice.Add(_backward.Input);
-			_inputDevice.Add(_strafeLeft.Input);
-			_inputDevice.Add(_strafeRight.Input);
-			_inputDevice.Add(_shooting1.Input);
-			_inputDevice.Add(_shooting2.Input);
-			_inputDevice.Add(_shooting3.Input);
-			_inputDevice.Add(_shooting4.Input);
+			_gameSession.InputDevice.Add(_respawn);
+			_gameSession.InputDevice.Add(_forward.Input);
+			_gameSession.InputDevice.Add(_backward.Input);
+			_gameSession.InputDevice.Add(_strafeLeft.Input);
+			_gameSession.InputDevice.Add(_strafeRight.Input);
+			_gameSession.InputDevice.Add(_shooting1.Input);
+			_gameSession.InputDevice.Add(_shooting2.Input);
+			_gameSession.InputDevice.Add(_shooting3.Input);
+			_gameSession.InputDevice.Add(_shooting4.Input);
 		}
 
 		/// <summary>
@@ -133,7 +126,7 @@
 			_shooting4.Update(ref _inputMessage.Shooting4);
 
 			// Add the target to the message
-			var worldCoordinates = _gameSession.Camera.ToWorldCoordinates(_inputDevice.NormalizedMousePosition);
+			var worldCoordinates = _gameSession.Camera.ToWorldCoordinates(_gameSession.InputDevice.NormalizedMousePosition);
 			if (_gameSession.LocalPlayer.Ship != null)
 				_inputMessage.Target = worldCoordinates - _gameSession.LocalPlayer.Ship.Position;
 
@@ -146,15 +139,15 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_inputDevice.Remove(_respawn);
-			_inputDevice.Remove(_forward.Input);
-			_inputDevice.Remove(_backward.Input);
-			_inputDevice.Remove(_strafeLeft.Input);
-			_inputDevice.Remove(_strafeRight.Input);
-			_inputDevice.Remove(_shooting1.Input);
-			_inputDevice.Remove(_shooting2.Input);
-			_inputDevice.Remove(_shooting3.Input);
-			_inputDevice.Remove(_shooting4.Input);
+			_gameSession.InputDevice.Remove(_respawn);
+			_gameSession.InputDevice.Remove(_forward.Input);
+			_gameSession.InputDevice.Remove(_backward.Input);
+			_gameSession.InputDevice.Remove(_strafeLeft.Input);
+			_gameSession.InputDevice.Remove(_strafeRight.Input);
+			_gameSession.InputDevice.Remove(_shooting1.Input);
+			_gameSession.InputDevice.Remove(_shooting2.Input);
+			_gameSession.InputDevice.Remove(_shooting3.Input);
+			_gameSession.InputDevice.Remove(_shooting4.Input);
 		}
 
 		/// <summary>

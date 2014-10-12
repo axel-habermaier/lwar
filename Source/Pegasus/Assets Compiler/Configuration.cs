@@ -60,6 +60,14 @@
 		}
 
 		/// <summary>
+		///     Gets the path to the C# file that should contain the generated vertex shader signature code.
+		/// </summary>
+		public static string CSharpShaderSignatureFile
+		{
+			get { return Path.Combine(SourceDirectory, "Effects", "ShaderSignatures.cs"); }
+		}
+
+		/// <summary>
 		///     Gets the path to the C# file that should contain the C# code generated from the Xaml files.
 		/// </summary>
 		public static string CSharpXamlFile

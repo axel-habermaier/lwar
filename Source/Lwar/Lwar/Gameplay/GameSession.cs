@@ -9,6 +9,7 @@
 	using Pegasus;
 	using Pegasus.Assets;
 	using Pegasus.Framework;
+	using Pegasus.Framework.UserInterface.Input;
 	using Pegasus.Platform;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Platform.Network;
@@ -60,7 +61,7 @@
 		public RenderContext RenderContext { get; private set; }
 
 		/// <summary>
-		///     The network session that handles the communiation with the server hosting the game session.
+		///     The network session that handles the communication with the server hosting the game session.
 		/// </summary>
 		public NetworkSession NetworkSession { get; private set; }
 
@@ -93,6 +94,11 @@
 		///     Gets the camera manager for the game session.
 		/// </summary>
 		public CameraManager CameraManager { get; private set; }
+
+		/// <summary>
+		/// Gets the input device that is used to capture all user input.
+		/// </summary>
+		public LogicalInputDevice InputDevice { get; private set; }
 
 		/// <summary>
 		///     Gets the game camera that is used to draw the game session.
@@ -175,9 +181,10 @@
 			// Resend player name, as it might have been changed during the connection attempt
 			OnPlayerNameChanged(Cvars.PlayerName);
 
-			// Initialize the camera and input managers
-			CameraManager = new CameraManager(LocalPlayer);
+			// Initialize the input device and manager as well as the camera manager
+			InputDevice = new LogicalInputDevice();
 			InputManager = new InputManager(this);
+			CameraManager = new CameraManager(LocalPlayer, InputDevice);
 
 			// Initialize the render context
 			RenderContext.Initialize();
@@ -199,7 +206,10 @@
 		public void Update(bool inGameMenuOpen)
 		{
 			if (!inGameMenuOpen)
+			{
+				InputDevice.Update();
 				InputManager.Update();
+			}
 
 			InputManager.SendInput();
 			NetworkSession.Update();
@@ -248,6 +258,7 @@
 			InputManager.SafeDispose();
 			NetworkSession.SafeDispose();
 			RenderContext.SafeDispose();
+			InputDevice.SafeDispose();
 
 			_assets.SafeDispose();
 			_objectPools.SafeDisposeAll();

@@ -3,6 +3,7 @@
 	using System;
 	using Math;
 	using Platform.Graphics;
+	using Rendering;
 
 	/// <summary>
 	///     Draws a border, a background, or both around another element.

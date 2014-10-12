@@ -12,11 +12,8 @@ static pgVoid pgCompile(pgShader* shader, GLenum shaderType, pgUInt8* shaderCode
 // Core functions
 //====================================================================================================================
 
-pgVoid pgCreateVertexShaderCore(pgShader* shader, pgUInt8* shaderData, pgUInt8* end, pgShaderInput* input, pgInt32 inputCount)
+pgVoid pgCreateVertexShaderCore(pgShader* shader, pgUInt8* shaderData, pgUInt8* end)
 {
-	PG_UNUSED(input);
-	PG_UNUSED(inputCount);
-
 	pgCompile(shader, GL_VERTEX_SHADER, shaderData, end);
 }
 

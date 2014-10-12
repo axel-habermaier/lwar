@@ -88,8 +88,7 @@
 						remoteEndPoint = new IPEndPoint(address, packet.Port);
 						return true;
 					default:
-						Assert.NotReached("Unknown receive status.");
-						return false;
+						throw new InvalidOperationException("Unknown receive status.");
 				}
 			}
 		}

@@ -5,6 +5,7 @@
 	using Platform.Graphics;
 	using Platform.Logging;
 	using Platform.Memory;
+	using Rendering;
 	using Scripting;
 
 	/// <summary>
@@ -166,7 +167,7 @@
 			if (validSignature)
 				renderOutputPanel._drawMethod = (DrawCallback)Delegate.CreateDelegate(typeof(DrawCallback), dataContext, method);
 			else
-				Log.Die("Unable to find method 'void {0}.{1}({2})'.", dataContext.GetType().FullName, drawMethod, typeof(RenderOutput).FullName);
+				Log.Debug("Unable to find method 'void {0}.{1}({2})'.", dataContext.GetType().FullName, drawMethod, typeof(RenderOutput).FullName);
 		}
 
 		/// <summary>
@@ -220,6 +221,16 @@
 		{
 			if (UseAppResolution)
 				DisposeGraphicsResources();
+		}
+
+		/// <summary>
+		///    We assume that a render output panel always has non-transparent content 
+		/// </summary>
+		/// <param name="position">The position that should be checked for a hit.</param>
+		/// <returns>Returns true if the UI element is hit; false, otherwise.</returns>
+		protected override bool HitTestCore(Vector2 position)
+		{
+			return true;
 		}
 
 		/// <summary>
@@ -317,7 +328,7 @@
 			_drawMethod(_renderOutput);
 
 			// Draw the contents into the UI
-			var quad = new Quad(VisualArea, Color.White, textureArea);
+			var quad = new Quad(VisualArea, Colors.White, textureArea);
 			spriteBatch.Draw(ref quad, _outputTexture);
 		}
 

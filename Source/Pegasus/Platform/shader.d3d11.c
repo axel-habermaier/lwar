@@ -3,26 +3,15 @@
 #ifdef PG_GRAPHICS_DIRECT3D11
 
 //====================================================================================================================
-// Helper functions
-//====================================================================================================================
-
-static pgVoid pgFillInputDescs(D3D11_INPUT_ELEMENT_DESC* descs, pgShaderInput* input, pgInt32 inputCount);
-
-//====================================================================================================================
 // Core functions
 //====================================================================================================================
 
-pgVoid pgCreateVertexShaderCore(pgShader* shader, pgUInt8* shaderData, pgUInt8* end, pgShaderInput* inputs, pgInt32 inputCount)
+pgVoid pgCreateVertexShaderCore(pgShader* shader, pgUInt8* shaderData, pgUInt8* end)
 {
 	size_t byteCodeLength = end - shaderData;
-	D3D11_INPUT_ELEMENT_DESC inputDescs[PG_INPUT_BINDINGS_COUNT];
-	pgFillInputDescs(inputDescs, inputs, inputCount);
 
 	PG_D3DCALL(ID3D11Device_CreateVertexShader(PG_DEVICE(shader), shaderData, byteCodeLength, NULL, &shader->ptr.vertexShader),
 		"Failed to create vertex shader.");
-
-	PG_D3DCALL(ID3D11Device_CreateInputLayout(PG_DEVICE(shader), inputDescs, inputCount, shaderData, byteCodeLength, &shader->inputLayout), 
-		"Failed to create input layout.");
 }
 
 pgVoid pgCreateFragmentShaderCore(pgShader* shader, pgUInt8* shaderData, pgUInt8* end)
@@ -39,7 +28,6 @@ pgVoid pgDestroyShaderCore(pgShader* shader)
 	{
 	case PG_VERTEX_SHADER:
 		PG_SAFE_RELEASE(ID3D11VertexShader, shader->ptr.vertexShader);
-		PG_SAFE_RELEASE(ID3D11InputLayout, shader->inputLayout);
 		break;
 	case PG_FRAGMENT_SHADER:
 		PG_SAFE_RELEASE(ID3D11PixelShader, shader->ptr.pixelShader);
@@ -67,37 +55,12 @@ pgVoid pgBindProgramCore(pgProgram* program)
 	{
 		pgShader* shader = program->vertexShader;
 		ID3D11DeviceContext_VSSetShader(PG_CONTEXT(shader), shader->ptr.vertexShader, NULL, 0);
-		ID3D11DeviceContext_IASetInputLayout(PG_CONTEXT(shader), shader->inputLayout);
 	}
 
 	if (program->device->fragmentShader != program->fragmentShader)
 	{
 		pgShader* shader = program->fragmentShader;
 		ID3D11DeviceContext_PSSetShader(PG_CONTEXT(shader), shader->ptr.pixelShader, NULL, 0);
-	}
-}
-
-//====================================================================================================================
-// Helper functions
-//====================================================================================================================
-
-static pgVoid pgFillInputDescs(D3D11_INPUT_ELEMENT_DESC* descs, pgShaderInput* input, pgInt32 inputCount)
-{
-	pgInt32 i;
-
-	for (i = 0; i < inputCount; ++i)
-	{
-		pgInt32 semanticIndex;
-		pgString semanticName;
-		pgConvertVertexDataSemantics(input[i].semantics, &semanticIndex, &semanticName);
-
-		descs[i].AlignedByteOffset = 0;
-		descs[i].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-		descs[i].InstanceDataStepRate = 0;
-		descs[i].Format = pgConvertVertexDataFormat(input[i].format);
-		descs[i].SemanticIndex = semanticIndex;
-		descs[i].SemanticName = semanticName;
-		descs[i].InputSlot = (pgInt32)input[i].semantics;
 	}
 }
 

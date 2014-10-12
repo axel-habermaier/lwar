@@ -68,12 +68,13 @@
 			_vertexInputBindings = vertexInputBindings;
 			_indexBuffer = indexBuffer;
 
-			if (indexBuffer == null)
-				_vertexInputLayout = NativeMethods.CreateInputLayout(graphicsDevice.NativePtr, IntPtr.Zero, 0, IndexSize.SixteenBits,
-					_vertexInputBindings, _vertexInputBindings.Length);
-			else
-				_vertexInputLayout = NativeMethods.CreateInputLayout(graphicsDevice.NativePtr, indexBuffer.NativePtr, indexOffset,
-					indexBuffer.IndexSize, _vertexInputBindings, _vertexInputBindings.Length);
+			var indexSize = indexBuffer == null ? IndexSize.SixteenBits : indexBuffer.IndexSize;
+			var indexBufferPtr = indexBuffer == null ? IntPtr.Zero : indexBuffer.NativePtr;
+			var shaderSignature = ShaderSignatureRegistry.GetShaderSignature(vertexInputBindings);
+			indexOffset = indexBuffer == null ? 0 : indexOffset;
+
+			_vertexInputLayout = NativeMethods.CreateInputLayout(graphicsDevice.NativePtr, indexBufferPtr, indexOffset,
+				indexSize, _vertexInputBindings, _vertexInputBindings.Length, shaderSignature, (uint)shaderSignature.Length);
 		}
 
 		/// <summary>
@@ -117,7 +118,8 @@
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateInputLayout")]
 			public static extern IntPtr CreateInputLayout(IntPtr device, IntPtr indexBuffer, int indexOffset, IndexSize indexSize,
-														  VertexInputBinding[] vertexInputBindings, int bindingsCount);
+														  VertexInputBinding[] vertexInputBindings, int bindingsCount,
+														  byte[] shaderSignature, uint shaderSignatureLength);
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDestroyInputLayout")]
 			public static extern void DestroyInputLayout(IntPtr vertexInputLayout);

@@ -120,6 +120,7 @@
 			GenerateConstantsFields();
 
 			GenerateConstructor();
+			GeneratePreloadMethod();
 
 			GenerateConstantsProperties();
 			GenerateTextureProperties();
@@ -190,14 +191,15 @@
 			_writer.AppendLine("\t: base(graphicsDevice, assets)");
 			_writer.AppendBlockStatement(() =>
 			{
+				_writer.AppendLine("Assert.ArgumentNotNull(graphicsDevice);");
+				_writer.AppendLine("Assert.ArgumentNotNull(assets);");
+				_writer.NewLine();
+
 				foreach (var technique in _effect.Techniques)
 				{
 					_writer.AppendLine("{0} = {1}.CreateTechnique({2}, {3}, {4}, {5});", technique.Name, ContextVariableName,
-						_bindMethodName, _unbindMethodName,
-						ShaderAsset.GetAssetIdentifier(_effect.Namespace.Replace(".", "/"), _effect.Name + "/" + technique.VertexShader.Name)
-								   .Replace("/", "."),
-						ShaderAsset.GetAssetIdentifier(_effect.Namespace.Replace(".", "/"), _effect.Name + "/" + technique.FragmentShader.Name)
-								   .Replace("/", "."));
+						_bindMethodName, _unbindMethodName, GetShaderIdentifier(technique.VertexShader.Name),
+						GetShaderIdentifier(technique.FragmentShader.Name));
 				}
 
 				foreach (var buffer in ConstantBuffers)
@@ -207,6 +209,31 @@
 						GetStructName(buffer), ContextVariableName);
 					_writer.AppendLine("{0}.SetName(\"used by {1}\");", GetFieldName(buffer.Name), _effect.FullName);
 				}
+			});
+
+			_writer.NewLine();
+		}
+
+		/// <summary>
+		///     Generates the shader preload method.
+		/// </summary>
+		private void GeneratePreloadMethod()
+		{
+			_writer.AppendLine("/// <summary>");
+			_writer.AppendLine("///     Preloads all shaders used by the effect into the given assets manager.");
+			_writer.AppendLine("/// </summary>");
+			_writer.AppendLine("/// <param name=\"assets\">The assets manager the shaders should be preloaded into.</param>");
+
+			_writer.AppendLine("public static void PreloadShaders(AssetsManager assets)");
+			_writer.AppendBlockStatement(() =>
+			{
+				_writer.AppendLine("Assert.ArgumentNotNull(assets);");
+				_writer.NewLine();
+
+				var vertexShaders = _effect.Techniques.Select(technique => technique.VertexShader.Name);
+				var fragmentShaders = _effect.Techniques.Select(technique => technique.FragmentShader.Name);
+				foreach (var shader in vertexShaders.Union(fragmentShaders).Distinct())
+					_writer.AppendLine("assets.Load({0});", GetShaderIdentifier(shader));
 			});
 
 			_writer.NewLine();
@@ -459,6 +486,16 @@
 		{
 			foreach (var line in documentation)
 				_writer.AppendLine("///{0}", line);
+		}
+
+		/// <summary>
+		///     Gets the shader identifier for the given shader name.
+		/// </summary>
+		/// <param name="shaderName">The name of the shader.</param>
+		private string GetShaderIdentifier(string shaderName)
+		{
+			return ShaderAsset.GetAssetIdentifier(_effect.Namespace.Replace(".", "/"), _effect.Name + "/" + shaderName)
+							  .Replace("/", ".");
 		}
 	}
 }

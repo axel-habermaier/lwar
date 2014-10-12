@@ -1,4 +1,4 @@
-#include "prelude.h"
+﻿#include "prelude.h"
 
 #ifdef PG_GRAPHICS_OPENGL3
 
@@ -95,6 +95,30 @@ pgVoid pgDrawIndexedCore(pgGraphicsDevice* device, pgInt32 indexCount, pgInt32 i
 	PG_ASSERT_NO_GL_ERRORS();
 }
 
+pgVoid pgDrawInstancedCore(pgGraphicsDevice* device, pgInt32 primitiveCountPerInstance, pgInt32 instanceCount, 
+						   pgInt32 vertexOffset, pgInt32 instanceOffset)
+{
+	pgInt32 vertexCount = pgPrimitiveCountToVertexCount(device, primitiveCountPerInstance);
+	glBindVertexArray(device->inputLayout->id);
+	glDrawArraysInstancedBaseInstance(device->glPrimitiveType, vertexOffset, vertexCount, instanceCount, instanceOffset);
+	glBindVertexArray(0);
+
+	PG_ASSERT_NO_GL_ERRORS();
+}
+
+pgVoid pgDrawIndexedInstancedCore(pgGraphicsDevice* device, pgInt32 indexCountPerInstance, pgInt32 instanceCount, 
+								  pgInt32 indexOffset, pgInt32 vertexOffset, pgInt32 instanceOffset)
+{
+	pgVoid* offset = (pgVoid*)(size_t)((indexOffset + device->inputLayout->indexOffset) * device->inputLayout->indexSizeInBytes);
+
+	glBindVertexArray(device->inputLayout->id);
+	glDrawElementsInstancedBaseVertexBaseInstance(device->glPrimitiveType, indexCountPerInstance, device->inputLayout->indexType, 
+												offset, instanceCount, vertexOffset, instanceOffset);
+	glBindVertexArray(0);
+
+	PG_ASSERT_NO_GL_ERRORS();
+}
+
 pgVoid pgPrintDeviceInfoCore(pgGraphicsDevice* device)
 {
 	pgMakeCurrent(&device->context);
@@ -137,6 +161,7 @@ static pgVoid InitializeOpenGLExtensions()
 
 	glExtsSupported &= GlExtSupported(ogl_ext_ARB_sampler_objects, "ARB_sampler_objects");
 	glExtsSupported &= GlExtSupported(ogl_ext_ARB_shading_language_420pack, "ARB_shading_language_420pack");
+	glExtsSupported &= GlExtSupported(ogl_ext_ARB_base_instance, "ARB_base_instance");
 	glExtsSupported &= GlExtSupported(ogl_ext_EXT_texture_filter_anisotropic, "EXT_texture_filter_anisotropic");
 	glExtsSupported &= GlExtSupported(ogl_ext_EXT_texture_compression_s3tc, "EXT_texture_compression_s3tc");
 

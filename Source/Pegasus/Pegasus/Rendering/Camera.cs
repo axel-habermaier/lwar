@@ -1,9 +1,10 @@
-﻿namespace Pegasus.Platform.Graphics
+﻿namespace Pegasus.Rendering
 {
 	using System;
 	using System.Runtime.InteropServices;
 	using Math;
-	using Memory;
+	using Platform.Graphics;
+	using Platform.Memory;
 
 	/// <summary>
 	///     Represents a camera that can be used to draw scenes.

@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.Framework.UserInterface.ViewModels
 {
 	using System;
+	using System.Text;
 	using Controls;
 	using Math;
 	using Platform.Memory;
@@ -28,6 +29,11 @@
 		private bool _fullscreen = Cvars.WindowMode == WindowMode.Fullscreen;
 
 		/// <summary>
+		///     The particle effect viewer that is currently open.
+		/// </summary>
+		private static ParticleEffectViewerViewModel _particleEffectViewer;
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="consoleViewModel">The view model that should be used for the in-game console.</param>
@@ -40,6 +46,8 @@
 
 			DebugOverlay = new DebugOverlayViewModel();
 			Window = new AppWindow(this, Application.Current.Name, Cvars.WindowPosition, Cvars.WindowSize, Cvars.WindowMode);
+
+			Commands.OnShowParticleEffectViewer += ShowParticleEffectViewer;
 		}
 
 		/// <summary>
@@ -110,6 +118,15 @@
 		}
 
 		/// <summary>
+		///     Shows the particle effect viewer.
+		/// </summary>
+		private void ShowParticleEffectViewer()
+		{
+			_particleEffectViewer.SafeDispose();
+			_particleEffectViewer = new ParticleEffectViewerViewModel();
+		}
+
+		/// <summary>
 		///     Toggles between fullscreen and windowed mode.
 		/// </summary>
 		public void ToggleFullscreen()
@@ -140,6 +157,7 @@
 		{
 			Console.SafeDispose();
 			DebugOverlay.SafeDispose();
+			_particleEffectViewer.SafeDispose();
 			Window.SafeDispose();
 		}
 	}

@@ -25,7 +25,12 @@
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
+			<RowDefinition Height="10" />
 			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="10" />
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="Auto" />
@@ -40,33 +45,50 @@
 		<TextBlock Grid.Row="1" Grid.Column="0" Text="Debug Mode: " />
 		<TextBlock Grid.Row="2" Grid.Column="0" Text="Renderer: " />
 		<TextBlock Grid.Row="3" Grid.Column="0" Text="# of GCs: " />
-		<TextBlock Grid.Row="4" Grid.Column="0" Text="GPU Time: " />
-		<TextBlock Grid.Row="5" Grid.Column="0" Text="CPU Time: " />
-		<TextBlock Grid.Row="6" Grid.Column="0" Text="Update Time: " />
-		<TextBlock Grid.Row="7" Grid.Column="0" Text="Render Time: " />
+		
+		<TextBlock Grid.Row="5" Grid.Column="0" Text="GPU Time: " />
+		<TextBlock Grid.Row="6" Grid.Column="0" Text="CPU Time: " />
+		<TextBlock Grid.Row="7" Grid.Column="0" Text="Update Time: " />
+		<TextBlock Grid.Row="8" Grid.Column="0" Text="Render Time: " />
+
+		<TextBlock Grid.Row="10" Grid.Column="0" Text="Particle Count: " />
+		<TextBlock Grid.Row="11" Grid.Column="0" Text="Particle Update: " />
+		<TextBlock Grid.Row="12" Grid.Column="0" Text="Particle Draw: " />
 
 		<TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Platform}" />
 		<TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding DebugMode, Converter={converters:BooleanToStringConverter}}" />
 		<TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Renderer}" />
 		<TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding GarbageCollections, Converter={converters:Int32ToStringConverter}}" />
 
-		<StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal">
+		<StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
 			<TextBlock Text="{Binding GpuTime, Converter={converters:FrameTimeToStringConverter}}" />
 			<TextBlock Text="ms" />
 		</StackPanel>
 
-		<StackPanel Grid.Row="5" Grid.Column="1" Orientation="Horizontal">
+		<StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
 			<TextBlock Text="{Binding CpuTime, Converter={converters:FrameTimeToStringConverter}}" />
 			<TextBlock Text="ms" />
 		</StackPanel>
 
-		<StackPanel Grid.Row="6" Grid.Column="1" Orientation="Horizontal">
+		<StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal">
 			<TextBlock Text="{Binding UpdateTime, Converter={converters:FrameTimeToStringConverter}}" />
 			<TextBlock Text="ms" />
 		</StackPanel>
 
-		<StackPanel Grid.Row="7" Grid.Column="1" Orientation="Horizontal">
+		<StackPanel Grid.Row="8" Grid.Column="1" Orientation="Horizontal">
 			<TextBlock Text="{Binding RenderTime, Converter={converters:FrameTimeToStringConverter}}" />
+			<TextBlock Text="ms" />
+		</StackPanel>
+
+		<TextBlock Grid.Row="10" Grid.Column="1" Text="{Binding ParticleCount, Converter={converters:Int32ToStringConverter}}" />
+
+		<StackPanel Grid.Row="11" Grid.Column="1" Orientation="Horizontal">
+			<TextBlock Text="{Binding ParticleUpdateTime, Converter={converters:FrameTimeToStringConverter}}" />
+			<TextBlock Text="ms" />
+		</StackPanel>
+
+		<StackPanel Grid.Row="12" Grid.Column="1" Orientation="Horizontal">
+			<TextBlock Text="{Binding ParticleRenderTime, Converter={converters:FrameTimeToStringConverter}}" />
 			<TextBlock Text="ms" />
 		</StackPanel>
 	</Grid>

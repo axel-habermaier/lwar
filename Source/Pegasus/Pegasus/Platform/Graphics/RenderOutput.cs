@@ -3,6 +3,7 @@
 	using System;
 	using Math;
 	using Memory;
+	using Rendering;
 
 	/// <summary>
 	///     Represents a rendering output configuration that can be used to draw geometry into the configured render target.
@@ -83,10 +84,10 @@
 		/// </summary>
 		/// <param name="effect">The effect that should be used for drawing.</param>
 		/// <param name="primitiveCount">The number of primitives that should be drawn.</param>
-		/// <param name="offset">The offset into the vertex buffers.</param>
 		/// <param name="primitiveType">The type of the primitives that should be drawn.</param>
-		public void Draw(EffectTechnique effect, int primitiveCount, int offset = 0,
-						 PrimitiveType primitiveType = PrimitiveType.Triangles)
+		/// <param name="offset">The offset into the vertex buffers.</param>
+		public void Draw(EffectTechnique effect, int primitiveCount,
+						 PrimitiveType primitiveType = PrimitiveType.Triangles, int offset = 0)
 		{
 			Bind();
 			effect.Bind();
@@ -104,16 +105,60 @@
 		/// <param name="effect">The effect that should be used for drawing.</param>
 		/// <param name="indexCount">The number of indices to draw.</param>
 		/// <param name="indexOffset">The location of the first index read by the GPU from the index buffer.</param>
-		/// <param name="vertexOffset">The value that should be added to each index before reading a vertex from the vertex buffer.</param>
 		/// <param name="primitiveType">The type of the primitives that should be drawn.</param>
-		public void DrawIndexed(EffectTechnique effect, int indexCount, int indexOffset = 0, int vertexOffset = 0,
-								PrimitiveType primitiveType = PrimitiveType.Triangles)
+		/// <param name="vertexOffset">The value that should be added to each index before reading a vertex from the vertex buffer.</param>
+		public void DrawIndexed(EffectTechnique effect, int indexCount, int indexOffset = 0,
+								PrimitiveType primitiveType = PrimitiveType.Triangles, int vertexOffset = 0)
 		{
 			Bind();
 			effect.Bind();
 
 			_graphicsDevice.PrimitiveType = primitiveType;
 			_graphicsDevice.DrawIndexed(indexCount, indexOffset, vertexOffset);
+
+			effect.Unbind();
+		}
+
+		/// <summary>
+		///     Draws primitiveCount-many instanced primitives, starting at the given offset into the currently bound vertex buffers.
+		/// </summary>
+		/// <param name="effect">The effect that should be used for drawing.</param>
+		/// <param name="instanceCount">The number of instanced that should be drawn.</param>
+		/// <param name="primitiveCount">The number of primitives that should be drawn per instance.</param>
+		/// <param name="primitiveType">The type of the primitives that should be drawn.</param>
+		/// <param name="offset">The offset into the vertex buffers.</param>
+		/// <param name="instanceOffset">The offset applied to the instanced vertex buffers.</param>
+		internal void DrawInstanced(EffectTechnique effect, int instanceCount, int primitiveCount,
+									PrimitiveType primitiveType = PrimitiveType.Triangles, int offset = 0, int instanceOffset = 0)
+		{
+			Bind();
+			effect.Bind();
+
+			_graphicsDevice.PrimitiveType = primitiveType;
+			_graphicsDevice.DrawInstanced(instanceCount, primitiveCount, offset, instanceOffset);
+
+			effect.Unbind();
+		}
+
+		/// <summary>
+		///     Draws indexCount-many instanced indices, starting at the given index offset into the currently bound index buffer.
+		/// </summary>
+		/// <param name="effect">The effect that should be used for drawing.</param>
+		/// <param name="instanceCount">The number of instances to draw.</param>
+		/// <param name="indexCount">The number of indices to draw per instance.</param>
+		/// <param name="primitiveType">The type of the primitives that should be drawn.</param>
+		/// <param name="indexOffset">The location of the first index read by the GPU from the index buffer.</param>
+		/// <param name="vertexOffset">The offset applied to the non-instanced vertex buffers.</param>
+		/// <param name="instanceOffset">The offset applied to the instanced vertex buffers.</param>
+		internal void DrawIndexedInstanced(EffectTechnique effect, int instanceCount, int indexCount,
+										   PrimitiveType primitiveType = PrimitiveType.Triangles,
+										   int indexOffset = 0, int vertexOffset = 0, int instanceOffset = 0)
+		{
+			Bind();
+			effect.Bind();
+
+			_graphicsDevice.PrimitiveType = primitiveType;
+			_graphicsDevice.DrawIndexedInstanced(instanceCount, indexCount, indexOffset, vertexOffset, instanceOffset);
 
 			effect.Unbind();
 		}

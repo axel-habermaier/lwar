@@ -27,15 +27,15 @@
 
 		[VertexShader]
 		public void VertexShader([Position] Vector4 position,
-								 [Normal] Vector4 normal,
+								 [Normal] Vector3 normal,
 								 [Position] out Vector4 outPosition,
 								 [TexCoords(0)] out Vector3 texCoords1,
 								 [TexCoords(1)] out Vector3 texCoords2)
 		{
 			outPosition = World * position;
 			outPosition = ViewProjection * outPosition;
-			texCoords1 = (Rotation1 * normal).xyz;
-			texCoords2 = (Rotation2 * normal).xyz;
+			texCoords1 = (Rotation1 * new Vector4(normal, 1)).xyz;
+			texCoords2 = (Rotation2 * new Vector4(normal, 1)).xyz;
 		}
 
 		[FragmentShader]

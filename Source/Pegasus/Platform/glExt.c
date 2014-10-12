@@ -100,8 +100,25 @@ static PROC WinGetProcAddress(const char *name)
 
 int ogl_ext_ARB_sampler_objects = ogl_LOAD_FAILED;
 int ogl_ext_ARB_shading_language_420pack = ogl_LOAD_FAILED;
+int ogl_ext_ARB_base_instance = ogl_LOAD_FAILED;
 int ogl_ext_EXT_texture_filter_anisotropic = ogl_LOAD_FAILED;
 int ogl_ext_EXT_texture_compression_s3tc = ogl_LOAD_FAILED;
+
+void (CODEGEN_FUNCPTR *_ptrc_glDrawArraysInstancedBaseInstance)(GLenum mode, GLint first, GLsizei count, GLsizei primcount, GLuint baseinstance) = NULL;
+void (CODEGEN_FUNCPTR *_ptrc_glDrawElementsInstancedBaseInstance)(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, GLsizei primcount, GLuint baseinstance) = NULL;
+void (CODEGEN_FUNCPTR *_ptrc_glDrawElementsInstancedBaseVertexBaseInstance)(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices, GLsizei primcount, GLint basevertex, GLuint baseinstance) = NULL;
+
+static int Load_ARB_base_instance()
+{
+	int numFailed = 0;
+	_ptrc_glDrawArraysInstancedBaseInstance = (void (CODEGEN_FUNCPTR *)(GLenum, GLint, GLsizei, GLsizei, GLuint))IntGetProcAddress("glDrawArraysInstancedBaseInstance");
+	if (!_ptrc_glDrawArraysInstancedBaseInstance) numFailed++;
+	_ptrc_glDrawElementsInstancedBaseInstance = (void (CODEGEN_FUNCPTR *)(GLenum, GLsizei, GLenum, const GLvoid*, GLsizei, GLuint))IntGetProcAddress("glDrawElementsInstancedBaseInstance");
+	if (!_ptrc_glDrawElementsInstancedBaseInstance) numFailed++;
+	_ptrc_glDrawElementsInstancedBaseVertexBaseInstance = (void (CODEGEN_FUNCPTR *)(GLenum, GLsizei, GLenum, const GLvoid *, GLsizei, GLint, GLuint))IntGetProcAddress("glDrawElementsInstancedBaseVertexBaseInstance");
+	if (!_ptrc_glDrawElementsInstancedBaseVertexBaseInstance) numFailed++;
+	return numFailed;
+}
 
 void (CODEGEN_FUNCPTR *_ptrc_glGenSamplers)(GLsizei , GLuint *) = NULL;
 void (CODEGEN_FUNCPTR *_ptrc_glDeleteSamplers)(GLsizei , const GLuint *) = NULL;
@@ -1211,14 +1228,15 @@ typedef struct ogl_StrToExtMap_s
 	PFN_LOADFUNCPOINTERS LoadExtension;
 } ogl_StrToExtMap;
 
-static ogl_StrToExtMap ExtensionMap[4] = {
+static ogl_StrToExtMap ExtensionMap[5] = {
 	{"GL_ARB_sampler_objects", &ogl_ext_ARB_sampler_objects, Load_ARB_sampler_objects},
 	{"GL_ARB_shading_language_420pack", &ogl_ext_ARB_shading_language_420pack, NULL},
+	{"GL_ARB_base_instance", &ogl_ext_ARB_base_instance, Load_ARB_base_instance},
 	{"GL_EXT_texture_filter_anisotropic", &ogl_ext_EXT_texture_filter_anisotropic, NULL},
 	{"GL_EXT_texture_compression_s3tc", &ogl_ext_EXT_texture_compression_s3tc, NULL},
 };
 
-static int g_extensionMapSize = 4;
+static int g_extensionMapSize = 5;
 
 static ogl_StrToExtMap *FindExtEntry(const char *extensionName)
 {
@@ -1237,6 +1255,7 @@ static void ClearExtensionVars()
 {
 	ogl_ext_ARB_sampler_objects = ogl_LOAD_FAILED;
 	ogl_ext_ARB_shading_language_420pack = ogl_LOAD_FAILED;
+	ogl_ext_ARB_base_instance = ogl_LOAD_FAILED;
 	ogl_ext_EXT_texture_filter_anisotropic = ogl_LOAD_FAILED;
 	ogl_ext_EXT_texture_compression_s3tc = ogl_LOAD_FAILED;
 }

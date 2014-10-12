@@ -4,6 +4,7 @@
 	using Controls;
 	using Math;
 	using Platform.Graphics;
+	using Rendering;
 
 	/// <summary>
 	///     Represents the root element of all visual trees within an application.

@@ -19,7 +19,7 @@
 		/// <summary>
 		///     The compiled asset file version supported by the application.
 		/// </summary>
-		public const ushort AssetFileVersion = 3;
+		public const ushort AssetFileVersion = 4;
 
 		/// <summary>
 		///     Indicates whether the platform is a big or little endian architecture.

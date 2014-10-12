@@ -6,6 +6,7 @@
 	using Pegasus.Assets;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
+	using Pegasus.Rendering;
 
 	/// <summary>
 	///     Renders elements into a 3D scene.

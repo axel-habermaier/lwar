@@ -3,6 +3,7 @@
 	using System;
 	using Math;
 	using Platform.Graphics;
+	using Rendering;
 
 	/// <summary>
 	///     Represents a text block that draws text into the UI.

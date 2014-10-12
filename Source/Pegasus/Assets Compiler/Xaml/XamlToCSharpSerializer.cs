@@ -207,9 +207,15 @@
 				case "Data":
 				{
 					var parentName = element.Parent.Attribute("Name").Value;
+					_writer.Append("{0}.CreateDataBinding({1}, ", parentName, element.Attribute("TargetProperty").Value);
+
+					var fallback = element.Attribute("FallbackValue");
+					if (fallback != null)
+						_writer.Append("{0}, ", fallback.Value);
+
 					var bindingModeAttribute = element.Attribute("BindingMode");
 					var bindingMode = bindingModeAttribute == null ? "Default" : bindingModeAttribute.Value;
-					_writer.Append("{0}.CreateDataBinding({1}, BindingMode.{2}, ", parentName, element.Attribute("TargetProperty").Value, bindingMode);
+					_writer.Append("BindingMode.{0}, ", bindingMode);
 
 					var path = element.Attribute("Path").Value;
 					var properties = path.Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries);

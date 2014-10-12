@@ -21,5 +21,10 @@ namespace Pegasus.AssetsCompiler.Xaml
 		///     Gets or sets the binding mode of the data binding.
 		/// </summary>
 		public string BindingMode { get; set; }
+
+		/// <summary>
+		///     Gets or sets the fallback value.
+		/// </summary>
+		public string FallbackValue { get; set; }
 	}
 }

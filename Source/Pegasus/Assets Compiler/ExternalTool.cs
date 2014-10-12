@@ -91,13 +91,25 @@
 		/// <param name="input">The shader file that should be compiled.</param>
 		/// <param name="output">The output file that should store the compiled shader.</param>
 		/// <param name="profile">The profile that should be used to compile the shader.</param>
-		public static void Fxc(string input, string output, string profile)
+		/// <param name="generateDebugInfo">
+		///     If true, generates debugging information for the shader. If false, no debugging information
+		///     is generated. If null, debugging information is added only for debug builds.
+		/// </param>
+		public static void Fxc(string input, string output, string profile, bool? generateDebugInfo = null)
 		{
+			const string optimize = "/O3";
+			const string debug = "/Od /Zi";
+
 #if DEBUG
-			var optimization = "/Od /Zi";
+			var optimization = debug;
 #else
-			var optimization = "/O3";
+			var optimization = optimize;
 #endif
+
+			if (generateDebugInfo != null && !generateDebugInfo.Value)
+				optimization = optimize;
+			else if (generateDebugInfo != null && generateDebugInfo.Value)
+				optimization = debug;
 
 			using (var fxc = new ExternalProcess("fxc",
 				@"/nologo {3} /E Main /Ges /T {0} /Fo ""{1}"" ""{2}""",

@@ -15,7 +15,7 @@
 		/// <summary>
 		///     The maximum number of frames the GPU can be behind the CPU.
 		/// </summary>
-		private const int FrameLag = 3;
+		public const int FrameLag = 3;
 
 		/// <summary>
 		///     The timestamp queries that mark the beginning of a frame.
@@ -209,6 +209,21 @@
 		}
 
 		/// <summary>
+		///     Draws primitiveCount-many instanced primitives, starting at the given offset into the currently bound vertex buffers.
+		/// </summary>
+		/// <param name="instanceCount">The number of instanced that should be drawn.</param>
+		/// <param name="primitiveCount">The number of primitives that should be drawn per instance.</param>
+		/// <param name="offset">The offset into the vertex buffers.</param>
+		/// <param name="instanceOffset">The offset applied to the instanced vertex buffers.</param>
+		internal void DrawInstanced(int instanceCount, int primitiveCount, int offset = 0, int instanceOffset = 0)
+		{
+			Assert.NotDisposed(this);
+			Assert.That(_canDraw, "Drawing commands can only be issued between a call to BeginFrame() and EndFrame().");
+
+			NativeMethods.DrawInstanced(_device, primitiveCount, instanceCount, offset, instanceOffset);
+		}
+
+		/// <summary>
 		///     Draws indexCount-many indices, starting at the given index offset into the currently bound index buffer, where the
 		///     vertex offset is added to each index before accessing the currently bound vertex buffers.
 		/// </summary>
@@ -221,6 +236,22 @@
 			Assert.That(_canDraw, "Drawing commands can only be issued between a call to BeginFrame() and EndFrame().");
 
 			NativeMethods.DrawIndexed(_device, indexCount, indexOffset, vertexOffset);
+		}
+
+		/// <summary>
+		///     Draws indexCount-many instanced indices, starting at the given index offset into the currently bound index buffer.
+		/// </summary>
+		/// <param name="instanceCount">The number of instances to draw.</param>
+		/// <param name="indexCount">The number of indices to draw per instance.</param>
+		/// <param name="indexOffset">The location of the first index read by the GPU from the index buffer.</param>
+		/// <param name="vertexOffset">The offset applied to the non-instanced vertex buffers.</param>
+		/// <param name="instanceOffset">The offset applied to the instanced vertex buffers.</param>
+		internal void DrawIndexedInstanced(int instanceCount, int indexCount, int indexOffset = 0, int vertexOffset = 0, int instanceOffset = 0)
+		{
+			Assert.NotDisposed(this);
+			Assert.That(_canDraw, "Drawing commands can only be issued between a call to BeginFrame() and EndFrame().");
+
+			NativeMethods.DrawIndexedInstanced(_device, indexCount, instanceCount, indexOffset, vertexOffset, instanceOffset);
 		}
 
 		/// <summary>
@@ -293,6 +324,14 @@
 
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDrawIndexed")]
 			public static extern void DrawIndexed(IntPtr device, int indexCount, int indexOffset, int vertexOffset);
+
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDrawInstanced")]
+			public static extern void DrawInstanced(IntPtr device, int primitiveCountPerInstance, int instanceCount,
+													int vertexOffset, int instanceOffset);
+
+			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDrawIndexedInstanced")]
+			public static extern void DrawIndexedInstanced(IntPtr device, int indexCountPerInstance, int instanceCount,
+														   int indexOffset, int vertexOffset, int instanceOffset);
 
 			[StructLayout(LayoutKind.Sequential), UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
 			public struct Rect

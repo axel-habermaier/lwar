@@ -713,6 +713,9 @@
 					if (dataBinding.Result.BindingMode != null)
 						element.Add(new XAttribute("BindingMode", dataBinding.Result.BindingMode));
 
+					if (dataBinding.Result.FallbackValue != null)
+						element.Add(new XAttribute("FallbackValue", dataBinding.Result.FallbackValue));
+
 					bindingElement.SetValue(String.Empty);
 					bindingElement.ReplaceWith(element);
 				}

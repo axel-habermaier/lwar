@@ -4,6 +4,8 @@
 	using Pegasus;
 	using Pegasus.Math;
 	using Pegasus.Platform;
+	using Pegasus.Platform.Memory;
+	using Pegasus.Rendering.Particles;
 
 	/// <summary>
 	///     Represents an explosion
@@ -11,27 +13,22 @@
 	public class Explosion : Actor<Explosion>
 	{
 		/// <summary>
-		///     The time (in seconds) it takes for the explision effect to play.
-		/// </summary>
-		private const float PlayTime = 1.0f;
-
-		/// <summary>
 		///     The position of the explosion;
 		/// </summary>
 		private Vector2 _position;
 
 		/// <summary>
-		///     The time (in seconds) for which the explosion continues playing.
+		///     Initializes a new instance.
 		/// </summary>
-		private float _remainingTime;
+		public Explosion()
+		{
+			ParticleEffect = new ParticleEffect();
+		}
 
 		/// <summary>
-		///     Gets the remaining time to live in the range [0,1], starting with 1.
+		///     Gets the particle effect used to draw the explosion.
 		/// </summary>
-		public float TimeToLive
-		{
-			get { return _remainingTime / PlayTime; }
-		}
+		public ParticleEffect ParticleEffect { get; private set; }
 
 		/// <summary>
 		///     Updates the actor's internal state.
@@ -39,9 +36,9 @@
 		/// <param name="clock">The clock that should be used for time measurements.</param>
 		public override void Update(Clock clock)
 		{
-			_remainingTime -= (float)clock.Seconds;
+			ParticleEffect.Update((float)clock.Seconds);
 
-			if (_remainingTime < 0.0f)
+			if (ParticleEffect.IsCompleted)
 				GameSession.Actors.Remove(this);
 		}
 
@@ -51,6 +48,14 @@
 		protected override void OnAdded()
 		{
 			Transform.Position2D = _position;
+		}
+
+		/// <summary>
+		///     Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
+		{
+			ParticleEffect.SafeDispose();
 		}
 
 		/// <summary>
@@ -64,7 +69,6 @@
 
 			var explosion = gameSession.Allocate<Explosion>();
 			explosion._position = position;
-			explosion._remainingTime = PlayTime;
 			return explosion;
 		}
 	}

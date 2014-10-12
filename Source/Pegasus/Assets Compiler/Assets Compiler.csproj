@@ -227,7 +227,7 @@
       <Link>Pegasus\PegasusException.cs</Link>
     </Compile>
     <Compile Include="..\Pegasus\Platform\Graphics\Color.cs">
-      <Link>Pegasus\Graphics\Color.cs</Link>
+      <Link>Pegasus\Platform\Graphics\Color.cs</Link>
     </Compile>
     <Compile Include="..\Pegasus\Platform\Graphics\DataSemantics.cs">
       <Link>Pegasus\Platform\Graphics\DataSemantics.cs</Link>
@@ -238,11 +238,14 @@
     <Compile Include="..\Pegasus\Platform\Graphics\ShaderInput.cs">
       <Link>Pegasus\Platform\Graphics\ShaderInput.cs</Link>
     </Compile>
+    <Compile Include="..\Pegasus\Platform\Graphics\ShaderSignature.cs">
+      <Link>Pegasus\Platform\Graphics\ShaderSignature.cs</Link>
+    </Compile>
     <Compile Include="..\Pegasus\Platform\Graphics\ShaderType.cs">
-      <Link>Pegasus\Graphics\ShaderType.cs</Link>
+      <Link>Pegasus\Platform\Graphics\ShaderType.cs</Link>
     </Compile>
     <Compile Include="..\Pegasus\Platform\Graphics\SurfaceFormat.cs">
-      <Link>Pegasus\Graphics\SurfaceFormat.cs</Link>
+      <Link>Pegasus\Platform\Graphics\SurfaceFormat.cs</Link>
     </Compile>
     <Compile Include="..\Pegasus\Platform\Graphics\TextureDescription.cs">
       <Link>Pegasus\Platform\Graphics\TextureDescription.cs</Link>
@@ -251,7 +254,7 @@
       <Link>Pegasus\Platform\Graphics\TextureFlags.cs</Link>
     </Compile>
     <Compile Include="..\Pegasus\Platform\Graphics\TextureType.cs">
-      <Link>Pegasus\Graphics\TextureType.cs</Link>
+      <Link>Pegasus\Platform\Graphics\TextureType.cs</Link>
     </Compile>
     <Compile Include="..\Pegasus\Platform\Graphics\VertexDataFormat.cs">
       <Link>Pegasus\Platform\Graphics\VertexDataFormat.cs</Link>

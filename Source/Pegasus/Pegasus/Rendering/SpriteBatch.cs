@@ -1,13 +1,15 @@
-﻿namespace Pegasus.Platform.Graphics
+﻿namespace Pegasus.Rendering
 {
 	using System;
 	using System.Collections.Generic;
 	using System.Runtime.InteropServices;
-	using Assets;
 	using Assets.Effects;
-	using Logging;
+	using Framework;
 	using Math;
-	using Memory;
+	using Platform;
+	using Platform.Graphics;
+	using Platform.Logging;
+	using Platform.Memory;
 
 	/// <summary>
 	///     Efficiently draws large amounts of 2D sprites by batching together quads with the same texture.
@@ -18,11 +20,6 @@
 		///     The maximum number of quads that can be queued.
 		/// </summary>
 		private const int MaxQuads = 8192;
-
-		/// <summary>
-		///     The number of chunks that the dynamic vertex buffer allocates.
-		/// </summary>
-		private const int ChunkCount = 3;
 
 		/// <summary>
 		///     The effect that is used to draw the sprites.
@@ -113,14 +110,12 @@
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		/// <param name="assets">The assets manager that should be used to load required assets.</param>
-		public SpriteBatch(GraphicsDevice graphicsDevice, AssetsManager assets)
+		public SpriteBatch(GraphicsDevice graphicsDevice)
 		{
 			Assert.ArgumentNotNull(graphicsDevice);
-			Assert.ArgumentNotNull(assets);
 
 			WorldMatrix = Matrix.Identity;
-			_effect = new SpriteEffect(graphicsDevice, assets);
+			_effect = new SpriteEffect(graphicsDevice, Application.Current.Assets);
 
 			// Initialize the indices; this can be done once, so after the indices are copied to the index buffer,
 			// we never have to change the index buffer again
@@ -142,7 +137,7 @@
 			}
 
 			// Initialize the graphics objects
-			_vertexBuffer = Quad.CreateDynamicVertexBuffer(graphicsDevice, MaxQuads, ChunkCount);
+			_vertexBuffer = Quad.CreateDynamicVertexBuffer(graphicsDevice, MaxQuads, GraphicsDevice.FrameLag);
 			_indexBuffer = IndexBuffer.Create(graphicsDevice, indices);
 			_vertexLayout = Quad.GetInputLayout(graphicsDevice, _vertexBuffer.Buffer, _indexBuffer);
 
@@ -263,7 +258,7 @@
 		/// <param name="texture">The texture that should be used to draw the quad.</param>
 		public void Draw(Rectangle rectangle, Texture2D texture)
 		{
-			Draw(rectangle, texture, Color.White);
+			Draw(rectangle, texture, Colors.White);
 		}
 
 		/// <summary>
@@ -437,9 +432,8 @@
 		public void DrawLine(Vector2 start, Vector2 end, Color color, float width)
 		{
 			Assert.ArgumentSatisfies(width >= 0, "Invalid width.");
-			Assert.That(start != end, "Start and end must differ from each other.");
 
-			if (MathUtils.Equals(width, 0))
+			if (MathUtils.Equals(width, 0) || MathUtils.Equals((start - end).SquaredLength, 0))
 				return;
 
 			// We first define a default quad to draw a line that goes from left to right. The center of the 
@@ -529,7 +523,7 @@
 
 				// Draw and increase the offset
 				var numIndices = sectionList.NumQuads * 6;
-				output.DrawIndexed(_effect.Default, numIndices, offset, _vertexBuffer.VertexOffset);
+				output.DrawIndexed(_effect.Default, numIndices, offset, vertexOffset: _vertexBuffer.VertexOffset);
 				offset += numIndices;
 			}
 
@@ -573,35 +567,36 @@
 		/// </summary>
 		private unsafe void UpdateVertexBuffer()
 		{
-			var vertexData = _vertexBuffer.Map();
-			var offset = 0;
-
-			fixed (Quad* quadsPtr = &_quads[0])
+			using (var vertexData = _vertexBuffer.Map())
 			{
-				var quads = new IntPtr(quadsPtr);
-				for (var i = 0; i < _numSectionLists; ++i)
+				var offset = 0;
+
+				fixed (Quad* quadsPtr = &_quads[0])
 				{
-					var section = _sectionLists[i].FirstSection;
-					while (section != -1)
+					var quads = new IntPtr(quadsPtr);
+					for (var i = 0; i < _numSectionLists; ++i)
 					{
-						// Calculate the offsets into the arrays and the amount of bytes to copy
-						var vertexOffset = vertexData + offset * _quadSize;
-						var quadOffset = quads + _sections[section].Offset * _quadSize;
-						var bytes = _sections[section].NumQuads * _quadSize;
+						var section = _sectionLists[i].FirstSection;
+						while (section != -1)
+						{
+							// Calculate the offsets into the arrays and the amount of bytes to copy
+							var vertexOffset = offset * _quadSize;
+							var quadOffset = quads + _sections[section].Offset * _quadSize;
+							var bytes = _sections[section].NumQuads * _quadSize;
 
-						// Copy the entire section to the vertex buffer
-						NativeLibrary.Copy(vertexOffset, quadOffset, bytes);
+							// Copy the entire section to the vertex buffer
+							vertexData.Write(quadOffset, vertexOffset, bytes);
 
-						// Update the section list's total quad count
-						_sectionLists[i].NumQuads += _sections[section].NumQuads;
+							// Update the section list's total quad count
+							_sectionLists[i].NumQuads += _sections[section].NumQuads;
 
-						// Update the offset and advance to the next section
-						offset += _sections[section].NumQuads;
-						section = _sections[section].Next;
+							// Update the offset and advance to the next section
+							offset += _sections[section].NumQuads;
+							section = _sections[section].Next;
+						}
 					}
 				}
 			}
-			_vertexBuffer.Unmap();
 		}
 
 		/// <summary>

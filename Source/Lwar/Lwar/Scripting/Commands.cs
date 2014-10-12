@@ -113,6 +113,11 @@
 		public static Command<bool> ShowConsoleCommand { get; private set; }
 
 		/// <summary>
+		///     Shows the particle effect viewer.
+		/// </summary>
+		public static Command ShowParticleEffectViewerCommand { get; private set; }
+
+		/// <summary>
 		///     Reloads all currently loaded assets.
 		/// </summary>
 		public static Command ReloadAssetsCommand { get; private set; }
@@ -345,6 +350,15 @@
 		}
 
 		/// <summary>
+		///     Shows the particle effect viewer.
+		/// </summary>
+		[DebuggerHidden]
+		public static void ShowParticleEffectViewer()
+		{
+			ShowParticleEffectViewerCommand.Invoke();
+		}
+
+		/// <summary>
 		///     Reloads all currently loaded assets.
 		/// </summary>
 		[DebuggerHidden]
@@ -554,6 +568,15 @@
 		}
 
 		/// <summary>
+		///     Raised when the 'ShowParticleEffectViewer' command is invoked.
+		/// </summary>
+		public static event Action OnShowParticleEffectViewer
+		{
+			add { ShowParticleEffectViewerCommand.Invoked += value; }
+			remove { ShowParticleEffectViewerCommand.Invoked -= value; }
+		}
+
+		/// <summary>
 		///     Raised when the 'ReloadAssets' command is invoked.
 		/// </summary>
 		public static event Action OnReloadAssets
@@ -622,6 +645,7 @@
 			UnbindAllCommand = CommandRegistry.Resolve("unbind_all");
 			ListBindingsCommand = CommandRegistry.Resolve("list_bindings");
 			ShowConsoleCommand = CommandRegistry.Resolve<bool>("show_console");
+			ShowParticleEffectViewerCommand = CommandRegistry.Resolve("show_particle_effect_viewer");
 			ReloadAssetsCommand = CommandRegistry.Resolve("reload_assets");
 			RestartGraphicsCommand = CommandRegistry.Resolve("restart_graphics");
 			ToggleCommand = CommandRegistry.Resolve<string>("toggle");

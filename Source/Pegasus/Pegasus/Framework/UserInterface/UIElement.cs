@@ -6,6 +6,7 @@
 	using Input;
 	using Math;
 	using Platform.Graphics;
+	using Rendering;
 
 	/// <summary>
 	///     Provides layouting, input, hit testing, rendering, and other base functionality for all UI elements.
@@ -534,6 +535,31 @@
 		}
 
 		/// <summary>
+		///     Creates a data binding.
+		/// </summary>
+		/// <typeparam name="T">The type of the value stored by the target dependency property.</typeparam>
+		/// <param name="sourceObject">The source object that should provide the value that is bound.</param>
+		/// <param name="targetProperty">The dependency property that should be target of the binding.</param>
+		/// <param name="fallbackValue">The fallback value that should be used when the binding fails or a null value is bound.</param>
+		/// <param name="bindingMode">Indicates the direction of the data flow of the data binding.</param>
+		/// <param name="property1">The name of the first property in the property path.</param>
+		/// <param name="property2">The name of the second property in the property path.</param>
+		/// <param name="property3">The name of the third property in the property path.</param>
+		/// <param name="converter">The convert that should be used to convert the source value to the property type.</param>
+		public void CreateDataBinding<T>(object sourceObject, DependencyProperty<T> targetProperty,
+										 T fallbackValue, BindingMode bindingMode,
+										 string property1, string property2 = null, string property3 = null,
+										 IValueConverter converter = null)
+		{
+			Assert.ArgumentNotNull(sourceObject);
+			Assert.ArgumentNotNull(targetProperty);
+			Assert.ArgumentInRange(bindingMode);
+			Assert.ArgumentNotNullOrWhitespace(property1);
+
+			SetBinding(targetProperty, new DataBinding<T>(sourceObject, fallbackValue, bindingMode, property1, property2, property3, converter));
+		}
+
+		/// <summary>
 		///     Creates a data binding with the UI element's view model as the source object.
 		/// </summary>
 		/// <typeparam name="T">The type of the value stored by the target dependency property.</typeparam>
@@ -547,6 +573,23 @@
 										 IValueConverter converter = null)
 		{
 			CreateDataBinding(this, targetProperty, bindingMode, "DataContext", property1, property2, converter);
+		}
+
+		/// <summary>
+		///     Creates a data binding with the UI element's view model as the source object.
+		/// </summary>
+		/// <typeparam name="T">The type of the value stored by the target dependency property.</typeparam>
+		/// <param name="targetProperty">The dependency property that should be target of the binding.</param>
+		/// <param name="fallbackValue">The fallback value that should be used when the binding fails or a null value is bound.</param>
+		/// <param name="bindingMode">Indicates the direction of the data flow of the data binding.</param>
+		/// <param name="property1">The name of the first property in the property path.</param>
+		/// <param name="property2">The name of the second property in the property path.</param>
+		/// <param name="converter">The convert that should be used to convert the source value to the property type.</param>
+		public void CreateDataBinding<T>(DependencyProperty<T> targetProperty, T fallbackValue, BindingMode bindingMode,
+										 string property1 = null, string property2 = null,
+										 IValueConverter converter = null)
+		{
+			CreateDataBinding(this, targetProperty, fallbackValue, bindingMode, "DataContext", property1, property2, converter);
 		}
 
 		/// <summary>
@@ -723,8 +766,8 @@
 				return null;
 
 			// Check if the position lies within the element's bounding box. If not, there can be no hit.
-			var horizontalHit = position.X >= VisualOffset.X && position.X <= VisualOffset.X + RenderSize.Width;
-			var verticalHit = position.Y >= VisualOffset.Y && position.Y <= VisualOffset.Y + RenderSize.Height;
+			var horizontalHit = position.X >= VisualOffset.X && position.X <= VisualOffset.X + RenderSize.Width - Margin.Width;
+			var verticalHit = position.Y >= VisualOffset.Y && position.Y <= VisualOffset.Y + RenderSize.Height - Margin.Height;
 
 			if (!horizontalHit || !verticalHit)
 				return null;

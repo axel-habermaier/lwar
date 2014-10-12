@@ -1,24 +1,16 @@
-﻿namespace Pegasus.Platform.Graphics
+﻿namespace Pegasus.Rendering
 {
 	using System;
 	using Framework.UserInterface.Input;
 	using Math;
+	using Platform;
+	using Platform.Graphics;
 
 	/// <summary>
 	///     Represents a six-degrees-of-freedom debug camera.
 	/// </summary>
 	public class DebugCamera : Camera
 	{
-		/// <summary>
-		///     The rotation speed of the camera.
-		/// </summary>
-		private const float RotationSpeed = 5f;
-
-		/// <summary>
-		///     The move speed of the camera.
-		/// </summary>
-		private const float MoveSpeed = 3000.0f;
-
 		/// <summary>
 		///     Triggered when the user wants to move backward.
 		/// </summary>
@@ -88,8 +80,22 @@
 			inputDevice.Add(_left);
 			inputDevice.Add(_right);
 
+			RotationSpeed = 5f;
+			MoveSpeed = 3000.0f;
+			IsActive = true;
+
 			Reset();
 		}
+
+		/// <summary>
+		///     Gets or sets the rotation speed of the camera.
+		/// </summary>
+		public float RotationSpeed { get; set; }
+
+		/// <summary>
+		///     Gets or sets the move speed of the camera.
+		/// </summary>
+		public float MoveSpeed { get; set; }
 
 		/// <summary>
 		///     Gets or sets a value indicating whether the debug camera is active.
@@ -128,6 +134,8 @@
 			_position = new Vector3(0, 0, -200);
 			_rotation = Vector2.Zero;
 			_mouseDelta = Vector2.Zero;
+
+			UpdateViewMatrix();
 		}
 
 		/// <summary>
@@ -136,7 +144,10 @@
 		public void Update()
 		{
 			if (!IsActive)
+			{
+				_clock.Reset();
 				return;
+			}
 
 			var move = Vector3.Zero;
 

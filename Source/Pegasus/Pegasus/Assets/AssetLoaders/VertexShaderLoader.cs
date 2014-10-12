@@ -31,24 +31,12 @@ namespace Pegasus.Assets.AssetLoaders
 			Assert.ArgumentOfType<VertexShader>(asset);
 			Assert.ArgumentNotNullOrWhitespace(assetName);
 
-			var inputCount = buffer.ReadByte();
-			var inputs = new ShaderInput[inputCount];
-
-			for (var i = 0; i < inputCount; ++i)
-			{
-				inputs[i] = new ShaderInput
-				{
-					Format = (VertexDataFormat)buffer.ReadByte(),
-					Semantics = (DataSemantics)buffer.ReadByte()
-				};
-			}
-
 			byte* data;
 			int length;
 			ExtractShaderCode(buffer, out data, out length);
 
 			var shader = (VertexShader)asset;
-			shader.Reinitialize(data, length, inputs);
+			shader.Reinitialize(data, length);
 			shader.SetName(assetName);
 		}
 

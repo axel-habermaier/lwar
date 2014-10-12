@@ -59,20 +59,20 @@
 		ID3D11VertexShader*		vertexShader;	\
 		ID3D11GeometryShader*	geometryShader;	\
 		ID3D11PixelShader*		pixelShader;	\
-	} ptr;										\
-	ID3D11InputLayout* inputLayout;
+	} ptr;
 
 #define PG_PROGRAM_PLATFORM
 
 #define PG_BUFFER_PLATFORM	\
 	ID3D11Buffer* ptr;
 
-#define PG_INPUT_LAYOUT_PLATFORM						\
-	pgBuffer*		indexBuffer;						\
-	pgInt32			indexOffset;						\
-	DXGI_FORMAT		indexFormat;						\
-	pgInputBinding  bindings[PG_INPUT_BINDINGS_COUNT];	\
-	pgInt32			bindingsCount;
+#define PG_INPUT_LAYOUT_PLATFORM							\
+	pgBuffer*			indexBuffer;						\
+	pgInt32				indexOffset;						\
+	DXGI_FORMAT			indexFormat;						\
+	pgInputBinding		bindings[PG_INPUT_BINDINGS_COUNT];	\
+	pgInt32				bindingsCount;						\
+	ID3D11InputLayout*  inputLayout;
 
 #define PG_TEXTURE_PLATFORM					\
 	ID3D11Texture2D*			ptr;		\

@@ -7,6 +7,7 @@
 	using Platform.Graphics;
 	using Platform.Logging;
 	using Platform.Memory;
+	using Rendering;
 
 	/// <summary>
 	///     Represents an operating system window that hosts UI elements.
@@ -102,7 +103,7 @@
 				Camera = new Camera2D(graphicsDevice)
 			};
 
-			_spriteBatch = new SpriteBatch(graphicsDevice, Application.Current.Assets)
+			_spriteBatch = new SpriteBatch(graphicsDevice)
 			{
 				BlendState = BlendState.Premultiplied,
 				DepthStencilState = DepthStencilState.DepthDisabled,

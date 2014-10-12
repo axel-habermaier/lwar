@@ -7,9 +7,13 @@
 //====================================================================================================================
 
 pgVoid pgCreateInputLayoutCore(pgInputLayout* inputLayout, pgBuffer* indexBuffer, pgInt32 indexOffset, 
-							   pgIndexSize indexSize, pgInputBinding* inputBindings, pgInt32 bindingsCount)
+							   pgIndexSize indexSize, pgInputBinding* inputBindings, pgInt32 bindingsCount,
+							   pgByte* signatureShader, pgUInt32 signatureShaderLength)
 {
 	GLint i;
+
+	PG_UNUSED(signatureShader);
+	PG_UNUSED(signatureShaderLength);
 	PG_ASSERT(indexBuffer == NULL || (indexBuffer != NULL && indexBuffer->glType == GL_ELEMENT_ARRAY_BUFFER), "Invalid index buffer.");
 
 	PG_GL_ALLOC("Vertex Input Layout", glGenVertexArrays, inputLayout->id);
@@ -47,6 +51,7 @@ pgVoid pgCreateInputLayoutCore(pgInputLayout* inputLayout, pgBuffer* indexBuffer
 			inputBindings[i].semantics == PG_VERTEX_SEMANTICS_COLOR2 ||
 			inputBindings[i].semantics == PG_VERTEX_SEMANTICS_COLOR3;
 		glVertexAttribPointer(slot, size, type, normalize, inputBindings[i].stride, (pgVoid*)(size_t)inputBindings[i].offset);
+		glVertexAttribDivisor(slot, inputBindings[i].instanceStepRate);
 		PG_ASSERT_NO_GL_ERRORS();
 	}
 

@@ -36,6 +36,13 @@
 		private int _elementCount;
 
 		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		private DynamicVertexBuffer()
+		{
+		}
+
+		/// <summary>
 		///     Gets the underlying vertex buffer. The returned buffer should only be used to initialize vertex layouts;
 		///     mapping the buffer will most likely result in some unexpected behavior.
 		/// </summary>
@@ -48,6 +55,17 @@
 		public int VertexOffset
 		{
 			get { return _currentChunk * _elementCount; }
+		}
+
+		/// <summary>
+		///     Gets the offset that must be applied to instanced drawing operations when the instanced data of the last buffer mapping
+		///     operation should be drawn.
+		/// </summary>
+		/// <param name="instanceCount">The maximum number of instanced data elements stored in the vertex buffer.</param>
+		public int GetInstanceOffset(int instanceCount)
+		{
+			Assert.ArgumentInRange(instanceCount, 0, Int32.MaxValue);
+			return instanceCount * _currentChunk;
 		}
 
 		/// <summary>
@@ -71,7 +89,7 @@
 			where T : struct
 		{
 			Assert.ArgumentNotNull(graphicsDevice);
-			Assert.ArgumentInRange(elementCount, 1, UInt16.MaxValue);
+			Assert.ArgumentInRange(elementCount, 1, Int32.MaxValue);
 			Assert.ArgumentInRange(chunkCount, 2, Byte.MaxValue);
 
 			return new DynamicVertexBuffer
@@ -94,18 +112,24 @@
 		/// <summary>
 		///     Maps the next chunk of the buffer and returns a pointer to the first byte of the chunk.
 		/// </summary>
-		public IntPtr Map()
+		public BufferData Map()
 		{
 			_currentChunk = (_currentChunk + 1) % _chunkCount;
 			return Buffer.MapRange(MapMode.WriteNoOverwrite, _currentChunk * _chunkSize, _chunkSize);
 		}
 
 		/// <summary>
-		///     Unmaps the buffer.
+		///     Maps the next chunk of the buffer and returns a pointer to the first byte of the chunk.
 		/// </summary>
-		public void Unmap()
+		/// <param name="offset">A zero-based index denoting the first byte of the next chunk that should be mapped.</param>
+		/// <param name="byteCount">The number of bytes of the next chunk that should be mapped.</param>
+		public BufferData MapRange(int offset, int byteCount)
 		{
-			Buffer.Unmap();
+			Assert.ArgumentSatisfies(offset < _chunkSize, "Offset is out-of-bounds.");
+			Assert.ArgumentSatisfies(byteCount <= _chunkSize - offset, "Size is out-of-bounds.");
+
+			_currentChunk = (_currentChunk + 1) % _chunkCount;
+			return Buffer.MapRange(MapMode.WriteNoOverwrite, _currentChunk * _chunkSize + offset, byteCount);
 		}
 	}
 }

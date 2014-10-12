@@ -6,6 +6,7 @@
 	using Math;
 	using Platform;
 	using Platform.Graphics;
+	using Rendering;
 
 	/// <summary>
 	///     An indicator that shows the current insertion and deletion position within an editable text.

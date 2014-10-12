@@ -134,6 +134,20 @@ pgVoid pgDrawIndexedCore(pgGraphicsDevice* device, pgInt32 indexCount, pgInt32 i
 	ID3D11DeviceContext_DrawIndexed(device->context, indexCount, indexOffset, vertexOffset);
 }
 
+pgVoid pgDrawInstancedCore(pgGraphicsDevice* device, pgInt32 primitiveCountPerInstance, pgInt32 instanceCount,
+						   pgInt32 vertexOffset, pgInt32 instanceOffset)
+{
+	ID3D11DeviceContext_DrawInstanced(device->context, pgPrimitiveCountToVertexCount(device, primitiveCountPerInstance), 
+									  instanceCount, vertexOffset, instanceOffset);
+}
+
+pgVoid pgDrawIndexedInstancedCore(pgGraphicsDevice* device, pgInt32 indexCountPerInstance, pgInt32 instanceCount,
+								  pgInt32 indexOffset, pgInt32 vertexOffset, pgInt32 instanceOffset)
+{
+	ID3D11DeviceContext_DrawIndexedInstanced(device->context, indexCountPerInstance, instanceCount, 
+											 indexOffset, vertexOffset, instanceOffset);
+}
+
 pgVoid pgPrintDeviceInfoCore(pgGraphicsDevice* device)
 {
 	DXGI_ADAPTER_DESC adapterDesc;

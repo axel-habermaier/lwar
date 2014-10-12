@@ -39,7 +39,7 @@
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="appName">The name of the application.</param>
-		public NativeLibrary(string appName)
+		internal NativeLibrary(string appName)
 		{
 			Assert.ArgumentNotNullOrWhitespace(appName);
 			Assert.That(!_isInitialized, "The library has already been initialized.");
@@ -64,7 +64,7 @@
 		/// <param name="text">The text that should be displayed in the message box.</param>
 		/// <param name="arguments">The arguments for the text format string.</param>
 		[Conditional("Windows"), StringFormatMethod("text")]
-		public static void ShowMessageBox(string caption, string text, params object[] arguments)
+		internal static void ShowMessageBox(string caption, string text, params object[] arguments)
 		{
 			Assert.ArgumentNotNullOrWhitespace(caption);
 			Assert.ArgumentNotNullOrWhitespace(text);
@@ -78,7 +78,7 @@
 		/// <param name="destination">The address of the first byte that should be written.</param>
 		/// <param name="source">The address of the first byte that should be read.</param>
 		/// <param name="byteCount">The number of bytes that should be copied.</param>
-		public static void Copy(IntPtr destination, IntPtr source, int byteCount)
+		internal static void Copy(IntPtr destination, IntPtr source, int byteCount)
 		{
 			Assert.ArgumentNotNull(destination);
 			Assert.ArgumentNotNull(source);

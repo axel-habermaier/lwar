@@ -47,7 +47,7 @@
 		/// <param name="vertexBuffer">The vertex buffer that holds the vertex data.</param>
 		/// <param name="indexBuffer">The index buffer that holds the vertex indices.</param>
 		public static VertexInputLayout GetInputLayout(GraphicsDevice graphicsDevice, VertexBuffer vertexBuffer,
-													   IndexBuffer indexBuffer)
+													   IndexBuffer indexBuffer = null)
 		{
 			Assert.ArgumentNotNull(graphicsDevice);
 			Assert.ArgumentNotNull(vertexBuffer);

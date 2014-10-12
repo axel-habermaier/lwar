@@ -67,6 +67,8 @@
 						if (!project.Compile())
 							throw new InvalidOperationException("Effect project compilation failed.");
 					}
+
+					CreateShaderSignatureFile();
 				}
 
 				base.Compile(_shaderAssets);
@@ -74,6 +76,7 @@
 			catch (Exception e)
 			{
 				Log.Error("Effect cross-compilation failed: {0}", e.Message);
+				Log.Error(e.StackTrace);
 			}
 		}
 
@@ -184,11 +187,10 @@
 					case ShaderType.VertexShader:
 						WriteAssetHeader(writer, (byte)AssetType.VertexShader);
 
+						// Skip over the shader signature
 						var count = reader.ReadByte();
-						writer.WriteByte(count);
-
-						for (var i = 0; i < count * 2; ++i)
-							writer.WriteByte(reader.ReadByte());
+						for (var i = 0; i < 2 * count; ++i)
+							reader.ReadByte();
 
 						profile = "vs_4_0";
 						break;
@@ -273,6 +275,123 @@
 		private static string GetCompiledHlslShaderPath(Asset asset)
 		{
 			return asset.TempPathWithoutExtension + ".fxo";
+		}
+
+		/// <summary>
+		///     Creates the C# code for the vertex shader signatures.
+		/// </summary>
+		private void CreateShaderSignatureFile()
+		{
+			var signatures = new List<ShaderSignature>();
+			foreach (var shader in _shaderAssets.Where(asset => asset.AssetType == (byte)AssetType.VertexShader))
+			{
+				using (var reader = new BinaryReader(new MemoryStream(File.ReadAllBytes(shader.SourcePath))))
+				{
+					var count = reader.ReadByte();
+					var inputs = new ShaderInput[count];
+
+					for (var i = 0; i < count; ++i)
+					{
+						inputs[i].Format = (VertexDataFormat)reader.ReadByte();
+						inputs[i].Semantics = (DataSemantics)reader.ReadByte();
+					}
+
+					signatures.Add(new ShaderSignature(inputs));
+				}
+			}
+
+			signatures = signatures.Distinct().ToList();
+
+			for (var i = 0; i < signatures.Count; ++i)
+			{
+				if (!Configuration.CompileHlsl)
+				{
+					signatures[i] = new ShaderSignature(signatures[i].Inputs, new byte[0]);
+					continue;
+				}
+
+				// Create a dummy HLSL vertex shader for the signature
+				var inputs = String.Join(", ", signatures[i].Inputs.Select((input, index) =>
+					String.Format("{0} p{1} : {2}", ToHlsl(input.Format), index, HlslCompiler.ToHlsl(input.Semantics))));
+				var hlslCode = String.Format("float4 Main({0}) : SV_POSITION {{  return float4(0, 0, 0, 0); }}", inputs);
+
+				// Compile the shader
+				if (!Configuration.CompileHlsl)
+					return;
+
+				var hlslFile = Path.Combine(Configuration.TempDirectory, "sigshader.hlsl");
+				var fxoFile = Path.Combine(Configuration.TempDirectory, "sigshader.fxo");
+
+				File.WriteAllText(hlslFile, hlslCode);
+				ExternalTool.Fxc(hlslFile, fxoFile, "vs_4_0", generateDebugInfo: false);
+
+				// Retrieve the compiled byte code
+				signatures[i] = new ShaderSignature(signatures[i].Inputs, File.ReadAllBytes(fxoFile));
+			}
+
+			// Generate the signature file
+			var writer = new CodeWriter();
+			writer.WriterHeader();
+
+			writer.AppendLine("namespace {0}.Effects", Configuration.AssetsProject.RootNamespace);
+			writer.AppendBlockStatement(() =>
+			{
+				writer.AppendLine("using System;");
+				writer.AppendLine("using System.Collections.Generic;");
+				writer.AppendLine("using Pegasus;");
+				writer.AppendLine("using Pegasus.Platform.Graphics;");
+				writer.NewLine();
+
+				writer.AppendLine("/// <summary>");
+				writer.AppendLine("///     Provides shader signatures.");
+				writer.AppendLine("/// </summary>");
+				writer.AppendLine("[UsedImplicitly]");
+				writer.AppendLine("internal class ShaderSignatures : IShaderSignatureProvider");
+				writer.AppendBlockStatement(() =>
+				{
+					writer.AppendLine("/// <summary>");
+					writer.AppendLine("///     Gets the provided shader signatures.");
+					writer.AppendLine("/// </summary>");
+					writer.AppendLine("public IEnumerable<ShaderSignature> GetShaderSignatures()");
+					writer.AppendBlockStatement(() =>
+					{
+						foreach (var signature in signatures)
+						{
+							var byteCode = String.Join(", ", signature.ByteCode);
+							var inputs = String.Join(", ", signature.Inputs.Select(input =>
+								String.Format("new ShaderInput(VertexDataFormat.{0}, DataSemantics.{1})", input.Format, input.Semantics)));
+
+							writer.AppendLine("yield return new ShaderSignature(new [] {{ {0} }}, new byte[] {{ {1} }});", inputs, byteCode);
+						}
+
+						writer.AppendLine("yield break;");
+					});
+				});
+			});
+
+			File.WriteAllText(Configuration.CSharpShaderSignatureFile, writer.ToString());
+		}
+
+		/// <summary>
+		///     Gets the HLSL type that represents the vertex data format.
+		/// </summary>
+		/// <param name="format">The format that should be converted to HLSL.</param>
+		private string ToHlsl(VertexDataFormat format)
+		{
+			switch (format)
+			{
+				case VertexDataFormat.Float:
+					return "float";
+				case VertexDataFormat.Vector2:
+					return "float2";
+				case VertexDataFormat.Vector3:
+					return "float3";
+				case VertexDataFormat.Vector4:
+				case VertexDataFormat.Color:
+					return "float4";
+				default:
+					throw new ArgumentOutOfRangeException("format");
+			}
 		}
 	}
 }

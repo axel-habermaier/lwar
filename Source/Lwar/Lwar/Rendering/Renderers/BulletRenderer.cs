@@ -2,28 +2,17 @@
 {
 	using System;
 	using Assets;
-	using Assets.Effects;
 	using Gameplay.Entities;
 	using Pegasus.Assets;
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
-	using Pegasus.Platform.Memory;
+	using Pegasus.Rendering;
 
 	/// <summary>
 	///     Renders bullets into a 3D scene.
 	/// </summary>
 	public class BulletRenderer : Renderer<Bullet>
 	{
-		/// <summary>
-		///     The effect that is used to draw the bullets.
-		/// </summary>
-		private TexturedQuadEffect _effect;
-
-		/// <summary>
-		///     The model that is used to draw the bullets.
-		/// </summary>
-		private Model _model;
-
 		private Texture2D _texture, _texture2;
 
 		/// <summary>
@@ -35,16 +24,6 @@
 		{
 			_texture = assets.Load(Textures.Bullet);
 			_texture2 = assets.Load(Textures.BulletGlow);
-			_effect = new TexturedQuadEffect(graphicsDevice, assets);
-		}
-
-		/// <summary>
-		///     Initializes the renderer.
-		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		public override void Initialize(GraphicsDevice graphicsDevice)
-		{
-			_model = Model.CreateQuad(graphicsDevice, _texture.Size);
 		}
 
 		/// <summary>
@@ -69,7 +48,7 @@
 				var rectangle = new Rectangle(bullet.Position.X - _texture.Width / 2.0f,
 					bullet.Position.Y - _texture.Height / 2.0f,
 					_texture.Width, _texture.Height);
-				spriteBatch.Draw(rectangle, _texture, Color.White);
+				spriteBatch.Draw(rectangle, _texture, Colors.White);
 			}
 		}
 
@@ -78,8 +57,7 @@
 		/// </summary>
 		protected override void OnDisposingCore()
 		{
-			_effect.SafeDispose();
-			_model.SafeDispose();
+			// Nothing to do here
 		}
 	}
 }

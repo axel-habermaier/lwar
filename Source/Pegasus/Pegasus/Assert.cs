@@ -183,6 +183,17 @@ namespace Pegasus
 		}
 
 		/// <summary>
+		///     Throws a PegasusException if the pointer is null.
+		/// </summary>
+		/// <param name="ptr">The pointer to check for null.</param>
+		[Conditional("DEBUG"), DebuggerHidden, ContractAnnotation("null => halt")]
+		public static void NotNull(IntPtr ptr)
+		{
+			if (ptr == IntPtr.Zero)
+				throw new PegasusException("Expected a valid pointer.");
+		}
+
+		/// <summary>
 		///     Throws a PegasusException if the string is null or empty (or only whitespace).
 		/// </summary>
 		/// <param name="s">The string to check.</param>

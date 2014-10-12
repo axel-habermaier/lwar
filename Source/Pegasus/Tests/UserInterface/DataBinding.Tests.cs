@@ -18,7 +18,7 @@
 			_viewModel = new TestViewModel();
 			_control = new TestControl();
 		}
-		
+
 		private readonly Thickness _margin1 = new Thickness(2);
 		private readonly Thickness _margin2 = new Thickness(4);
 		private readonly Thickness _margin3 = new Thickness(8);
@@ -99,6 +99,15 @@
 		}
 
 		[Test]
+		public void BindToUnknownProperty_OneWayToSource()
+		{
+			var control = new Button { DataContext = new object(), IsAttachedToRoot = true };
+
+			Action action = () => control.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWayToSource, "Width");
+			action.ShouldNotThrow();
+		}
+
+		[Test]
 		public void BindToUnknownProperty_OneWay_ChangeViewModel()
 		{
 			var viewModel = new TestViewModel();
@@ -111,27 +120,6 @@
 		}
 
 		[Test]
-		public void BindToUnknownProperty_TwoWay_ChangeViewModel()
-		{
-			var viewModel = new TestViewModel();
-			var control = new Button { DataContext = viewModel, IsAttachedToRoot = true };
-
-			control.CreateDataBinding(UIElement.WidthProperty, BindingMode.TwoWay, "Unknown");
-
-			Action action = () => viewModel.Integer = 22;
-			action.ShouldNotThrow();
-		}
-
-		[Test]
-		public void BindToUnknownProperty_OneWayToSource()
-		{
-			var control = new Button { DataContext = new object(), IsAttachedToRoot = true };
-
-			Action action = () => control.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWayToSource, "Width");
-			action.ShouldNotThrow();
-		}
-
-		[Test]
 		public void BindToUnknownProperty_TwoWay()
 		{
 			var control = new Button { DataContext = new object(), IsAttachedToRoot = true };
@@ -140,6 +128,18 @@
 			action.ShouldNotThrow();
 
 			action = () => control.Width = 22;
+			action.ShouldNotThrow();
+		}
+
+		[Test]
+		public void BindToUnknownProperty_TwoWay_ChangeViewModel()
+		{
+			var viewModel = new TestViewModel();
+			var control = new Button { DataContext = viewModel, IsAttachedToRoot = true };
+
+			control.CreateDataBinding(UIElement.WidthProperty, BindingMode.TwoWay, "Unknown");
+
+			Action action = () => viewModel.Integer = 22;
 			action.ShouldNotThrow();
 		}
 
@@ -173,6 +173,19 @@
 			_control.IntegerTest1 = 33;
 			_viewModel.Integer.Should().Be(33);
 			_control.IntegerTest1.Should().Be(33);
+		}
+
+		[Test]
+		public void BindingMode_OneWayToSource_BindingToObjectRequiresInvalidCast()
+		{
+			_viewModel.String = "A";
+			_control.DataContext = _viewModel;
+			_control.CreateDataBinding(TestControl.ObjectTestProperty, BindingMode.OneWayToSource, "String");
+
+			_control.ObjectTest.Should().Be(null);
+
+			Action action = () => _control.ObjectTest = new object();
+			action.ShouldThrow<Exception>();
 		}
 
 		[Test]
@@ -258,6 +271,20 @@
 		}
 
 		[Test]
+		public void BindingMode_OneWay_BindingToObjectRequiresCast()
+		{
+			_viewModel.String = "A";
+			_control.DataContext = _viewModel;
+			_control.IsAttachedToRoot = true;
+			_control.CreateDataBinding(TestControl.ObjectTestProperty, BindingMode.OneWay, "String");
+
+			_control.ObjectTest.Should().Be("A");
+			_viewModel.String = "C";
+
+			_control.ObjectTest.Should().Be("C");
+		}
+
+		[Test]
 		public void BindingMode_OneWay_Property_Property()
 		{
 			_viewModel.InitializeRecursively(1);
@@ -340,6 +367,19 @@
 
 			_viewModel.Integer = 8;
 			_control.IntegerTest1.Should().Be(8);
+		}
+
+		[Test]
+		public void BindingMode_TwoWay_BindingToObjectRequiresInvalidCast()
+		{
+			_viewModel.String = "A";
+			_control.DataContext = _viewModel;
+			_control.CreateDataBinding(TestControl.ObjectTestProperty, BindingMode.TwoWay, "String");
+
+			_control.ObjectTest.Should().Be("A");
+
+			Action action = () => _control.ObjectTest = new object();
+			action.ShouldThrow<Exception>();
 		}
 
 		[Test]
@@ -544,46 +584,73 @@
 		}
 
 		[Test]
-		public void SingleToString_ValueConversion_OneWay()
+		public void FallbackValue_Failure()
 		{
-			_viewModel.InitializeRecursively(1);
-			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.OneWay, "Width",
-				converter: new SingleToStringConverter());
-
-			_control.StringTest.Should().Be("0");
-
-			_viewModel.Width = 21.5f;
-			_control.StringTest.Should().Be("21.5");
+			_control.CreateDataBinding(new object(), TestControl.ObjectTestProperty, "ABC", BindingMode.OneWay, "String");
+			_control.ObjectTest.Should().Be("ABC");
 		}
 
 		[Test]
-		public void SingleToString_ValueConversion_OneWayToSource()
+		public void FallbackValue_NonNull_NonNull_Null()
 		{
 			_viewModel.InitializeRecursively(1);
-			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.OneWayToSource, "Width",
-				converter: new SingleToStringConverter());
+			_viewModel.Model.String = null;
+			_control.DataContext = _viewModel;
+			_control.CreateDataBinding(TestControl.ObjectTestProperty, "ABC", BindingMode.OneWay, "Model", "String");
 
-			_viewModel.Width.Should().Be(0);
-
-			_control.StringTest = "21.5";
-			_viewModel.Width.Should().Be(21.5f);
+			_control.ObjectTest.Should().Be("ABC");
 		}
 
 		[Test]
-		public void SingleToString_ValueConversion_TwoWay()
+		public void FallbackValue_NonNull_Null()
+		{
+			_viewModel.String = null;
+			_control.DataContext = _viewModel;
+			_control.CreateDataBinding(TestControl.ObjectTestProperty, "ABC", BindingMode.OneWay, "String");
+
+			_control.ObjectTest.Should().Be("ABC");
+		}
+
+		[Test]
+		public void FallbackValue_Null()
+		{
+			_control.CreateDataBinding(TestControl.ObjectTestProperty, "ABC", BindingMode.OneWay, "String");
+			_control.ObjectTest.Should().Be("ABC");
+		}
+
+		[Test]
+		public void FallbackValue_Ok_Failure()
+		{
+			_control.DataContext = _viewModel;
+			_control.CreateDataBinding(TestControl.ObjectTestProperty, "ABC", BindingMode.OneWay, "Unknown");
+
+			_control.ObjectTest.Should().Be("ABC");
+		}
+
+		[Test]
+		public void FallbackValue_Ok_Ok_Failure()
 		{
 			_viewModel.InitializeRecursively(1);
-			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.TwoWay, "Width",
-				converter: new SingleToStringConverter());
+			_control.DataContext = _viewModel;
+			_control.CreateDataBinding(TestControl.ObjectTestProperty, "ABC", BindingMode.OneWay, "Model", "Unknown");
 
-			_viewModel.Width.Should().Be(0);
-			_control.StringTest.Should().Be("0");
+			_control.ObjectTest.Should().Be("ABC");
+		}
 
-			_control.StringTest = "21.5";
-			_viewModel.Width.Should().Be(21.5f);
+		[Test]
+		public void OneWayToSource_BindingToObjectRequiresCast()
+		{
+			_viewModel.String = "A";
+			_control.DataContext = _viewModel;
+			_control.CreateDataBinding(TestControl.ObjectTestProperty, BindingMode.OneWayToSource, "String");
 
-			_viewModel.Width = 0.5f;
-			_control.StringTest.Should().Be("0.5");
+			_control.ObjectTest.Should().Be(null);
+			_control.ObjectTest = "B";
+
+			_viewModel.String.Should().Be("B");
+			_viewModel.String = "C";
+
+			_control.ObjectTest.Should().Be("B");
 		}
 
 		[Test]
@@ -731,6 +798,49 @@
 		}
 
 		[Test]
+		public void SingleToString_ValueConversion_OneWay()
+		{
+			_viewModel.InitializeRecursively(1);
+			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.OneWay, "Width",
+				converter: new SingleToStringConverter());
+
+			_control.StringTest.Should().Be("0");
+
+			_viewModel.Width = 21.5f;
+			_control.StringTest.Should().Be("21.5");
+		}
+
+		[Test]
+		public void SingleToString_ValueConversion_OneWayToSource()
+		{
+			_viewModel.InitializeRecursively(1);
+			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.OneWayToSource, "Width",
+				converter: new SingleToStringConverter());
+
+			_viewModel.Width.Should().Be(0);
+
+			_control.StringTest = "21.5";
+			_viewModel.Width.Should().Be(21.5f);
+		}
+
+		[Test]
+		public void SingleToString_ValueConversion_TwoWay()
+		{
+			_viewModel.InitializeRecursively(1);
+			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.TwoWay, "Width",
+				converter: new SingleToStringConverter());
+
+			_viewModel.Width.Should().Be(0);
+			_control.StringTest.Should().Be("0");
+
+			_control.StringTest = "21.5";
+			_viewModel.Width.Should().Be(21.5f);
+
+			_viewModel.Width = 0.5f;
+			_control.StringTest.Should().Be("0.5");
+		}
+
+		[Test]
 		public void Source_ChangeNotificationUnregisteredCorrectly()
 		{
 			_viewModel.InitializeRecursively(1);
@@ -846,6 +956,22 @@
 
 			_viewModel.Model.Thickness = _margin1;
 			_control.Margin.Should().Be(_margin1);
+		}
+
+		[Test]
+		public void TwoWay_BindingToObjectRequiresCast()
+		{
+			_viewModel.String = "A";
+			_control.DataContext = _viewModel;
+			_control.CreateDataBinding(TestControl.ObjectTestProperty, BindingMode.TwoWay, "String");
+
+			_control.ObjectTest.Should().Be("A");
+			_control.ObjectTest = "B";
+
+			_viewModel.String.Should().Be("B");
+			_viewModel.String = "C";
+
+			_control.ObjectTest.Should().Be("C");
 		}
 
 		[Test]

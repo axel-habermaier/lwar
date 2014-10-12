@@ -6,6 +6,7 @@
 	using Pegasus.Assets;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
+	using Pegasus.Rendering;
 
 	/// <summary>
 	///     Renders a skybox.
@@ -54,6 +55,7 @@
 		/// <param name="output">The output that the bullets should be rendered to.</param>
 		public void Draw(RenderOutput output)
 		{
+			BlendState.Premultiplied.Bind();
 			RasterizerState.CullCounterClockwise.Bind();
 			_model.Draw(output, _effect.Default);
 		}

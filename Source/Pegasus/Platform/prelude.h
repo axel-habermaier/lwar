@@ -371,6 +371,12 @@ pgVoid pgSetPrimitiveTypeCore(pgGraphicsDevice* device, pgPrimitiveType primitiv
 pgVoid pgDrawCore(pgGraphicsDevice* device, pgInt32 primitiveCount, pgInt32 offset);
 pgVoid pgDrawIndexedCore(pgGraphicsDevice* device, pgInt32 indexCount, pgInt32 indexOffset, pgInt32 vertexOffset);
 
+pgVoid pgDrawInstancedCore(pgGraphicsDevice* device, pgInt32 vertexCountPerInstance,
+						   pgInt32 instanceCount, pgInt32 vertexOffset, pgInt32 instanceOffset);
+
+pgVoid pgDrawIndexedInstancedCore(pgGraphicsDevice* device, pgInt32 indexCountPerInstance,
+								  pgInt32 instanceCount, pgInt32 indexOffset, pgInt32 vertexOffset, pgInt32 instanceOffset);
+
 pgInt32 pgPrimitiveCountToVertexCount(pgGraphicsDevice* device, pgInt32 primitiveCount);
 pgVoid pgPrintDeviceInfoCore(pgGraphicsDevice* device);
 pgVoid pgValidateDeviceState(pgGraphicsDevice* device);
@@ -394,7 +400,7 @@ struct pgProgram
 	PG_PROGRAM_PLATFORM
 };
 
-pgVoid pgCreateVertexShaderCore(pgShader* shader, pgUInt8* shaderData, pgUInt8* end, pgShaderInput* inputs, pgInt32 inputCount);
+pgVoid pgCreateVertexShaderCore(pgShader* shader, pgUInt8* shaderData, pgUInt8* end);
 pgVoid pgCreateFragmentShaderCore(pgShader* shader, pgUInt8* shaderData, pgUInt8* end);
 pgVoid pgDestroyShaderCore(pgShader* shader);
 
@@ -436,7 +442,8 @@ struct pgInputLayout
 };
 
 pgVoid pgCreateInputLayoutCore(pgInputLayout* inputLayout, pgBuffer* indexBuffer, pgInt32 indexOffset, 
-							   pgIndexSize indexSize, pgInputBinding* inputBindings, pgInt32 bindingsCount);
+							   pgIndexSize indexSize, pgInputBinding* inputBindings, pgInt32 bindingsCount,
+							   pgByte* signatureShader, pgUInt32 signatureShaderLength);
 pgVoid pgDestroyInputLayoutCore(pgInputLayout* inputLayout);
 
 pgVoid pgBindInputLayoutCore(pgInputLayout* inputLayout);

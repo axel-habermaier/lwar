@@ -9,7 +9,7 @@
 	using Platform;
 	using Platform.Logging;
 	using Platform.Memory;
-	using Platform.Graphics;
+	using Rendering;
 
 	/// <summary>
 	///     Represents the state of the mouse.
@@ -44,11 +44,6 @@
 		}
 
 		/// <summary>
-		/// Gets a value indicating whether the mouse input is currently captured by an UI element.
-		/// </summary>
-		internal bool InputIsCaptured { get; private set; }
-
-		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="window">The window that generates the mouse events.</param>
@@ -62,6 +57,11 @@
 			Window.NativeWindow.MouseWheel += OnWheel;
 			Window.NativeWindow.MouseMoved += OnMove;
 		}
+
+		/// <summary>
+		///     Gets a value indicating whether the mouse input is currently captured by an UI element.
+		/// </summary>
+		internal bool InputIsCaptured { get; private set; }
 
 		/// <summary>
 		///     Gets the position of the mouse.
@@ -203,7 +203,7 @@
 				return;
 
 			SetIsMouseOver(args);
-				
+
 			var element = _hoveredElement;
 			do
 			{

@@ -20,14 +20,19 @@
 		///     The offset in bytes. The offset should point to the first byte of
 		///     the first data value in the associated vertex buffer.
 		/// </param>
+		/// <param name="instanceDataStepRate">
+		///     The number of instances to draw using the same per-instance data before advancing in the
+		///     buffer by one element.
+		/// </param>
 		public VertexInputBinding(VertexBuffer vertexBuffer, VertexDataFormat format, DataSemantics semantics,
-								  int stride, int offset)
+								  int stride, int offset, uint instanceDataStepRate = 0)
 			: this()
 		{
 			Format = format;
 			Semantics = semantics;
 			Stride = stride;
 			Offset = offset;
+			InstanceDataStepRate = instanceDataStepRate;
 			VertexBuffer = vertexBuffer.NativePtr;
 		}
 
@@ -51,6 +56,11 @@
 		///     the first data value in the associated vertex buffer.
 		/// </summary>
 		internal readonly int Offset;
+
+		/// <summary>
+		///     The number of instances to draw using the same per-instance data before advancing in the buffer by one element.
+		/// </summary>
+		internal readonly uint InstanceDataStepRate;
 
 		/// <summary>
 		///     The vertex buffer that stores the data.

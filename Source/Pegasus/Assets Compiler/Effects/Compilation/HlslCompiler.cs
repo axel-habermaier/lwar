@@ -213,7 +213,7 @@
 		///     Gets the corresponding HLSL semantics.
 		/// </summary>
 		/// <param name="semantics">The data semantics that should be converted.</param>
-		private static string ToHlsl(DataSemantics semantics)
+		public static string ToHlsl(DataSemantics semantics)
 		{
 			switch (semantics)
 			{

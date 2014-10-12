@@ -3,6 +3,7 @@
 	using System;
 	using System.Collections.Generic;
 	using Platform.Graphics;
+	using Rendering;
 
 	/// <summary>
 	///     A base class for all panel elements that position and arrange child UI elements.
