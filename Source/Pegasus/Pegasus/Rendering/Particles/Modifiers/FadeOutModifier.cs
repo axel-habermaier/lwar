@@ -18,7 +18,7 @@
 			var alpha = particles.Colors + 3;
 			var age = particles.Age;
 
-			while (count -- > 0)
+			while (count-- > 0)
 			{
 				*alpha = (byte)(*age * 255);
 
