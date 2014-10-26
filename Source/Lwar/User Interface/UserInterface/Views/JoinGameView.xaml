@@ -29,18 +29,22 @@
 				(invalid)
 			</TextBlock>
 		</StackPanel>
-		<Button Margin="0,0,0,20" Click="{Binding Connect}">Connect</Button>
+		<Button HorizontalAlignment="Center" Margin="0,0,0,50" Click="{Binding Connect}">Connect</Button>
 		<TextBlock>Or click on one of the following servers:</TextBlock>
 		<Border Margin="0,5,0,5" Padding="2" BorderBrush="#FFAFAFAF">
 			<ListBox ItemsSource="{Binding DiscoveredServers}" SelectedItem="{Binding SelectedServer, Mode=OneWayToSource}">
 				<ListBox.ItemTemplate>
 					<DataTemplate>
-						<TextBlock Text="{Binding EndPoint}" />
+						<StackPanel Orientation="Horizontal">
+							<TextBlock Text="{Binding Name}" />
+							<TextBlock Text=" @ " />
+							<TextBlock Text="{Binding EndPoint}" />
+						</StackPanel>
 					</DataTemplate>
 				</ListBox.ItemTemplate>
 			</ListBox>
 		</Border>
 		<TextBlock Margin="0, 0, 0, 20">(it might take a couple of seconds before servers start appearing in the list)</TextBlock>
-		<Button HorizontalAlignment="Right" Click="{Binding ReturnToMainMenu}">Return to Main Menu</Button>
+		<Button HorizontalAlignment="Center" Click="{Binding ReturnToMainMenu}">Return to Main Menu</Button>
 	</StackPanel>
 </UserControl>

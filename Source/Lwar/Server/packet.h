@@ -47,7 +47,6 @@ size_t packet_update_n(Packet *p, size_t len);
 
 void packet_init_send(Packet *p, Address *adr);
 void packet_init_recv(Packet *p);
-void packet_init_discovery(Packet *p);
 
 bool packet_put(Packet *p, Pack *pack, void *u);
 bool packet_get(Packet *p, Unpack *unpack, void *u);

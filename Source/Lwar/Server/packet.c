@@ -52,10 +52,6 @@ void packet_init_recv(Packet *p) {
     packet_init(p, &address_none, PACKET_RECV, &server->conn_clients);
 }
 
-void packet_init_discovery(Packet *p) {
-    packet_init(p, &address_multicast, PACKET_SEND, &server->conn_discovery);
-}
-
 bool packet_put(Packet *p, Pack *pack, void *u) {
     assert(p->type == PACKET_SEND);
     assert(p->start <= p->end);

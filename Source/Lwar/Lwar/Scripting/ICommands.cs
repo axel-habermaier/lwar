@@ -14,8 +14,10 @@ internal interface ICommands
 	///     Starts up a new local server instance. If a local server is currently running, it is shut down before the new server
 	///     is started.
 	/// </summary>
+	/// <param name="serverName">The name of the server that is displayed in the Join screen.</param>
+	/// <param name="port">The port the server should use to communicate with the clients.</param>
 	[Command]
-	void StartServer();
+	void StartServer([NotEmpty] string serverName, ushort port = NetworkProtocol.DefaultServerPort);
 
 	/// <summary>
 	///     Shuts down the currently running server.

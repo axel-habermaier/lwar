@@ -14,8 +14,6 @@
 #include <ws2tcpip.h>
 #endif
 
-Address address_multicast;
-
 bool address_eq(Address *adr0, Address *adr1) {
     if (adr0->port != adr1->port)
 		return false;

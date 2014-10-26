@@ -7,6 +7,5 @@ bool stream_send(cr_t *state, Header *h, Message *m); /* Note: keep h constant f
 #define stream_flush(state) stream_send(state, 0, 0);
 
 bool stream_send_flush(Header *h, Message *m);
-bool stream_send_discovery(Discovery *d);
 
 #endif

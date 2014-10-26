@@ -358,6 +358,7 @@
     <Compile Include="..\User Interface\UserInterface.cs">
       <Link>UserInterface\Views\UserInterface.cs</Link>
     </Compile>
+    <Compile Include="UserInterface\ViewModels\StartGameViewModel.cs" />
     <Compile Include="UserInterface\Views\ShipOverlayPanel.cs" />
     <Compile Include="UserInterface\Views\ShipOverlayView.cs" />
   </ItemGroup>

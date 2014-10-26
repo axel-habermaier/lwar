@@ -103,7 +103,7 @@
 
 			// Send a respawn message when the player is dead and the respawn input is triggered
 			if (_gameSession.LocalPlayer.Ship == null && _respawn.IsTriggered)
-				_gameSession.Connection.Send(PlayerLoadoutMessage.Create(_gameSession.PoolAllocator, _gameSession.LocalPlayer.Identity,
+				_gameSession.Connection.Send(PlayerLoadoutMessage.Create(_gameSession.Allocator, _gameSession.LocalPlayer.Identity,
 					EntityType.Ship, _weaponTypes));
 		}
 
@@ -137,7 +137,7 @@
 
 			// Send the input message to the server
 			_gameSession.Connection.Send(PlayerInputMessage.Create(
-				_gameSession.PoolAllocator, _gameSession.LocalPlayer.Identity, ++_frameNumber, target,
+				_gameSession.Allocator, _gameSession.LocalPlayer.Identity, ++_frameNumber, target,
 				_forward.State, _backward.State,
 				_strafeLeft.State, _strafeRight.State,
 				0, 0,

@@ -16,7 +16,7 @@
 		/// <summary>
 		///     Starts up a new local server instance. If a local server is currently running, it is shut down before the new server is started.
 		/// </summary>
-		public static Command StartServerCommand { get; private set; }
+		public static Command<string, ushort> StartServerCommand { get; private set; }
 
 		/// <summary>
 		///     Shuts down the currently running server.
@@ -137,10 +137,14 @@
 		///     Starts up a new local server instance. If a local server is currently running, it is shut down before the new server
 		///     is started.
 		/// </summary>
+		/// <param name="serverName">The name of the server that is displayed in the Join screen.</param>
+		/// <param name="port">The port the server should use to communicate with the clients.</param>
 		[DebuggerHidden]
-		public static void StartServer()
+		public static void StartServer(string serverName, ushort port = NetworkProtocol.DefaultServerPort)
 		{
-			StartServerCommand.Invoke();
+			Assert.ArgumentNotNull((object)serverName);
+			Assert.ArgumentNotNull((object)port);
+			StartServerCommand.Invoke(serverName, port);
 		}
 
 		/// <summary>
@@ -391,7 +395,7 @@
 		/// <summary>
 		///     Raised when the 'StartServer' command is invoked.
 		/// </summary>
-		public static event Action OnStartServer
+		public static event Action<string, ushort> OnStartServer
 		{
 			add { StartServerCommand.Invoked += value; }
 			remove { StartServerCommand.Invoked -= value; }
@@ -609,7 +613,9 @@
 		/// </summary>
 		public static void Initialize()
 		{
-			StartServerCommand = new Command("start_server", "Starts up a new local server instance. If a local server is currently running, it is shut down before the new server is started.", false);
+			StartServerCommand = new Command<string, ushort>("start_server", "Starts up a new local server instance. If a local server is currently running, it is shut down before the new server is started.", false, 
+				new CommandParameter("serverName", typeof(string), false, default(string), "The name of the server that is displayed in the Join screen.", new NotEmptyAttribute()),
+				new CommandParameter("port", typeof(ushort), true, NetworkProtocol.DefaultServerPort, "The port the server should use to communicate with the clients."));
 			StopServerCommand = new Command("stop_server", "Shuts down the currently running server.", false);
 			ConnectCommand = new Command<IPAddress, ushort>("connect", "Connects to a game session on a remote or local server.", false, 
 				new CommandParameter("ipAddress", typeof(IPAddress), false, default(IPAddress), "The IP address of the server."),

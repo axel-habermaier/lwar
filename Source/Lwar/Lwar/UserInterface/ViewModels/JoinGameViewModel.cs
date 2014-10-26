@@ -220,6 +220,8 @@
 			var revision = reader.ReadByte();
 
 			var port = reader.ReadUInt16();
+			var name = reader.ReadString(NetworkProtocol.ServerNameLength);
+
 			if (applicationIdentifier != NetworkProtocol.AppIdentifier || revision != NetworkProtocol.Revision)
 			{
 				Log.Debug("Ignored invalid discovery message from {0}.", endPoint);
@@ -229,10 +231,10 @@
 			endPoint = new IPEndPoint(endPoint.Address, port);
 
 			// Check if we already know this server; if not add it, otherwise update the server's discovery time
-			var server = DiscoveredServers.SingleOrDefault(s => s.EndPoint == endPoint);
+			var server = DiscoveredServers.SingleOrDefault(s => s.EndPoint == endPoint && s.Name == name);
 			if (server == null)
 			{
-				server = new ServerInfo { EndPoint = endPoint, DiscoveryTime = Clock.SystemTime };
+				server = new ServerInfo { EndPoint = endPoint, Name = name, DiscoveryTime = Clock.SystemTime };
 				DiscoveredServers.Add(server);
 			}
 			else
@@ -261,6 +263,11 @@
 			///     Gets or sets the end point of the server.
 			/// </summary>
 			public IPEndPoint EndPoint { get; set; }
+
+			/// <summary>
+			///     Gets or sets the name of the server.
+			/// </summary>
+			public string Name { get; set; }
 
 			/// <summary>
 			///     Gets a value indicating whether the server has timed out and is presumably no longer running.

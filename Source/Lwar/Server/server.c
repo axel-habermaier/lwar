@@ -20,18 +20,13 @@ static Server _server;
 
 Server *server=&_server;
 
-int server_init() {
+int server_init(unsigned short port) {
     /* initialize static server struct */
     memset(server, 0, sizeof(Server));
     memset(assert_handler, 0, sizeof(jmp_buf));
 
-	address_create(&address_multicast, MULTICAST_GROUP, MULTICAST_PORT);
-
     if(!conn_init(&server->conn_clients)) return 0;
-    if(!conn_bind(&server->conn_clients)) return 0;
-
-    if(!conn_init(&server->conn_discovery)) return 0;
-	if(!conn_multicast(&server->conn_discovery)) { /* return 0; */ }
+    if(!conn_bind(&server->conn_clients, port)) return 0;
 
     queue_init();
     physics_init();
@@ -96,7 +91,6 @@ int server_update(Clock time, int force) {
 
 void server_shutdown() {
 	conn_shutdown(&server->conn_clients);
-	conn_shutdown(&server->conn_discovery);
 
     rules_shutdown();
 

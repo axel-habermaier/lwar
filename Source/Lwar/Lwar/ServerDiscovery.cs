@@ -5,6 +5,7 @@
 	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Platform.Network;
+	using Pegasus.Utilities;
 
 	/// <summary>
 	///     Sends server discovery messages.
@@ -19,7 +20,12 @@
 		/// <summary>
 		///     A cached buffer that is used to hold the contents of the discovery messages.
 		/// </summary>
-		private readonly byte[] _buffer = new byte[7];
+		private readonly byte[] _buffer = new byte[7 + NetworkProtocol.ServerNameLength];
+
+		/// <summary>
+		///     The name of the server that is sent in the discovery message.
+		/// </summary>
+		private readonly string _serverName;
 
 		/// <summary>
 		///     The port that the server is using to communicate with its clients.
@@ -44,9 +50,16 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
+		/// <param name="serverName">The name of the server that should be sent in the discovery message.</param>
 		/// <param name="serverPort">The port that the server is using to communicate with its clients.</param>
-		public ServerDiscovery(ushort serverPort)
+		public ServerDiscovery(string serverName, ushort serverPort)
 		{
+			Assert.ArgumentNotNull(serverName);
+
+			_serverName = String.IsNullOrWhiteSpace(serverName) ? "Unnamed Server" : serverName.Trim();
+			if (_serverName.Length > NetworkProtocol.ServerNameLength)
+				_serverName = _serverName.Substring(0, NetworkProtocol.ServerNameLength);
+
 			_serverPort = serverPort;
 		}
 
@@ -70,6 +83,7 @@
 					writer.WriteUInt32(NetworkProtocol.AppIdentifier);
 					writer.WriteByte(NetworkProtocol.Revision);
 					writer.WriteUInt16(_serverPort);
+					writer.WriteString(_serverName, NetworkProtocol.ServerNameLength);
 
 					_socket.Send(_buffer, writer.Count, NetworkProtocol.MulticastGroup);
 				}

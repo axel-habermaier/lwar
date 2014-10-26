@@ -3,7 +3,6 @@
 	using System;
 	using Assets;
 	using Pegasus;
-	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Platform.Network;
 	using Pegasus.UserInterface;
@@ -18,35 +17,9 @@
 	public sealed partial class LwarApplication
 	{
 		/// <summary>
-		///     The allocator that is used to allocate game objects.
-		/// </summary>
-		private readonly PoolAllocator _allocator = new PoolAllocator();
-
-		/// <summary>
 		///     The root view model of the view model stacked used by the application.
 		/// </summary>
 		private readonly StackedViewModel _viewModelRoot = StackedViewModel.CreateRoot();
-
-		/// <summary>
-		///     The game server that is currently running.
-		/// </summary>
-		private Server _server;
-
-		/// <summary>
-		///     Gets a value indicating whether a server is currently running.
-		/// </summary>
-		private bool IsServerRunning
-		{
-			get { return _server != null; }
-		}
-
-		/// <summary>
-		///     Gets a value indicating whether a client is currently running.
-		/// </summary>
-		private bool IsClientRunning
-		{
-			get { return !(_viewModelRoot.Child is MainMenuViewModel); }
-		}
 
 		/// <summary>
 		///     Invoked when the application is initializing.
@@ -64,7 +37,7 @@
 			Commands.OnStopServer += StopServer;
 			Cvars.UseDebugServerChanged += v => StopServer();
 
-			Commands.Bind(Key.F1.WentDown(), "start_server");
+			Commands.Bind(Key.F1.WentDown(), "start_server TestServer");
 			Commands.Bind(Key.F2.WentDown(), "stop_server");
 			Commands.Bind(Key.F3.WentDown(), "connect 127.0.0.1");
 			Commands.Bind(Key.F4.WentDown(), "disconnect");
@@ -90,7 +63,7 @@
 			Commands.Disconnect();
 			MessageBox.CloseAll();
 
-			_viewModelRoot.ReplaceChild(new LoadingViewModel(_allocator, new IPEndPoint(address, port)));
+			_viewModelRoot.ReplaceChild(new LoadingViewModel(new IPEndPoint(address, port)));
 		}
 
 		/// <summary>
@@ -102,45 +75,24 @@
 				return;
 
 			_viewModelRoot.ReplaceChild(new MainMenuViewModel());
-
-			if (!IsServerRunning)
-				_allocator.Free();
 		}
 
 		/// <summary>
 		///     Starts a local game server.
 		/// </summary>
-		private void StartServer()
+		/// <param name="serverName">The name of the server that is displayed in the Join screen.</param>
+		/// <param name="port">The port the server should use to communicate with the clients.</param>
+		private static void StartServer(string serverName, ushort port)
 		{
-			_server.SafeDispose();
-
-			try
-			{
-				if (Cvars.UseDebugServer)
-					_server = new DebugServer(_allocator);
-				else
-					_server = new NativeServer();
-			}
-			catch (NetworkException e)
-			{
-				Log.Error("Unable to start the server: {0}", e.Message);
-				MessageBox.Show("Server Failure", String.Format("Unable to start the server: {0}", e.Message));
-
-				_server.SafeDispose();
-				_server = null;
-			}
+			Server.TryStart(serverName, port);
 		}
 
 		/// <summary>
 		///     Stops the currently running local game server.
 		/// </summary>
-		private void StopServer()
+		private static void StopServer()
 		{
-			_server.SafeDispose();
-			_server = null;
-
-			if (!IsClientRunning)
-				_allocator.Free();
+			Server.Stop();
 		}
 
 		/// <summary>
@@ -148,9 +100,7 @@
 		/// </summary>
 		protected override void Update()
 		{
-			if (IsServerRunning)
-				_server.Update();
-
+			Server.Update();
 			_viewModelRoot.Update();
 		}
 
@@ -160,8 +110,7 @@
 		protected override void Dispose()
 		{
 			_viewModelRoot.SafeDispose();
-			_server.SafeDispose();
-			_allocator.SafeDispose();
+			Server.Stop();
 
 			base.Dispose();
 		}

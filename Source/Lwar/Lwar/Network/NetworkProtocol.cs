@@ -33,6 +33,11 @@
 		public const int PlayerNameLength = 32;
 
 		/// <summary>
+		///     The maximum allowed byte length of an UTF8-encoded server name.
+		/// </summary>
+		public const int ServerNameLength = 32;
+
+		/// <summary>
 		///     The maximum allowed byte length of an UTF8-encoded chat message.
 		/// </summary>
 		public const int ChatMessageLength = 255;
@@ -80,7 +85,7 @@
 		/// <summary>
 		///     The time (in seconds) after which a discovered server has presumably shut down.
 		/// </summary>
-		public const float DiscoveryTimeout = 10;
+		public const float DiscoveryTimeout = 5;
 
 		/// <summary>
 		///     The frequency in Hz that determines how often a server sends a discovery message.

@@ -3,7 +3,6 @@
 	using System;
 	using System.Runtime.InteropServices;
 	using System.Security;
-	using Network;
 	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Platform.Network;
@@ -32,8 +31,10 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		public NativeServer()
-			: base(NetworkProtocol.DefaultServerPort)
+		/// <param name="serverName">The name of the server that is displayed in the Join screen.</param>
+		/// <param name="port">The port that the server should be used to listen for connecting clients.</param>
+		public NativeServer(string serverName, ushort port)
+			: base(serverName, port)
 		{
 			_logCallbacks = new NativeMethods.LogCallbacks
 			{
@@ -49,7 +50,7 @@
 			Log.Info("Initializing server...");
 
 			NativeMethods.SetCallbacks(_logCallbacks);
-			_isRunning = NativeMethods.Initialize();
+			_isRunning = NativeMethods.Initialize(port);
 
 			if (_isRunning)
 				return;
@@ -106,7 +107,7 @@
 #endif
 
 			[DllImport(LibraryName, EntryPoint = "server_init")]
-			public static extern bool Initialize();
+			public static extern bool Initialize(ushort port);
 
 			[DllImport(LibraryName, EntryPoint = "server_update")]
 			public static extern int Update(ulong time, bool force);

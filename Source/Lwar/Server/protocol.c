@@ -31,13 +31,6 @@ static void send_kick(Client *c);
 
 static jmp_buf io_error_handler;
 
-static Discovery discovery = {
-    MESSAGE_DISCOVERY,
-    APP_ID,
-    NETWORK_REVISION,
-    SERVER_PORT,
-};
-
 static const char *src_fmt(Client *c) {
     static char s[16];
     if(c) { snprintf(s,sizeof(s),"%d> ",c->player.id.n);

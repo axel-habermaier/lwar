@@ -34,16 +34,13 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="allocator">The allocator that should be used to allocate game objects.</param>
 		/// <param name="serverEndPoint">The remote end point of the server.</param>
-		public LoadingViewModel(PoolAllocator allocator, IPEndPoint serverEndPoint)
+		public LoadingViewModel(IPEndPoint serverEndPoint)
 		{
-			Assert.ArgumentNotNull(allocator);
-
 			Commands.ShowConsole(false);
 			View = new LoadingView();
 
-			_gameSession = new ClientGameSession(allocator, serverEndPoint);
+			_gameSession = new ClientGameSession(serverEndPoint);
 		}
 
 		/// <summary>

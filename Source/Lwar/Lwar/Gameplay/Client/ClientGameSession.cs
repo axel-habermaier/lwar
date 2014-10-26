@@ -38,20 +38,17 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="allocator">The allocator that should be used to allocate game objects.</param>
 		/// <param name="serverEndPoint">The remote end point of the server.</param>
-		public ClientGameSession(PoolAllocator allocator, IPEndPoint serverEndPoint)
+		public ClientGameSession(IPEndPoint serverEndPoint)
 		{
-			Assert.ArgumentNotNull(allocator);
-
 			_messageHandler = new MessageHandler(this);
 			_assets = new AssetsManager(Application.Current.GraphicsDevice, asyncLoading: true);
 
 			EntityTemplates.Initialize(Application.Current.GraphicsDevice, _assets);
 
 			var channel = UdpChannel.Create(serverEndPoint, NetworkProtocol.MaxPacketSize);
-			PoolAllocator = allocator;
-			Connection = Connection.Create(PoolAllocator, channel);
+			Allocator = new PoolAllocator();
+			Connection = Connection.Create(Allocator, channel);
 			RenderContext = new RenderContext(_assets);
 
 			Actors = new ActorList(this, RenderContext);
@@ -60,7 +57,7 @@
 			RootTransform = new Transformation();
 			EventMessages = new EventMessageList(this);
 
-			Connection.Send(ClientConnectMessage.Create(PoolAllocator, Cvars.PlayerName));
+			Connection.Send(ClientConnectMessage.Create(Allocator, Cvars.PlayerName));
 			Connection.SendQueuedMessages();
 		}
 
@@ -80,7 +77,7 @@
 		/// <summary>
 		///     Gets the object pool that is used to allocate gameplay objects.
 		/// </summary>
-		public PoolAllocator PoolAllocator { get; private set; }
+		public PoolAllocator Allocator { get; private set; }
 
 		/// <summary>
 		///     Gets the render context that is used to draw the game session.
@@ -178,7 +175,7 @@
 			if (!ConstructorCache.IsCached<T>())
 				ConstructorCache.Set(() => new T());
 
-			return PoolAllocator.Allocate<T>();
+			return Allocator.Allocate<T>();
 		}
 
 		/// <summary>
@@ -253,7 +250,7 @@
 		/// <param name="name">The previous name of the local player.</param>
 		private void OnPlayerNameChanged(string name)
 		{
-			Connection.Send(PlayerNameMessage.Create(PoolAllocator, LocalPlayer.Identity, Cvars.PlayerName));
+			Connection.Send(PlayerNameMessage.Create(Allocator, LocalPlayer.Identity, Cvars.PlayerName));
 		}
 
 		/// <summary>
@@ -263,7 +260,7 @@
 		private void OnSay(string message)
 		{
 			Assert.NotNull(LocalPlayer);
-			Connection.Send(PlayerChatMessage.Create(PoolAllocator, LocalPlayer.Identity, message));
+			Connection.Send(PlayerChatMessage.Create(Allocator, LocalPlayer.Identity, message));
 		}
 
 		/// <summary>
@@ -284,6 +281,7 @@
 			RenderContext.SafeDispose();
 			InputDevice.SafeDispose();
 			Connection.SafeDispose();
+			Allocator.SafeDispose();
 
 			_assets.SafeDispose();
 		}

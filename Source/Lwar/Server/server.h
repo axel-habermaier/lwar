@@ -38,7 +38,6 @@ struct Server {
 	Clock      discovery_periodic;
 
 	Connection conn_clients;
-	Connection conn_discovery;
 };
 
 #define clients_foreach(c)       pool_foreach(&server->clients, c, Client)

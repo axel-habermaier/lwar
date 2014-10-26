@@ -38,7 +38,7 @@ extern "C" {
      * and network connection,
      * return > 0 on success
      */
-    EXPORT int  server_init();
+	EXPORT int  server_init(unsigned short port);
 
     /* should be called periodically
      * clock is a monotonic counter in millisecs

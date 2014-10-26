@@ -139,6 +139,9 @@
     <Compile Include="UserInterface\Views\ShipOverlayPanel.xaml.cs">
       <DependentUpon>ShipOverlayPanel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserInterface\Views\StartGameView.xaml.cs">
+      <DependentUpon>StartGameView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserInterface\Views\WaitingView.xaml.cs">
       <DependentUpon>WaitingView.xaml</DependentUpon>
     </Compile>
@@ -230,6 +233,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserInterface\Views\ShipOverlayView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\Views\StartGameView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

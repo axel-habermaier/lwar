@@ -1,7 +1,6 @@
 ﻿namespace Lwar.UserInterface.ViewModels
 {
 	using System;
-	using Pegasus.Platform.Network;
 	using Pegasus.UserInterface.ViewModels;
 	using Scripting;
 	using Views;
@@ -38,8 +37,7 @@
 		/// </summary>
 		public void StartGame()
 		{
-			Commands.StartServer();
-			Commands.Connect(IPAddress.LocalHost);
+			ReplaceChild(new StartGameViewModel());
 		}
 
 		/// <summary>

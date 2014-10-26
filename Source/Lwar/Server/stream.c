@@ -129,11 +129,3 @@ bool stream_send_flush(Header *h, Message *m) {
     packet_put(&p, message_pack, m);
     return packet_send(&p);
 }
-
-bool stream_send_discovery(Discovery *d) {
-    Packet p;
-    packet_init_discovery(&p);
-    packet_put(&p, discovery_pack, d);
-    return packet_send(&p);
-}
-

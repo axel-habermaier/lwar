@@ -137,58 +137,17 @@ bool conn_isup(Connection *connection) {
     return !memchk(connection, 0, sizeof(Connection));
 }
 
-bool conn_bind(Connection* connection)
+bool conn_bind(Connection* connection, unsigned short port)
 {
 	struct sockaddr_in6 addr;
 	memset(&addr, 0, sizeof(addr));
 	addr.sin6_family = AF_INET6;
 	addr.sin6_addr = in6addr_any;
-	addr.sin6_port = htons(SERVER_PORT);
+	addr.sin6_port = htons(port);
 
 	if (socket_error(bind(connection->socket, (struct sockaddr*)&addr, sizeof(addr))))
 	{
 		conn_error("Unable to bind socket.");
-		conn_shutdown(connection);
-		return false;
-	}
-
-	return true;
-}
-
-bool conn_multicast(Connection* connection)
-{
-	int loop = 1;
-	if (socket_error(setsockopt(connection->socket, IPPROTO_IPV6, IPV6_MULTICAST_LOOP, (char*)&loop, sizeof(loop))))
-	{
-		conn_error("Failed to enable multicast looping.");
-		conn_shutdown(connection);
-		return false;
-	}
-
-	int ttl = MULTICAST_TTL;
-	if (socket_error(setsockopt(connection->socket, IPPROTO_IPV6, IPV6_MULTICAST_HOPS, (char*)&ttl, sizeof(ttl))))
-	{
-		conn_error("Failed to set multicast TTL.");
-		conn_shutdown(connection);
-		return false;
-	}
-
-	struct in6_addr result;
-	inet_pton(AF_INET6, MULTICAST_GROUP, &result);
-
-	struct sockaddr_in6 addr;
-	memset(&addr, 0, sizeof(addr));
-	addr.sin6_family = AF_INET6;
-	addr.sin6_addr = result;
-	addr.sin6_port = htons(MULTICAST_PORT);
-
-	struct ipv6_mreq group;
-	memset(&group, 0, sizeof(group));
-	group.ipv6mr_multiaddr = addr.sin6_addr;
-
-	if (socket_error(setsockopt(connection->socket, IPPROTO_IPV6, IPV6_ADD_MEMBERSHIP, (char*)&group, sizeof(group))))
-	{
-		conn_error("Failed to add multicast membership.");
 		conn_shutdown(connection);
 		return false;
 	}

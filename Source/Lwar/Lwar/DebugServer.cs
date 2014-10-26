@@ -6,13 +6,17 @@ namespace Lwar
 	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Platform.Network;
-	using Pegasus.Utilities;
 
 	/// <summary>
 	///     Represents a debug server hosting a game session.
 	/// </summary>
 	public class DebugServer : Server
 	{
+		/// <summary>
+		///     The allocator that is used to allocate server objects.
+		/// </summary>
+		private readonly PoolAllocator _allocator;
+
 		/// <summary>
 		///     The clients connected to the server.
 		/// </summary>
@@ -36,23 +40,22 @@ namespace Lwar
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="allocator">The allocator that should be used to allocate pooled objects.</param>
+		/// <param name="serverName">The name of the server that is displayed in the Join screen.</param>
 		/// <param name="port">The port that the server should be used to listen for connecting clients.</param>
-		public DebugServer(PoolAllocator allocator, ushort port = NetworkProtocol.DefaultServerPort)
-			: base(port)
+		public DebugServer(string serverName, ushort port)
+			: base(serverName, port)
 		{
-			Assert.ArgumentNotNull(allocator);
-
 			try
 			{
-				_gameSession = new GameSession(allocator);
-				_serverLogic = new ServerLogic(allocator, _gameSession);
+				_allocator = new PoolAllocator();
+				_gameSession = new GameSession(_allocator);
+				_serverLogic = new ServerLogic(_allocator, _gameSession);
 
 				_listener = new UdpListener(port, NetworkProtocol.MaxPacketSize);
 				_listener.Start();
 
 				_gameSession.InitializeServer(_serverLogic);
-				_clients = new ClientCollection(allocator, _serverLogic, _listener);
+				_clients = new ClientCollection(_allocator, _serverLogic, _listener);
 
 				Log.Info("Server started.");
 			}
@@ -85,6 +88,7 @@ namespace Lwar
 			_clients.SafeDispose();
 			_gameSession.SafeDispose();
 			_listener.SafeDispose();
+			_allocator.SafeDispose();
 
 			base.OnDisposing();
 			Log.Info("Server stopped.");
