@@ -69,6 +69,7 @@ size_t message_unpack(const char *s, void *p) {
     case MESSAGE_ADD:
         i += id_unpack(s+i, &m->add.entity_id);
         i += id_unpack(s+i, &m->add.player_id);
+		i += id_unpack(s+i, &m->add.parent_id);
         i += uint8_unpack(s+i, &m->add.type_id);
         break;
     case MESSAGE_REMOVE:
@@ -91,6 +92,7 @@ size_t message_unpack(const char *s, void *p) {
 		i += id_unpack(s+i, &m->kill.victim_id);
 		break;
     case MESSAGE_SYNCED:
+		i += id_unpack(s+i, &m->synced.player_id);
         break;
    case MESSAGE_REJECT:
 		i += uint8_unpack(s+i, (uint8_t*)&m->reject.reason);

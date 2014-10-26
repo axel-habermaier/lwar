@@ -3,6 +3,7 @@
 	using System;
 	using System.Runtime.InteropServices;
 	using System.Security;
+	using Utilities;
 
 	/// <summary>
 	///     Raised when a network error occurred.
@@ -14,6 +15,17 @@
 		/// </summary>
 		public NetworkException()
 			: base(GetLastError())
+		{
+		}
+
+		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		/// <param name="message">A message explaining the exception.</param>
+		/// <param name="args">The format arguments for the exception message.</param>
+		[StringFormatMethod("message")]
+		public NetworkException(string message, params object[] args)
+			: base(String.Format(message, args))
 		{
 		}
 

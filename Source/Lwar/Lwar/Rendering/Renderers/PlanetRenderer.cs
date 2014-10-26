@@ -1,8 +1,9 @@
 ﻿namespace Lwar.Rendering.Renderers
 {
 	using System;
+	using System.Collections.Generic;
 	using Assets.Effects;
-	using Gameplay.Entities;
+	using Gameplay.Client.Entities;
 	using Pegasus.Assets;
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
@@ -12,7 +13,7 @@
 	/// <summary>
 	///     Renders planets into a 3D scene.
 	/// </summary>
-	public class PlanetRenderer : Renderer<Planet>
+	public class PlanetRenderer : Renderer<PlanetEntity>
 	{
 		/// <summary>
 		///     The width of the planet trajectories.
@@ -27,17 +28,22 @@
 		/// <summary>
 		///     The color of the planet trajectories.
 		/// </summary>
-		private static readonly Vector4 TrajectoryColor = new Vector4(0.07f, 0.07f, 0.07f, 0.07f);
+		private static readonly Vector4 TrajectoryColor = new Vector4(0.07f);
+
+		/// <summary>
+		///     The color of the planet trajectories when the planet orbits another planet.
+		/// </summary>
+		private static readonly Vector4 SubTrajectoryColor = new Vector4(0.05f);
+
+		/// <summary>
+		///     Maps each planet to its trajectory. TODO: Ugly hack.
+		/// </summary>
+		private readonly Dictionary<PlanetEntity, Model> _trajectories = new Dictionary<PlanetEntity, Model>();
 
 		/// <summary>
 		///     The effect that is used to draw the planets.
 		/// </summary>
 		private SphereEffect _planetEffect;
-
-		/// <summary>
-		///     The model that stores the planet trajectories.
-		/// </summary>
-		private Model _trajectories;
 
 		/// <summary>
 		///     The effect that is used to draw the planet trajectories.
@@ -61,11 +67,13 @@
 		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
 		public override void Initialize(GraphicsDevice graphicsDevice)
 		{
-			var outline = new CircleOutline();
 			foreach (var planet in Elements)
-				outline.Add(planet.Position.Length, TrajectoryPrecision, TrajectoryWidth);
-
-			_trajectories = outline.ToModel(graphicsDevice);
+			{
+				var outline = new CircleOutline();
+				var width = planet.Parent is SunEntity ? TrajectoryWidth : TrajectoryWidth / 2;
+				outline.Add(planet.Position.Length, TrajectoryPrecision, width);
+				_trajectories.Add(planet, outline.ToModel(graphicsDevice));
+			}
 		}
 
 		/// <summary>
@@ -74,6 +82,9 @@
 		/// <param name="output">The output that the bullets should be rendered to.</param>
 		public override void Draw(RenderOutput output)
 		{
+			if (ElementCount == 0)
+				return;
+
 			BlendState.Premultiplied.Bind();
 			DepthStencilState.DepthEnabled.Bind();
 
@@ -84,10 +95,11 @@
 				_planetEffect.SphereTexture = new CubeMapView(planet.Template.CubeMap, SamplerState.TrilinearClamp);
 
 				planet.Template.Model.Draw(output, _planetEffect.Planet);
-			}
 
-			_trajectoryEffect.Color = TrajectoryColor;
-			_trajectories.Draw(output, _trajectoryEffect.Default);
+				_trajectoryEffect.Color = planet.Parent is SunEntity ? TrajectoryColor : SubTrajectoryColor;
+				_trajectoryEffect.World = planet.Parent.Transform.Matrix;
+				_trajectories[planet].Draw(output, _trajectoryEffect.Default);
+			}
 		}
 
 		/// <summary>
@@ -97,7 +109,9 @@
 		{
 			_planetEffect.SafeDispose();
 			_trajectoryEffect.SafeDispose();
-			_trajectories.SafeDispose();
+
+			foreach (var trajectory in _trajectories.Values)
+				trajectory.SafeDispose();
 		}
 	}
 }

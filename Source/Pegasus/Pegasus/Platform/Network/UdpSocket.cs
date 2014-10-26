@@ -4,11 +4,12 @@
 	using System.Runtime.InteropServices;
 	using System.Security;
 	using Memory;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a Udp-based socket that can be used to unreliably send and receive packets over the network.
 	/// </summary>
-	public class UdpSocket : DisposableObject
+	public sealed class UdpSocket : DisposableObject
 	{
 		/// <summary>
 		///     The underlying socket that is used to send and receive packets.
@@ -34,7 +35,12 @@
 		public unsafe void Send(byte[] buffer, int size, IPEndPoint remoteEndPoint)
 		{
 			Assert.ArgumentNotNull(buffer);
+			Assert.ArgumentSatisfies(size >= 0, "Invalid size.");
+			Assert.ArgumentSatisfies(size <= buffer.Length, "Invalid size.");
 			Assert.NotDisposed(this);
+
+			if (size == 0)
+				return;
 
 			var address = remoteEndPoint.Address;
 			fixed (byte* data = buffer)

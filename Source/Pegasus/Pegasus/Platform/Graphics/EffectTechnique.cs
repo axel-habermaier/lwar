@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a combination of shaders that can be set on the GPU to create a rendering effect.

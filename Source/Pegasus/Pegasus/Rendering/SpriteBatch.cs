@@ -3,13 +3,15 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Runtime.InteropServices;
+	using Assets;
 	using Assets.Effects;
-	using Framework;
+	using UserInterface;
 	using Math;
 	using Platform;
 	using Platform.Graphics;
 	using Platform.Logging;
 	using Platform.Memory;
+	using Utilities;
 
 	/// <summary>
 	///     Efficiently draws large amounts of 2D sprites by batching together quads with the same texture.
@@ -109,13 +111,23 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
+		public SpriteBatch()
+			: this(Application.Current.GraphicsDevice, Application.Current.Assets)
+		{
+		}
+
+		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
 		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		public SpriteBatch(GraphicsDevice graphicsDevice)
+		/// <param name="assets">The assets manager that should be used to load required assets.</param>
+		public SpriteBatch(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
 			Assert.ArgumentNotNull(graphicsDevice);
+			Assert.ArgumentNotNull(assets);
 
 			WorldMatrix = Matrix.Identity;
-			_effect = new SpriteEffect(graphicsDevice, Application.Current.Assets);
+			_effect = new SpriteEffect(graphicsDevice, assets);
 
 			// Initialize the indices; this can be done once, so after the indices are copied to the index buffer,
 			// we never have to change the index buffer again
@@ -282,10 +294,11 @@
 		/// <param name="texture">The texture that should be used to draw the quad.</param>
 		/// <param name="color">The color of the quad.</param>
 		/// <param name="rotation">The rotation (in radians) that should be applied to the quad before it is drawn.</param>
-		public void Draw(Vector2 position, Size size, Texture2D texture, Color color, float rotation)
+		/// <param name="textureArea">The texture coordinates that should be used to draw the quad.</param>
+		public void Draw(Vector2 position, Size size, Texture2D texture, Color color, float rotation, Rectangle? textureArea = null)
 		{
 			var rectangle = new Rectangle(-size.Width / 2.0f, -size.Height / 2.0f, size.Width, size.Height);
-			var quad = new Quad(rectangle, color);
+			var quad = new Quad(rectangle, color, textureArea);
 
 			var rotationMatrix = Matrix.CreateRotationZ(rotation);
 			var unrotatedPosition = new Vector3(position.X, position.Y, 0);
@@ -433,7 +446,7 @@
 		{
 			Assert.ArgumentSatisfies(width >= 0, "Invalid width.");
 
-			if (MathUtils.Equals(width, 0) || MathUtils.Equals((start - end).SquaredLength, 0))
+			if (MathUtils.Equals(width, 0) || MathUtils.Equals((start - end).LengthSquared, 0))
 				return;
 
 			// We first define a default quad to draw a line that goes from left to right. The center of the 

@@ -3,9 +3,10 @@
 	using System;
 	using System.Runtime.InteropServices;
 	using System.Security;
-	using Framework.UserInterface;
 	using Math;
 	using Memory;
+	using UserInterface;
+	using Utilities;
 
 	/// <summary>
 	///     A swap chain provides a front buffer and a back buffer for a window that can be used as the target of a

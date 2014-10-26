@@ -1,8 +1,8 @@
 ﻿namespace Tests.UserInterface
 {
 	using System;
-	using Pegasus.Framework.UserInterface;
-	using Pegasus.Framework.UserInterface.Controls;
+	using Pegasus.UserInterface;
+	using Pegasus.UserInterface.Controls;
 
 	/// <summary>
 	///     The control that is used for UI-related unit tests.

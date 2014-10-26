@@ -9,6 +9,7 @@
 	using Fonts;
 	using Pegasus.Assets;
 	using Platform.Logging;
+	using Utilities;
 	using BinaryWriter = AssetsCompiler.BinaryWriter;
 
 	/// <summary>
@@ -166,8 +167,8 @@
 			writer.AppendBlockStatement(() =>
 			{
 				writer.AppendLine("using System;");
-				writer.AppendLine("using Pegasus;");
-				writer.AppendLine("using Pegasus.Framework.UserInterface;");
+				writer.AppendLine("using Pegasus.Utilities;");
+				writer.AppendLine("using Pegasus.UserInterface;");
 				writer.AppendLine("using Pegasus.Assets;");
 				writer.AppendLine("using Pegasus.Platform.Logging;");
 				writer.AppendLine("using Pegasus.Platform.Graphics;");

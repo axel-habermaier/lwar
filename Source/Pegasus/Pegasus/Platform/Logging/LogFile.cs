@@ -4,6 +4,7 @@
 	using System.Collections.Generic;
 	using System.Text;
 	using Memory;
+	using Utilities;
 
 	/// <summary>
 	///     Captures all generated logs and outputs them to a log file.

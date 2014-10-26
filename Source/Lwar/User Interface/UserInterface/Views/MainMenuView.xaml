@@ -2,13 +2,14 @@
 			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-			 xmlns:converters="clr-namespace:Pegasus.Framework.UserInterface.Converters;assembly=PegasusUI"
+			 xmlns:converters="clr-namespace:Pegasus.UserInterface.Converters;assembly=PegasusUI"
 			 mc:Ignorable="d"
 			 HorizontalAlignment="Center" 
 			 VerticalAlignment="Center">
 	<StackPanel Visibility="{Binding IsTopLevel, Converter={converters:BooleanToVisibilityConverter}}">
 		<TextBlock Style="{StaticResource HeaderStyle}">lwar</TextBlock>
-		<Button Style="{StaticResource MenuButtonStyle}" Click="{Binding PlaySingle}">Single Player</Button>
+		<Button Style="{StaticResource MenuButtonStyle}" Click="{Binding StartGame}">Start Game</Button>
+		<Button Style="{StaticResource MenuButtonStyle}" Click="{Binding JoinGame}">Join Game</Button>
 		<Button Style="{StaticResource MenuButtonStyle}" Click="{Binding Options}">Options</Button>
 		<Button Style="{StaticResource MenuButtonStyle}" Click="{Binding Exit}">Exit</Button>
 	</StackPanel>

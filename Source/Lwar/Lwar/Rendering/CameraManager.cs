@@ -1,13 +1,14 @@
 ﻿namespace Lwar.Rendering
 {
 	using System;
-	using Gameplay;
+	using Gameplay.Client;
 	using Pegasus;
-	using Pegasus.Framework;
-	using Pegasus.Framework.UserInterface.Controls;
-	using Pegasus.Framework.UserInterface.Input;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
+	using Pegasus.UserInterface;
+	using Pegasus.UserInterface.Controls;
+	using Pegasus.UserInterface.Input;
+	using Pegasus.Utilities;
 	using Scripting;
 
 	/// <summary>

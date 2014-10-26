@@ -4,6 +4,7 @@
 	using Math;
 	using Platform.Graphics;
 	using Platform.Memory;
+	using Utilities;
 
 	/// <summary>
 	///     A base class for particle renderers.

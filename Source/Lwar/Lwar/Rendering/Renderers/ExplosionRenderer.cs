@@ -2,7 +2,7 @@
 {
 	using System;
 	using Assets;
-	using Gameplay.Actors;
+	using Gameplay.Client.Actors;
 	using Pegasus.Assets;
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
@@ -14,7 +14,7 @@
 	/// <summary>
 	///     Renders explosion effects into a 3D scene.
 	/// </summary>
-	public class ExplosionRenderer : Renderer<Explosion>
+	public class ExplosionRenderer : Renderer<ExplosionActor>
 	{
 		/// <summary>
 		///     The particle effect template used to initialize the explosion particle effects.
@@ -35,7 +35,7 @@
 		///     Invoked when an element has been added to the renderer.
 		/// </summary>
 		/// <param name="element">The element that has been added.</param>
-		protected override void OnAdded(Explosion element)
+		protected override void OnAdded(ExplosionActor element)
 		{
 			element.ParticleEffect.Template = _template;
 			element.ParticleEffect.Reset();

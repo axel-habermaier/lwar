@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Collections.Generic;
+	using Utilities;
 
 	/// <summary>
 	///     A base class for object pools.
@@ -38,5 +39,10 @@
 		/// </summary>
 		/// <param name="obj">The object that should be returned to the pool.</param>
 		public abstract void Free(object obj);
+
+		/// <summary>
+		///     Frees all allocated instances.
+		/// </summary>
+		public abstract void Free();
 	}
 }

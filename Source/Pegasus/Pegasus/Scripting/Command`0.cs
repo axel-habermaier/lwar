@@ -4,6 +4,7 @@
 	using System.Collections.Generic;
 	using System.Linq;
 	using Platform.Logging;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a parameterless command.

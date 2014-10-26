@@ -4,6 +4,7 @@
 	using System.IO;
 	using System.Linq;
 	using Platform.Graphics;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a shader that requires compilation.
@@ -50,7 +51,7 @@
 		/// <param name="effect">The name of the effect the shader belongs to.</param>
 		/// <param name="name">The name of the shader method.</param>
 		/// <param name="type">The type of the shader.</param>
-		public static string GetPath(string effect, string name, ShaderType type)
+		private static string GetPath(string effect, string name, ShaderType type)
 		{
 			Assert.ArgumentNotNullOrWhitespace(effect);
 			Assert.ArgumentNotNullOrWhitespace(name);

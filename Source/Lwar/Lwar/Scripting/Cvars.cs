@@ -2,15 +2,16 @@
 {
 	using System;
 	using System.Diagnostics;
+	using Pegasus.Utilities;
 	using Lwar.Network;
 	using Pegasus;
-	using Pegasus.Framework.UserInterface.Controls;
-	using Pegasus.Framework.UserInterface.Input;
 	using Pegasus.Math;
 	using Pegasus.Platform;
 	using Pegasus.Platform.Logging;
 	using Pegasus.Scripting;
 	using Pegasus.Scripting.Validators;
+	using Pegasus.UserInterface.Controls;
+	using Pegasus.UserInterface.Input;
 
 	internal static class Cvars
 	{
@@ -83,6 +84,11 @@
 		///     When triggered in an active game session, opens the chat input.
 		/// </summary>
 		public static Cvar<ConfigurableInput> InputChatCvar { get; private set; }
+
+		/// <summary>
+		///     When true, the debug server is used instead of the actual game server.
+		/// </summary>
+		public static Cvar<bool> UseDebugServerCvar { get; private set; }
 
 		/// <summary>
 		///     The scaling factor that is applied to all time-scaling sensitive timing values.
@@ -307,6 +313,20 @@
 			{
 				Assert.ArgumentNotNull((object)value);
 				InputChatCvar.Value = value;
+			}
+		}
+
+		/// <summary>
+		///     When true, the debug server is used instead of the actual game server.
+		/// </summary>
+		public static bool UseDebugServer
+		{
+			get { return UseDebugServerCvar.Value; }
+			[DebuggerHidden]
+			set
+			{
+				Assert.ArgumentNotNull((object)value);
+				UseDebugServerCvar.Value = value;
 			}
 		}
 
@@ -647,6 +667,24 @@
 		}
 
 		/// <summary>
+		///     Raised when the 'UseDebugServer' cvar is changing. The new value is passed to the event handler.
+		/// </summary>
+		public static event Action<bool> UseDebugServerChanging
+		{
+			add { UseDebugServerCvar.Changing += value; }
+			remove { UseDebugServerCvar.Changing -= value; }
+		}
+
+		/// <summary>
+		///     Raised when the 'UseDebugServer' cvar is changed. The previous value is passed to the event handler.
+		/// </summary>
+		public static event Action<bool> UseDebugServerChanged
+		{
+			add { UseDebugServerCvar.Changed += value; }
+			remove { UseDebugServerCvar.Changed -= value; }
+		}
+
+		/// <summary>
 		///     Raised when the 'TimeScale' cvar is changing. The new value is passed to the event handler.
 		/// </summary>
 		public static event Action<double> TimeScaleChanging
@@ -759,7 +797,7 @@
 		/// </summary>
 		public static void Initialize()
 		{
-			PlayerNameCvar = new Cvar<string>("player_name", "UnnamedPlayer", "The name of the player.", UpdateMode.Immediate, true, false, new NotEmptyAttribute(), new MaximumLengthAttribute(Specification.PlayerNameLength, true));
+			PlayerNameCvar = new Cvar<string>("player_name", "UnnamedPlayer", "The name of the player.", UpdateMode.Immediate, true, false, new NotEmptyAttribute(), new MaximumLengthAttribute(NetworkProtocol.PlayerNameLength, true));
 			EventMessageDisplayTimeCvar = new Cvar<double>("event_message_display_time", 3, "The display time (in seconds) of event messages such as 'X killed Y', 'X joined the game', etc.", UpdateMode.Immediate, true, false, new RangeAttribute(0.5, 60.0));
 			ChatMessageDisplayTimeCvar = new Cvar<double>("chat_message_display_time", 6, "The display time (in seconds) of chat messages.", UpdateMode.Immediate, true, false, new RangeAttribute(0.5, 60.0));
 			InputShowScoreboardCvar = new Cvar<ConfigurableInput>("input_show_scoreboard", Key.Tab, "When triggered in an active game session, shows the scoreboard.", UpdateMode.Immediate, true, false);
@@ -773,6 +811,7 @@
 			InputTertiaryWeaponCvar = new Cvar<ConfigurableInput>("input_tertiary_weapon", Key.Num1, "When triggered in an active game session, fires the player's tertiary weapon.", UpdateMode.Immediate, true, false);
 			InputQuaternaryWeaponCvar = new Cvar<ConfigurableInput>("input_quaternary_weapon", Key.Num2, "When triggered in an active game session, fires the player's quaternary weapon.", UpdateMode.Immediate, true, false);
 			InputChatCvar = new Cvar<ConfigurableInput>("input_chat", Key.Return, "When triggered in an active game session, opens the chat input.", UpdateMode.Immediate, true, false);
+			UseDebugServerCvar = new Cvar<bool>("use_debug_server", false, "When true, the debug server is used instead of the actual game server.", UpdateMode.Immediate, true, false);
 
 			CvarRegistry.Register(PlayerNameCvar);
 			CvarRegistry.Register(EventMessageDisplayTimeCvar);
@@ -788,6 +827,7 @@
 			CvarRegistry.Register(InputTertiaryWeaponCvar);
 			CvarRegistry.Register(InputQuaternaryWeaponCvar);
 			CvarRegistry.Register(InputChatCvar);
+			CvarRegistry.Register(UseDebugServerCvar);
 		}
 
 		/// <summary>

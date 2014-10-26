@@ -2,7 +2,7 @@
 {
 	using System;
 	using System.Linq;
-	using Framework.UserInterface.Input;
+	using UserInterface.Input;
 
 	/// <summary>
 	///     Parses input trigger expressions. The precedence of the three operators '+', '&', and '|' is encoded in the grammar,

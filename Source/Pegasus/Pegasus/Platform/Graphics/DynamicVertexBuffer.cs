@@ -4,6 +4,7 @@
 	using System.Diagnostics;
 	using System.Runtime.InteropServices;
 	using Memory;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a dynamic vertex buffer that is split into several chunks. Each chunk is of the requested size; therefore,

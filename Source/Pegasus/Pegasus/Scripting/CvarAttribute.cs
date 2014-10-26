@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.Scripting
 {
 	using System;
+	using Utilities;
 
 	/// <summary>
 	///     Must be applied to a property in a registry specification interface in order to indicate that the property

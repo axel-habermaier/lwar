@@ -1,63 +1,53 @@
 ﻿namespace Lwar.Network
 {
 	using System;
-	using Pegasus;
 	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Memory;
+	using Pegasus.Utilities;
 
 	/// <summary>
 	///     Represents the header of a packet.
 	/// </summary>
-	public struct PacketHeader
+	public static class PacketHeader
 	{
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		/// <param name="acknowledgement">The acknowledged sequence number of the packet.</param>
-		public PacketHeader(uint acknowledgement)
-			: this()
-		{
-			Acknowledgement = acknowledgement;
-		}
-
-		/// <summary>
-		///     Gets the acknowledged sequence number of the packet.
-		/// </summary>
-		public uint Acknowledgement { get; private set; }
-
 		/// <summary>
 		///     Initializes a new instance from a buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the header data should be read from.</param>
-		public static PacketHeader? Create(BufferReader buffer)
+		/// <param name="acknowledgement">Returns the acknowledged sequence number of the packet.</param>
+		public static bool TryRead(BufferReader buffer, out uint acknowledgement)
 		{
 			Assert.ArgumentNotNull(buffer);
 
-			if (!buffer.CanRead(Specification.HeaderSize))
+			acknowledgement = 0;
+
+			if (!buffer.CanRead(NetworkProtocol.HeaderSize))
 			{
 				Log.Warn("Received a packet with an incomplete header.");
-				return null;
+				return false;
 			}
 
-			if (buffer.ReadUInt32() != Specification.AppIdentifier)
+			if (buffer.ReadUInt32() != NetworkProtocol.AppIdentifier)
 			{
 				Log.Warn("Received a packet with an invalid application identifier from the server.");
-				return null;
+				return false;
 			}
 
-			return new PacketHeader { Acknowledgement = buffer.ReadUInt32() };
+			acknowledgement = buffer.ReadUInt32();
+			return true;
 		}
 
 		/// <summary>
 		///     Writes the header into the given buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the header should be written into.</param>
-		public void Write(BufferWriter buffer)
+		/// <param name="acknowledgement">The acknowledged sequence number of the packet.</param>
+		public static void Write(BufferWriter buffer, uint acknowledgement)
 		{
 			Assert.ArgumentNotNull(buffer);
 
-			buffer.WriteUInt32(Specification.AppIdentifier);
-			buffer.WriteUInt32(Acknowledgement);
+			buffer.WriteUInt32(NetworkProtocol.AppIdentifier);
+			buffer.WriteUInt32(acknowledgement);
 		}
 	}
 }

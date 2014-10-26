@@ -2,17 +2,17 @@
 {
 	using System;
 	using System.Collections.Generic;
-	using Gameplay;
-	using Gameplay.Entities;
+	using Gameplay.Client;
+	using Network;
 	using Network.Messages;
 	using Pegasus;
-	using Pegasus.Framework;
-	using Pegasus.Framework.UserInterface.Controls;
-	using Pegasus.Framework.UserInterface.ViewModels;
+	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Platform.Network;
-	using Pegasus.Platform.Graphics;
+	using Pegasus.UserInterface.Controls;
+	using Pegasus.UserInterface.ViewModels;
+	using Pegasus.Utilities;
 	using Rendering;
 	using Scripting;
 	using Views;
@@ -25,7 +25,7 @@
 		/// <summary>
 		///     The game session that is played.
 		/// </summary>
-		private GameSession _gameSession;
+		private ClientGameSession _gameSession;
 
 		/// <summary>
 		///     Indicates whether the connection to the server is lagging.
@@ -35,7 +35,7 @@
 		/// <summary>
 		///     Indicates whether the 3D scene should be rendered using the global app resolution.
 		/// </summary>
-		private bool _useAppResolution;
+		private ResolutionSource _resolutionSource;
 
 		/// <summary>
 		///     The remaining number of seconds before the connection of the server is dropped.
@@ -46,7 +46,7 @@
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="gameSession">The game session that should be displayed.</param>
-		public GameSessionViewModel(GameSession gameSession)
+		public GameSessionViewModel(ClientGameSession gameSession)
 		{
 			Assert.ArgumentNotNull(gameSession);
 
@@ -58,10 +58,8 @@
 			View = new GameSessionView();
 
 			_gameSession.InputDevice.UIElement = View;
-
-			// TODO: Selection via UI
-			_gameSession.NetworkSession.Send(SelectionMessage.Create(_gameSession.LocalPlayer,
-				EntityType.Ship, EntityType.Gun, EntityType.Phaser, EntityType.Phaser, EntityType.Phaser));
+			_gameSession.Connection.Send(PlayerLoadoutMessage.Create(_gameSession.PoolAllocator, _gameSession.LocalPlayer.Identity,
+				EntityType.Ship, new[] { EntityType.Gun, EntityType.Phaser, EntityType.Phaser, EntityType.Phaser }));
 		}
 
 		/// <summary>
@@ -72,10 +70,10 @@
 		/// <summary>
 		///     Gets a value indicating whether the 3D scene should be rendered using the global app resolution.
 		/// </summary>
-		public bool UseAppResolution
+		public ResolutionSource ResolutionSource
 		{
-			get { return _useAppResolution; }
-			set { ChangePropertyValue(ref _useAppResolution, value); }
+			get { return _resolutionSource; }
+			set { ChangePropertyValue(ref _resolutionSource, value); }
 		}
 
 		/// <summary>
@@ -178,7 +176,7 @@
 		protected override void OnActivated()
 		{
 			Cvars.WindowModeChanged += WindowModeChanged;
-			UseAppResolution = Cvars.WindowMode == WindowMode.Fullscreen;
+			ResolutionSource = Cvars.WindowMode == WindowMode.Fullscreen ? ResolutionSource.Application : ResolutionSource.Layout;
 		}
 
 		/// <summary>
@@ -187,7 +185,7 @@
 		/// <param name="previousWindowMode">The previous window mode.</param>
 		private void WindowModeChanged(WindowMode previousWindowMode)
 		{
-			UseAppResolution = Cvars.WindowMode == WindowMode.Fullscreen;
+			ResolutionSource = Cvars.WindowMode == WindowMode.Fullscreen ? ResolutionSource.Application : ResolutionSource.Layout;
 		}
 
 		/// <summary>
@@ -216,8 +214,8 @@
 				Respawn.Update();
 
 				// Check if we're lagging or waiting for the server
-				IsLagging = _gameSession.NetworkSession.IsLagging;
-				WaitForServerTimeout = _gameSession.NetworkSession.TimeToDrop / 1000;
+				IsLagging = _gameSession.Connection.IsLagging;
+				WaitForServerTimeout = _gameSession.Connection.TimeToDrop / 1000;
 
 				// Ensure that the scoreboard is hidden when the chat input or the console are visible
 				if (Chat.IsVisible || Application.Current.IsConsoleOpen)
@@ -225,13 +223,18 @@
 			}
 			catch (ConnectionDroppedException)
 			{
-				ShowErrorBox("Connection Lost", "The connection to the server has been lost.", new MainMenuViewModel());
+				ShowErrorBox("Connection Lost", "The connection to the server has been lost.");
+				Commands.Disconnect();
+			}
+			catch (ServerQuitException)
+			{
+				ShowErrorBox("Server Shutdown", "The server has ended the game session.");
+				Commands.Disconnect();
 			}
 			catch (NetworkException e)
 			{
-				ShowErrorBox("Connection Error",
-					String.Format("The game session has been aborted due to a network error: {0}", e.Message),
-					new MainMenuViewModel());
+				ShowErrorBox("Connection Error", String.Format("The game session has been aborted due to a network error: {0}", e.Message));
+				Commands.Disconnect();
 			}
 		}
 	}

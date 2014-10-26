@@ -2,10 +2,11 @@
 {
 	using System;
 	using System.Text;
-	using Gameplay;
-	using Pegasus;
+	using Pegasus.Entities;
+	using Pegasus.Math;
 	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Memory;
+	using Pegasus.Utilities;
 
 	/// <summary>
 	///     Provides extension methods for buffer readers and writers.
@@ -13,35 +14,82 @@
 	public static class BufferExtensions
 	{
 		/// <summary>
-		///     Writes the given identifier into the buffer.
+		///     Writes the given identity into the buffer.
 		/// </summary>
-		/// <param name="buffer">The buffer the identifier should be written into.</param>
-		/// <param name="identifier">The identifier that should be written into the buffer.</param>
-		public static void WriteIdentifier(this BufferWriter buffer, Identifier identifier)
+		/// <param name="buffer">The buffer the identity should be written into.</param>
+		/// <param name="identity">The identity that should be written into the buffer.</param>
+		public static void WriteIdentifier(this BufferWriter buffer, Identity identity)
 		{
 			Assert.ArgumentNotNull(buffer);
 
-			buffer.WriteUInt16(identifier.Generation);
-			buffer.WriteUInt16(identifier.Identity);
+			buffer.WriteUInt16(identity.Generation);
+			buffer.WriteUInt16(identity.Identifier);
 		}
 
 		/// <summary>
-		///     Reads an identifier from the buffer.
+		///     Writes the given vector into the buffer.
 		/// </summary>
-		/// <param name="buffer">The buffer the identifier should be read from.</param>
-		public static Identifier ReadIdentifier(this BufferReader buffer)
+		/// <param name="buffer">The buffer the vector should be written into.</param>
+		/// <param name="vector">The vector that should be written into the buffer.</param>
+		public static void WriteVector2(this BufferWriter buffer, Vector2 vector)
+		{
+			Assert.ArgumentNotNull(buffer);
+
+			vector = Vector2.Clamp(vector, new Vector2(Int16.MinValue), new Vector2(Int16.MaxValue));
+			buffer.WriteInt16((short)vector.X);
+			buffer.WriteInt16((short)vector.Y);
+		}
+
+		/// <summary>
+		///     Writes the given orientation into the buffer.
+		/// </summary>
+		/// <param name="buffer">The buffer the orientation should be written into.</param>
+		/// <param name="orientation">The orientation that should be written into the buffer.</param>
+		public static void WriteOrientation(this BufferWriter buffer, float orientation)
+		{
+			Assert.ArgumentNotNull(buffer);
+			Assert.InRange(orientation, 0, 360);
+
+			buffer.WriteUInt16((ushort)(orientation * NetworkProtocol.AngleFactor));
+		}
+
+		/// <summary>
+		///     Reads an identity from the buffer.
+		/// </summary>
+		/// <param name="buffer">The buffer the identity should be read from.</param>
+		public static Identity ReadIdentifier(this BufferReader buffer)
 		{
 			Assert.ArgumentNotNull(buffer);
 
 			var generation = buffer.ReadUInt16();
 			var id = buffer.ReadUInt16();
 
-			Assert.That(id != Specification.ReservedEntityIdentifier.Identity || generation == 0,
-				"Generation of reserved entity identifier must be 0.");
-			Assert.That(id != Specification.ServerPlayerIdentifier.Identity || generation == 0,
-				"Generation of reserved server player identifier must be 0.");
+			Assert.That(id != NetworkProtocol.ReservedEntityIdentity.Identifier || generation == 0,
+				"Generation of reserved entity identity must be 0.");
+			Assert.That(id != NetworkProtocol.ServerPlayerIdentity.Identifier || generation == 0,
+				"Generation of reserved server player identity must be 0.");
 
-			return new Identifier(id, generation);
+			return new Identity(id, generation);
+		}
+
+		/// <summary>
+		///     Reads a vector from the buffer.
+		/// </summary>
+		/// <param name="buffer">The buffer the vector should be read from.</param>
+		public static Vector2 ReadVector2(this BufferReader buffer)
+		{
+			Assert.ArgumentNotNull(buffer);
+			return new Vector2(buffer.ReadInt16(), buffer.ReadInt16());
+		}
+
+		/// <summary>
+		///     Reads an orientation from the buffer.
+		/// </summary>
+		/// <param name="buffer">The buffer the orientation should be read from.</param>
+		public static float ReadOrientation(this BufferReader buffer)
+		{
+			Assert.ArgumentNotNull(buffer);
+			return buffer.ReadUInt16() / NetworkProtocol.AngleFactor;
 		}
 
 		/// <summary>

@@ -8,6 +8,7 @@
 	using Platform.Graphics;
 	using Platform.Memory;
 	using Scripting;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a particle effect consisting of one or more particle emitters.

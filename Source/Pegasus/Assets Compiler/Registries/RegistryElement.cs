@@ -5,6 +5,7 @@
 	using CSharp;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
+	using Utilities;
 	using Attribute = ICSharpCode.NRefactory.CSharp.Attribute;
 
 	/// <summary>

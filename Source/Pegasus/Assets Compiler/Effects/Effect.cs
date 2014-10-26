@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.AssetsCompiler.Effects
 {
 	using System;
+	using Utilities;
 
 	/// <summary>
 	///     Represents an effect that provides shaders for drawing operations.
@@ -121,6 +122,42 @@
 		/// <param name="max">The maximum value that the given value should be clamped to.</param>
 		[MapsTo(Intrinsic.Clamp)]
 		protected float Clamp(float value, float min, float max)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		///     Clamps the specified value to the specified minimum and maximum range.
+		/// </summary>
+		/// <param name="value">The value that should be clamped.</param>
+		/// <param name="min">The minimum value that the given value should be clamped to.</param>
+		/// <param name="max">The maximum value that the given value should be clamped to.</param>
+		[MapsTo(Intrinsic.Clamp)]
+		protected float Clamp(Vector2 value, Vector2 min, Vector2 max)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		///     Clamps the specified value to the specified minimum and maximum range.
+		/// </summary>
+		/// <param name="value">The value that should be clamped.</param>
+		/// <param name="min">The minimum value that the given value should be clamped to.</param>
+		/// <param name="max">The maximum value that the given value should be clamped to.</param>
+		[MapsTo(Intrinsic.Clamp)]
+		protected float Clamp(Vector3 value, Vector3 min, Vector3 max)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		///     Clamps the specified value to the specified minimum and maximum range.
+		/// </summary>
+		/// <param name="value">The value that should be clamped.</param>
+		/// <param name="min">The minimum value that the given value should be clamped to.</param>
+		/// <param name="max">The maximum value that the given value should be clamped to.</param>
+		[MapsTo(Intrinsic.Clamp)]
+		protected float Clamp(Vector4 value, Vector4 min, Vector4 max)
 		{
 			throw new NotImplementedException();
 		}
@@ -333,6 +370,94 @@
 		/// <param name="vector">The vector that should be normalized.</param>
 		[MapsTo(Intrinsic.Normalize)]
 		protected Vector4 Normalize(Vector4 vector)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		///     Clamps the given value within the range 0 and 1.
+		/// </summary>
+		/// <param name="value">The value that should be saturated.</param>
+		[MapsTo(Intrinsic.Saturate)]
+		protected Vector4 Saturate(float value)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		///     Clamps the given value within the range 0 and 1.
+		/// </summary>
+		/// <param name="value">The value that should be saturated.</param>
+		[MapsTo(Intrinsic.Saturate)]
+		protected Vector4 Saturate(Vector2 value)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		///     Clamps the given value within the range 0 and 1.
+		/// </summary>
+		/// <param name="value">The value that should be saturated.</param>
+		[MapsTo(Intrinsic.Saturate)]
+		protected Vector4 Saturate(Vector3 value)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		///     Clamps the given value within the range 0 and 1.
+		/// </summary>
+		/// <param name="value">The value that should be saturated.</param>
+		[MapsTo(Intrinsic.Saturate)]
+		protected Vector4 Saturate(Vector4 value)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		///     Performs a linear interpolation.
+		/// </summary>
+		/// <param name="source">The source value.</param>
+		/// <param name="target">The target value.</param>
+		/// <param name="amount">A value between 0 and 1 indicating the weight of the target value.</param>
+		[MapsTo(Intrinsic.Lerp)]
+		protected Vector4 Lerp(float source, float target, float amount)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		///     Performs a linear interpolation.
+		/// </summary>
+		/// <param name="source">The source value.</param>
+		/// <param name="target">The target value.</param>
+		/// <param name="amount">A value between 0 and 1 for each component indicating the weight of the target value.</param>
+		[MapsTo(Intrinsic.Lerp)]
+		protected Vector4 Lerp(Vector2 source, Vector2 target, Vector2 amount)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		///     Performs a linear interpolation.
+		/// </summary>
+		/// <param name="source">The source value.</param>
+		/// <param name="target">The target value.</param>
+		/// <param name="amount">A value between 0 and 1 for each component indicating the weight of the target value.</param>
+		[MapsTo(Intrinsic.Lerp)]
+		protected Vector4 Lerp(Vector3 source, Vector3 target, Vector3 amount)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		///     Performs a linear interpolation.
+		/// </summary>
+		/// <param name="source">The source value.</param>
+		/// <param name="target">The target value.</param>
+		/// <param name="amount">A value between 0 and 1 for each component indicating the weight of the target value.</param>
+		[MapsTo(Intrinsic.Lerp)]
+		protected Vector4 Lerp(Vector4 source, Vector4 target, Vector4 amount)
 		{
 			throw new NotImplementedException();
 		}

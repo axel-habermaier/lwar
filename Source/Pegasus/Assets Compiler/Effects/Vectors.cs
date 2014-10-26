@@ -12,6 +12,14 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
+		public Vector2(float value)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
 		public Vector2(float x, float y)
 		{
 			throw new NotImplementedException();
@@ -27,6 +35,14 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
+		public Vector3(float value)
+		{
+			throw new NotImplementedException();
+		}
+
+		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
 		public Vector3(float x, float y, float z)
 		{
 			throw new NotImplementedException();
@@ -39,6 +55,14 @@
 	[StructLayout(LayoutKind.Sequential)]
 	public partial class Vector4
 	{
+		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		public Vector4(float value)
+		{
+			throw new NotImplementedException();
+		}
+
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>

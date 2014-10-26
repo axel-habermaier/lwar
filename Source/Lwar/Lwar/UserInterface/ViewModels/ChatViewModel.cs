@@ -3,8 +3,8 @@
 	using System;
 	using System.Text;
 	using Network;
-	using Pegasus;
-	using Pegasus.Framework;
+	using Pegasus.UserInterface;
+	using Pegasus.Utilities;
 	using Scripting;
 
 	/// <summary>
@@ -28,7 +28,7 @@
 		/// </summary>
 		public int MaxMessageLength
 		{
-			get { return Specification.ChatMessageLength; }
+			get { return NetworkProtocol.ChatMessageLength; }
 		}
 
 		/// <summary>
@@ -66,7 +66,7 @@
 		/// </summary>
 		public bool LengthExceeded
 		{
-			get { return Encoding.UTF8.GetByteCount(Message) > Specification.ChatMessageLength; }
+			get { return Encoding.UTF8.GetByteCount(Message) > NetworkProtocol.ChatMessageLength; }
 		}
 
 		/// <summary>

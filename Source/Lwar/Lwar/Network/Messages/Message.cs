@@ -1,149 +1,179 @@
 ﻿namespace Lwar.Network.Messages
 {
 	using System;
-	using System.Diagnostics;
-	using System.Runtime.InteropServices;
-	using Gameplay;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Linq.Expressions;
+	using System.Reflection;
+	using System.Runtime.CompilerServices;
+	using Pegasus.Platform.Memory;
+	using Pegasus.Utilities;
 
 	/// <summary>
-	///     Represents a message that is used for the communication between the server and the client (implemented as a
-	///     union-type).
+	///     Represents a message that is used for the communication between the server and the client.
 	/// </summary>
-	[StructLayout(LayoutKind.Explicit)]
-	[DebuggerDisplay("Type = {Type}")]
-	public struct Message
+	public abstract class Message : SharedPooledObject
 	{
 		/// <summary>
-		///     The offset of payload fields that contain strings at offset 0.
+		///     Maps a message type to its transmission information.
 		/// </summary>
-		private const int StringPayloadOffset = 8;
+		private static readonly Dictionary<Type, TransmissionInfo> TransmissionInfos = new Dictionary<Type, TransmissionInfo>();
 
 		/// <summary>
-		///     The offset of the payload fields that contain native types only.
+		///     Maps a message type to a message instance allocator.
 		/// </summary>
-		/// <remarks>
-		///     These fields must lie at offsets after the string, which ends at offset 16 in 64 bit builds.
-		/// </remarks>
-		private const int PayloadOffset = 16;
+		private static readonly Dictionary<MessageType, Func<PoolAllocator, Message>> MessageConstructors =
+			new Dictionary<MessageType, Func<PoolAllocator, Message>>();
 
 		/// <summary>
-		///     The type of the message.
+		///     Initializes the type.
 		/// </summary>
-		[FieldOffset(0)]
-		public MessageType Type;
+		static Message()
+		{
+			var allocatorParameter = Expression.Parameter(typeof(PoolAllocator));
+			var allocateMethod = typeof(PoolAllocator).GetMethod("Allocate", BindingFlags.Public | BindingFlags.Instance);
+
+			var messageTypes = Assembly
+				.GetExecutingAssembly()
+				.GetTypes().Where(type => type.IsClass && !type.IsAbstract && typeof(Message).IsAssignableFrom(type));
+
+			foreach (var messageType in messageTypes)
+			{
+				var reliable = (ReliableTransmissionAttribute)messageType
+					.GetCustomAttributes(typeof(ReliableTransmissionAttribute), false).FirstOrDefault();
+				var unreliable = (UnreliableTransmissionAttribute)messageType
+					.GetCustomAttributes(typeof(UnreliableTransmissionAttribute), false).FirstOrDefault();
+
+				Assert.That(reliable == null || unreliable == null,
+					"Cannot use both reliable and unreliable transmission for messages of type '{0}'.", messageType.FullName);
+				Assert.That(reliable != null || unreliable != null,
+					"No transmission type has been specified for messages of type '{0}'.", messageType.FullName);
+
+				var typedAllocateMethod = allocateMethod.MakeGenericMethod(messageType);
+				var callAllocateMethod = Expression.Call(allocatorParameter, typedAllocateMethod);
+				var constructMessage = Expression.Lambda<Func<PoolAllocator, Message>>(callAllocateMethod, allocatorParameter).Compile();
+
+				if (reliable != null)
+				{
+					Assert.That((int)reliable.MessageType < 100, "Invalid reliable transmission message type.");
+
+					MessageConstructors.Add(reliable.MessageType, constructMessage);
+					TransmissionInfos.Add(messageType, new TransmissionInfo
+					{
+						BatchedTransmission = false,
+						MessageType = reliable.MessageType,
+						ReliableTransmission = true,
+					});
+				}
+
+				if (unreliable != null)
+				{
+					Assert.That((int)unreliable.MessageType > 100, "Invalid unreliable transmission message type.");
+
+					MessageConstructors.Add(unreliable.MessageType, constructMessage);
+					TransmissionInfos.Add(messageType, new TransmissionInfo
+					{
+						BatchedTransmission = unreliable.EnableBatching,
+						MessageType = unreliable.MessageType,
+						ReliableTransmission = false,
+					});
+				}
+
+				RuntimeHelpers.RunClassConstructor(messageType.TypeHandle);
+			}
+		}
 
 		/// <summary>
-		///     The sequence number of a reliable message.
+		///     Initializes a new instance.
 		/// </summary>
-		[FieldOffset(4)]
-		public uint SequenceNumber;
+		protected Message()
+		{
+			var transmissionInfo = TransmissionInfos[GetType()];
+
+			MessageType = transmissionInfo.MessageType;
+			IsReliable = transmissionInfo.ReliableTransmission;
+			UseBatchedTransmission = transmissionInfo.BatchedTransmission;
+		}
 
 		/// <summary>
-		///     The payload of a Connect message.
+		///     Gets the type of the message.
 		/// </summary>
-		[FieldOffset(StringPayloadOffset)]
-		public ConnectMessage Connect;
+		public MessageType MessageType { get; private set; }
 
 		/// <summary>
-		///     The payload of a Join message.
+		///     Gets a value indicating whether as many messages of this type as possible are batched together into a
+		///     single network transmission.
 		/// </summary>
-		[FieldOffset(StringPayloadOffset)]
-		public JoinMessage Join;
+		public bool UseBatchedTransmission { get; private set; }
 
 		/// <summary>
-		///     The payload of a Leave message.
+		///     Gets a value indicating whether the message is reliable.
 		/// </summary>
-		[FieldOffset(PayloadOffset)]
-		public LeaveMessage Leave;
+		public bool IsReliable { get; private set; }
 
 		/// <summary>
-		///     The payload of a Chat message.
+		///     Gets a value indicating whether the message is unreliable.
 		/// </summary>
-		[FieldOffset(StringPayloadOffset)]
-		public ChatMessage Chat;
+		public bool IsUnreliable
+		{
+			get { return !IsReliable; }
+		}
 
 		/// <summary>
-		///     The payload of an Add message.
+		///     Serializes the message using the given writer.
 		/// </summary>
-		[FieldOffset(PayloadOffset)]
-		public AddMessage Add;
+		/// <param name="writer">The writer that should be used to serialize the message.</param>
+		public abstract void Serialize(BufferWriter writer);
 
 		/// <summary>
-		///     The payload of a Remove message.
+		///     Deserializes the message using the given reader.
 		/// </summary>
-		[FieldOffset(PayloadOffset)]
-		public Identifier Remove;
+		/// <param name="reader">The reader that should be used to deserialize the message.</param>
+		public abstract void Deserialize(BufferReader reader);
 
 		/// <summary>
-		///     The payload of a Selection message.
+		///     Dispatches the message to the given dispatcher.
 		/// </summary>
-		[FieldOffset(PayloadOffset)]
-		public SelectionMessage Selection;
+		/// <param name="handler">The dispatcher that should be used to dispatch the message.</param>
+		/// <param name="sequenceNumber">The sequence number of the message.</param>
+		public abstract void Dispatch(IMessageHandler handler, uint sequenceNumber);
 
 		/// <summary>
-		///     The payload of a Name message.
+		///     Creates a message instance for a message of the given message transmission type.
 		/// </summary>
-		[FieldOffset(StringPayloadOffset)]
-		public NameMessage Name;
+		/// <param name="allocator">The allocator that should be used to allocate the message.</param>
+		/// <param name="messageType">The message transmission type a message instance should be created for.</param>
+		public static Message Create(PoolAllocator allocator, MessageType messageType)
+		{
+			Assert.ArgumentNotNull(allocator);
+			Assert.ArgumentInRange(messageType);
+
+			Func<PoolAllocator, Message> constructor;
+			if (!MessageConstructors.TryGetValue(messageType, out constructor))
+				throw new InvalidOperationException("Unsupported message type.");
+
+			return constructor(allocator);
+		}
 
 		/// <summary>
-		///     The payload of a Kill message.
+		///     Provides transmission information about a message.
 		/// </summary>
-		[FieldOffset(PayloadOffset)]
-		public KillMessage Kill;
+		private struct TransmissionInfo
+		{
+			/// <summary>
+			///     Indicates whether as many messages as possible should be batched together for optimized transmission.
+			/// </summary>
+			public bool BatchedTransmission;
 
-		/// <summary>
-		///     The payload of a Reject message.
-		/// </summary>
-		[FieldOffset(PayloadOffset)]
-		public RejectReason Reject;
+			/// <summary>
+			///     The transmission type of the message.
+			/// </summary>
+			public MessageType MessageType;
 
-		/// <summary>
-		///     The payload of a Stats message.
-		/// </summary>
-		[FieldOffset(PayloadOffset)]
-		public StatsMessage Stats;
-
-		/// <summary>
-		///     The payload of an Input message.
-		/// </summary>
-		[FieldOffset(PayloadOffset)]
-		public InputMessage Input;
-
-		/// <summary>
-		///     The payload of a Collision message.
-		/// </summary>
-		[FieldOffset(PayloadOffset)]
-		public CollisionMessage Collision;
-
-		/// <summary>
-		///     The payload of an Update message.
-		/// </summary>
-		[FieldOffset(PayloadOffset)]
-		public UpdateMessage Update;
-
-		/// <summary>
-		///     The payload of an UpdatePosition message.
-		/// </summary>
-		[FieldOffset(PayloadOffset)]
-		public UpdatePositionMessage UpdatePosition;
-
-		/// <summary>
-		///     The payload of an UpdateRay message.
-		/// </summary>
-		[FieldOffset(PayloadOffset)]
-		public UpdateRayMessage UpdateRay;
-
-		/// <summary>
-		///     The payload of an UpdateCircle message.
-		/// </summary>
-		[FieldOffset(PayloadOffset)]
-		public UpdateCircleMessage UpdateCircle;
-
-		/// <summary>
-		///     The payload of an UpdateShip message.
-		/// </summary>
-		[FieldOffset(PayloadOffset)]
-		public UpdateShipMessage UpdateShip;
+			/// <summary>
+			///     Indicates whether reliable or unreliable transmission should be used.
+			/// </summary>
+			public bool ReliableTransmission;
+		}
 	}
 }

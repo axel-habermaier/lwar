@@ -30,7 +30,7 @@
 		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
 		public void Load(GraphicsDevice graphicsDevice, AssetsManager assets)
 		{
-			_effect = new SimpleVertexEffect(graphicsDevice, assets) { Color = new Vector4(0.3f, 0, 0, 0.3f) };
+			_effect = new SimpleVertexEffect(graphicsDevice, assets) { Color = new Vector4(0.3f, 0, 0, 0.3f), World = Matrix.Identity };
 		}
 
 		/// <summary>

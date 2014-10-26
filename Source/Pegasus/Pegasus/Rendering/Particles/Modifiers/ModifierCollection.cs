@@ -1,7 +1,8 @@
 ﻿namespace Pegasus.Rendering.Particles.Modifiers
 {
 	using System;
-	using Framework;
+	using UserInterface;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a collection of particle modifiers.

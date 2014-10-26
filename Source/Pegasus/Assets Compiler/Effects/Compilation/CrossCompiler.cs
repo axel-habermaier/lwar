@@ -7,6 +7,7 @@
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
 	using Platform.Graphics;
+	using Utilities;
 
 	/// <summary>
 	///     Cross-compiles a C# shader method.
@@ -29,6 +30,11 @@
 		protected CSharpAstResolver Resolver { get; private set; }
 
 		/// <summary>
+		///     Gets a value indicating whether the shader main method is being compiled.
+		/// </summary>
+		protected bool GeneratingMainMethod { get; private set; }
+
+		/// <summary>
 		///     Cross-compiles the C# shader method.
 		/// </summary>
 		/// <param name="effect">The effect class the shader method belongs to.</param>
@@ -46,22 +52,20 @@
 			Resolver = resolver;
 			Shader = shader;
 
-			if (effect.Literals.Any())
+			var literals = effect.Literals.Where(shader.Uses).ToArray();
+			if (literals.Length != 0)
 			{
-				foreach (var literal in effect.Literals)
+				foreach (var literal in literals)
 					GenerateLiteral(literal);
 
 				Writer.NewLine();
 			}
 
-			foreach (var constantBuffer in effect.ConstantBuffers)
+			foreach (var constantBuffer in effect.ConstantBuffers.Where(shader.Uses))
 				GenerateConstantBuffer(constantBuffer);
 
-			if (effect.Textures.Any())
-			{
-				foreach (var texture in effect.Textures)
-					GenerateTextureObject(texture);
-			}
+			foreach (var texture in effect.Textures.Where(shader.Uses))
+				GenerateTextureObject(texture);
 
 			if (shader.Type == ShaderType.VertexShader)
 			{
@@ -80,6 +84,10 @@
 				Writer.NewLine();
 			}
 
+			foreach (var method in effect.HelperMethods.Where(shader.Uses))
+				GenerateMethod(method);
+
+			GeneratingMainMethod = true;
 			GenerateMainMethod();
 		}
 
@@ -129,6 +137,18 @@
 		///     Generates the shader entry point.
 		/// </summary>
 		protected abstract void GenerateMainMethod();
+
+		/// <summary>
+		///     Generates the shader entry point.
+		/// </summary>
+		/// <param name="method">The C# method the shader code should be generated for.</param>
+		protected virtual void GenerateMethod(ShaderMethod method)
+		{
+			Writer.Append("{0} {1}(", ToShaderType(method.ReturnType), Escape(method.Name));
+			Writer.AppendSeparated(method.Parameters, ", ", p => Writer.Append("{0} {1}", ToShaderType(p.Type), Escape(p.Name)));
+			Writer.AppendLine(")");
+			Writer.AppendBlockStatement(() => method.MethodBody.AcceptVisitor(this));
+		}
 
 		/// <summary>
 		///     Gets the corresponding shader type.
@@ -304,6 +324,10 @@
 					return "distance";
 				case Intrinsic.Normalize:
 					return "normalize";
+				case Intrinsic.Saturate:
+					return "saturate";
+				case Intrinsic.Lerp:
+					return "lerp";
 				default:
 					throw new NotSupportedException("Unsupported intrinsic function.");
 			}

@@ -217,14 +217,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Pegasus\Assert.cs">
-      <Link>Pegasus\Assert.cs</Link>
-    </Compile>
     <Compile Include="..\Pegasus\Assets\AssetType.cs">
       <Link>Pegasus\Assets\AssetType.cs</Link>
-    </Compile>
-    <Compile Include="..\Pegasus\PegasusException.cs">
-      <Link>Pegasus\PegasusException.cs</Link>
     </Compile>
     <Compile Include="..\Pegasus\Platform\Graphics\Color.cs">
       <Link>Pegasus\Platform\Graphics\Color.cs</Link>
@@ -279,9 +273,6 @@
     </Compile>
     <Compile Include="..\Pegasus\Platform\PlatformType.cs">
       <Link>Pegasus\Platform\PlatformType.cs</Link>
-    </Compile>
-    <Compile Include="..\Pegasus\ResharperAttributes.cs">
-      <Link>Pegasus\ResharperAttributes.cs</Link>
     </Compile>
     <Compile Include="..\Pegasus\Scripting\Parsing\BasicParsers\AttemptParser.cs">
       <Link>Pegasus\Parsing\AttemptParser.cs</Link>
@@ -391,6 +382,15 @@
     <Compile Include="..\Pegasus\Scripting\Parsing\ReplyStatus.cs">
       <Link>Pegasus\Parsing\ReplyStatus.cs</Link>
     </Compile>
+    <Compile Include="..\Pegasus\Utilities\Assert.cs">
+      <Link>Pegasus\Utilities\Assert.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Utilities\PegasusException.cs">
+      <Link>Pegasus\Utilities\PegasusException.cs</Link>
+    </Compile>
+    <Compile Include="..\Pegasus\Utilities\ResharperAttributes.cs">
+      <Link>Pegasus\Utilities\ResharperAttributes.cs</Link>
+    </Compile>
     <Compile Include="AssetsProject.cs" />
     <Compile Include="Assets\Attributes\AssetAttribute.cs" />
     <Compile Include="Assets\Attributes\IgnoreAttribute.cs" />
@@ -409,6 +409,7 @@
     <Compile Include="Assets\TextureAsset.cs" />
     <Compile Include="BinaryWriter.cs" />
     <Compile Include="Compilers\AssetIdentifierListGenerator.cs" />
+    <Compile Include="Effects\ArrayLengthAttribute.cs" />
     <Compile Include="Fonts\FontMetadata.cs" />
     <Compile Include="CSharp\CodeElement.cs" />
     <Compile Include="CSharp\CSharpFile.cs" />

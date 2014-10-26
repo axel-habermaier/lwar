@@ -1,8 +1,7 @@
 ﻿namespace Tests.UserInterface
 {
 	using System;
-	using Pegasus.Framework;
-	using Pegasus.Framework.UserInterface;
+	using Pegasus.UserInterface;
 
 	/// <summary>
 	///     The control that is used for UI-related unit tests. The view model is recursive.
@@ -57,6 +56,16 @@
 		{
 			get { return _bool; }
 			set { ChangePropertyValue(ref _bool, value); }
+		}
+
+		public object ObjectNoSetter
+		{
+			get { return _object; }
+		}
+
+		public object ObjectNoGetter
+		{
+			set { ChangePropertyValue(ref _object, value); }
 		}
 
 		/// <summary>

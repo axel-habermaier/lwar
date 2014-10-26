@@ -3,6 +3,7 @@
 	using System;
 	using System.Diagnostics;
 	using Memory;
+	using Utilities;
 
 	/// <summary>
 	///     Base class for all objects belonging to a graphics device.

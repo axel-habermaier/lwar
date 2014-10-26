@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.Scripting
 {
 	using System;
+	using Utilities;
 
 	/// <summary>
 	///     Describes the update mode of a cvar.

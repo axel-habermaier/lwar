@@ -7,6 +7,7 @@
 	using System.Xml;
 	using System.Xml.Linq;
 	using Platform.Logging;
+	using Utilities;
 
 	/// <summary>
 	///     Provides type information about types that can be referenced in a Xaml file.

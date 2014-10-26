@@ -8,6 +8,7 @@ namespace Pegasus.AssetsCompiler
 	using System.Text;
 	using Platform;
 	using Platform.Memory;
+	using Utilities;
 
 	/// <summary>
 	///     Writes binary data to a memory stream using a little endian encoding.

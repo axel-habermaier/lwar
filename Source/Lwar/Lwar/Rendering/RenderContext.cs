@@ -3,11 +3,11 @@
 	using System;
 	using Pegasus;
 	using Pegasus.Assets;
-	using Pegasus.Framework;
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
+	using Pegasus.Utilities;
 	using Renderers;
 
 	/// <summary>
@@ -48,11 +48,10 @@
 		{
 			Assert.ArgumentNotNull(assets);
 
-			var graphicsDevice = Application.Current.GraphicsDevice;
-			_spriteBatch = new SpriteBatch(graphicsDevice);
+			_spriteBatch = new SpriteBatch();
 
 			foreach (var renderer in _renderers)
-				renderer.Load(graphicsDevice, assets);
+				renderer.Load(Application.Current.GraphicsDevice, assets);
 		}
 
 		/// <summary>

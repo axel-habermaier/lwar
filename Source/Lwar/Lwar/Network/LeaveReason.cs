@@ -8,9 +8,14 @@
 	public enum LeaveReason
 	{
 		/// <summary>
-		///     Indicates that the player quit the game session.
+		///     Indicates that the reason is unknown.
 		/// </summary>
-		Quit = 1,
+		Unknown = 0,
+
+		/// <summary>
+		///     Indicates that the player has disconnected from the game session.
+		/// </summary>
+		Disconnect = 1,
 
 		/// <summary>
 		///     Indicates that the connection to the client has been dropped.

@@ -3,7 +3,7 @@
 	using System;
 	using Assets;
 	using Assets.Effects;
-	using Gameplay.Entities;
+	using Gameplay.Client.Entities;
 	using Pegasus.Assets;
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
@@ -13,7 +13,7 @@
 	/// <summary>
 	///     Renders shockwaves into a 3D scene.
 	/// </summary>
-	public class ShockwaveRenderer : Renderer<Shockwave>
+	public class ShockwaveRenderer : Renderer<ShockwaveEntity>
 	{
 		/// <summary>
 		///     The effect that is used to draw the shockwaves.

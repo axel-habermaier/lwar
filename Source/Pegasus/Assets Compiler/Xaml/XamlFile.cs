@@ -8,6 +8,7 @@
 	using System.Xml.Linq;
 	using Platform.Logging;
 	using Scripting.Parsing;
+	using Utilities;
 
 	/// <summary>
 	///     Applies a number of transformations to a Xaml file to facilitate the cross-compilation of the Xaml code to C#.
@@ -92,7 +93,7 @@
 		private void Transform()
 		{
 			var baseType = GetClrType(Root.Name);
-			if (baseType.FullName == "Pegasus.Framework.UserInterface.ResourceDictionary")
+			if (baseType.FullName == "Pegasus.UserInterface.ResourceDictionary")
 			{
 				Root = null;
 				return;
@@ -208,7 +209,7 @@
 			foreach (var child in element.Elements().ToArray())
 				RewriteControlTemplateInstantiations(child);
 
-			if (element.Name.LocalName != "Create" || element.Attribute("Type").Value != "Pegasus.Framework.UserInterface.Controls.ControlTemplate")
+			if (element.Name.LocalName != "Create" || element.Attribute("Type").Value != "Pegasus.UserInterface.Controls.ControlTemplate")
 				return;
 
 			element.ReplaceWith(new XElement(DefaultNamespace + "Delegate",
@@ -225,7 +226,7 @@
 			foreach (var child in element.Elements().ToArray())
 				RewriteDataTemplateInstantiations(child);
 
-			if (element.Name.LocalName != "Create" || element.Attribute("Type").Value != "Pegasus.Framework.UserInterface.Controls.DataTemplate")
+			if (element.Name.LocalName != "Create" || element.Attribute("Type").Value != "Pegasus.UserInterface.Controls.DataTemplate")
 				return;
 
 			element.ReplaceWith(new XElement(DefaultNamespace + "Delegate",
@@ -239,7 +240,7 @@
 		private void AddSetterConstructorParameters()
 		{
 			foreach (var setter in Root.DescendantsAndSelf()
-									   .Where(e => e.Name.LocalName == "Create" && e.Attribute("Type").Value == "Pegasus.Framework.UserInterface.Setter"))
+									   .Where(e => e.Name.LocalName == "Create" && e.Attribute("Type").Value == "Pegasus.UserInterface.Setter"))
 			{
 				var property = setter.Element(DefaultNamespace + "Setter.Property");
 				var value = setter.Element(DefaultNamespace + "Setter.Value");
@@ -949,15 +950,15 @@
 			_namespaceShortcutMap.Add(String.Empty, "http://schemas.microsoft.com/winfx/2006/xaml");
 			_namespaceMap.Add("http://schemas.microsoft.com/winfx/2006/xaml", new[]
 			{
-				new XamlNamespace("Pegasus.Framework.UserInterface")
+				new XamlNamespace("Pegasus.UserInterface")
 			});
 
 			_namespaceShortcutMap.Add("x", "http://schemas.microsoft.com/winfx/2006/xaml/presentation");
 			_namespaceMap.Add("http://schemas.microsoft.com/winfx/2006/xaml/presentation", new[]
 			{
-				new XamlNamespace("Pegasus.Framework"),
-				new XamlNamespace("Pegasus.Framework.UserInterface"),
-				new XamlNamespace("Pegasus.Framework.UserInterface.Controls")
+				new XamlNamespace("Pegasus"),
+				new XamlNamespace("Pegasus.UserInterface"),
+				new XamlNamespace("Pegasus.UserInterface.Controls")
 			});
 
 			// Ignored namespaces

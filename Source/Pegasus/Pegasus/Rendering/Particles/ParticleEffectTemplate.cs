@@ -4,6 +4,7 @@ namespace Pegasus.Rendering.Particles
 	using Assets;
 	using Platform.Graphics;
 	using Platform.Memory;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a template from which a certain particle effect can be created.

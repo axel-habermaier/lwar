@@ -4,10 +4,11 @@
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Text;
-	using Framework.UserInterface.Input;
 	using Parsing;
 	using Platform.Logging;
 	using Platform.Memory;
+	using UserInterface.Input;
+	using Utilities;
 
 	/// <summary>
 	///     Manages all registered instruction bindings.

@@ -6,12 +6,18 @@
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.TypeSystem;
 	using Platform.Graphics;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a parameter of a shader.
 	/// </summary>
 	internal class ShaderParameter : EffectElement
 	{
+		/// <summary>
+		///     Indicates whether this is a parameter of a shader helper method.
+		/// </summary>
+		private readonly bool _isHelperMethod;
+
 		/// <summary>
 		///     The declaration of the method parameter that represents the shader parameter.
 		/// </summary>
@@ -21,10 +27,13 @@
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="parameter">The declaration of the method parameter that represents the shader parameter.</param>
-		public ShaderParameter(ParameterDeclaration parameter)
+		/// <param name="isHelperMethod">Indicates whether this is a parameter of a shader helper method.</param>
+		public ShaderParameter(ParameterDeclaration parameter, bool isHelperMethod)
 		{
 			Assert.ArgumentNotNull(parameter);
+
 			_parameter = parameter;
+			_isHelperMethod = isHelperMethod;
 		}
 
 		/// <summary>
@@ -82,33 +91,42 @@
 			if (!types.Contains(Type))
 				Error(_parameter.Type, "Unexpected data type.");
 
-			// Check whether the parameter has type Vector4 if it has the color semantics
-			if (Semantics.IsColor() && Type != DataType.Vector4)
-				Error(_parameter, "Parameters with the 'Color' semantics must be of type '{0}'.", typeof(Vector4).FullName);
-
 			// Check whether the parameter is an array type
 			if (_parameter.ResolveType(Resolver).Kind == TypeKind.Array)
 				Error(_parameter.Type, "Unexpected array declaration.");
 
-			// Check whether the parameter is declared with modifier 'out' or no modifier at all
-			if (_parameter.ParameterModifier != ParameterModifier.Out && _parameter.ParameterModifier != ParameterModifier.None)
-				Error(_parameter, "Unexpected modifier '{0}'.", _parameter.ParameterModifier.ToString().ToLower());
+			if (_isHelperMethod)
+			{
+				// Check whether the parameter is declared with any modifier
+				if (_parameter.ParameterModifier != ParameterModifier.None)
+					Error(_parameter, "Unexpected modifier '{0}'.", _parameter.ParameterModifier.ToString().ToLower());
+			}
+			else
+			{
+				// Check whether the parameter is declared with modifier 'out' or no modifier at all
+				if (_parameter.ParameterModifier != ParameterModifier.Out && _parameter.ParameterModifier != ParameterModifier.None)
+					Error(_parameter, "Unexpected modifier '{0}'.", _parameter.ParameterModifier.ToString().ToLower());
 
-			// Check whether the parameter is declared with any semantics or with multiple semantics
-			var semanticsCount = _parameter.GetSemantics(Resolver).Count();
-			if (semanticsCount > 1)
-				Error(_parameter, "Unexpected declaration of multiple semantics attributes.");
-			if (semanticsCount == 0)
-				Error(_parameter, "Expected declaration of a semantics attribute.");
+				// Check whether the parameter has type Vector4 if it has the color semantics
+				if (Semantics.IsColor() && Type != DataType.Vector4)
+					Error(_parameter, "Parameters with the 'Color' semantics must be of type '{0}'.", typeof(Vector4).FullName);
 
-			// Check whether the semantic index is out of range
-			var invalidSemantics = from attribute in _parameter.GetSemantics(Resolver)
-								   let semantics = attribute.ToSemanticsAttribute(Resolver)
-								   where semantics.Index < 0 || semantics.Index > SemanticsAttribute.MaximumIndex
-								   select attribute;
+				// Check whether the parameter is declared with any semantics or with multiple semantics
+				var semanticsCount = _parameter.GetSemantics(Resolver).Count();
+				if (semanticsCount > 1)
+					Error(_parameter, "Unexpected declaration of multiple semantics attributes.");
+				if (semanticsCount == 0)
+					Error(_parameter, "Expected declaration of a semantics attribute.");
 
-			foreach (var attribute in invalidSemantics)
-				Error(attribute.Arguments.First(), "Semantic index is out of range.");
+				// Check whether the semantic index is out of range
+				var invalidSemantics = from attribute in _parameter.GetSemantics(Resolver)
+									   let semantics = attribute.ToSemanticsAttribute(Resolver)
+									   where semantics.Index < 0 || semantics.Index > SemanticsAttribute.MaximumIndex
+									   select attribute;
+
+				foreach (var attribute in invalidSemantics)
+					Error(attribute.Arguments.First(), "Semantic index is out of range.");
+			}
 		}
 	}
 }

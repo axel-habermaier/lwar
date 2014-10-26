@@ -7,6 +7,7 @@
 	using Assets;
 	using Compilers;
 	using Platform.Logging;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a font as a bitmap, containing all glyphs of a given font.

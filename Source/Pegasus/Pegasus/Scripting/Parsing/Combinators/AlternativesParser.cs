@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.Scripting.Parsing.Combinators
 {
 	using System;
+	using Utilities;
 
 	/// <summary>
 	///     First, it applies the parser p1 to the input stream. If the first parser succeeds, the reply of the first parser is

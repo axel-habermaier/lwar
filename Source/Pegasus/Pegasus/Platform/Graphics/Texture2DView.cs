@@ -2,6 +2,7 @@
 {
 	using System;
 	using Math;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a 2D texture associated with a sampler state that can be used by an effect.

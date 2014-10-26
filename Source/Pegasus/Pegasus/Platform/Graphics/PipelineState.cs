@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Diagnostics;
+	using Utilities;
 
 	/// <summary>
 	///     Describes a state a pipeline stage. Objects of this class are immutable once

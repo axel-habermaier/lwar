@@ -4,11 +4,12 @@
 	using System.Collections.Generic;
 	using System.Linq;
 	using System.Text;
-	using Framework;
+	using UserInterface;
 	using Parsing;
 	using Platform;
 	using Platform.Logging;
 	using Platform.Memory;
+	using Utilities;
 
 	/// <summary>
 	///     Interprets user-provided input to set and view cvars and invoke commands.
@@ -141,7 +142,7 @@
 		private void OnPersist(string fileName)
 		{
 			var configFile = new ConfigurationFile(_parser, fileName);
-			configFile.Persist(CvarRegistry.All.Where(cvar => cvar.Persistent));
+			configFile.Persist(CvarRegistry.All.Where(cvar => cvar.Persistent && cvar.HasExplicitValue));
 		}
 
 		/// <summary>

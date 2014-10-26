@@ -3,6 +3,8 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
+	using Platform.Logging;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a constant buffer that groups shader constants.
@@ -51,7 +53,7 @@
 			get
 			{
 				var info = GetLayoutedConstants().Last();
-				var size = info.Offset + SizeInBytes(info.Constant.Type);
+				var size = info.Offset + info.Size;
 
 				if (size % 16 != 0)
 					size = 16 * (size / 16 + 1);
@@ -66,17 +68,15 @@
 		public ShaderConstant[] Constants { get; private set; }
 
 		/// <summary>
-		///     Returns the size in bytes required to store a value of the given data type.
+		///     Returns the size in bytes required to store a value of the given constant.
 		/// </summary>
-		/// <param name="dataType">The data type whose size should be returned.</param>
-		private static int SizeInBytes(DataType dataType)
+		/// <param name="constant">The shader constant whose size should be returned.</param>
+		private static int SizeInBytes(ShaderConstant constant)
 		{
-			switch (dataType)
+			switch (constant.Type)
 			{
 				case DataType.Boolean:
-					return 4;
 				case DataType.Integer:
-					return 4;
 				case DataType.Float:
 					return 4;
 				case DataType.Vector2:
@@ -96,6 +96,8 @@
 		///     Computes the constant buffer layout in accordance with the D3D11 constant buffer layouting rules and returns the
 		///     layouted constants contained in the constant buffer.
 		///     http://msdn.microsoft.com/en-us/library/windows/desktop/bb509632%28v=vs.85%29.aspx
+		///     Array elements are always aligned to 16-byte boundaries.
+		///     http://geidav.wordpress.com/2013/03/05/hidden-hlsl-performance-hit-accessing-unpadded-arrays-in-constant-buffers/
 		/// </summary>
 		public IEnumerable<LayoutedShaderConstant> GetLayoutedConstants()
 		{
@@ -105,23 +107,46 @@
 
 			foreach (var constant in Constants)
 			{
-				var size = SizeInBytes(constant.Type);
+				var elementSize = SizeInBytes(constant);
+				var size = elementSize;
+				var padding = 0;
 
-				// All types with more than 16 bytes must start at a 16-byte boundary
-				if (size > 16)
+				if (constant.IsArray && elementSize < 16)
+				{
+					size = 16 * constant.ArrayLength;
+					padding = 16 - elementSize;
+				}
+				else if (constant.IsArray)
+				{
+					size = (int)Math.Ceiling(elementSize / 16.0) * 16;
+					padding = size - elementSize;
+					size *= constant.ArrayLength;
+				}
+
+				// All types with more than 16 bytes as well as arrays must start at a 16-byte boundary
+				if (size > 16 || constant.IsArray)
 				{
 					if (remainingBytes != 16)
 						offset += remainingBytes;
 
 					remainingBytes = size;
 				}
-				else if (size > remainingBytes)
+				else if (size > remainingBytes && !constant.IsArray)
 				{
 					offset += remainingBytes;
 					remainingBytes = 16;
 				}
 
-				yield return new LayoutedShaderConstant(constant, offset);
+				yield return new LayoutedShaderConstant
+				{
+					Constant = constant,
+					Offset = offset,
+					ElementSize = elementSize,
+					ElementCount = constant.ArrayLength,
+					Padding = padding,
+					Size = size
+				};
+
 				offset += size;
 				remainingBytes -= size;
 			}
@@ -133,30 +158,35 @@
 		public struct LayoutedShaderConstant
 		{
 			/// <summary>
-			///     Initializes a new instance.
+			///     The shader constant stored in a constant buffer.
 			/// </summary>
-			/// <param name="constant">The shader constant stored in a constant buffer.</param>
-			/// <param name="offset">
-			///     The zero-based offset in bytes from the beginning of the constant buffer to the first byte of the
-			///     shader constant.
-			/// </param>
-			public LayoutedShaderConstant(ShaderConstant constant, int offset)
-				: this()
-			{
-				Constant = constant;
-				Offset = offset;
-			}
+			public ShaderConstant Constant;
 
 			/// <summary>
-			///     Gets the shader constant stored in a constant buffer.
+			///     The number of elements.
 			/// </summary>
-			public ShaderConstant Constant { get; private set; }
+			public int ElementCount;
 
 			/// <summary>
-			///     Gets the zero-based offset in bytes from the beginning of the constant buffer to the first byte of the shader
+			///     The size in bytes of a single element.
+			/// </summary>
+			public int ElementSize;
+
+			/// <summary>
+			///     The zero-based offset in bytes from the beginning of the constant buffer to the first byte of the shader
 			///     constant.
 			/// </summary>
-			public int Offset { get; private set; }
+			public int Offset;
+
+			/// <summary>
+			///     The padding in bytes after each element.
+			/// </summary>
+			public int Padding;
+
+			/// <summary>
+			/// The total size of the constant in bytes.
+			/// </summary>
+			public int Size;
 		}
 	}
 }

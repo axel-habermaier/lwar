@@ -53,6 +53,18 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
+		/// <param name="value">The value of the X, Y, Z, and W components of the vector.</param>
+		public Vector4(float value)
+		{
+			X = value;
+			Y = value;
+			Z = value;
+			W = value;
+		}
+
+		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
 		/// <param name="vector">The X, Y, and Z components of the vector.</param>
 		/// <param name="w">The W-component of the vector.</param>
 		public Vector4(Vector3 vector, float w = 1.0f)
@@ -190,13 +202,13 @@
 		/// </summary>
 		public float Length
 		{
-			get { return (float)Math.Sqrt(SquaredLength); }
+			get { return (float)Math.Sqrt(LengthSquared); }
 		}
 
 		/// <summary>
 		///     Gets the squared length of the vector.
 		/// </summary>
-		public float SquaredLength
+		public float LengthSquared
 		{
 			get { return X * X + Y * Y + Z * Z + W * W; }
 		}

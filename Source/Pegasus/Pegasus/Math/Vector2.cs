@@ -28,6 +28,16 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
+		/// <param name="value">The value of both the X- and Y-components of the vector.</param>
+		public Vector2(float value)
+		{
+			X = value;
+			Y = value;
+		}
+
+		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
 		/// <param name="x">The X-component of the vector.</param>
 		/// <param name="y">The Y-component of the vector.</param>
 		public Vector2(float x, float y)
@@ -57,13 +67,13 @@
 		/// </summary>
 		public float Length
 		{
-			get { return (float)Math.Sqrt(SquaredLength); }
+			get { return (float)Math.Sqrt(LengthSquared); }
 		}
 
 		/// <summary>
 		///     Gets the squared length of the vector.
 		/// </summary>
-		public float SquaredLength
+		public float LengthSquared
 		{
 			get { return X * X + Y * Y; }
 		}
@@ -230,6 +240,86 @@
 		{
 			result = new Vector2(matrix.M11 * vector.X + matrix.M21 * vector.Y + matrix.M41,
 				matrix.M12 * vector.X + matrix.M22 * vector.Y + matrix.M42);
+		}
+
+		/// <summary>
+		///     Clamps the given vector to be in the range [min, max] for each component of the vector.
+		/// </summary>
+		/// <param name="value">The value that should be clamped.</param>
+		/// <param name="min">The lower bound of the clamped interval.</param>
+		/// <param name="max">The upper bound of the clamped interval.</param>
+		public static Vector2 Clamp(Vector2 value, Vector2 min, Vector2 max)
+		{
+			return new Vector2(MathUtils.Clamp(value.X, min.X, max.X), MathUtils.Clamp(value.Y, min.Y, max.Y));
+		}
+
+		/// <summary>
+		///     Rotates the given vector by the given angle.
+		/// </summary>
+		/// <param name="vector">The vector that should be rotated.</param>
+		/// <param name="angle">The rotation angle in radians.</param>
+		public static Vector2 Rotate(Vector2 vector, float angle)
+		{
+			var cos = MathUtils.Cos(angle);
+			var sin = -MathUtils.Sin(angle);
+			return new Vector2(vector.X * cos - vector.Y * sin, vector.X * sin + vector.Y * cos);
+		}
+
+		/// <summary>
+		///     Scales the length of the vector to the given length.
+		/// </summary>
+		/// <param name="vector">The vector that should be scaled.</param>
+		/// <param name="length">The length of the scaled vector.</param>
+		public static Vector2 ScaleTo(Vector2 vector, float length)
+		{
+			return vector * (length / vector.Length);
+		}
+
+		/// <summary>
+		///     Scales the length of the vector to the given length.
+		/// </summary>
+		/// <param name="length">The length of the scaled vector.</param>
+		public Vector2 ScaleTo(float length)
+		{
+			return this * (length / Length);
+		}
+
+		/// <summary>
+		///     Gets the squared distance between two vectors.
+		/// </summary>
+		/// <param name="vector1">The first vector the squared distance should be computed for.</param>
+		/// <param name="vector2">The second vector the squared distance should be computed for.</param>
+		public static float DistanceSquared(Vector2 vector1, Vector2 vector2)
+		{
+			return (vector1 - vector2).LengthSquared;
+		}
+
+		/// <summary>
+		///     Gets the distance between two vectors.
+		/// </summary>
+		/// <param name="vector1">The first vector the distance should be computed for.</param>
+		/// <param name="vector2">The second vector the distance should be computed for.</param>
+		public static float Distance(Vector2 vector1, Vector2 vector2)
+		{
+			return (vector1 - vector2).Length;
+		}
+
+		/// <summary>
+		///     Computes the angle in radians from the given vector.
+		/// </summary>
+		/// <param name="vector">The vector the angle should be computed from.</param>
+		public static float ToAngle(Vector2 vector)
+		{
+			return MathUtils.Atan2(-vector.Y, vector.X);
+		}
+
+		/// <summary>
+		///     Computes the vector from the given angle.
+		/// </summary>
+		/// <param name="angle">The angle in radians the vector should be computed from.</param>
+		public static Vector2 FromAngle(float angle)
+		{
+			return new Vector2(MathUtils.Cos(angle), -MathUtils.Sin(angle));
 		}
 	}
 }

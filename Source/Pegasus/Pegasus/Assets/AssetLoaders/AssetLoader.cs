@@ -6,6 +6,7 @@
 	using Platform;
 	using Platform.Graphics;
 	using Platform.Memory;
+	using Utilities;
 
 	/// <summary>
 	///     Asset loaders are used by assets managers to load assets from disk.

@@ -2,8 +2,7 @@
 {
 	using System;
 	using Messages;
-	using Pegasus;
-	using Pegasus.Platform.Memory;
+	using Pegasus.Utilities;
 
 	/// <summary>
 	///     Manages the delivery guarantees of all incoming and outgoing messages.
@@ -26,33 +25,18 @@
 		private uint _lastAssignedUnreliableSequenceNumber;
 
 		/// <summary>
-		///     The sequence number of the last reliable message that has been received and processed.
+		///     Gets the sequence number of the last reliable message that has been received and processed.
 		/// </summary>
-		private uint _lastReceivedReliableSequenceNumber;
-
-		/// <summary>
-		///     The sequence number of the last unreliable message that has been received and processed.
-		/// </summary>
-		private uint _lastReceivedUnreliableSequenceNumber;
-
-		/// <summary>
-		///     Writes the header of a packet.
-		/// </summary>
-		/// <param name="buffer">The buffer the header should be written into.</param>
-		public void WriteHeader(BufferWriter buffer)
-		{
-			var header = new PacketHeader(_lastReceivedReliableSequenceNumber);
-			header.Write(buffer);
-		}
+		public uint LastReceivedReliableSequenceNumber { get; private set; }
 
 		/// <summary>
 		///     Checks whether the reception of the given reliable message has been acknowledged by the remote peer.
 		/// </summary>
-		/// <param name="message">The message that should be checked.</param>
-		public bool IsAcknowledged(ref Message message)
+		/// <param name="sequencedMessage">The message that should be checked.</param>
+		public bool IsAcknowledged(SequencedMessage sequencedMessage)
 		{
-			Assert.That(message.Type.IsReliable(), "The reception of unreliable messages cannot be acknowledged.");
-			return message.SequenceNumber <= _lastAckedSequenceNumber;
+			Assert.That(sequencedMessage.Message.IsReliable, "The reception of unreliable messages cannot be acknowledged.");
+			return sequencedMessage.SequenceNumber <= _lastAckedSequenceNumber;
 		}
 
 		/// <summary>
@@ -62,24 +46,10 @@
 		/// <param name="sequenceNumber">The sequence number that should be checked.</param>
 		public bool AllowReliableDelivery(uint sequenceNumber)
 		{
-			if (sequenceNumber != _lastReceivedReliableSequenceNumber + 1)
+			if (sequenceNumber != LastReceivedReliableSequenceNumber + 1)
 				return false;
 
-			++_lastReceivedReliableSequenceNumber;
-			return true;
-		}
-
-		/// <summary>
-		///     Checks the sequence number to determine whether the message has not been processed before. If true,
-		///     updates the last timestamp and processed sequence number, causing future older unreliable messages to be discarded.
-		/// </summary>
-		/// <param name="sequenceNumber">The sequence number that should be checked.</param>
-		public bool AllowUnreliableDelivery(uint sequenceNumber)
-		{
-			if (sequenceNumber <= _lastReceivedUnreliableSequenceNumber)
-				return false;
-
-			_lastReceivedUnreliableSequenceNumber = sequenceNumber;
+			++LastReceivedReliableSequenceNumber;
 			return true;
 		}
 
@@ -94,15 +64,46 @@
 		}
 
 		/// <summary>
-		///     Assigns a sequence number to the message.
+		///     Assigns a sequence number to the given reliable message.
 		/// </summary>
 		/// <param name="message">The message the sequence number should be assigned to.</param>
-		public void AssignSequenceNumber(ref Message message)
+		public SequencedMessage AssignReliableSequenceNumber(Message message)
 		{
-			if (message.Type.IsReliable())
-				message.SequenceNumber = ++_lastAssignedReliableSequenceNumber;
-			else
-				message.SequenceNumber = ++_lastAssignedUnreliableSequenceNumber;
+			Assert.ArgumentNotNull(message);
+			Assert.ArgumentSatisfies(message.IsReliable, "Expected a reliable message.");
+
+			return new SequencedMessage(message, ++_lastAssignedReliableSequenceNumber);
+		}
+
+		/// <summary>
+		///     Assigns a sequence number to the given unreliable message.
+		/// </summary>
+		/// <param name="message">The message the sequence number should be assigned to.</param>
+		public SequencedMessage AssignUnreliableSequenceNumber(Message message)
+		{
+			Assert.ArgumentNotNull(message);
+			Assert.ArgumentSatisfies(message.IsUnreliable, "Expected an unreliable message.");
+
+			return new SequencedMessage(message, ++_lastAssignedUnreliableSequenceNumber);
+		}
+
+		/// <summary>
+		///     Assigns an unreliable sequence number.
+		/// </summary>
+		public uint AssignUnreliableSequenceNumber()
+		{
+			return ++_lastAssignedUnreliableSequenceNumber;
+		}
+
+		/// <summary>
+		///     Resets the delivery manager.
+		/// </summary>
+		public void Reset()
+		{
+			_lastAckedSequenceNumber = 0;
+			_lastAssignedReliableSequenceNumber = 0;
+			_lastAssignedUnreliableSequenceNumber = 0;
+			LastReceivedReliableSequenceNumber = 0;
 		}
 	}
 }

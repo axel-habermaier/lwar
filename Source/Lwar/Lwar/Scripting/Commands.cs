@@ -2,13 +2,14 @@
 {
 	using System;
 	using System.Diagnostics;
+	using Pegasus.Utilities;
 	using Lwar.Network;
 	using Pegasus;
-	using Pegasus.Framework.UserInterface.Input;
 	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Network;
 	using Pegasus.Scripting;
 	using Pegasus.Scripting.Validators;
+	using Pegasus.UserInterface.Input;
 
 	internal static class Commands
 	{
@@ -157,7 +158,7 @@
 		/// <param name="ipAddress">The IP address of the server.</param>
 		/// <param name="port">The port of the server.</param>
 		[DebuggerHidden]
-		public static void Connect(IPAddress ipAddress, ushort port = Specification.DefaultServerPort)
+		public static void Connect(IPAddress ipAddress, ushort port = NetworkProtocol.DefaultServerPort)
 		{
 			Assert.ArgumentNotNull((object)ipAddress);
 			Assert.ArgumentNotNull((object)port);
@@ -612,10 +613,10 @@
 			StopServerCommand = new Command("stop_server", "Shuts down the currently running server.", false);
 			ConnectCommand = new Command<IPAddress, ushort>("connect", "Connects to a game session on a remote or local server.", false, 
 				new CommandParameter("ipAddress", typeof(IPAddress), false, default(IPAddress), "The IP address of the server."),
-				new CommandParameter("port", typeof(ushort), true, Specification.DefaultServerPort, "The port of the server."));
+				new CommandParameter("port", typeof(ushort), true, NetworkProtocol.DefaultServerPort, "The port of the server."));
 			DisconnectCommand = new Command("disconnect", "Disconnects from the current game session.", false);
 			SayCommand = new Command<string>("say", "Sends a chat message to all peers.", false, 
-				new CommandParameter("message", typeof(string), false, default(string), "The message that should be sent.", new NotEmptyAttribute(), new MaximumLengthAttribute(Specification.ChatMessageLength, true)));
+				new CommandParameter("message", typeof(string), false, default(string), "The message that should be sent.", new NotEmptyAttribute(), new MaximumLengthAttribute(NetworkProtocol.ChatMessageLength, true)));
 			ToggleDebugCameraCommand = new Command("toggle_debug_camera", "Toggles between the game and the debugging camera.", false);
 
 			CommandRegistry.Register(StartServerCommand);

@@ -5,6 +5,7 @@
 	using System.Linq;
 	using System.Xml.Linq;
 	using Platform.Logging;
+	using Utilities;
 
 	/// <summary>
 	///     Stores type information about a class that can be referenced in a Xaml file.

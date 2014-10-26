@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Linq;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a file in the application's user directory that can be read and written by the application.

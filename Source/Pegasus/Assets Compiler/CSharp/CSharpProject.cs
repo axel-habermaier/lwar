@@ -10,6 +10,7 @@
 	using ICSharpCode.NRefactory.CSharp.Resolver;
 	using ICSharpCode.NRefactory.TypeSystem;
 	using Platform.Logging;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a NRefactory C# project.

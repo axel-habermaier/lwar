@@ -16,7 +16,7 @@
 			Shield = 1,
 			Mass = 0.1f,
 			Radius = 16,
-			Acceleration = new Vector2(0, 3000),
+			Acceleration = new Vector2(0, 6000),
 			Format = "format_pos"
 		};
 
@@ -31,7 +31,7 @@
 			Acceleration = new Vector2(500, 20),
 			Decelaration = new Vector2(20, 20),
 			Rotation = 1,
-			Format = "format_ship"
+			Format = "format_pos"
 		};
 
 		public static readonly EntityTemplate Ray = new EntityTemplate
@@ -50,7 +50,7 @@
 		public static readonly EntityTemplate Gun = new EntityTemplate
 		{
 			Act = "gun_shoot",
-			Interval = 150,
+			Interval = 100,
 			Energy = 1000,
 			Health = 1
 		};

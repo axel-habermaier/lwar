@@ -1,10 +1,10 @@
 ﻿namespace Lwar.UserInterface.ViewModels
 {
 	using System;
-	using Gameplay;
-	using Pegasus;
-	using Pegasus.Framework;
-	using Pegasus.Framework.UserInterface.Input;
+	using Gameplay.Client;
+	using Pegasus.UserInterface;
+	using Pegasus.UserInterface.Input;
+	using Pegasus.Utilities;
 	using Scripting;
 
 	/// <summary>
@@ -15,7 +15,7 @@
 		/// <summary>
 		///     The game session that is played.
 		/// </summary>
-		private GameSession _gameSession;
+		private ClientGameSession _gameSession;
 
 		/// <summary>
 		///     Indicates whether the view is visible.
@@ -26,7 +26,7 @@
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="gameSession">The game session that should be displayed.</param>
-		public RespawnViewModel(GameSession gameSession)
+		public RespawnViewModel(ClientGameSession gameSession)
 		{
 			Assert.ArgumentNotNull(gameSession);
 

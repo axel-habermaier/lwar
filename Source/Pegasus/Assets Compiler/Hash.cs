@@ -3,6 +3,7 @@
 	using System;
 	using System.IO;
 	using System.Security.Cryptography;
+	using Utilities;
 
 	/// <summary>
 	///     Represents an MD5 hash of a file.

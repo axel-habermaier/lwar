@@ -55,6 +55,10 @@ Network
 - Add reliable GameEnd message with reason Victory/Tie/GalaxyChange (client can automatically determine (tied) winners
   based on player ranks); should contain next galaxy name (so that client can show it and load the data)
 - Add reliable achievement message (see ideas.txt)
+- Remove seqno from unreliable messages header; instead, add frameNumber (or frameTime) to packet header (use the same
+  value for all packets sent during the same frame) that is used by unreliable messages instead
+- Server should send Disconnect message (or serveral ones) when it shuts down to all clients (the clients can then end
+  the game session, instead of timing out)
 
 Server
 ========

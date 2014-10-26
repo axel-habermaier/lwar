@@ -3,6 +3,7 @@
 	using System;
 	using System.IO;
 	using Assets;
+	using Utilities;
 
 	/// <summary>
 	///     Writes a compiled asset file. The endianess of the compiled file always matches the endianess of the target

@@ -128,7 +128,7 @@
 		/// <param name="circle">The circle that should be checked.</param>
 		public bool Intersects(Circle circle)
 		{
-			var distance = (Position - circle.Position).SquaredLength;
+			var distance = (Position - circle.Position).LengthSquared;
 			var radiusSum = Radius + circle.Radius;
 			return distance <= radiusSum * radiusSum;
 		}
@@ -148,7 +148,7 @@
 			var distance = Position - closest;
 
 			// There is an intersection only if the distance is less than or equal to the circle's radius
-			return distance.SquaredLength <= Radius * Radius;
+			return distance.LengthSquared <= Radius * Radius;
 		}
 
 		/// <summary>
@@ -157,7 +157,7 @@
 		/// <param name="point">The point that should be checked.</param>
 		public bool Intersects(Vector2 point)
 		{
-			var distance = (Position - point).SquaredLength;
+			var distance = (Position - point).LengthSquared;
 			return distance <= Radius * Radius;
 		}
 	}

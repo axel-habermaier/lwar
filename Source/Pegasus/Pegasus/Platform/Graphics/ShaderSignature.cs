@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Linq;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a shader signature.

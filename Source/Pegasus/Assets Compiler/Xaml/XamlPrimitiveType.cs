@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.AssetsCompiler.Xaml
 {
 	using System;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a built-in primitive Xaml type such as int, string, or double.

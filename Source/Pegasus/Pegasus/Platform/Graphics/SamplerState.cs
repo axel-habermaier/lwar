@@ -5,6 +5,7 @@
 	using System.Runtime.InteropServices;
 	using System.Security;
 	using Memory;
+	using Utilities;
 
 	/// <summary>
 	///     Describes a sampler state of a shader pipeline stage. Objects of this class are immutable once

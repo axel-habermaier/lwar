@@ -33,7 +33,7 @@ Source/Lwar/Assets/Effects/Effects.cs
 Source/Lwar/Assets/Effects/ShaderSignatures.cs
 Source/Lwar/Assets/Fonts/FontLoader.cs
 Source/Lwar/User Interface/UserInterface.cs
-Source/Lwar/Lwar/Gameplay/Entities/EntityType.cs
-Source/Lwar/Lwar/Gameplay/Entities/EntityTemplates.cs
+Source/Lwar/Lwar/Gameplay/Client/Entities/EntityTemplates.cs
+Source/Lwar/Lwar/Network/EntityType.cs
 Source/Lwar/Server/templates.c
 Source/Lwar/Server/templates.h

@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Diagnostics;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a log entry with a specific type and message.

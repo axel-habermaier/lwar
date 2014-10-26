@@ -3,10 +3,10 @@
 	using System;
 	using FluentAssertions;
 	using NUnit.Framework;
-	using Pegasus;
-	using Pegasus.Framework.UserInterface;
-	using Pegasus.Framework.UserInterface.Controls;
-	using Pegasus.Framework.UserInterface.Input;
+	using Pegasus.UserInterface;
+	using Pegasus.UserInterface.Controls;
+	using Pegasus.UserInterface.Input;
+	using Pegasus.Utilities;
 
 	[TestFixture]
 	public class RoutedEventBindingTests

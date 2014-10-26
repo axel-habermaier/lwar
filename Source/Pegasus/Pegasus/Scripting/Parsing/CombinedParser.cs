@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.Scripting.Parsing
 {
 	using System;
+	using Utilities;
 
 	/// <summary>
 	///     An abstract base class for the implementation of combined parsers.

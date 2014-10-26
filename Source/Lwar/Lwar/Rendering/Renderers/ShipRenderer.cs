@@ -2,7 +2,7 @@
 {
 	using System;
 	using Assets;
-	using Gameplay.Entities;
+	using Gameplay.Client.Entities;
 	using Pegasus.Assets;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Rendering;
@@ -10,7 +10,7 @@
 	/// <summary>
 	///     Renders ships into a 3D scene.
 	/// </summary>
-	public class ShipRenderer : Renderer<Ship>
+	public class ShipRenderer : Renderer<ShipEntity>
 	{
 		/// <summary>
 		///     The texture that is used to draw the ship.
@@ -37,7 +37,7 @@
 			spriteBatch.DepthStencilState = DepthStencilState.DepthDisabled;
 
 			foreach (var ship in Elements)
-				spriteBatch.Draw(ship.Position, _texture.Size, _texture, Colors.White, -ship.Rotation);
+				spriteBatch.Draw(ship.Position, _texture.Size, _texture, Colors.White, -ship.Orientation);
 		}
 
 		/// <summary>

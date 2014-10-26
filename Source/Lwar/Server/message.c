@@ -46,6 +46,7 @@ void message_add(Message *m, Entity *e) {
     m->type = MESSAGE_ADD;
     m->add.entity_id = e->id;
     m->add.player_id = e->player->id;
+	m->add.parent_id = e->parent_id;
     m->add.type_id   = e->type->id;
 }
 
@@ -78,8 +79,9 @@ void message_stats(Message *m) {
 	}
 }
 
-void message_synced(Message *m) {
+void message_synced(Message *m, Player *p) {
     m->type = MESSAGE_SYNCED;
+	m->synced.player_id = p->id;
 }
 
 void message_reject(Message *m, RejectReason reason) {

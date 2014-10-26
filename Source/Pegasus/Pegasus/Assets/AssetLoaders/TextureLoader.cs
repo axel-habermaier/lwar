@@ -3,6 +3,7 @@ namespace Pegasus.Assets.AssetLoaders
 	using System;
 	using Platform.Graphics;
 	using Platform.Memory;
+	using Utilities;
 
 	/// <summary>
 	///     Loads texture assets.

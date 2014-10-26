@@ -7,6 +7,7 @@
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.Semantics;
 	using Platform.Graphics;
+	using Utilities;
 
 	/// <summary>
 	///     Cross-compiles a C# shader method to GLSL.
@@ -28,14 +29,12 @@
 
 			if (literal.IsArray)
 			{
-				Writer.Append("new {0}[] ( ", ToShaderType(literal.Type));
+				Writer.Append("{0}[] ( ", ToShaderType(literal.Type));
 				Writer.Append(String.Join(", ", literal.Value.GetConstantValues(Resolver)));
 				Writer.Append(" )");
 			}
-			else if (literal.IsConstructed)
-				literal.Value.AcceptVisitor(this);
 			else
-				Writer.Append(literal.Value.ToString().ToLower());
+				literal.Value.AcceptVisitor(this);
 
 			Writer.AppendLine(";");
 		}
@@ -51,7 +50,12 @@
 			Writer.AppendBlockStatement(() =>
 			{
 				foreach (var constant in constantBuffer.Constants)
-					Writer.AppendLine("{0} {1};", ToShaderType(constant.Type), Escape(constant.Name));
+				{
+					Writer.Append("{0} {1}", ToShaderType(constant.Type), Escape(constant.Name));
+					if (constant.IsArray)
+						Writer.Append("[{0}]", constant.ArrayLength);
+					Writer.AppendLine(";");
+				}
 			}, true);
 			Writer.NewLine();
 		}
@@ -159,6 +163,8 @@
 			}
 		}
 
+
+
 		/// <summary>
 		///     Gets the token for the given intrinsic function.
 		/// </summary>
@@ -169,6 +175,8 @@
 			{
 				case Intrinsic.InverseSquareRoot:
 					return "inversesqrt";
+				case Intrinsic.Lerp:
+					return "mix";
 				default:
 					return base.GetToken(intrinsic);
 			}
@@ -177,7 +185,7 @@
 		public override void VisitIdentifierExpression(IdentifierExpression identifierExpression)
 		{
 			var local = Resolver.Resolve(identifierExpression) as LocalResolveResult;
-			if (local != null && local.IsParameter)
+			if (local != null && local.IsParameter && GeneratingMainMethod)
 			{
 				var parameter = Shader.Parameters.Single(p => p.Name == local.Variable.Name);
 				if (Shader.Type == ShaderType.VertexShader && parameter.IsOutput && parameter.Semantics == DataSemantics.Position)
@@ -196,12 +204,20 @@
 			base.VisitIdentifierExpression(identifierExpression);
 		}
 
-		public override void VisitInvocationExpression(InvocationExpression invocationExpression)
+		protected override void VisitIntrinsicExpression(InvocationExpression invocationExpression)
 		{
 			var intrinsic = invocationExpression.ResolveIntrinsic(Resolver);
-			if (intrinsic != Intrinsic.Sample && intrinsic != Intrinsic.SampleLevel)
+			if (intrinsic != Intrinsic.Sample && intrinsic != Intrinsic.SampleLevel && intrinsic != Intrinsic.Saturate)
 			{
-				base.VisitInvocationExpression(invocationExpression);
+				base.VisitIntrinsicExpression(invocationExpression);
+				return;
+			}
+
+			if (intrinsic == Intrinsic.Saturate)
+			{
+				Writer.Append("clamp(");
+				invocationExpression.Arguments.AcceptVisitor(this, () => Writer.Append(", "));
+				Writer.Append(", 0.0f, 1.0f)");
 				return;
 			}
 

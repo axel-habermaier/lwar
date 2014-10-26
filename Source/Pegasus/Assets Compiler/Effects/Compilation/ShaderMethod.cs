@@ -5,7 +5,11 @@
 	using System.Linq;
 	using CSharp;
 	using ICSharpCode.NRefactory.CSharp;
+	using ICSharpCode.NRefactory.CSharp.Resolver;
+	using ICSharpCode.NRefactory.Semantics;
+	using ICSharpCode.NRefactory.TypeSystem;
 	using Platform.Graphics;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a C# method that is cross-compiled to GLSL or HLSL.
@@ -21,11 +25,19 @@
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="method">The declaration of the method that represents the shader.</param>
-		public ShaderMethod(MethodDeclaration method)
+		/// <param name="isHelperMethod">A value indicating whether the method is a helper method and not a stand-alone shader method.</param>
+		public ShaderMethod(MethodDeclaration method, bool isHelperMethod = false)
 		{
 			Assert.ArgumentNotNull(method);
+
 			_method = method;
+			IsHelperMethod = isHelperMethod;
 		}
+
+		/// <summary>
+		///     Gets a value indicating whether the method is a helper method and not a stand-alone shader method.
+		/// </summary>
+		public bool IsHelperMethod { get; private set; }
 
 		/// <summary>
 		///     Gets the name of the shader.
@@ -50,6 +62,14 @@
 
 				throw new InvalidOperationException("Unsupported shader type.");
 			}
+		}
+
+		/// <summary>
+		///     Gets the member symbol of the shader method.
+		/// </summary>
+		public IMember ResolvedSymbol
+		{
+			get { return ((MemberResolveResult)Resolver.Resolve(_method)).Member; }
 		}
 
 		/// <summary>
@@ -82,6 +102,14 @@
 		public IEnumerable<ShaderParameter> Parameters
 		{
 			get { return GetChildElements<ShaderParameter>(); }
+		}
+
+		/// <summary>
+		///     Gets the return type of the shader method.
+		/// </summary>
+		public DataType ReturnType
+		{
+			get { return _method.ReturnType.ResolveType(Resolver).ToDataType(); }
 		}
 
 		/// <summary>
@@ -132,7 +160,7 @@
 		{
 			// Add all shader parameters
 			AddElements(from parameter in _method.Descendants.OfType<ParameterDeclaration>()
-						select new ShaderParameter(parameter));
+						select new ShaderParameter(parameter, IsHelperMethod));
 		}
 
 		/// <summary>
@@ -141,6 +169,18 @@
 		/// </summary>
 		protected override void Validate()
 		{
+			// Check whether the shader depends on any type arguments
+			foreach (var parameter in _method.TypeParameters)
+				Error(parameter, "Unexpected type parameter '{0}'.", parameter.Name);
+
+			if (IsHelperMethod)
+			{
+				// Check whether 'private' is the only declared modifier 
+				ValidateModifiers(_method, _method.ModifierTokens, new[] { Modifiers.Private });
+
+				return;
+			}
+
 			// Check whether both the vertex and fragment shader attributes are declared on the method
 			var isVertexShader = _method.Attributes.Contain<VertexShaderAttribute>(Resolver);
 			var isFragmentShader = _method.Attributes.Contain<FragmentShaderAttribute>(Resolver);
@@ -155,10 +195,6 @@
 
 			// Check whether 'public' is the only declared modifier 
 			ValidateModifiers(_method, _method.ModifierTokens, new[] { Modifiers.Public });
-
-			// Check whether the shader depends on any type arguments
-			foreach (var parameter in _method.TypeParameters)
-				Error(parameter, "Unexpected type parameter '{0}'.", parameter.Name);
 
 			// Check whether the vertex shader declares an output parameter with the Position semantics
 			if (Type == ShaderType.VertexShader && Outputs.All(output => output.Semantics != DataSemantics.Position))
@@ -185,6 +221,53 @@
 			// Check whether the all inputs and outputs have distinct semantics
 			ValidateSemantics(Inputs, "input");
 			ValidateSemantics(Outputs, "output");
+		}
+
+		/// <summary>
+		///     Gets a value indicating whether the shader uses the given constant buffer.
+		/// </summary>
+		/// <param name="constantBuffer">The constant buffer that should be checked.</param>
+		public bool Uses(ConstantBuffer constantBuffer)
+		{
+			return (from constant in constantBuffer.Constants
+					from expression in MethodBody.Descendants.OfType<IdentifierExpression>()
+					where constant.IsReferenced(expression)
+					select constant).Any();
+		}
+
+		/// <summary>
+		///     Gets a value indicating whether the shader uses the given shader literal.
+		/// </summary>
+		/// <param name="literal">The shader literal that should be checked.</param>
+		public bool Uses(ShaderLiteral literal)
+		{
+			return MethodBody.Descendants.OfType<IdentifierExpression>().Any(literal.IsReferenced);
+		}
+
+		/// <summary>
+		///     Gets a value indicating whether the shader uses the given shader texture.
+		/// </summary>
+		/// <param name="texture">The shader texture that should be checked.</param>
+		public bool Uses(ShaderTexture texture)
+		{
+			return MethodBody.Descendants.OfType<IdentifierExpression>().Any(texture.IsReferenced);
+		}
+
+		/// <summary>
+		///     Gets a value indicating whether the shader uses the given shader helper method.
+		/// </summary>
+		/// <param name="method">The shader texture that should be checked.</param>
+		public bool Uses(ShaderMethod method)
+		{
+			return MethodBody.Descendants.OfType<IdentifierExpression>().Any(expression =>
+			{
+				var resolved = Resolver.Resolve(expression) as MethodGroupResolveResult;
+				if (resolved == null)
+					return false;
+
+				var resolvedMethod = Resolver.Resolve(method._method) as MemberResolveResult;
+				return resolved.Methods.Contains(resolvedMethod.Member);
+			});
 		}
 
 		/// <summary>

@@ -3,6 +3,7 @@
 	using System;
 	using System.Runtime.InteropServices;
 	using System.Security;
+	using Utilities;
 
 	/// <summary>
 	///     A fragment shader is a program that controls the fragment-shader stage.

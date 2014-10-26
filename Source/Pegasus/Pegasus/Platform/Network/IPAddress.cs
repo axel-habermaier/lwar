@@ -4,6 +4,7 @@
 	using System.Runtime.InteropServices;
 	using System.Security;
 	using Logging;
+	using Utilities;
 
 	/// <summary>
 	///     Represents an IPv4 or IPv6 internet protocol address.

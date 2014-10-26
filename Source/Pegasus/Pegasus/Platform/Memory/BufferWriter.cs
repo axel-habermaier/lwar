@@ -3,16 +3,18 @@
 	using System;
 	using System.Diagnostics;
 	using System.Text;
+	using Utilities;
 
 	/// <summary>
 	///     Wraps a byte buffer, providing methods for writing fundamental data types to the buffer.
 	/// </summary>
-	public class BufferWriter : PooledObject
+	public sealed class BufferWriter : UniquePooledObject
 	{
 		/// <summary>
 		///     The default pool for buffer writer instances.
 		/// </summary>
-		private static readonly ObjectPool<BufferWriter> DefaultPool = new ObjectPool<BufferWriter>(hasGlobalLifetime: true);
+		private static readonly ObjectPool<BufferWriter> DefaultPool =
+			new ObjectPool<BufferWriter>(() => new BufferWriter(), hasGlobalLifetime: true);
 
 		/// <summary>
 		///     The buffer to which the data is written.
@@ -25,16 +27,49 @@
 		private Endianess _endianess;
 
 		/// <summary>
+		///     The maximum position that was written by the writer.
+		/// </summary>
+		private int _maxWritePosition;
+
+		/// <summary>
 		///     The current write position.
 		/// </summary>
 		private int _writePosition;
+
+		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		private BufferWriter()
+		{
+		}
+
+		/// <summary>
+		///     Gets or sets the zero-based write position where the next write operation will be performed.
+		/// </summary>
+		public int WritePosition
+		{
+			get { return _writePosition - _buffer.Offset; }
+			set
+			{
+				Assert.InRange(value, 0, _maxWritePosition - _buffer.Offset);
+				_writePosition = value + _buffer.Offset;
+			}
+		}
+
+		/// <summary>
+		///     Gets the buffer that is written to.
+		/// </summary>
+		public byte[] Buffer
+		{
+			get { return _buffer.Array; }
+		}
 
 		/// <summary>
 		///     Gets the number of bytes that have been written to the buffer.
 		/// </summary>
 		public int Count
 		{
-			get { return _writePosition - _buffer.Offset; }
+			get { return _maxWritePosition - _buffer.Offset; }
 		}
 
 		/// <summary>
@@ -82,6 +117,7 @@
 		public void Reset()
 		{
 			_writePosition = _buffer.Offset;
+			_maxWritePosition = _buffer.Offset;
 		}
 
 		/// <summary>
@@ -91,6 +127,28 @@
 		public bool CanWrite(int size)
 		{
 			return _writePosition + size <= _buffer.Offset + _buffer.Count;
+		}
+
+		/// <summary>
+		///     Skips writing the given number of bytes.
+		/// </summary>
+		/// <param name="byteCount">The number of bytes that should be skipped.</param>
+		public void SkipBytes(int byteCount)
+		{
+			Assert.ArgumentInRange(byteCount, 0, Int32.MaxValue);
+			ValidateCanWrite(byteCount);
+
+			AdvanceWritePosition(byteCount);
+		}
+
+		/// <summary>
+		///     Advances the write position by the given number of bytes.
+		/// </summary>
+		/// <param name="bytes">The number of bytes the write position should be advanced.</param>
+		private void AdvanceWritePosition(int bytes)
+		{
+			_writePosition += bytes;
+			_maxWritePosition = Math.Max(_maxWritePosition, _writePosition);
 		}
 
 		/// <summary>
@@ -111,7 +169,8 @@
 		/// <param name="value">The value that should be appended.</param>
 		private void Append(byte value)
 		{
-			_buffer.Array[_writePosition++] = value;
+			_buffer.Array[_writePosition] = value;
+			AdvanceWritePosition(1);
 		}
 
 		/// <summary>
@@ -286,7 +345,7 @@
 
 			ValidateCanWrite(value.Length);
 			Array.Copy(value, 0, _buffer.Array, _writePosition, value.Length);
-			_writePosition += value.Length;
+			AdvanceWritePosition(value.Length);
 		}
 
 		/// <summary>
@@ -300,7 +359,9 @@
 		{
 			Assert.ArgumentNotNull(serializer);
 
-			var offset = _writePosition;
+			var previousWritePosition = _writePosition;
+			var previousMaxWritePosition = _maxWritePosition;
+
 			try
 			{
 				serializer(this, obj);
@@ -308,7 +369,8 @@
 			}
 			catch (IndexOutOfRangeException)
 			{
-				_writePosition = offset;
+				_writePosition = previousWritePosition;
+				_maxWritePosition = previousMaxWritePosition;
 				return false;
 			}
 		}

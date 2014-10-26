@@ -11,8 +11,8 @@
 	{
 		public AlternativesParserTests()
 			: base(new AlternativesParser<object>(
-					   new Int32Parser().Apply(i => (object)i),
-					   (new LetterParser() + ~new LetterParser()).Apply(d => (object)d)))
+				new Int32Parser().Apply(i => (object)i),
+				(new LetterParser() + ~new LetterParser()).Apply(d => (object)d)))
 		{
 		}
 

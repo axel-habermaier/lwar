@@ -3,6 +3,7 @@
 	using System;
 	using Math;
 	using Memory;
+	using Utilities;
 
 	/// <summary>
 	///     A 2D texture manages two-dimensional texel data.

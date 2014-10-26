@@ -1,8 +1,9 @@
 ﻿namespace Pegasus.Scripting
 {
 	using System;
-	using Framework.UserInterface.Input;
 	using Platform.Logging;
+	using UserInterface.Input;
+	using Utilities;
 
 	/// <summary>
 	///     Binds an instruction to a logical input. Whenever the input is triggered, the instruction is executed.

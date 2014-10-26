@@ -7,6 +7,7 @@
 	using Assets;
 	using CSharp;
 	using Platform;
+	using Utilities;
 
 	/// <summary>
 	///     Generates a class that contains the identifiers of all compiled assets.

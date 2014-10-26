@@ -6,6 +6,7 @@
 	using System.Security;
 	using Logging;
 	using Memory;
+	using Utilities;
 
 	/// <summary>
 	///     Manages the initialization and shutdown of the native platform library.
@@ -84,6 +85,17 @@
 			Assert.ArgumentNotNull(source);
 
 			NativeMethods.MemCopy(destination, source, byteCount);
+		}
+
+		/// <summary>
+		///     Copies given number of bytes from the source to the destination.
+		/// </summary>
+		/// <param name="destination">The address of the first byte that should be written.</param>
+		/// <param name="source">The address of the first byte that should be read.</param>
+		/// <param name="byteCount">The number of bytes that should be copied.</param>
+		internal unsafe static void Copy(void* destination, void* source, int byteCount)
+		{
+			Copy(new IntPtr(destination), new IntPtr(source), byteCount);
 		}
 
 		/// <summary>

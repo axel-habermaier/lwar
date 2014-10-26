@@ -3,6 +3,7 @@
 	using System;
 	using System.Linq;
 	using System.Xml.Linq;
+	using Utilities;
 
 	/// <summary>
 	///     Stores information about a type that can be referenced in a Xaml file.

@@ -3,6 +3,7 @@
 	using System;
 	using System.Diagnostics;
 	using Assets;
+	using Utilities;
 
 	/// <summary>
 	///     Represents the context of an effect.

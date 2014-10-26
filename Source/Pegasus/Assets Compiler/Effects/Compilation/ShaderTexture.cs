@@ -4,7 +4,10 @@
 	using System.Collections.Generic;
 	using CSharp;
 	using ICSharpCode.NRefactory.CSharp;
+	using ICSharpCode.NRefactory.Semantics;
 	using ICSharpCode.NRefactory.TypeSystem;
+	using Platform.Logging;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a field of an effect class that allows access to a texture or cubemap.
@@ -66,6 +69,20 @@
 		///     Gets the slot the texture object is bound to.
 		/// </summary>
 		public int Slot { get; private set; }
+
+		/// <summary>
+		///     Gets a value indicating whether the shader texture is referenced in the given identifier expression.
+		/// </summary>
+		/// <param name="identifierExpression">The identifier expression that should be checked.</param>
+		public bool IsReferenced(IdentifierExpression identifierExpression)
+		{
+			var resolvedAccess = Resolver.Resolve(identifierExpression) as MemberResolveResult;
+			if (resolvedAccess == null)
+				return false;
+
+			var resolvedVariable = Resolver.Resolve(_variable) as MemberResolveResult;
+			return resolvedAccess.Member.Equals(resolvedVariable.Member);
+		}
 
 		/// <summary>
 		///     Invoked when the element should validate itself. This method is invoked only if no errors occurred during

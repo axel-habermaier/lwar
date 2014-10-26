@@ -2,11 +2,12 @@
 {
 	using System;
 	using System.Diagnostics;
+	using Pegasus.Utilities;
 	using Pegasus;
-	using Pegasus.Framework.UserInterface.Input;
 	using Pegasus.Platform.Logging;
 	using Pegasus.Scripting;
 	using Pegasus.Scripting.Validators;
+	using Pegasus.UserInterface.Input;
 
 	internal static class Commands
 	{

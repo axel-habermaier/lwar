@@ -12,7 +12,7 @@
 		public BetweenParserTests()
 			: base(
 				new BetweenParser<int, char, char>(new Int32Parser(), new CharacterParser('('),
-												   new CharacterParser(')')))
+					new CharacterParser(')')))
 		{
 		}
 

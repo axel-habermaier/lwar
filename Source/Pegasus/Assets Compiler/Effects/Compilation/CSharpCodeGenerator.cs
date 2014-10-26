@@ -6,6 +6,7 @@
 	using System.Linq;
 	using Assets;
 	using CSharp;
+	using Utilities;
 
 	/// <summary>
 	///     Generates a C# class for an effect.
@@ -46,7 +47,7 @@
 			_writer.AppendLine("using System;");
 			_writer.AppendLine("using System.Diagnostics;");
 			_writer.AppendLine("using System.Runtime.InteropServices;");
-			_writer.AppendLine("using Pegasus;");
+			_writer.AppendLine("using Pegasus.Utilities;");
 			_writer.AppendLine("using Pegasus.Math;");
 			_writer.AppendLine("using Pegasus.Platform;");
 			_writer.AppendLine("using Pegasus.Assets;");
@@ -126,11 +127,12 @@
 			GenerateTextureProperties();
 			GenerateTechniqueProperties();
 
-			GenerateBindMethod();
-			GenerateUnbindMethod();
+			GenerateBindMethods();
+			GenerateUnbindMethods();
 			GenerateOnDisposingMethod();
 
 			GenerateConstantBufferStructs();
+			GenerateConstantArrayClasses();
 		}
 
 		/// <summary>
@@ -168,7 +170,7 @@
 		/// </summary>
 		private void GenerateConstantsFields()
 		{
-			foreach (var constant in Constants)
+			foreach (var constant in Constants.Where(c => !c.IsArray))
 			{
 				WriteDocumentation(constant.Documentation);
 				_writer.AppendLine("private {0} {1};", ToCSharpType(constant.Type), GetFieldName(constant.Name));
@@ -197,7 +199,7 @@
 
 				foreach (var technique in _effect.Techniques)
 				{
-					_writer.AppendLine("{0} = {1}.CreateTechnique({2}, {3}, {4}, {5});", technique.Name, ContextVariableName,
+					_writer.AppendLine("{0} = {1}.CreateTechnique({2}{0}, {3}{0}, {4}, {5});", technique.Name, ContextVariableName,
 						_bindMethodName, _unbindMethodName, GetShaderIdentifier(technique.VertexShader.Name),
 						GetShaderIdentifier(technique.FragmentShader.Name));
 				}
@@ -209,6 +211,12 @@
 						GetStructName(buffer), ContextVariableName);
 					_writer.AppendLine("{0}.SetName(\"used by {1}\");", GetFieldName(buffer.Name), _effect.FullName);
 				}
+
+				if (Constants.Any(c => c.IsArray))
+					_writer.NewLine();
+
+				foreach (var constant in Constants.Where(c => c.IsArray))
+					_writer.AppendLine("{0} = new {1}();", constant.Name, GetClassName(constant));
 			});
 
 			_writer.NewLine();
@@ -249,17 +257,24 @@
 				foreach (var constant in buffer.Constants)
 				{
 					WriteDocumentation(constant.Documentation);
-					_writer.AppendLine("public {0} {1}", ToCSharpType(constant.Type), constant.Name);
-					_writer.AppendBlockStatement(() =>
+					
+
+					if (constant.IsArray)
+						_writer.AppendLine("public {0} {1} {{ get; private set; }}", GetClassName(constant), constant.Name);
+					else
 					{
-						_writer.AppendLine("get {{ return {0}; }}", GetFieldName(constant.Name));
-						_writer.AppendLine("set");
+						_writer.AppendLine("public {0} {1}", ToCSharpType(constant.Type), constant.Name);
 						_writer.AppendBlockStatement(() =>
 						{
-							_writer.AppendLine("{0} = value;", GetFieldName(constant.Name));
-							_writer.AppendLine("{0} = true;", GetDirtyFlagName(buffer.Name));
+							_writer.AppendLine("get {{ return {0}; }}", GetFieldName(constant.Name));
+							_writer.AppendLine("set");
+							_writer.AppendBlockStatement(() =>
+							{
+								_writer.AppendLine("{0} = value;", GetFieldName(constant.Name));
+								_writer.AppendLine("{0} = true;", GetDirtyFlagName(buffer.Name));
+							});
 						});
-					});
+					}
 					_writer.NewLine();
 				}
 			}
@@ -294,70 +309,92 @@
 		}
 
 		/// <summary>
-		///     Generates the state binding method.
+		///     Generates the state binding methods.
 		/// </summary>
-		private void GenerateBindMethod()
+		private void GenerateBindMethods()
 		{
-			_writer.AppendLine("/// <summary>");
-			_writer.AppendLine("///     Binds all textures and non-shared constant buffers required by the effect.");
-			_writer.AppendLine("/// </summary>");
-			_writer.Append("private ");
-			if (Constants.Any())
-				_writer.Append("unsafe ");
-
-			_writer.AppendLine("void {0}()", _bindMethodName);
-			_writer.AppendBlockStatement(() =>
+			foreach (var technique in _effect.Techniques)
 			{
-				if (!ConstantBuffers.Any() && !_effect.Textures.Any())
-					_writer.AppendLine("// Nothing to do here");
+				_writer.AppendLine("/// <summary>");
+				_writer.AppendLine("///     Binds all textures and non-shared constant buffers required by the '{0}' technique.", technique.Name);
+				_writer.AppendLine("/// </summary>");
+				_writer.Append("private ");
+				if (Constants.Any())
+					_writer.Append("unsafe ");
 
-				foreach (var buffer in ConstantBuffers)
+				_writer.AppendLine("void {0}{1}()", _bindMethodName, technique.Name);
+				_writer.AppendBlockStatement(() =>
 				{
-					_writer.AppendLine("if ({0})", GetDirtyFlagName(buffer.Name));
-					_writer.AppendBlockStatement(() =>
+					var constantBuffers = ConstantBuffers.Where(constantBuffer => technique.Uses(constantBuffer)).ToArray();
+					var textures = _effect.Textures.Where(texture => technique.Uses(texture)).ToArray();
+
+					if (constantBuffers.Length == 0 && textures.Length == 0)
+						_writer.AppendLine("// Nothing to do here");
+
+					foreach (var buffer in constantBuffers)
 					{
-						_writer.AppendLine("var _{1}data = new {0}();", GetStructName(buffer), Configuration.ReservedIdentifierPrefix);
-						foreach (var constant in buffer.Constants)
-							_writer.AppendLine("_{1}data.{0} = {0};", constant.Name, Configuration.ReservedIdentifierPrefix);
+						var arrayConstants = buffer.Constants.Where(c => c.IsArray).ToArray();
+						_writer.Append("if ({0}", GetDirtyFlagName(buffer.Name));
+						if (arrayConstants.Length > 0)
+						{
+							_writer.Append(" || ");
+							_writer.AppendSeparated(arrayConstants, " || ", c => _writer.Append("{0}.IsDirty", c.Name));
+						}
+						_writer.AppendLine(")");
 
+						_writer.AppendBlockStatement(() =>
+						{
+							_writer.AppendLine("var _{1}data = new {0}();", GetStructName(buffer), Configuration.ReservedIdentifierPrefix);
+							foreach (var constant in buffer.Constants)
+							{
+								if (constant.IsArray)
+									_writer.AppendLine("{0}.WriteToConstantBuffer(_{1}data.{0});", constant.Name, Configuration.ReservedIdentifierPrefix);
+								else
+									_writer.AppendLine("_{1}data.{0} = {0};", constant.Name, Configuration.ReservedIdentifierPrefix);
+							}
+
+							_writer.NewLine();
+							_writer.AppendLine("{0} = false;", GetDirtyFlagName(buffer.Name));
+							_writer.AppendLine("{2}.Update({0}, &_{1}data);", GetFieldName(buffer.Name),
+								Configuration.ReservedIdentifierPrefix, ContextVariableName);
+						});
 						_writer.NewLine();
-						_writer.AppendLine("{0} = false;", GetDirtyFlagName(buffer.Name));
-						_writer.AppendLine("{2}.Update({0}, &_{1}data);", GetFieldName(buffer.Name),
-							Configuration.ReservedIdentifierPrefix, ContextVariableName);
-					});
-					_writer.NewLine();
-				}
+					}
 
-				foreach (var texture in _effect.Textures)
-					_writer.AppendLine("{2}.Bind({0}, {1});", texture.Name, texture.Slot, ContextVariableName);
+					foreach (var texture in textures)
+						_writer.AppendLine("{2}.Bind({0}, {1});", texture.Name, texture.Slot, ContextVariableName);
 
-				foreach (var buffer in ConstantBuffers)
-					_writer.AppendLine("{1}.Bind({0});", GetFieldName(buffer.Name), ContextVariableName);
-			});
+					foreach (var buffer in constantBuffers)
+						_writer.AppendLine("{1}.Bind({0});", GetFieldName(buffer.Name), ContextVariableName);
+				});
 
-			_writer.NewLine();
+				_writer.NewLine();
+			}
 		}
 
 		/// <summary>
-		///     Generates the texture unbinding method.
+		///     Generates the texture unbinding methods.
 		/// </summary>
-		private void GenerateUnbindMethod()
+		private void GenerateUnbindMethods()
 		{
-			_writer.AppendLine("/// <summary>");
-			_writer.AppendLine("///     Unbinds all textures required by the effect.");
-			_writer.AppendLine("/// </summary>");
-			_writer.Append("private void {0}()", _unbindMethodName);
-			_writer.AppendBlockStatement(() =>
+			foreach (var technique in _effect.Techniques)
 			{
-				if (!_effect.Textures.Any())
-					_writer.AppendLine("// Nothing to do here");
+				_writer.AppendLine("/// <summary>");
+				_writer.AppendLine("///     Unbinds all textures required by the '{0}' technique.", technique.Name);
+				_writer.AppendLine("/// </summary>");
+				_writer.Append("private void {0}{1}()", _unbindMethodName, technique.Name);
+				_writer.AppendBlockStatement(() =>
+				{
+					var textures = _effect.Textures.Where(texture => technique.Uses(texture)).ToArray();
+					if (textures.Length == 0)
+						_writer.AppendLine("// Nothing to do here");
 
-				foreach (var texture in _effect.Textures)
-					_writer.AppendLine("{2}.Unbind({0}, {1});", texture.Name, texture.Slot, ContextVariableName);
-			});
+					foreach (var texture in textures)
+						_writer.AppendLine("{2}.Unbind({0}, {1});", texture.Name, texture.Slot, ContextVariableName);
+				});
 
-			if (ConstantBuffers.Any())
 				_writer.NewLine();
+			}
 		}
 
 		/// <summary>
@@ -388,7 +425,12 @@
 			for (var i = 0; i < buffers.Length; ++i)
 			{
 				_writer.AppendLine("[StructLayout(LayoutKind.Explicit, Size = Size)]");
-				_writer.AppendLine("private struct {0}", GetStructName(buffers[i]));
+				_writer.Append("private ");
+
+				if (buffers[i].Constants.Any(c=>c.IsArray))
+					_writer.Append("unsafe ");
+
+				_writer.AppendLine("struct {0}", GetStructName(buffers[i]));
 				_writer.AppendBlockStatement(() =>
 				{
 					_writer.AppendLine("/// <summary>");
@@ -408,7 +450,12 @@
 					{
 						WriteDocumentation(constants[j].Constant.Documentation);
 						_writer.AppendLine("[FieldOffset({0})]", constants[j].Offset);
-						_writer.AppendLine("public {0} {1};", ToCSharpType(constants[j].Constant.Type), constants[j].Constant.Name);
+
+						if (constants[j].Constant.IsArray)
+							_writer.AppendLine("public fixed byte {0}[{1}.ElementCount * ({1}.ElementSize + {1}.Padding)];", 
+								constants[j].Constant.Name, GetClassName(constants[j].Constant));
+						else
+							_writer.AppendLine("public {0} {1};", ToCSharpType(constants[j].Constant.Type), constants[j].Constant.Name);
 
 						if (j < buffers[i].Constants.Length - 1)
 							_writer.NewLine();
@@ -417,6 +464,104 @@
 
 				if (i < buffers.Length - 1)
 					_writer.NewLine();
+			}
+		}
+
+		/// <summary>
+		///     Generates the classes for shader constant arrays.
+		/// </summary>
+		private void GenerateConstantArrayClasses()
+		{
+			var constants = ConstantBuffers.SelectMany(b => b.GetLayoutedConstants()).Where(c=>c.Constant.IsArray);
+			foreach (var constant in constants)
+			{
+				_writer.NewLine();
+				_writer.AppendLine("/// <summary>");
+				_writer.AppendLine("///     Represents a fixed-length array of shader constants.");
+				_writer.AppendLine("/// </summary>");
+				_writer.AppendLine("public class {0}", GetClassName(constant.Constant));
+				_writer.AppendBlockStatement(() =>
+				{
+					_writer.AppendLine("/// <summary>");
+					_writer.AppendLine("///     The data stored in the shader constant array.");
+					_writer.AppendLine("/// </summary>");
+					_writer.AppendLine("private readonly {0}[] _data = new {0}[ElementCount];", ToCSharpType(constant.Constant.Type));
+					_writer.NewLine();
+
+					_writer.AppendLine("/// <summary>");
+					_writer.AppendLine("///     The number of elements stored within the array.");
+					_writer.AppendLine("/// </summary>");
+					_writer.AppendLine("public const int ElementCount = {0};", constant.ElementCount);
+					_writer.NewLine();
+
+					_writer.AppendLine("/// <summary>");
+					_writer.AppendLine("///     The size in bytes of a single element.");
+					_writer.AppendLine("/// </summary>");
+					_writer.AppendLine("public const int ElementSize = {0};", constant.ElementSize);
+					_writer.NewLine();
+
+					_writer.AppendLine("/// <summary>");
+					_writer.AppendLine("///     The padding in bytes after each element.");
+					_writer.AppendLine("/// </summary>");
+					_writer.AppendLine("public const int Padding = {0};", constant.Padding);
+					_writer.NewLine();
+
+					_writer.AppendLine("/// <summary>");
+					_writer.AppendLine("///     Gets a value indicating whether the data contained in the array is dirty.");
+					_writer.AppendLine("/// </summary>");
+					_writer.AppendLine("internal bool IsDirty {{ get; private set; }}");
+					_writer.NewLine();
+
+					_writer.AppendLine("/// <summary>");
+					_writer.AppendLine("///     The number of elements stored within the array.");
+					_writer.AppendLine("/// </summary>");
+					_writer.AppendLine("public int Length {{ get {{ return ElementCount; }} }}");
+					_writer.NewLine();
+
+					_writer.AppendLine("/// <summary>");
+					_writer.AppendLine("///     Gets or sets an element of the constant array.");
+					_writer.AppendLine("/// </summary>");
+					_writer.AppendLine("/// <param name=\"index\">The index of the element that should be set or retrieved.</param>");
+					_writer.AppendLine("public {0} this[int index]", ToCSharpType(constant.Constant.Type));
+					_writer.AppendBlockStatement(() =>
+					{
+						_writer.AppendLine("get");
+						_writer.AppendBlockStatement(() =>
+						{
+							_writer.AppendLine("Assert.InRange(index, _data);");
+							_writer.AppendLine("return _data[index];");
+						});
+						_writer.AppendLine("set");
+						_writer.AppendBlockStatement(() =>
+						{
+							_writer.AppendLine("Assert.InRange(index, _data);");
+							_writer.NewLine();
+
+							_writer.AppendLine("_data[index] = value;");
+							_writer.AppendLine("IsDirty = true;");
+						});
+					});
+					_writer.NewLine();
+
+					_writer.AppendLine("/// <summary>");
+					_writer.AppendLine("///     Writes the data to the given constant buffer.");
+					_writer.AppendLine("/// </summary>");
+					_writer.AppendLine("/// <param name=\"buffer\">A pointer to a location within a constant buffer where the data should be written to.</param>");
+					_writer.AppendLine("internal unsafe void WriteToConstantBuffer(byte* buffer)");
+					_writer.AppendBlockStatement(() =>
+					{
+						_writer.AppendLine("Assert.ArgumentNotNull(new IntPtr(buffer));");
+						_writer.NewLine();
+
+						_writer.AppendLine("foreach (var data in _data)");
+						_writer.AppendBlockStatement(() =>
+						{
+							_writer.AppendLine("var typedBuffer = ({0}*)buffer;", ToCSharpType(constant.Constant.Type));
+							_writer.AppendLine("*typedBuffer = data;");
+							_writer.AppendLine("buffer += ElementSize + Padding;");
+						});
+					});
+				});
 			}
 		}
 
@@ -467,6 +612,15 @@
 		private static string GetStructName(ConstantBuffer buffer)
 		{
 			return String.Format("_{1}{0}", buffer.Name, Configuration.ReservedIdentifierPrefix);
+		}
+
+		/// <summary>
+		///     Gets the name of the array constant class.
+		/// </summary>
+		/// <param name="constant">The constant whose class name should be returned.</param>
+		private static string GetClassName(ShaderConstant constant)
+		{
+			return String.Format("{0}Array", constant.Name);
 		}
 
 		/// <summary>

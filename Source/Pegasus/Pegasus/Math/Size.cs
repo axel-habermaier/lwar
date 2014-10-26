@@ -104,6 +104,26 @@
 		}
 
 		/// <summary>
+		///     Computes the sum of the two sizes.
+		/// </summary>
+		/// <param name="left">The first size to add.</param>
+		/// <param name="right">The second size to add.</param>
+		public static Size operator +(Size left, Size right)
+		{
+			return new Size(left.Width + right.Width, left.Height + right.Height);
+		}
+
+		/// <summary>
+		///     Computes the difference of the two sizes.
+		/// </summary>
+		/// <param name="left">The first size.</param>
+		/// <param name="right">The second size.</param>
+		public static Size operator -(Size left, Size right)
+		{
+			return new Size(left.Width - right.Width, left.Height - right.Height);
+		}
+
+		/// <summary>
 		///     Scales the size by the given factor.
 		/// </summary>
 		/// <param name="size">The size that should be scaled.</param>

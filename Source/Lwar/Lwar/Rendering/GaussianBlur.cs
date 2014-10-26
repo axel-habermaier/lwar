@@ -3,12 +3,12 @@
 	using System;
 	using System.Collections.Generic;
 	using Assets.Effects;
-	using Pegasus;
 	using Pegasus.Assets;
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
+	using Pegasus.Utilities;
 
 	/// <summary>
 	///     Represents a GPU-based gaussian blur filter than can be applied to a texture.

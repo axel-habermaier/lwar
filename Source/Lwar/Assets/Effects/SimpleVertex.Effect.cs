@@ -15,11 +15,14 @@ namespace Lwar.Assets.Effects
 			FragmentShader = "FragmentShader"
 		};
 
+		[Constant]
+		public readonly Matrix World;
+
 		[VertexShader]
 		public void VertexShader([Position] Vector3 position,
 								 [Position] out Vector4 outPosition)
 		{
-			outPosition = ViewProjection * new Vector4(position, 1);
+			outPosition = ViewProjection * World * new Vector4(position, 1);
 		}
 
 		[FragmentShader]

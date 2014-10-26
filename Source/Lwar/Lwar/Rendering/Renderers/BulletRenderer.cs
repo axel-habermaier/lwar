@@ -2,7 +2,7 @@
 {
 	using System;
 	using Assets;
-	using Gameplay.Entities;
+	using Gameplay.Client.Entities;
 	using Pegasus.Assets;
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
@@ -11,7 +11,7 @@
 	/// <summary>
 	///     Renders bullets into a 3D scene.
 	/// </summary>
-	public class BulletRenderer : Renderer<Bullet>
+	public class BulletRenderer : Renderer<BulletEntity>
 	{
 		private Texture2D _texture, _texture2;
 

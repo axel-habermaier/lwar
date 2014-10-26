@@ -4,6 +4,7 @@
 	using System.Diagnostics;
 	using System.Runtime.InteropServices;
 	using System.Security;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a query that can be used to retrieve information from the GPU.

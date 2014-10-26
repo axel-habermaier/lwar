@@ -42,14 +42,14 @@
 		public void Overflow()
 		{
 			Message("111111111111111111111111111111111111111111111111",
-					String.Format(NumberParser<int>.OverflowMessage, TypeRegistry.GetDescription<float>()));
+				String.Format(NumberParser<int>.OverflowMessage, TypeRegistry.GetDescription<float>()));
 		}
 
 		[Test]
 		public void Underflow()
 		{
 			Message("-111111111111111111111111111111111111111111111111",
-					String.Format(NumberParser<int>.OverflowMessage, TypeRegistry.GetDescription<float>()));
+				String.Format(NumberParser<int>.OverflowMessage, TypeRegistry.GetDescription<float>()));
 		}
 
 		[Test]

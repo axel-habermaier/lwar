@@ -2,7 +2,7 @@ namespace Pegasus.Scripting.Parsing.Combinators
 {
 	using System;
 	using System.Linq;
-	using Framework.UserInterface.Input;
+	using UserInterface.Input;
 
 	/// <summary>
 	///     Parses a configurable input of the form 'Key.A', 'Key.A+Control', 'Mouse.Left+Alt+Shift', etc.

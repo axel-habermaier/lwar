@@ -3,6 +3,7 @@
 	using System;
 	using System.Runtime.InteropServices;
 	using Math;
+	using Utilities;
 
 	/// <summary>
 	///     Holds position, texture coordinates, and color data for a vertex.

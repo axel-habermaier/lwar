@@ -1,7 +1,8 @@
 ﻿namespace Pegasus.Rendering.Particles
 {
 	using System;
-	using Framework.UserInterface.ViewModels;
+	using UserInterface.ViewModels;
+	using Utilities;
 
 	/// <summary>
 	///     Provides performance statistics about the particle system.

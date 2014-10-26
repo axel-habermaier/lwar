@@ -4,6 +4,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 	using System.Collections.Generic;
 	using System.IO;
 	using Platform.Logging;
+	using Utilities;
 
 	/// <summary>
 	///     Provides metadata about a font.

@@ -124,6 +124,9 @@
     <Compile Include="UserInterface\Views\InGameMenuView.xaml.cs">
       <DependentUpon>InGameMenuView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserInterface\Views\JoinGameView.xaml.cs">
+      <DependentUpon>JoinGameView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserInterface\Views\OptionsMenuView.xaml.cs">
       <DependentUpon>OptionsMenuView.xaml</DependentUpon>
     </Compile>
@@ -183,6 +186,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserInterface\Views\InGameMenuView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserInterface\Views\JoinGameView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

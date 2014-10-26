@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.Scripting.Parsing.BasicParsers
 {
 	using System;
+	using Utilities;
 
 	/// <summary>
 	///     Parses a given string.

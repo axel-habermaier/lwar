@@ -3,18 +3,19 @@
 	using System;
 	using System.Diagnostics;
 	using Logging;
+	using Utilities;
 
 	/// <summary>
 	///     An abstract base class for objects whose instances are pooled in order to reduce the pressure on the garbage
 	///     collector. Pooled types should override the OnReturning method to perform all their cleanup logic that must be run when
 	///     an instance is returned to the pool.
 	/// </summary>
-	public abstract class PooledObject : IPooledObject, IDisposable
+	public abstract class PooledObject : IPooledObject
 	{
 		/// <summary>
-		///     Gets a value indicating whether the instance is currently available, that is, waiting in the pool to be reused.
+		///     Gets a value indicating whether the instance is currently in use, i.e., not pooled.
 		/// </summary>
-		public bool IsAvailable { get; private set; }
+		public bool InUse { get; private set; }
 
 		/// <summary>
 		///     The pool the instance should be returned to.
@@ -32,19 +33,11 @@
 		/// </summary>
 		~PooledObject()
 		{
-			if (!IsAvailable)
+			if (InUse)
 				Log.Error("A pooled object of type '{0}' was not returned to the pool.\nInstance description: '{1}'",
-					GetType().Name, _description ?? "None");
+					GetType().FullName, _description ?? "None");
 		}
 #endif
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		protected PooledObject()
-		{
-			IsAvailable = true;
-		}
 
 		/// <summary>
 		///     In debug builds, sets a description for the instance in order to make debugging easier.
@@ -70,7 +63,7 @@
 			Assert.ArgumentNotNull(objectPool);
 
 			_pool = objectPool;
-			IsAvailable = false;
+			InUse = true;
 		}
 
 		/// <summary>
@@ -96,16 +89,25 @@
 		}
 
 		/// <summary>
+		///     Invoked when an owner of the pooled object release its ownership. Returns true to indicate that
+		///     the object should be returned to the pool.
+		/// </summary>
+		protected abstract bool OnOwnershipReleased();
+
+		/// <summary>
 		///     Returns the instance to the pool.
 		/// </summary>
 		[DebuggerHidden]
 		void IDisposable.Dispose()
 		{
-			Assert.That(!IsAvailable, "The instance has already been returned.");
+			Assert.That(InUse, "The instance has already been returned.");
 			Assert.NotNull(_pool, "Unknown object pool.");
 
+			if (!OnOwnershipReleased())
+				return;
+
 			OnReturning();
-			IsAvailable = true;
+			InUse = false;
 			_pool.Free(this);
 		}
 	}

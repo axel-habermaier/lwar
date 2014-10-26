@@ -3,6 +3,7 @@
 	using System;
 	using System.Diagnostics;
 	using Logging;
+	using Utilities;
 
 	/// <summary>
 	///     Base implementation for the IDisposable interface. In debug builds, throws an exception if the finalizer runs
@@ -33,7 +34,7 @@
 		~DisposableObject()
 		{
 			Log.Error("Finalizer runs for a disposable object of type '{0}'.\nInstance description: '{1}'",
-				GetType().Name, _description ?? "None");
+				GetType().FullName, _description ?? "None");
 		}
 #endif
 

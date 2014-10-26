@@ -8,6 +8,7 @@
 	using ICSharpCode.NRefactory.CSharp.Resolver;
 	using ICSharpCode.NRefactory.Semantics;
 	using ICSharpCode.NRefactory.TypeSystem;
+	using Utilities;
 	using Attribute = System.Attribute;
 	using CSharpAttribute = ICSharpCode.NRefactory.CSharp.Attribute;
 
@@ -142,6 +143,20 @@
 			Assert.ArgumentNotNull(resolver);
 
 			var resolved = resolver.Resolve(declaration.Type);
+			return resolved.Type;
+		}
+
+		/// <summary>
+		///     Gets the resolved type of the AST type.
+		/// </summary>
+		/// <param name="type">The type whose type symbol should be returned.</param>
+		/// <param name="resolver">The resolver that should be used to resolve type information.</param>
+		public static IType ResolveType(this AstType type, CSharpAstResolver resolver)
+		{
+			Assert.ArgumentNotNull(type);
+			Assert.ArgumentNotNull(resolver);
+
+			var resolved = resolver.Resolve(type);
 			return resolved.Type;
 		}
 

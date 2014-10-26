@@ -6,6 +6,7 @@
 	using System.Threading.Tasks;
 	using Platform;
 	using Platform.Logging;
+	using Utilities;
 
 	/// <summary>
 	///     Executes the asset compiler.

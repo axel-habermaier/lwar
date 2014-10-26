@@ -29,7 +29,7 @@ internal interface ICommands
 	/// <param name="ipAddress">The IP address of the server.</param>
 	/// <param name="port">The port of the server.</param>
 	[Command]
-	void Connect(IPAddress ipAddress, ushort port = Specification.DefaultServerPort);
+	void Connect(IPAddress ipAddress, ushort port = NetworkProtocol.DefaultServerPort);
 
 	/// <summary>
 	///     Disconnects from the current game session.
@@ -42,7 +42,7 @@ internal interface ICommands
 	/// </summary>
 	/// <param name="message">The message that should be sent.</param>
 	[Command]
-	void Say([NotEmpty, MaximumLength(Specification.ChatMessageLength, true)] string message);
+	void Say([NotEmpty, MaximumLength(NetworkProtocol.ChatMessageLength, true)] string message);
 
 	/// <summary>
 	///     Toggles between the game and the debugging camera.

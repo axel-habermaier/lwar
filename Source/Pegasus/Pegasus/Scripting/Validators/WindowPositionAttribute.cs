@@ -1,8 +1,9 @@
 ﻿namespace Pegasus.Scripting.Validators
 {
 	using System;
-	using Framework.UserInterface;
 	using Math;
+	using UserInterface;
+	using Utilities;
 
 	/// <summary>
 	///     Ensures that the validated value lies within the acceptable bounds of a window position.

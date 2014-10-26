@@ -4,6 +4,7 @@ namespace Pegasus.Assets.AssetLoaders
 	using Math;
 	using Platform.Graphics;
 	using Platform.Memory;
+	using Utilities;
 
 	/// <summary>
 	///     Loads font assets.

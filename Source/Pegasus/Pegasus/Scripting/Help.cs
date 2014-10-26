@@ -5,6 +5,7 @@
 	using System.Text;
 	using Platform.Logging;
 	using Platform.Memory;
+	using Utilities;
 
 	/// <summary>
 	///     Explains the usage of the cvar and command system.

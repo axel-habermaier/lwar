@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.IO;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a C# file of a C# project.

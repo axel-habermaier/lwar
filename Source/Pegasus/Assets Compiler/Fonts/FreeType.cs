@@ -12,6 +12,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 	using System;
 	using System.Runtime.InteropServices;
 	using Platform.Logging;
+	using Utilities;
 
 	/// <summary>
 	///     Provides access to native freetype functions.

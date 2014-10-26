@@ -61,7 +61,8 @@ PG_API_EXPORT pgVoid pgSetRenderTargetName(pgRenderTarget* renderTarget, pgStrin
 	for (i = 0; i < renderTarget->count; ++i)
 		PG_SET_NAME(ID3D11RenderTargetView, renderTarget->cbPtr[i]);
 
-	PG_SET_NAME(ID3D11DepthStencilView, renderTarget->dsPtr);
+	if (renderTarget->dsPtr != NULL)
+		PG_SET_NAME(ID3D11DepthStencilView, renderTarget->dsPtr);
 }
 
 PG_API_EXPORT pgVoid pgSetBlendStateName(pgBlendState* blendState, pgString name)

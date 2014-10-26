@@ -1,14 +1,13 @@
 ﻿namespace Lwar.UserInterface.Views
 {
 	using System;
-	using Gameplay;
-	using Gameplay.Entities;
+	using Gameplay.Client;
+	using Gameplay.Client.Entities;
 	using Network;
-	using Pegasus;
-	using Pegasus.Framework.UserInterface;
 	using Pegasus.Math;
-	using Pegasus.Platform.Graphics;
 	using Pegasus.Rendering;
+	using Pegasus.UserInterface;
+	using Pegasus.Utilities;
 	using Rendering;
 
 	internal partial class ShipOverlayPanel
@@ -26,7 +25,7 @@
 		/// <summary>
 		///     The player infos storing the state of the individual ship overlays.
 		/// </summary>
-		private readonly PlayerInfo[] _playerInfos = new PlayerInfo[Specification.MaxPlayers];
+		private readonly PlayerInfo[] _playerInfos = new PlayerInfo[NetworkProtocol.MaxPlayers];
 
 		/// <summary>
 		///     Gets the game camera that is used to draw the game session.

@@ -107,7 +107,7 @@ void debug_message(Message *m, const char *s) {
         log_debug("%schat %d: %.*s", s, m->chat.player_id.n, m->chat.msg.n, m->chat.msg.s);
         break;
     case MESSAGE_ADD:
-        log_debug("%sadd %d: player %d, type %d", s, m->add.entity_id.n, m->add.player_id.n, m->add.type_id);
+        log_debug("%sadd %d: player %d, type %d, parent %d", s, m->add.entity_id.n, m->add.player_id.n, m->add.type_id, m->add.parent_id);
         break;
     case MESSAGE_REMOVE:
         log_debug("%srem %d", s, m->remove.entity_id.n);
@@ -128,7 +128,7 @@ void debug_message(Message *m, const char *s) {
         log_debug("%skill %d by %d ", s, m->kill.victim_id.n, m->kill.killer_id.n);
         break;
     case MESSAGE_SYNCED:
-        log_debug("%ssynced", s);
+        log_debug("%ssynced %d", s, m->synced.player_id.n);
         break;
     case MESSAGE_REJECT:
         log_debug("%sreject", s);
@@ -163,7 +163,7 @@ void debug_header(Header *h, const char *s) {
 }
 
 void debug_packet(Packet *p) {
-    Header h;
+    /*Header h;
     Message m;
     size_t pos = 0;
 
@@ -181,5 +181,5 @@ void debug_packet(Packet *p) {
             }
         }
     }
-    log_debug("}");
+    log_debug("}");*/
 }

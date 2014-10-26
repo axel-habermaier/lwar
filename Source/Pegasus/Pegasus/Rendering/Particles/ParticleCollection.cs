@@ -3,6 +3,7 @@
 	using System;
 	using System.Runtime.InteropServices;
 	using Platform.Memory;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a collection of a particle emitter's live particles.

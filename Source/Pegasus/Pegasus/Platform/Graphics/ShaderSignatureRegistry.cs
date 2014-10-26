@@ -4,6 +4,7 @@
 	using System.Collections.Generic;
 	using System.Linq;
 	using Logging;
+	using Utilities;
 
 	/// <summary>
 	///     Provides access to all shader signatures used throughout the application.

@@ -8,6 +8,7 @@
 	using Platform.Logging;
 	using Platform.Memory;
 	using Scripting;
+	using Utilities;
 
 	/// <summary>
 	///     Tracks all assets that it loaded. If an asset has already been loaded and it is
@@ -206,18 +207,27 @@
 		///     Loads the asset corresponding to the asset info object.
 		/// </summary>
 		/// <param name="info">The info object of the asset that should be loaded.</param>
-		private static void Load(AssetInfo info)
+		private unsafe static void Load(AssetInfo info)
 		{
 			try
 			{
 				var loader = AssetLoader.Get(info.Type);
-				Log.Info("Loading {0} {1}...", loader.AssetTypeName, GetAssetDisplayName(info));
 
+				double loadingTime;
+				using (TimeMeasurement.Measure(&loadingTime))
 				using (var reader = BufferReader.Create(FileSystem.ReadAllBytes(info.Path)))
 				{
 					AssetLoader.ValidateHeader(reader, info.Type);
 					loader.Load(reader, info.Asset, info.Path);
 				}
+
+				var color = "\\green";
+				if (loadingTime > 5)
+					color = "\\red";
+				else if (loadingTime > 1)
+					color = "\\yellow";
+
+				Log.Info("Loaded {0} {1} ({2}{3:F2} ms\\\0).", loader.AssetTypeName, GetAssetDisplayName(info), color, loadingTime);
 			}
 			catch (Exception e)
 			{

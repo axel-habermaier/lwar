@@ -6,6 +6,7 @@
 	using Modifiers;
 	using Platform.Graphics;
 	using Platform.Memory;
+	using Utilities;
 
 	/// <summary>
 	///     Emits, updates, and removes particles of a particle effect, with all particles sharing the same properties and

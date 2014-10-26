@@ -1,12 +1,13 @@
 ﻿namespace Lwar.UserInterface.ViewModels
 {
 	using System;
-	using Gameplay;
-	using Pegasus.Framework.UserInterface.ViewModels;
+	using Gameplay.Client;
 	using Pegasus.Platform;
 	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Platform.Network;
+	using Pegasus.UserInterface.ViewModels;
+	using Pegasus.Utilities;
 	using Scripting;
 	using Views;
 
@@ -28,18 +29,21 @@
 		/// <summary>
 		///     The game session that is being loaded.
 		/// </summary>
-		private GameSession _gameSession;
+		private ClientGameSession _gameSession;
 
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
+		/// <param name="allocator">The allocator that should be used to allocate game objects.</param>
 		/// <param name="serverEndPoint">The remote end point of the server.</param>
-		public LoadingViewModel(IPEndPoint serverEndPoint)
+		public LoadingViewModel(PoolAllocator allocator, IPEndPoint serverEndPoint)
 		{
+			Assert.ArgumentNotNull(allocator);
+
 			Commands.ShowConsole(false);
 			View = new LoadingView();
 
-			_gameSession = new GameSession(serverEndPoint);
+			_gameSession = new ClientGameSession(allocator, serverEndPoint);
 		}
 
 		/// <summary>
@@ -47,7 +51,7 @@
 		/// </summary>
 		public IPEndPoint ServerEndPoint
 		{
-			get { return _gameSession.NetworkSession.ServerEndPoint; }
+			get { return _gameSession.ServerEndPoint; }
 		}
 
 		/// <summary>
@@ -80,23 +84,28 @@
 			}
 			catch (ConnectionDroppedException)
 			{
-				ShowErrorBox("Connection Failed",
-					String.Format("Unable to connect to {0}. The connection attempt timed out.", ServerEndPoint),
-					new MainMenuViewModel());
+				ShowErrorBox("Connection Failed", String.Format("Unable to connect to {0}. The connection attempt timed out.", ServerEndPoint));
+				Commands.Disconnect();
 			}
 			catch (ServerFullException)
 			{
-				ShowErrorBox("Connection Rejected", "The server is full.", new MainMenuViewModel());
+				ShowErrorBox("Connection Rejected", "The server is full.");
+				Commands.Disconnect();
 			}
 			catch (ProtocolMismatchException)
 			{
-				ShowErrorBox("Connection Rejected", "The server uses an incompatible version of the network protocol.", new MainMenuViewModel());
+				ShowErrorBox("Connection Rejected", "The server uses an incompatible version of the network protocol.");
+				Commands.Disconnect();
+			}
+			catch (ServerQuitException)
+			{
+				ShowErrorBox("Server Shutdown", "The server has ended the game session.");
+				Commands.Disconnect();
 			}
 			catch (NetworkException e)
 			{
-				ShowErrorBox("Connection Error",
-					String.Format("The connection attempt has been aborted due to a network error: {0}", e.Message),
-					new MainMenuViewModel());
+				ShowErrorBox("Connection Error", String.Format("The connection attempt has been aborted due to a network error: {0}", e.Message));
+				Commands.Disconnect();
 			}
 		}
 

@@ -3,7 +3,8 @@
 	using System;
 	using System.Runtime.InteropServices;
 	using System.Security;
-	using Framework;
+	using UserInterface;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a combination of different shader programs that control the various pipeline stages of the GPU.

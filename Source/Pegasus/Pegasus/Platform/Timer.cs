@@ -2,6 +2,7 @@
 {
 	using System;
 	using Scripting;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a timer that periodically raises a timeout event.

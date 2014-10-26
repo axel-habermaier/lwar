@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.Scripting.Validators
 {
 	using System;
+	using Utilities;
 
 	/// <summary>
 	///     Ensures that the validated string does not consist of whitespaces only.

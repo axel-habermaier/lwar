@@ -3,7 +3,7 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Diagnostics;
-	using Framework;
+	using UserInterface;
 
 	/// <summary>
 	///     Provides extension methods for classes implementing the IDisposable interface.
@@ -11,7 +11,7 @@
 	public static class DisposableExtensions
 	{
 		/// <summary>
-		///     Disposes all objects contained in the list if the list is not null.
+		///     Disposes all objects contained in the list if the list is not null and clears the list.
 		/// </summary>
 		/// <param name="list">The list that should be disposed.</param>
 		[DebuggerHidden]
@@ -28,7 +28,24 @@
 		}
 
 		/// <summary>
-		///     Disposes all objects contained in the collection if the collection is not null.
+		///     Disposes all objects contained in the queue if the queue is not null and clears the queue.
+		/// </summary>
+		/// <param name="queue">The queue that should be disposed.</param>
+		[DebuggerHidden]
+		public static void SafeDisposeAll<T>(this Queue<T> queue)
+			where T : IDisposable
+		{
+			if (queue == null)
+				return;
+
+			foreach (var obj in queue)
+				obj.SafeDispose();
+
+			queue.Clear();
+		}
+
+		/// <summary>
+		///     Disposes all objects contained in the collection if the collection is not null and clears the collection.
 		/// </summary>
 		/// <param name="collection">The collection that should be disposed.</param>
 		[DebuggerHidden]
@@ -92,7 +109,7 @@
 		[DebuggerHidden]
 		public static void SafeDispose(this PooledObject obj)
 		{
-			if (obj != null && !obj.IsAvailable)
+			if (obj != null)
 				((IDisposable)obj).Dispose();
 		}
 	}

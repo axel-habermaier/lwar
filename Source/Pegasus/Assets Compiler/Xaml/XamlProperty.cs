@@ -3,6 +3,7 @@
 	using System;
 	using System.Xml.Linq;
 	using Platform.Logging;
+	using Utilities;
 
 	/// <summary>
 	///     Stores information about a property of a class that can be referenced in a Xaml file.

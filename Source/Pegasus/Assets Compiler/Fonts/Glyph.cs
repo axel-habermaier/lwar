@@ -4,6 +4,7 @@
 	using System.Drawing;
 	using System.Drawing.Imaging;
 	using Platform.Logging;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a single character of a font face.

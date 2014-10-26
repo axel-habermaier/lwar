@@ -13,6 +13,7 @@
 	using Pegasus.Assets;
 	using Platform.Graphics;
 	using Platform.Logging;
+	using Utilities;
 	using BinaryWriter = AssetsCompiler.BinaryWriter;
 
 	/// <summary>
@@ -48,36 +49,28 @@
 		/// <param name="assets">The assets that should be compiled.</param>
 		public override void Compile(IEnumerable<Asset> assets)
 		{
-			try
+			var csharpAssets = assets.OfType<EffectAsset>().ToArray();
+
+			if (DetermineAction(_shaderAssets, csharpAssets) == CompilationAction.Skip)
+				Log.Info("Skipping effect compilation (no changes detected).");
+			else
 			{
-				var csharpAssets = assets.OfType<EffectAsset>().ToArray();
+				Log.Info("Compiling effects...");
 
-				if (DetermineAction(_shaderAssets, csharpAssets) == CompilationAction.Skip)
-					Log.Info("Skipping effect compilation (no changes detected).");
-				else
+				foreach (var asset in csharpAssets)
+					Hash.Compute(asset.SourcePath).WriteTo(asset.HashPath);
+
+				var csharpFiles = csharpAssets.Select(asset => new CSharpFile(Configuration.SourceDirectory, asset.RelativePath));
+				using (var project = new EffectsProject { CSharpFiles = csharpFiles })
 				{
-					Log.Info("Compiling effects...");
-
-					foreach (var asset in csharpAssets)
-						Hash.Compute(asset.SourcePath).WriteTo(asset.HashPath);
-
-					var csharpFiles = csharpAssets.Select(asset => new CSharpFile(Configuration.SourceDirectory, asset.RelativePath));
-					using (var project = new EffectsProject { CSharpFiles = csharpFiles })
-					{
-						if (!project.Compile())
-							throw new InvalidOperationException("Effect project compilation failed.");
-					}
-
-					CreateShaderSignatureFile();
+					if (!project.Compile())
+						throw new InvalidOperationException("Effect project compilation failed.");
 				}
 
-				base.Compile(_shaderAssets);
+				CreateShaderSignatureFile();
 			}
-			catch (Exception e)
-			{
-				Log.Error("Effect cross-compilation failed: {0}", e.Message);
-				Log.Error(e.StackTrace);
-			}
+
+			base.Compile(_shaderAssets);
 		}
 
 		/// <summary>
@@ -338,7 +331,7 @@
 			{
 				writer.AppendLine("using System;");
 				writer.AppendLine("using System.Collections.Generic;");
-				writer.AppendLine("using Pegasus;");
+				writer.AppendLine("using Pegasus.Utilities;");
 				writer.AppendLine("using Pegasus.Platform.Graphics;");
 				writer.NewLine();
 
@@ -376,7 +369,7 @@
 		///     Gets the HLSL type that represents the vertex data format.
 		/// </summary>
 		/// <param name="format">The format that should be converted to HLSL.</param>
-		private string ToHlsl(VertexDataFormat format)
+		private static string ToHlsl(VertexDataFormat format)
 		{
 			switch (format)
 			{

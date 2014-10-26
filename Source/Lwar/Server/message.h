@@ -21,7 +21,7 @@ void message_leave(Message *m, Client *c, LeaveReason reason);
 void message_reject(Message *m, RejectReason reason);
 void message_remove(Message *m, Entity *e);
 void message_stats(Message *m);
-void message_synced(Message *m);
+void message_synced(Message *m, Player *p);
 void message_update(Message *m, Format *f); /* TODO: use data structure, e.g. Format. */
 
 enum MessageType {
@@ -110,6 +110,7 @@ struct Message {
         struct {
             Id entity_id;
             Id player_id;
+			Id parent_id;
             uint8_t type_id;
         } add;
 
@@ -139,6 +140,10 @@ struct Message {
         struct {
             RejectReason reason;
         } reject;
+
+		struct {
+			Id player_id;
+		} synced;
 
         struct {
             uint8_t n;

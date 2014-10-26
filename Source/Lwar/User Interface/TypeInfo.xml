@@ -3,12 +3,12 @@
 <Types>
 	<Include>../../Pegasus/User Interface/TypeInfo.xml</Include>
 
-	<Class Name="Lwar.UserInterface.Views.UserControl1" Inherits="Pegasus.Framework.UserInterface.UIElement"></Class>
-	<Class Name="Lwar.UserInterface.Views.ScoreboardView" Inherits="Pegasus.Framework.UserInterface.UIElement"></Class>
-	<Class Name="Lwar.UserInterface.Views.ChatView" Inherits="Pegasus.Framework.UserInterface.UIElement"></Class>
-	<Class Name="Lwar.UserInterface.Views.InGameMenuView" Inherits="Pegasus.Framework.UserInterface.UIElement"></Class>
-	<Class Name="Lwar.UserInterface.Views.RespawnView" Inherits="Pegasus.Framework.UserInterface.UIElement"></Class>
-	<Class Name="Lwar.UserInterface.Views.EventListView" Inherits="Pegasus.Framework.UserInterface.UIElement"></Class>
-	<Class Name="Lwar.UserInterface.Views.WaitingView" Inherits="Pegasus.Framework.UserInterface.UIElement"></Class>
-	<Class Name="Lwar.UserInterface.Views.ShipOverlayPanel" Inherits="Pegasus.Framework.UserInterface.UIElement"></Class>
+	<Class Name="Lwar.UserInterface.Views.UserControl1" Inherits="Pegasus.UserInterface.UIElement"></Class>
+	<Class Name="Lwar.UserInterface.Views.ScoreboardView" Inherits="Pegasus.UserInterface.UIElement"></Class>
+	<Class Name="Lwar.UserInterface.Views.ChatView" Inherits="Pegasus.UserInterface.UIElement"></Class>
+	<Class Name="Lwar.UserInterface.Views.InGameMenuView" Inherits="Pegasus.UserInterface.UIElement"></Class>
+	<Class Name="Lwar.UserInterface.Views.RespawnView" Inherits="Pegasus.UserInterface.UIElement"></Class>
+	<Class Name="Lwar.UserInterface.Views.EventListView" Inherits="Pegasus.UserInterface.UIElement"></Class>
+	<Class Name="Lwar.UserInterface.Views.WaitingView" Inherits="Pegasus.UserInterface.UIElement"></Class>
+	<Class Name="Lwar.UserInterface.Views.ShipOverlayPanel" Inherits="Pegasus.UserInterface.UIElement"></Class>
 </Types>

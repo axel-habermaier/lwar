@@ -5,6 +5,7 @@
 	using System.Runtime.InteropServices;
 	using System.Security;
 	using System.Text;
+	using Utilities;
 
 	/// <summary>
 	///     Provides access to the operating system's file system.

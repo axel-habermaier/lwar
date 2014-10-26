@@ -2,9 +2,9 @@ namespace Lwar.UserInterface.ViewModels
 {
 	using System;
 	using System.Linq;
-	using Gameplay;
-	using Pegasus;
-	using Pegasus.Framework;
+	using Gameplay.Client;
+	using Pegasus.UserInterface;
+	using Pegasus.Utilities;
 
 	/// <summary>
 	///     Displays the score board.
@@ -30,7 +30,7 @@ namespace Lwar.UserInterface.ViewModels
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="gameSession">The game session that is played.</param>
-		public ScoreboardViewModel(GameSession gameSession)
+		public ScoreboardViewModel(ClientGameSession gameSession)
 		{
 			Assert.ArgumentNotNull(gameSession);
 

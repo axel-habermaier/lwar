@@ -4,6 +4,7 @@
 	using System.Collections.Generic;
 	using System.Runtime.InteropServices;
 	using Platform.Logging;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a typeface in a given style.

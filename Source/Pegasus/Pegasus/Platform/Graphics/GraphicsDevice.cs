@@ -6,6 +6,7 @@
 	using Logging;
 	using Math;
 	using Memory;
+	using Utilities;
 
 	/// <summary>
 	///     Represents the graphics device.

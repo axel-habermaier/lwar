@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.Math
 {
 	using System;
+	using Utilities;
 
 	/// <summary>
 	///     Provides math utility functions.
@@ -26,6 +27,11 @@
 		///     Represents the value of Pi divided by two, i.e., a 90 degree rotation.
 		/// </summary>
 		public const float PiOver2 = (float)Math.PI / 2;
+
+		/// <summary>
+		///     Represents the value of Pi divided by four, i.e., a 45 degree rotation.
+		/// </summary>
+		public const float PiOver4 = (float)Math.PI / 4;
 
 		/// <summary>
 		///     Checks whether two float values are equal. If the difference between the two floats is
@@ -128,6 +134,15 @@
 		}
 
 		/// <summary>
+		///     Converts radians to degrees. The result lies within the range of [0; 360[.
+		/// </summary>
+		/// <param name="radians">The value in radians that should be converted.</param>
+		public static float RadToDeg360(float radians)
+		{
+			return ((radians / Pi * 180.0f) % 360 + 360) % 360;
+		}
+
+		/// <summary>
 		///     Rounds the given value to nearest integral value.
 		/// </summary>
 		/// <param name="value">The value to round.</param>
@@ -170,6 +185,44 @@
 		public static float Tan(float value)
 		{
 			return (float)Math.Tan(value);
+		}
+
+		/// <summary>
+		///     Returns the angle in radians whose cosine is the given number.
+		/// </summary>
+		/// <param name="value">A value between -1 and 1.</param>
+		public static float Acos(float value)
+		{
+			Assert.ArgumentInRange(value, -1, 1);
+			return (float)Math.Acos(value);
+		}
+
+		/// <summary>
+		///     Returns the angle in radians whose sine is the given number.
+		/// </summary>
+		/// <param name="value">A value between -1 and 1.</param>
+		public static float Asin(float value)
+		{
+			return (float)Math.Asin(value);
+		}
+
+		/// <summary>
+		///     Returns the angle in radians whose tangent is the given number.
+		/// </summary>
+		/// <param name="value">A value representing a tangent.</param>
+		public static float Atan(float value)
+		{
+			return (float)Math.Atan(value);
+		}
+
+		/// <summary>
+		///     Returns the angle in radians whose tangent is the quotient of the two given numbers.
+		/// </summary>
+		/// <param name="y">The Y-coordinate of a point.</param>
+		/// <param name="x">The X-coordinate of a point.</param>
+		public static float Atan2(float y, float x)
+		{
+			return (float)Math.Atan2(y, x);
 		}
 
 		/// <summary>

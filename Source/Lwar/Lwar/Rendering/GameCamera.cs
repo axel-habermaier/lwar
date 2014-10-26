@@ -1,13 +1,13 @@
 ﻿namespace Lwar.Rendering
 {
 	using System;
-	using Gameplay;
-	using Pegasus;
-	using Pegasus.Framework.UserInterface.Input;
+	using Gameplay.Client;
 	using Pegasus.Math;
 	using Pegasus.Platform;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Rendering;
+	using Pegasus.UserInterface.Input;
+	using Pegasus.Utilities;
 
 	/// <summary>
 	///     Represents the camera that is used to draw the game session.

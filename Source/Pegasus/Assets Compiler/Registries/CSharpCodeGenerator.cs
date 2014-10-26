@@ -5,6 +5,7 @@
 	using System.Linq;
 	using System.Text.RegularExpressions;
 	using CSharp;
+	using Utilities;
 
 	/// <summary>
 	///     Generates a C# registry class.
@@ -54,6 +55,7 @@
 			{
 				_writer.AppendLine("using System;");
 				_writer.AppendLine("using System.Diagnostics;");
+				_writer.AppendLine("using Pegasus.Utilities;");
 
 				foreach (var import in _registry.ImportedNamespaces
 												.Union(_importedRegistry.ImportedNamespaces)

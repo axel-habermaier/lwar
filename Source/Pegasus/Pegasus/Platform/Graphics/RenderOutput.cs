@@ -4,6 +4,7 @@
 	using Math;
 	using Memory;
 	using Rendering;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a rendering output configuration that can be used to draw geometry into the configured render target.

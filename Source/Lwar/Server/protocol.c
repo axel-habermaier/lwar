@@ -270,7 +270,7 @@ void queue_gamestate_for(Client *cn) {
         queue_unicast(cn, &m);
     }
 
-    message_synced(&m);
+    message_synced(&m, &cn->player);
     queue_unicast(cn, &m);
 }
 

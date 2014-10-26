@@ -6,6 +6,7 @@
 	using System.Diagnostics;
 	using System.Threading.Tasks;
 	using Platform.Logging;
+	using Utilities;
 
 	/// <summary>
 	///     Represents external process.

@@ -26,12 +26,12 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 		/// <summary>
 		///     The path of the client file containing the template declarations.
 		/// </summary>
-		private const string ClientTemplates = "../../Source/Lwar/Lwar/Gameplay/Entities/EntityTemplates.cs";
+		private const string ClientTemplates = "../../Source/Lwar/Lwar/Gameplay/Client/Entities/EntityTemplates.cs";
 
 		/// <summary>
 		///     The path of the client file containing the entity type enumeration.
 		/// </summary>
-		private const string ClientTypeEnumeration = "../../Source/Lwar/Lwar/Gameplay/Entities/EntityType.cs";
+		private const string ClientTypeEnumeration = "../../Source/Lwar/Lwar/Network/EntityType.cs";
 
 		/// <summary>
 		///     The path of the server file containing the template declarations.
@@ -202,11 +202,11 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 			var writer = new CodeWriter();
 			writer.WriterHeader();
 
-			writer.AppendLine("namespace Lwar.Gameplay.Entities");
+			writer.AppendLine("namespace Lwar.Gameplay.Client.Entities");
 			writer.AppendBlockStatement(() =>
 			{
 				writer.AppendLine("using Assets;");
-				writer.AppendLine("using Pegasus;");
+				writer.AppendLine("using Pegasus.Utilities;");
 				writer.AppendLine("using Pegasus.Platform;");
 				writer.AppendLine("using Pegasus.Assets;");
 				writer.AppendLine("using Pegasus.Platform.Graphics;");
@@ -285,7 +285,7 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 			var writer = new CodeWriter();
 			writer.WriterHeader();
 
-			writer.AppendLine("namespace Lwar.Gameplay.Entities");
+			writer.AppendLine("namespace Lwar.Network");
 			writer.AppendBlockStatement(() =>
 			{
 				writer.AppendLine("public enum EntityType");

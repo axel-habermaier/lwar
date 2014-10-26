@@ -5,6 +5,7 @@
 	using System.Drawing;
 	using System.Linq;
 	using Platform.Logging;
+	using Utilities;
 
 	/// <summary>
 	///     Converts a Xaml value string into a given type's string representation.
@@ -29,16 +30,16 @@
 			{ "uint", s => s },
 			{ "long", s => s },
 			{ "ulong", s => s },
-			{ "Pegasus.Framework.UserInterface.Thickness", s => String.Format("new Pegasus.Framework.UserInterface.Thickness({0})", s) },
+			{ "Pegasus.UserInterface.Thickness", s => String.Format("new Pegasus.UserInterface.Thickness({0})", s) },
 			{ "Pegasus.Platform.Graphics.Color", ConvertColor },
 			{ "Pegasus.Platform.Graphics.Color?", ConvertNullableColor },
 			{ "System.Type", s => String.Format("typeof({0})", s) },
 			{ "Pegasus.AssetCompiler.Xaml.XamlLiteral", s => s },
-			{ "Pegasus.Framework.UserInterface.Input.KeyModifiers", ConvertKeyModifiers },
+			{ "Pegasus.UserInterface.Input.KeyModifiers", ConvertKeyModifiers },
 			{ "Pegasus.Scripting.Cvar", s => s },
-			{ "Pegasus.Platform.Graphics.Texture2D", s => String.Format("Pegasus.Framework.Application.Current.Assets.Load({0})", s) },
+			{ "Pegasus.Platform.Graphics.Texture2D", s => String.Format("Pegasus.Application.Current.Assets.Load({0})", s) },
 			{ "Pegasus.Math.Vector2", s => String.Format("new Pegasus.Math.Vector2({0})", s) },
-			{ "Pegasus.Framework.UserInterface.Input.Cursor", s => String.Format("Pegasus.Framework.UserInterface.Input.Cursors.{0}", s) }
+			{ "Pegasus.UserInterface.Input.Cursor", s => String.Format("Pegasus.UserInterface.Input.Cursors.{0}", s) }
 		};
 
 		/// <summary>
@@ -82,7 +83,7 @@
 		private static string ConvertKeyModifiers(string value)
 		{
 			var modifiers = value.Split(new[] { "+" }, StringSplitOptions.RemoveEmptyEntries);
-			return String.Join(" | ", modifiers.Select(m => "Pegasus.Framework.UserInterface.Input.KeyModifiers." + m));
+			return String.Join(" | ", modifiers.Select(m => "Pegasus.UserInterface.Input.KeyModifiers." + m));
 		}
 
 		/// <summary>

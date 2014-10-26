@@ -3,6 +3,7 @@ namespace Pegasus.AssetsCompiler.Xaml
 	using System;
 	using System.Xml.Linq;
 	using Platform.Logging;
+	using Utilities;
 
 	/// <summary>
 	///     Stores information about a routed event of a class that can be referenced in a Xaml file.

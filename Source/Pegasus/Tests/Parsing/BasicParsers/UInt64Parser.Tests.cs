@@ -41,7 +41,7 @@
 		public void Overflow()
 		{
 			Message("1111111111111111111111111",
-					String.Format(NumberParser<uint>.OverflowMessage, TypeRegistry.GetDescription<ulong>()));
+				String.Format(NumberParser<uint>.OverflowMessage, TypeRegistry.GetDescription<ulong>()));
 		}
 
 		[Test]

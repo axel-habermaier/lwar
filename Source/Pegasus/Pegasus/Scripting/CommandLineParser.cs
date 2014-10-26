@@ -3,6 +3,7 @@
 	using System;
 	using Parsing;
 	using Platform.Logging;
+	using Utilities;
 
 	/// <summary>
 	///     Parses the command line, consisting of a string of cvar set requests. For instance, the

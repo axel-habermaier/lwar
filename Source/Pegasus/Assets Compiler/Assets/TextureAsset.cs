@@ -5,6 +5,7 @@
 	using System.Drawing.Imaging;
 	using System.Runtime.InteropServices;
 	using Platform.Graphics;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a texture asset that requires compilation.

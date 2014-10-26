@@ -3,6 +3,7 @@
 	using System;
 	using System.Collections.Generic;
 	using Platform.Logging;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a command with two parameters.

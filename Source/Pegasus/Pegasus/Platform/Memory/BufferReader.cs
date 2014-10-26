@@ -3,16 +3,18 @@
 	using System;
 	using System.Diagnostics;
 	using System.Text;
+	using Utilities;
 
 	/// <summary>
 	///     Wraps a byte buffer, providing methods for reading fundamental data types from the buffer.
 	/// </summary>
-	public class BufferReader : PooledObject
+	public sealed class BufferReader : UniquePooledObject
 	{
 		/// <summary>
 		///     The default pool for buffer reader instances.
 		/// </summary>
-		private static readonly ObjectPool<BufferReader> DefaultPool = new ObjectPool<BufferReader>(hasGlobalLifetime: true);
+		private static readonly ObjectPool<BufferReader> DefaultPool =
+			new ObjectPool<BufferReader>(() => new BufferReader(), hasGlobalLifetime: true);
 
 		/// <summary>
 		///     The buffer from which the data is read.
@@ -33,6 +35,21 @@
 		///     The current read position.
 		/// </summary>
 		private int _readPosition;
+
+		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		private BufferReader()
+		{
+		}
+
+		/// <summary>
+		///     Gets the buffer that is read from.
+		/// </summary>
+		public byte[] Buffer
+		{
+			get { return _buffer.Array; }
+		}
 
 		/// <summary>
 		///     Gets a value indicating whether the end of the buffer has been reached.

@@ -1,8 +1,8 @@
 ﻿namespace Lwar.UserInterface.ViewModels
 {
 	using System;
-	using Pegasus.Framework;
-	using Pegasus.Framework.UserInterface.ViewModels;
+	using Pegasus;
+	using Pegasus.UserInterface.ViewModels;
 	using Scripting;
 	using Views;
 

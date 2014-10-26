@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Runtime.InteropServices;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a pointer to a byte buffer.

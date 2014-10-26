@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.Scripting.Parsing.BasicParsers
 {
 	using System;
+	using Utilities;
 
 	/// <summary>
 	///     Applies the given parser and replaces the parser's error message by the given description in case of failure. The

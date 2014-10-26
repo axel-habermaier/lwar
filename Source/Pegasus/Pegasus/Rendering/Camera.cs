@@ -5,6 +5,7 @@
 	using Math;
 	using Platform.Graphics;
 	using Platform.Memory;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a camera that can be used to draw scenes.

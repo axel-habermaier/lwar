@@ -29,7 +29,10 @@ Message Delivery Guarantees
 	is lost. Unreliable messages also have sequence numbers, allowing the peers to filter out older 
 	unreliable messages	that are received after newer ones have arrived due to UDP packet reordering.
     Hence, both peers must also discard messages that refer to obsolete (and possibly already deleted)
-    players or entities.
+    players or entities. Since there is only one unreliable update message per player and entity, the 
+	sequence number of the last applied update must be stored per player and entity. This can subsequently
+	be used to filter out old updates. Unreliable messages must always be fully processed, as otherwise
+	some updates might be incorrectly skipped when more than one packet is sent per frame. 
 
 	Reliable message therefore have a 'receive exactly once in the correct order' semantics, whereas unreliable
 	messages have a 'receive at most once, in any order, ignoring outdated messages' semantics.
@@ -171,6 +174,15 @@ Messages Payload Data
 		---------	----------	------------------------------------------------------------------------
 		uint32(Id)	entityId	The generational identifier of the entity that is added
 		uint32(Id)	playerId	The generational identifier of the player the entity belongs to
+		uint32(Id)  parentId    The optional generational identifier of the parent entity or
+								the reserved entity id if the entity has no parent. If an entity has a
+								parent, all positions and orientations in their Update messages are
+								relative to their parent's positions and orientations. A parent entity
+								can be removed as long as there still are child entities; in that case,
+								the child entities are considered to be detached from the parent and their
+								positions and orientations in Update messages are absolute again. An Add
+								message must have been sent for the parent entity before the Add message 
+								of the child entities are sent.
 		uint8		typeId		The identifier of the entity type template
 		
 	Remove
@@ -202,7 +214,9 @@ Messages Payload Data
 								killed the player (e.g., collision with sun)
 
 	Synced
-		Does not carry any payload data
+		Type		Name 		Description
+		---------	----------	------------------------------------------------------------------------
+		uint32(Id)	playerId	The generational identifier of the local player of the synced client
 
 	Reject
 		Type		Name 		Description
@@ -229,6 +243,9 @@ Messages Payload Data
 		uint8		num			The number of ship updates that follow
 		[for i < num, ++i]
 		uint32(Id)	entityId	The generational identifier of the ship that is updated
+		int16		x			The new x position
+		int16		y			The new y position
+		uint16		orientation	New orientation angle, in degrees, scaled by the Angle Scale Factor
 		uint8		health		The new health (range [0,100])
 		uint8		shield		The new shield (range [0,100])
 		uint8		energy1		The new energy/ammo of weapon 1 (range [0,100])
@@ -345,17 +362,14 @@ Connecting to the server
 	in order to increase the likelihood that the client actually receives the message.
 
 	If the server is not full, it sends a Join message containing the id of the newly allocated player to 
-	all clients, including the new one. This must be the first message sent to the new client and it must 
-	have sequence number 1. Furthermore, this message must acknowledge the reception of the client's Connect 
-	message.
-
+	all clients, including the new one. 
 	Upon reception of the Join message, the client knows that it has established a connection to the
 	server and waits for the synchronization of the game state to complete. The server starts sending
 	Join messages for all active players and then sends all necessary Add, Name, and Selection messages in an
 	arbitrary order. The players and entities that are sent represent the state of the server at the time the 
 	Join message has been sent back to the connecting client and are followed by a Synced message. After the
 	Synced message has been sent, the server can start sending regular reliable and unreliable messages to 
-	the new client.
+	the new client. The synced message contains the local player id for the client.
 	
 	The Synced message is a special marker for the client, indicating that it now knows about all players 
 	and	entities. The client can then wait a for a short amount of time (say, one second) until it can be
@@ -390,6 +404,11 @@ Automatic server discovery
 Revision History
     Rev.    Date    Author		Changes
     ----  --------  ----------	-------------------------------------------------------------------
+	27    14-10-24  Axel/Gidon  Added parent entity to Add message
+	26    14-10-23  Axel		The UpdateShip message now also contains the position and orientation
+	25    14-10-22  Axel		Synced messages now contain the id of the local player; the first join
+								message sent to a player must no longer be the one for the local player
+	24	  14-10-16  Axel/Gidon  Fixed conceptual problem with the handling of unreliable messages
 	23    14-10-07	Axel		Reserved server/entity identifiers must have generation 0
 	22    14-10-07  Axel/Gidon  Removed health from Update message; added new UpdateShip message
 	21	  14-08-20  Axel		Removed timestamp from message header; fixed unreliable message header

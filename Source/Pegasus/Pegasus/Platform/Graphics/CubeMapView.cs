@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a cubemap associated with a sampler state that can be used by an effect.

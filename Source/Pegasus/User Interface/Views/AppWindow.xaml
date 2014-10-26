@@ -1,0 +1,22 @@
+﻿<controls:Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+				 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+				 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+				 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+				 xmlns:controls="clr-namespace:Pegasus.UserInterface.Controls"
+				 xmlns:views="clr-namespace:Pegasus.UserInterface.Views"
+				 xmlns:input="clr-namespace:Pegasus.UserInterface.Input"
+				 mc:Ignorable="d"
+				 Fullscreen="{Binding Fullscreen}"
+				 Position="{Binding Position, Mode=OneWayToSource}"
+				 Size="{Binding Size, Mode=OneWayToSource}"
+				 WindowMode="{Binding WindowMode, Mode=OneWayToSource}"
+				 TextOptions.TextRenderingMode="ClearType" 
+				 Background="Black">
+	<Window.InputBindings>
+		<input:KeyBinding TriggerOnRepeat="false" Key="Return" Modifiers="Alt" Method="ToggleFullscreen" Preview="true" />
+	</Window.InputBindings>
+	<controls:AreaPanel x:Name="LayoutRoot">
+		<views:ConsoleView DataContext="{Binding Console}" />
+		<views:DebugOverlayView DataContext="{Binding DebugOverlay}" />
+	</controls:AreaPanel>
+</controls:Window>

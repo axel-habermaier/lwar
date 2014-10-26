@@ -3,10 +3,10 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Runtime.InteropServices;
-	using Pegasus;
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Rendering;
+	using Pegasus.Utilities;
 
 	/// <summary>
 	///     Builds up a model containing circle outlines.

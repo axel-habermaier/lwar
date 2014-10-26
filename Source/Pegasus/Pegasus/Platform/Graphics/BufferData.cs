@@ -1,6 +1,7 @@
 namespace Pegasus.Platform.Graphics
 {
 	using System;
+	using Utilities;
 
 	/// <summary>
 	///     Provides access to the data of a mapped buffer.

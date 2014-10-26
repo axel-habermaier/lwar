@@ -3,7 +3,7 @@
 	using System;
 	using Assets;
 	using Assets.Effects;
-	using Gameplay.Actors;
+	using Gameplay.Client.Actors;
 	using Pegasus.Assets;
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
@@ -13,7 +13,7 @@
 	/// <summary>
 	///     Renders shield effects into a 3D scene.
 	/// </summary>
-	public class ShieldRenderer : Renderer<Shield>
+	public class ShieldRenderer : Renderer<ShieldActor>
 	{
 		/// <summary>
 		///     The effect that is used to draw the shields.

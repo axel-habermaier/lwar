@@ -30,6 +30,8 @@
 		Distance,
 		Dot,
 		Cross,
-		Normalize
+		Normalize,
+		Saturate,
+		Lerp
 	}
 }

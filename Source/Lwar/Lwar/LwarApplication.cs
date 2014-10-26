@@ -2,12 +2,12 @@
 {
 	using System;
 	using Assets;
-	using Network;
-	using Pegasus.Framework;
-	using Pegasus.Framework.UserInterface.Input;
-	using Pegasus.Framework.UserInterface.ViewModels;
+	using Pegasus;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Platform.Network;
+	using Pegasus.UserInterface;
+	using Pegasus.UserInterface.Input;
+	using Pegasus.UserInterface.ViewModels;
 	using Scripting;
 	using UserInterface.ViewModels;
 
@@ -17,14 +17,35 @@
 	public sealed partial class LwarApplication
 	{
 		/// <summary>
-		///     The local game server that can be used to hosts game sessions locally.
+		///     The allocator that is used to allocate game objects.
 		/// </summary>
-		private readonly LocalServer _localServer = new LocalServer();
+		private readonly PoolAllocator _allocator = new PoolAllocator();
 
 		/// <summary>
 		///     The root view model of the view model stacked used by the application.
 		/// </summary>
 		private readonly StackedViewModel _viewModelRoot = StackedViewModel.CreateRoot();
+
+		/// <summary>
+		///     The game server that is currently running.
+		/// </summary>
+		private Server _server;
+
+		/// <summary>
+		///     Gets a value indicating whether a server is currently running.
+		/// </summary>
+		private bool IsServerRunning
+		{
+			get { return _server != null; }
+		}
+
+		/// <summary>
+		///     Gets a value indicating whether a client is currently running.
+		/// </summary>
+		private bool IsClientRunning
+		{
+			get { return !(_viewModelRoot.Child is MainMenuViewModel); }
+		}
 
 		/// <summary>
 		///     Invoked when the application is initializing.
@@ -38,12 +59,16 @@
 			Window.Closing += Exit;
 			Commands.OnConnect += Connect;
 			Commands.OnDisconnect += Disconnect;
+			Commands.OnStartServer += StartServer;
+			Commands.OnStopServer += StopServer;
+			Cvars.UseDebugServerChanged += v => StopServer();
 
 			Commands.Bind(Key.F1.WentDown(), "start_server");
 			Commands.Bind(Key.F2.WentDown(), "stop_server");
 			Commands.Bind(Key.F3.WentDown(), "connect 127.0.0.1");
 			Commands.Bind(Key.F4.WentDown(), "disconnect");
 			Commands.Bind(Key.F5.WentDown(), "reload_assets");
+			Commands.Bind(Key.F6.WentDown(), "toggle use_debug_server");
 
 			Commands.Bind(Key.C.WentDown(), "toggle_debug_camera");
 			Commands.Bind(Key.Escape.WentDown() & Key.LeftShift.IsPressed(), "exit");
@@ -62,7 +87,9 @@
 		private void Connect(IPAddress address, ushort port)
 		{
 			Commands.Disconnect();
-			_viewModelRoot.ReplaceChild(new LoadingViewModel(new IPEndPoint(address, port)));
+			MessageBox.CloseAll();
+
+			_viewModelRoot.ReplaceChild(new LoadingViewModel(_allocator, new IPEndPoint(address, port)));
 		}
 
 		/// <summary>
@@ -70,8 +97,38 @@
 		/// </summary>
 		private void Disconnect()
 		{
-			if (_viewModelRoot.Child is LoadingViewModel || _viewModelRoot.Child is GameSessionViewModel)
-				_viewModelRoot.ReplaceChild(new MainMenuViewModel());
+			if (!(_viewModelRoot.Child is LoadingViewModel || _viewModelRoot.Child is GameSessionViewModel))
+				return;
+
+			_viewModelRoot.ReplaceChild(new MainMenuViewModel());
+
+			if (!IsServerRunning)
+				_allocator.Free();
+		}
+
+		/// <summary>
+		///     Starts a local game server.
+		/// </summary>
+		private void StartServer()
+		{
+			_server.SafeDispose();
+
+			if (Cvars.UseDebugServer)
+				_server = new DebugServer(_allocator);
+			else
+				_server = new NativeServer();
+		}
+
+		/// <summary>
+		///     Stops the currently running local game server.
+		/// </summary>
+		private void StopServer()
+		{
+			_server.SafeDispose();
+			_server = null;
+
+			if (!IsClientRunning)
+				_allocator.Free();
 		}
 
 		/// <summary>
@@ -79,7 +136,9 @@
 		/// </summary>
 		protected override void Update()
 		{
-			_localServer.Update();
+			if (IsServerRunning)
+				_server.Update();
+
 			_viewModelRoot.Update();
 		}
 
@@ -89,7 +148,8 @@
 		protected override void Dispose()
 		{
 			_viewModelRoot.SafeDispose();
-			_localServer.SafeDispose();
+			_server.SafeDispose();
+			_allocator.SafeDispose();
 
 			base.Dispose();
 		}

@@ -5,8 +5,10 @@
 	using CSharp;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
+	using ICSharpCode.NRefactory.Semantics;
 	using ICSharpCode.NRefactory.TypeSystem;
 	using ICSharpCode.NRefactory.TypeSystem.Implementation;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a field of an effect class that acts as compile-time constant literal shader value.
@@ -137,6 +139,20 @@
 			if (!_variable.Initializer.IsNull && !HasConstantValue)
 				Error(_variable.Initializer, "Shader literal '{0}' must be initialized with a non-null compile-time constant value.",
 					Name);
+		}
+
+		/// <summary>
+		///     Gets a value indicating whether the shader literal is referenced in the given identifier expression.
+		/// </summary>
+		/// <param name="identifierExpression">The identifier expression that should be checked.</param>
+		public bool IsReferenced(IdentifierExpression identifierExpression)
+		{
+			var resolvedAccess = Resolver.Resolve(identifierExpression) as MemberResolveResult;
+			if (resolvedAccess == null)
+				return false;
+
+			var resolvedVariable = Resolver.Resolve(_variable) as MemberResolveResult;
+			return resolvedAccess.Member.Equals(resolvedVariable.Member);
 		}
 	}
 }

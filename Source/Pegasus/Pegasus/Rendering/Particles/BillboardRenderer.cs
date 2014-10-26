@@ -6,6 +6,7 @@
 	using Math;
 	using Platform.Graphics;
 	using Platform.Memory;
+	using Utilities;
 
 	/// <summary>
 	///     Renders particles as 2D billboard sprites.

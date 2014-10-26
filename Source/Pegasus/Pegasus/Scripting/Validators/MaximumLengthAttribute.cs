@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Text;
+	using Utilities;
 
 	/// <summary>
 	///     Ensures that the validated string has a length less than or equal to the maximum allowed length.

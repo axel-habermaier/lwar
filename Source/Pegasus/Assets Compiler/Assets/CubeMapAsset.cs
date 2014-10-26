@@ -3,6 +3,7 @@
 	using System;
 	using System.Drawing;
 	using Platform.Graphics;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a cube map asset that requires compilation.

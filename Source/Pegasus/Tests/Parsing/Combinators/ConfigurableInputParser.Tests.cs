@@ -2,8 +2,8 @@
 {
 	using System;
 	using NUnit.Framework;
-	using Pegasus.Framework.UserInterface.Input;
 	using Pegasus.Scripting.Parsing.Combinators;
+	using Pegasus.UserInterface.Input;
 
 	[TestFixture]
 	public class ConfigurableInputParserTests : ParserTestsHelper<ConfigurableInput>

@@ -5,7 +5,9 @@
 	using System.Linq;
 	using CSharp;
 	using ICSharpCode.NRefactory.CSharp;
+	using ICSharpCode.NRefactory.Semantics;
 	using ICSharpCode.NRefactory.TypeSystem;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a field of an effect class that is part of a constant buffer.
@@ -93,6 +95,30 @@
 		public bool IsSpecial { get; private set; }
 
 		/// <summary>
+		///     Gets a value indicating whether the shader constant is an array.
+		/// </summary>
+		public bool IsArray { get; private set; }
+
+		/// <summary>
+		///     Gets the array length if the shader constant is an array. Returns 1 if the constant is not an array.
+		/// </summary>
+		public int ArrayLength
+		{
+			get
+			{
+				if (!IsArray)
+					return 1;
+
+				var attribute = _field.Attributes.GetAttribute<ArrayLengthAttribute>(Resolver);
+				if (attribute == null)
+					throw new InvalidOperationException("Unknown array size.");
+
+				var resolved = Resolver.Resolve(attribute.Arguments.Single());
+				return (int)resolved.ConstantValue;
+			}
+		}
+
+		/// <summary>
 		///     Invoked when the element should initialize itself.
 		/// </summary>
 		protected override void Initialize()
@@ -100,8 +126,11 @@
 			if (IsSpecial)
 				return;
 
+			var type = _field.ResolveType(Resolver);
+
 			Name = _variable.Name;
-			Type = _field.ResolveType(Resolver).ToDataType();
+			Type = type.ToDataType();
+			IsArray = type.Kind == TypeKind.Array;
 		}
 
 		/// <summary>
@@ -119,9 +148,13 @@
 			// Check whether the constant is declared with a known type
 			ValidateType(_field, _field.ResolveType(Resolver));
 
-			// Check whether the constant is an array type
+			// Check whether the constant is an array type but has no valid array length specified
 			if (_field.ResolveType(Resolver).Kind == TypeKind.Array)
-				Error(_field, "Unexpected array declaration.");
+			{
+				var attribute = _field.Attributes.GetAttribute<ArrayLengthAttribute>(Resolver);
+				if (attribute == null)
+					Error(_field, "The '{0}' attribute is required for shader constants of array type.", typeof(ArrayLengthAttribute).FullName);
+			}
 
 			// Check whether the declared modifiers match the expected ones
 			ValidateModifiers(_field, _field.ModifierTokens, new[] { Modifiers.Public, Modifiers.Readonly });
@@ -129,6 +162,23 @@
 			// Check whether the constant is initialized
 			if (!_variable.Initializer.IsNull)
 				Error(_variable.Initializer, "Unexpected initialization of shader constant.");
+		}
+
+		/// <summary>
+		///     Gets a value indicating whether the shader constant is referenced in the given identifier expression.
+		/// </summary>
+		/// <param name="identifierExpression">The identifier expression that should be checked.</param>
+		public bool IsReferenced(IdentifierExpression identifierExpression)
+		{
+			if (IsSpecial)
+				return true;
+
+			var resolvedAccess = Resolver.Resolve(identifierExpression) as MemberResolveResult;
+			if (resolvedAccess == null)
+				return false;
+
+			var resolvedVariable = Resolver.Resolve(_variable) as MemberResolveResult;
+			return resolvedAccess.Member.Equals(resolvedVariable.Member);
 		}
 	}
 }

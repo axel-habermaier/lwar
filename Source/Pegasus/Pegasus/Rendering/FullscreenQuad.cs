@@ -3,6 +3,7 @@
 	using System;
 	using Platform.Graphics;
 	using Platform.Memory;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a textured full-screen quad.

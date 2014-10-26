@@ -3,7 +3,7 @@
 	using System;
 	using Assets;
 	using Assets.Effects;
-	using Gameplay.Entities;
+	using Gameplay.Client.Entities;
 	using Pegasus.Assets;
 	using Pegasus.Math;
 	using Pegasus.Platform;
@@ -14,7 +14,7 @@
 	/// <summary>
 	///     Renders suns into a 3D scene.
 	/// </summary>
-	public class SunRenderer : Renderer<Sun>
+	public class SunRenderer : Renderer<SunEntity>
 	{
 		private GaussianBlur _blur;
 		private Clock _clock = new Clock();

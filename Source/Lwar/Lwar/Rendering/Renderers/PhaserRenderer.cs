@@ -1,13 +1,13 @@
 ﻿namespace Lwar.Rendering.Renderers
 {
 	using System;
-	using Gameplay.Entities;
+	using Gameplay.Client.Entities;
 	using Pegasus.Platform.Graphics;
 
 	/// <summary>
 	///     Renders phasers into a 3D scene.
 	/// </summary>
-	public class PhaserRenderer : Renderer<Phaser>
+	public class PhaserRenderer : Renderer<PhaserEntity>
 	{
 		/// <summary>
 		///     Draws all phasers.

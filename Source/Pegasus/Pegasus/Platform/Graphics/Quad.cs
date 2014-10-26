@@ -3,6 +3,7 @@
 	using System;
 	using System.Runtime.InteropServices;
 	using Math;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a rectangle with possibly non-axis aligned edges.

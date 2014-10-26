@@ -40,6 +40,7 @@ struct Entity {
     List children;  /* structured as a tree */
     List siblings;  /* with sibling lists   */
     Entity *parent; /* and parent pointers  */
+	Id parent_id;   /* hack */
 
     Slot *slot;     /* if directly controlled by a player */
 

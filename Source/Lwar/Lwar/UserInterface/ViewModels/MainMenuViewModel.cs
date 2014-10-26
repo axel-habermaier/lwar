@@ -1,8 +1,8 @@
 ﻿namespace Lwar.UserInterface.ViewModels
 {
 	using System;
-	using Pegasus.Framework.UserInterface.ViewModels;
 	using Pegasus.Platform.Network;
+	using Pegasus.UserInterface.ViewModels;
 	using Scripting;
 	using Views;
 
@@ -34,12 +34,20 @@
 		}
 
 		/// <summary>
-		///     Starts a single player game.
+		///     Starts a new game on a local server.
 		/// </summary>
-		public void PlaySingle()
+		public void StartGame()
 		{
 			Commands.StartServer();
 			Commands.Connect(IPAddress.LocalHost);
+		}
+
+		/// <summary>
+		///     Lets the user select a server to connect to.
+		/// </summary>
+		public void JoinGame()
+		{
+			ReplaceChild(new JoinGameViewModel());
 		}
 
 		/// <summary>

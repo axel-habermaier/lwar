@@ -3,6 +3,7 @@
 	using System;
 	using System.Diagnostics;
 	using System.Linq;
+	using Utilities;
 
 	/// <summary>
 	///     Provides extension methods for logging-related types.

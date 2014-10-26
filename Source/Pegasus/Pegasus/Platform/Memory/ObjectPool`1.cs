@@ -6,6 +6,7 @@
 	using System.Linq;
 	using System.Threading;
 	using Logging;
+	using Utilities;
 
 	/// <summary>
 	///     Pools objects of type T in order to reduce the pressure on the garbage collector. Instead of new'ing up a new
@@ -14,9 +15,15 @@
 	///     so that it can be reused later on.
 	/// </summary>
 	/// <typeparam name="T">The type of the pooled objects.</typeparam>
+	[DebuggerDisplay("{_pooledObjects.Count} of {_allocationCount} available ({typeof(T)})")]
 	public sealed class ObjectPool<T> : ObjectPool
-		where T : class, new()
+		where T : class
 	{
+		/// <summary>
+		///     The constructor function that is used to allocate new objects.
+		/// </summary>
+		private readonly Func<T> _constructor;
+
 		/// <summary>
 		///     The pooled objects that are currently not in use.
 		/// </summary>
@@ -42,12 +49,16 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
+		/// <param name="constructor">The constructor function that should be used to allocate new objects.</param>
 		/// <param name="hasGlobalLifetime">
 		///     Indicates whether the object pool should have global lifetime and should be
 		///     disposed automatically during application shutdown.
 		/// </param>
-		public ObjectPool(bool hasGlobalLifetime = false)
+		public ObjectPool(Func<T> constructor, bool hasGlobalLifetime = false)
 		{
+			Assert.ArgumentNotNull(constructor);
+
+			_constructor = constructor;
 			if (hasGlobalLifetime)
 				AddGlobalPool(this);
 		}
@@ -63,7 +74,7 @@
 			if (_pooledObjects.Count == 0)
 			{
 				++_allocationCount;
-				obj = new T();
+				obj = _constructor();
 #if DEBUG
 				_allocatedObjects.Add(obj);
 #endif
@@ -103,22 +114,13 @@
 		}
 
 		/// <summary>
-		///     In debug builds, checks that the object pool is only accessed from the thread it was created on.
+		///     Frees all allocated instances.
 		/// </summary>
-		[Conditional("DEBUG")]
-		private void ValidateThread()
+		public override void Free()
 		{
-#if DEBUG
-			Assert.That(_threadId == Thread.CurrentThread.ManagedThreadId,
-				"Object pool is accessed from a thread other than the one that created it.");
-#endif
-		}
+			if (_allocationCount == 0)
+				return;
 
-		/// <summary>
-		///     Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		protected override void OnDisposing()
-		{
 			ValidateThread();
 			Log.Debug("Releasing {1} pooled object(s) of type '{0}'...", typeof(T).FullName, _allocationCount);
 
@@ -132,7 +134,32 @@
 
 			if (leakedObjects.Length > 0 && Debugger.IsAttached)
 				Debugger.Break();
+
+			_allocatedObjects.Clear();
 #endif
+
+			_pooledObjects.Clear();
+			_allocationCount = 0;
+		}
+
+		/// <summary>
+		///     In debug builds, checks that the object pool is only accessed from the thread it was created on.
+		/// </summary>
+		[Conditional("VALIDATETHREAD")]
+		private void ValidateThread()
+		{
+#if DEBUG
+			Assert.That(_threadId == Thread.CurrentThread.ManagedThreadId,
+				"Object pool is accessed from a thread other than the one that created it.");
+#endif
+		}
+
+		/// <summary>
+		///     Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
+		{
+			Free();
 		}
 	}
 }

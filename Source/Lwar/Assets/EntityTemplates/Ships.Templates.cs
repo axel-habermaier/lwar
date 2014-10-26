@@ -19,7 +19,7 @@
 			Acceleration = new Vector2(2000, 2000),
 			Decelaration = new Vector2(2000, 2000),
 			Rotation = 10,
-			Format = "format_pos_rot"
+			Format = "format_ship"
 		};
 	}
 }

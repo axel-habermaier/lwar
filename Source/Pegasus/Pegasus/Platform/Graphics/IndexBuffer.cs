@@ -3,6 +3,7 @@
 	using System;
 	using System.Runtime.InteropServices;
 	using Memory;
+	using Utilities;
 
 	/// <summary>
 	///     An index buffer holds indices that are used to index into vertex buffers.

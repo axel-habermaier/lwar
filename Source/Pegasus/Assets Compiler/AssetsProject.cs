@@ -5,6 +5,7 @@
 	using System.Linq;
 	using System.Xml.Linq;
 	using Platform.Logging;
+	using Utilities;
 
 	/// <summary>
 	///     Represents the assets project that contains the assets that are compiled.

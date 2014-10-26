@@ -1,7 +1,7 @@
 ﻿using Lwar.Network;
-using Pegasus.Framework.UserInterface.Input;
 using Pegasus.Scripting;
 using Pegasus.Scripting.Validators;
+using Pegasus.UserInterface.Input;
 
 // ReSharper disable CheckNamespace
 
@@ -13,7 +13,7 @@ internal interface ICvars
 	/// <summary>
 	///     The name of the player.
 	/// </summary>
-	[Cvar("UnnamedPlayer"), Persistent, NotEmpty, MaximumLength(Specification.PlayerNameLength, true)]
+	[Cvar("UnnamedPlayer"), Persistent, NotEmpty, MaximumLength(NetworkProtocol.PlayerNameLength, true)]
 	string PlayerName { get; set; }
 
 	/// <summary>
@@ -93,4 +93,10 @@ internal interface ICvars
 	/// </summary>
 	[Cvar("Key.Return"), Persistent]
 	ConfigurableInput InputChat { get; set; }
+
+	/// <summary>
+	///     When true, the debug server is used instead of the actual game server.
+	/// </summary>
+	[Cvar(false), Persistent]
+	bool UseDebugServer { get; set; }
 }

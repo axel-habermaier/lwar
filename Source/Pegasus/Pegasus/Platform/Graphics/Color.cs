@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Runtime.InteropServices;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a 32-bit color (4 bytes) in the form of RGBA.

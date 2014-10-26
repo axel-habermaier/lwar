@@ -2,11 +2,11 @@
 {
 	using System;
 	using System.Collections.Generic;
-	using Pegasus;
 	using Pegasus.Assets;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
+	using Pegasus.Utilities;
 
 	/// <summary>
 	///     Renders elements into a 3D scene.
@@ -26,6 +26,14 @@
 		protected Enumerator Elements
 		{
 			get { return new Enumerator(_elements.GetEnumerator()); }
+		}
+
+		/// <summary>
+		///     Gets the number of elements.
+		/// </summary>
+		protected int ElementCount
+		{
+			get { return _elements.Count; }
 		}
 
 		/// <summary>

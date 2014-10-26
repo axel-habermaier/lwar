@@ -2,6 +2,7 @@
 {
 	using System;
 	using Platform;
+	using Utilities;
 
 	/// <summary>
 	///     Ensures that the validated string is a file name.

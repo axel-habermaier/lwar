@@ -3,6 +3,7 @@
 	using System;
 	using System.Linq;
 	using Platform.Logging;
+	using Utilities;
 
 	/// <summary>
 	///     Represents an interpreted instruction that invokes a command, sets a cvar, or displays the value of a cvar.

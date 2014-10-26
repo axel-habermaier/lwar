@@ -80,6 +80,7 @@ size_t message_pack(char *s, void *p) {
     case MESSAGE_ADD:
         i += id_pack(s+i, m->add.entity_id);
         i += id_pack(s+i, m->add.player_id);
+		i += id_pack(s+i, m->add.parent_id);
         i += uint8_pack(s+i, m->add.type_id);
         break;
     case MESSAGE_REMOVE:
@@ -102,6 +103,7 @@ size_t message_pack(char *s, void *p) {
         i += id_pack(s+i, m->kill.victim_id);
         break;
     case MESSAGE_SYNCED:
+		i += id_pack(s+i, m->synced.player_id);
         break;
     case MESSAGE_REJECT:
         i += uint8_pack(s+i, (uint8_t)m->reject.reason);
@@ -195,15 +197,25 @@ size_t update_ship_pack(char *s, void *p) {
     size_t i=0;
     i += id_pack(s+i, e->id);
     
+	i += int16_pack(s+i, e->x.x);
+    i += int16_pack(s+i, e->x.y);
+    i += uint16_pack(s+i, deg100(e->phi));
     i += uint8_pack(s+i, 100 * e->health / e->type->init_health);
     i += uint8_pack(s+i, 100 * e->health / e->type->init_health); /* TODO: actually use some shield */
 
+	i += uint8_pack(s+i, 100);	 /* TODO remove */
+	i += uint8_pack(s+i, 100);   /* TODO remove */
+	i += uint8_pack(s+i, 100);   /* TODO remove */
+	i += uint8_pack(s+i, 100);   /* TODO remove */
+
+	/* TODO
     Slot *sl;
     SlotType *st;
     slots_foreach(e->player,sl,st) {
         Entity *r = sl->entity;
         i += uint8_pack(s+i, 100 * r->energy / r->type->init_energy);
     }
+	*/
 
     return i;
 }

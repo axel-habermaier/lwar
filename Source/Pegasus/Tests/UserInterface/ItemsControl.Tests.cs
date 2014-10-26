@@ -5,9 +5,8 @@
 	using System.Linq;
 	using FluentAssertions;
 	using NUnit.Framework;
-	using Pegasus.Framework;
-	using Pegasus.Framework.UserInterface;
-	using Pegasus.Framework.UserInterface.Controls;
+	using Pegasus.UserInterface;
+	using Pegasus.UserInterface.Controls;
 
 	[TestFixture]
 	public class ItemsControlTests

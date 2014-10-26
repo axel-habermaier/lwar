@@ -4,6 +4,7 @@
 	using System.Collections.Generic;
 	using System.Linq;
 	using ICSharpCode.NRefactory.CSharp;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a parameter of a command method.

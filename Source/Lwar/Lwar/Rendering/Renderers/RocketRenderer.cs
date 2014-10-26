@@ -3,7 +3,7 @@
 	using System;
 	using Assets;
 	using Assets.Effects;
-	using Gameplay.Entities;
+	using Gameplay.Client.Entities;
 	using Pegasus.Assets;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
@@ -12,7 +12,7 @@
 	/// <summary>
 	///     Renders rockets into a 3D scene.
 	/// </summary>
-	public class RocketRenderer : Renderer<Rocket>
+	public class RocketRenderer : Renderer<RocketEntity>
 	{
 		/// <summary>
 		///     The effect that is used to draw the rockets.

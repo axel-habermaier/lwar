@@ -6,8 +6,10 @@
 	using CSharp;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.Semantics;
+	using ICSharpCode.NRefactory.TypeSystem;
 	using Microsoft.CSharp;
 	using Platform.Graphics;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a C# class that contains cross-compiled shader code and shader constants.
@@ -87,7 +89,15 @@
 		/// </summary>
 		public IEnumerable<ShaderMethod> Shaders
 		{
-			get { return GetChildElements<ShaderMethod>(); }
+			get { return GetChildElements<ShaderMethod>().Where(s => !s.IsHelperMethod); }
+		}
+
+		/// <summary>
+		///     Gets the shader helper methods declared by the effect.
+		/// </summary>
+		public IEnumerable<ShaderMethod> HelperMethods
+		{
+			get { return GetChildElements<ShaderMethod>().Where(s => s.IsHelperMethod); }
 		}
 
 		/// <summary>
@@ -161,6 +171,13 @@
 						where field.Attributes.Contain<ConstantAttribute>(Resolver)
 						from variable in field.Descendants.OfType<VariableInitializer>()
 						select new ShaderConstant(field, variable));
+
+			// Find all helper methods
+			AddElements(from method in _type.Descendants.OfType<MethodDeclaration>()
+						let isVertexShader = method.Attributes.Contain<VertexShaderAttribute>(Resolver)
+						let isFragmentShader = method.Attributes.Contain<FragmentShaderAttribute>(Resolver)
+						where !isVertexShader && !isFragmentShader
+						select new ShaderMethod(method, isHelperMethod: true));
 
 			// Create the default constants
 			var view = new ShaderConstant("View", DataType.Matrix);
@@ -370,25 +387,27 @@
 				Error(variable.Declaration, "Unsupported data type: '{0}'.", variable.Type.FullName);
 			}
 
-			// Check for indexer expressions with out-of-bounds indices into a shader literal
+			// Check for indexer expressions with out-of-bounds indices into a shader literal or constant
 			foreach (var indexArgument in from method in _type.Descendants.OfType<MethodDeclaration>()
 										  from indexer in method.Descendants.OfType<IndexerExpression>()
 										  from argument in indexer.Arguments
 										  select new { Indexer = indexer, Argument = argument })
 			{
 				var resolved = Resolver.Resolve(indexArgument.Indexer.Target);
-				var type = resolved.Type.ToDataType();
+				var type = resolved.Type;
+				var dataType = type.ToDataType();
 				resolved = Resolver.Resolve(indexArgument.Argument);
 
 				if (!resolved.IsCompileTimeConstant)
 					continue;
 
 				var value = (int)resolved.ConstantValue;
-				var matrix = type == DataType.Matrix && value > 3;
-				var vector4 = type == DataType.Vector4 && value > 3;
-				var vector3 = type == DataType.Vector3 && value > 2;
-				var vector2 = type == DataType.Vector2 && value > 1;
+				var matrix =  type.Kind != TypeKind.Array && dataType  == DataType.Matrix && value > 3;
+				var vector4 = type.Kind != TypeKind.Array && dataType == DataType.Vector4 && value > 3;
+				var vector3 = type.Kind != TypeKind.Array && dataType == DataType.Vector3 && value > 2;
+				var vector2 = type.Kind != TypeKind.Array && dataType == DataType.Vector2 && value > 1;
 				var literalOutOfBounds = false;
+				var constantOutOfBounds = false;
 
 				var identifier = indexArgument.Indexer.Target as IdentifierExpression;
 				if (identifier != null)
@@ -396,17 +415,23 @@
 					var literal = Literals.SingleOrDefault(l => l.Name == identifier.Identifier && l.IsArray);
 					if (literal != null)
 						literalOutOfBounds = value >= literal.Value.GetConstantValues(Resolver).Length;
+
+					var constant = Constants.SingleOrDefault(c => c.Name == identifier.Identifier && c.IsArray);
+					if (constant != null)
+						constantOutOfBounds = value >= constant.ArrayLength;
 				}
 
-				if (value < 0 || matrix || vector4 || vector3 || vector2 || literalOutOfBounds)
+				if (value < 0 || matrix || vector4 || vector3 || vector2 || literalOutOfBounds || constantOutOfBounds)
 					Error(indexArgument.Argument, "Array index is out of bounds.");
 			}
 
 			// Check for unsupported method invocations
 			foreach (var invocation in from method in _type.Descendants.OfType<MethodDeclaration>()
 									   from invocation in method.Descendants.OfType<InvocationExpression>()
+									   let methodSymbol = Resolver.Resolve(invocation) as MemberResolveResult
 									   let intrinsic = invocation.ResolveIntrinsic(Resolver)
-									   where intrinsic == Intrinsic.Unknown
+									   where intrinsic == Intrinsic.Unknown &&
+											 !HelperMethods.Any(h => h.ResolvedSymbol.Equals(methodSymbol.Member))
 									   select invocation)
 			{
 				Error(invocation, "Invocation of unsupported method.");

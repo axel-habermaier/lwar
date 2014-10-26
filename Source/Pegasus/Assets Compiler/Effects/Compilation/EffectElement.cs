@@ -7,6 +7,7 @@
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
 	using ICSharpCode.NRefactory.TypeSystem;
+	using Utilities;
 
 	/// <summary>
 	///     Represents an element of an effect declaration.

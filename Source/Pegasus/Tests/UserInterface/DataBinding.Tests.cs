@@ -4,10 +4,9 @@
 	using System.Text;
 	using FluentAssertions;
 	using NUnit.Framework;
-	using Pegasus.Framework;
-	using Pegasus.Framework.UserInterface;
-	using Pegasus.Framework.UserInterface.Controls;
-	using Pegasus.Framework.UserInterface.Converters;
+	using Pegasus.UserInterface;
+	using Pegasus.UserInterface.Controls;
+	using Pegasus.UserInterface.Converters;
 
 	[TestFixture]
 	public class DataBindingTests
@@ -215,6 +214,17 @@
 		}
 
 		[Test]
+		public void BindingMode_OneWayToSource_PropertyHasNoGetter()
+		{
+			var obj = new object();
+			_control.DataContext = _viewModel;
+			_control.ObjectTest = obj;
+			_control.CreateDataBinding(TestControl.ObjectTestProperty, BindingMode.OneWayToSource, "ObjectNoGetter");
+
+			_viewModel.Object.Should().Be(obj);
+		}
+
+		[Test]
 		public void BindingMode_OneWayToSource_Property_Property()
 		{
 			_viewModel.InitializeRecursively(1);
@@ -282,6 +292,17 @@
 			_viewModel.String = "C";
 
 			_control.ObjectTest.Should().Be("C");
+		}
+
+		[Test]
+		public void BindingMode_OneWay_PropertyHasNoSetter()
+		{
+			var obj = new object();
+			_control.DataContext = _viewModel;
+			_viewModel.Object = obj;
+			_control.CreateDataBinding(TestControl.ObjectTestProperty, BindingMode.OneWay, "ObjectNoSetter");
+
+			_control.ObjectTest.Should().Be(obj);
 		}
 
 		[Test]

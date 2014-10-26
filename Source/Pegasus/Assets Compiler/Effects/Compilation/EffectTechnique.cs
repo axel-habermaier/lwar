@@ -8,6 +8,7 @@
 	using ICSharpCode.NRefactory.Semantics;
 	using ICSharpCode.NRefactory.TypeSystem;
 	using Platform.Graphics;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a field of an effect class that defines the combination of shaders that should be set on the GPU to
@@ -161,6 +162,24 @@
 			}
 
 			ValidateShaderSignatures();
+		}
+
+		/// <summary>
+		///     Gets a value indicating whether the technique uses the given constant buffer.
+		/// </summary>
+		/// <param name="constantBuffer">The constant buffer that should be checked.</param>
+		public bool Uses(ConstantBuffer constantBuffer)
+		{
+			return VertexShader.Uses(constantBuffer) || FragmentShader.Uses(constantBuffer);
+		}
+
+		/// <summary>
+		///     Gets a value indicating whether the technique uses the given shader texture.
+		/// </summary>
+		/// <param name="texture">The shader texture that should be checked.</param>
+		public bool Uses(ShaderTexture texture)
+		{
+			return VertexShader.Uses(texture) || FragmentShader.Uses(texture);
 		}
 
 		/// <summary>

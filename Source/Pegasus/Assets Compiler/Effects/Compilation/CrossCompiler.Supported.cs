@@ -143,11 +143,25 @@
 			Writer.Append(primitiveExpression.Value.ToString().ToLower());
 		}
 
+		protected virtual void VisitIntrinsicExpression(InvocationExpression invocationExpression)
+		{
+			var intrinsic = invocationExpression.ResolveIntrinsic(Resolver);
+			Writer.Append("{0}(", GetToken(intrinsic));
+			invocationExpression.Arguments.AcceptVisitor(this, () => Writer.Append(", "));
+			Writer.Append(")");
+		}
+
 		public virtual void VisitInvocationExpression(InvocationExpression invocationExpression)
 		{
 			var intrinsic = invocationExpression.ResolveIntrinsic(Resolver);
+			if (intrinsic != Intrinsic.Unknown)
+			{
+				VisitIntrinsicExpression(invocationExpression);
+				return;
+			}
 
-			Writer.Append("{0}(", GetToken(intrinsic));
+			invocationExpression.Target.AcceptVisitor(this);
+			Writer.Append("(");
 			invocationExpression.Arguments.AcceptVisitor(this, () => Writer.Append(", "));
 			Writer.Append(")");
 		}
@@ -176,6 +190,32 @@
 		public virtual void VisitObjectCreateExpression(ObjectCreateExpression objectCreateExpression)
 		{
 			var resolved = Resolver.Resolve(objectCreateExpression);
+			var dataType = resolved.Type.ToDataType();
+			var isVector = dataType == DataType.Vector2 || dataType == DataType.Vector3 || dataType == DataType.Vector4;
+			var constructFromSingleArgument = objectCreateExpression.Arguments.Count == 1;
+
+			if (isVector && constructFromSingleArgument)
+			{
+				Writer.Append("{0}(", ToShaderType(resolved.Type.ToDataType()));
+				objectCreateExpression.Arguments.First().AcceptVisitor(this);
+				Writer.Append(", ");
+				objectCreateExpression.Arguments.First().AcceptVisitor(this);
+
+				if (dataType == DataType.Vector3 || dataType == DataType.Vector4)
+				{
+					Writer.Append(", ");
+					objectCreateExpression.Arguments.First().AcceptVisitor(this);
+				}
+
+				if (dataType == DataType.Vector4)
+				{
+					Writer.Append(", ");
+					objectCreateExpression.Arguments.First().AcceptVisitor(this);
+				}
+
+				Writer.Append(")");
+				return;
+			}
 
 			Writer.Append("{0}(", ToShaderType(resolved.Type.ToDataType()));
 			objectCreateExpression.Arguments.AcceptVisitor(this, () => Writer.Append(", "));
@@ -184,7 +224,8 @@
 
 		public virtual void VisitReturnStatement(ReturnStatement returnStatement)
 		{
-			Writer.Append("return");
+			Writer.Append("return ");
+			returnStatement.Expression.AcceptVisitor(this);
 		}
 
 		public virtual void VisitUnaryOperatorExpression(UnaryOperatorExpression unaryOperatorExpression)

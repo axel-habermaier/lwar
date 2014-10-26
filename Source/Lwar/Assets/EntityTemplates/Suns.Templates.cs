@@ -13,7 +13,7 @@
 			Act = "gravity",
 			Collide = "planet_hit",
 			Health = 1,
-			Mass = 50000,
+			Mass = 5000000,
 			Radius = 4000,
 			Format = "format_pos"
 		};

@@ -11,6 +11,7 @@
 #include "server.h"
 
 #include <math.h>
+#include <stdlib.h>
 
 /* accelerate e by absolute a */
 void entity_push(Entity *e, Vec a) {
@@ -140,6 +141,7 @@ static void entity_unset_type(Entity *e) {
 }
 
 Entity *entity_create(EntityType *t, Player *p, Vec x, Vec v) {
+	Id none = { 0, USHRT_MAX };
     assert(t);
     assert(p);
     Entity *e = pool_new(&server->entities, Entity);
@@ -153,6 +155,7 @@ Entity *entity_create(EntityType *t, Player *p, Vec x, Vec v) {
     e->phi    = 0;
     e->rot    = 0;
     e->active = 0;
+	e->parent_id = none;
     e->periodic = 0;
     e->interval = t->init_interval;
     e->energy = t->init_energy;

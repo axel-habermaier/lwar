@@ -7,6 +7,7 @@
 	using System.Security;
 	using Math;
 	using Memory;
+	using Utilities;
 
 	/// <summary>
 	///     Represents the target of a rendering operation.

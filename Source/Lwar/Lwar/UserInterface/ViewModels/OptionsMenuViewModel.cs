@@ -3,8 +3,8 @@
 	using System;
 	using System.Text;
 	using Network;
-	using Pegasus;
-	using Pegasus.Framework.UserInterface.ViewModels;
+	using Pegasus.UserInterface.ViewModels;
+	using Pegasus.Utilities;
 	using Scripting;
 	using Views;
 
@@ -32,7 +32,7 @@
 		/// </summary>
 		public int MaxPlayerNameLength
 		{
-			get { return Specification.PlayerNameLength; }
+			get { return NetworkProtocol.PlayerNameLength; }
 		}
 
 		/// <summary>
@@ -56,7 +56,7 @@
 		/// </summary>
 		public bool PlayerNameLengthExceeded
 		{
-			get { return Encoding.UTF8.GetByteCount(PlayerName) > Specification.PlayerNameLength; }
+			get { return Encoding.UTF8.GetByteCount(PlayerName) > NetworkProtocol.PlayerNameLength; }
 		}
 
 		/// <summary>

@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Diagnostics;
+	using Utilities;
 
 	/// <summary>
 	///     Provides functions to log fatal errors, errors, warnings, informational messages, and debug-time only

@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Collections.Generic;
+	using Utilities;
 
 	/// <summary>
 	///     Applies the given parser zero or more times and returns the parser's results as a list in the order of occurrence.

@@ -37,6 +37,7 @@ static void level_init() {
         Vec  x = scale(u, dist);
         Entity *p = entity_create(types[rand() % sizeof(types) / sizeof(EntityType*)], &server->self->player, x, _0);
         p->active = true;
+		p->parent_id = sun->id;
         p->len    = dist;
         p->energy = rad(20 + rand()%50); /* speed of rotation around sun per second */
         //p->radius += rand()%(unsigned)p->radius;
@@ -51,7 +52,7 @@ void rules_init() {
     server->self = client_create_local();
     player_rename(&server->self->player, self_name);
 
-    // format_register(&format_ship);
+    format_register(&format_ship);
     format_register(&format_pos);
     format_register(&format_pos_rot);
     format_register(&format_ray);

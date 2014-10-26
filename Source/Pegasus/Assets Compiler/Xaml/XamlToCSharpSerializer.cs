@@ -5,6 +5,7 @@
 	using System.Xml.Linq;
 	using CSharp;
 	using Platform.Logging;
+	using Utilities;
 
 	/// <summary>
 	///     Serializes a preprocessed Xaml file to equivalent C# code.

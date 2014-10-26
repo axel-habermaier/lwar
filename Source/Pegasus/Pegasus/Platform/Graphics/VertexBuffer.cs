@@ -3,6 +3,7 @@
 	using System;
 	using System.Runtime.InteropServices;
 	using Memory;
+	using Utilities;
 
 	/// <summary>
 	///     A vertex buffer holds vertex data such as position, texture coordinates, or color information for

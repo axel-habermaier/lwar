@@ -7,6 +7,7 @@
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
 	using Platform.Logging;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a code element.

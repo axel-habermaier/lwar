@@ -2,13 +2,14 @@
 {
 	using System;
 	using System.Diagnostics;
+	using Pegasus.Utilities;
 	using Pegasus;
-	using Pegasus.Framework.UserInterface.Controls;
 	using Pegasus.Math;
 	using Pegasus.Platform;
 	using Pegasus.Platform.Logging;
 	using Pegasus.Scripting;
 	using Pegasus.Scripting.Validators;
+	using Pegasus.UserInterface.Controls;
 
 	internal static class Cvars
 	{

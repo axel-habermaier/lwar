@@ -4,6 +4,7 @@
 	using System.IO;
 	using Compilers;
 	using Platform;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a source asset that requires compilation.

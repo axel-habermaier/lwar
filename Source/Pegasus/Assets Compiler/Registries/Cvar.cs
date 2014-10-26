@@ -5,6 +5,7 @@
 	using System.Linq;
 	using CSharp;
 	using ICSharpCode.NRefactory.CSharp;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a cvar property of the registry interface.

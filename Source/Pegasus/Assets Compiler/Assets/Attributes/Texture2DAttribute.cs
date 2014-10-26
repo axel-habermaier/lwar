@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.AssetsCompiler.Assets.Attributes
 {
 	using System;
+	using Utilities;
 
 	/// <summary>
 	///     When applied to an asset assembly, overrides the default compilation settings of a Texture2D asset.
