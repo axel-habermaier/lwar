@@ -228,6 +228,7 @@
 					textBox._caret.RemovePreviousCharacter();
 					break;
 				case Key.Delete:
+				case Key.NumpadDecimal:
 					textBox._caret.RemoveCurrentCharacter();
 					break;
 				default:
