@@ -13,7 +13,7 @@
 	/// <summary>
 	///     Manages all registered instruction bindings.
 	/// </summary>
-	internal class Bindings : DisposableObject
+	internal class BindingCollection : DisposableObject
 	{
 		/// <summary>
 		///     The registered instruction bindings.
@@ -34,7 +34,7 @@
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="device">The logical input device that is used to determine whether the logical inputs are triggered.</param>
-		public Bindings(LogicalInputDevice device)
+		public BindingCollection(LogicalInputDevice device)
 		{
 			Assert.ArgumentNotNull(device);
 

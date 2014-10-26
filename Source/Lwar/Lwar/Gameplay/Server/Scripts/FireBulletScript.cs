@@ -31,7 +31,7 @@ namespace Lwar.Gameplay.Server.Scripts
 		/// </summary>
 		static FireBulletScript()
 		{
-			ConstructorCache.Set(() => new FireBulletScript());
+			ConstructorCache.Register(() => new FireBulletScript());
 		}
 
 		/// <summary>
@@ -61,7 +61,7 @@ namespace Lwar.Gameplay.Server.Scripts
 			var position = Transform.Position;
 			var direction = Vector2.FromAngle(Transform.Orientation);
 			var velocity = direction.Normalize() * BaseSpeed + Motion.Velocity;
-			GameSession.Templates.CreateBullet(Owner.Player, position, velocity);
+			EntityFactory.CreateBullet(Owner.Player, position, velocity);
 		}
 
 		/// <summary>

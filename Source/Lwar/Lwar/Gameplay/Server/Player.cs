@@ -16,7 +16,7 @@
 		/// </summary>
 		static Player()
 		{
-			ConstructorCache.Set(() => new Player());
+			ConstructorCache.Register(() => new Player());
 		}
 
 		/// <summary>

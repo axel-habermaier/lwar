@@ -15,7 +15,7 @@ namespace Lwar.Network.Messages
 		/// </summary>
 		static DisconnectMessage()
 		{
-			ConstructorCache.Set(() => new DisconnectMessage());
+			ConstructorCache.Register(() => new DisconnectMessage());
 		}
 
 		/// <summary>

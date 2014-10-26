@@ -216,7 +216,7 @@
     <Compile Include="Gameplay\Server\Components\TimeToLive.cs" />
     <Compile Include="Gameplay\Server\Components\Transform.cs" />
     <Compile Include="Gameplay\Server\Components\Sprite.cs" />
-    <Compile Include="Gameplay\Server\EntityTemplates.cs" />
+    <Compile Include="Gameplay\Server\EntityFactory.cs" />
     <Compile Include="Gameplay\Server\GameSession.cs" />
     <Compile Include="Gameplay\Server\Scripts\FirePhaserScript.cs" />
     <Compile Include="Gameplay\Server\Scripts\Script.cs" />

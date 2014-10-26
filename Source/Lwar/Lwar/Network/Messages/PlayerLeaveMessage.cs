@@ -16,7 +16,7 @@ namespace Lwar.Network.Messages
 		/// </summary>
 		static PlayerLeaveMessage()
 		{
-			ConstructorCache.Set(() => new PlayerLeaveMessage());
+			ConstructorCache.Register(() => new PlayerLeaveMessage());
 		}
 
 		/// <summary>

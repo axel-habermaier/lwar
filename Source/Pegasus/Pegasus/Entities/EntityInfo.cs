@@ -14,7 +14,7 @@ namespace Pegasus.Entities
 		/// </summary>
 		static EntityInfo()
 		{
-			ConstructorCache.Set(() => new EntityInfo());
+			ConstructorCache.Register(() => new EntityInfo());
 		}
 
 		/// <summary>

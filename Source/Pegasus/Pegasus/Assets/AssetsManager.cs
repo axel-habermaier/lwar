@@ -227,7 +227,7 @@
 				else if (loadingTime > 1)
 					color = "\\yellow";
 
-				Log.Info("Loaded {0} {1} ({2}{3:F2} ms\\\0).", loader.AssetTypeName, GetAssetDisplayName(info), color, loadingTime);
+				Log.Info("Loaded {0} {1} ({2}{3:F2}ms\\\0).", loader.AssetTypeName, GetAssetDisplayName(info), color, loadingTime);
 			}
 			catch (Exception e)
 			{

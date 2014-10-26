@@ -31,7 +31,7 @@ namespace Lwar.Gameplay.Server.Scripts
 		/// </summary>
 		static FirePhaserScript()
 		{
-			ConstructorCache.Set(() => new FirePhaserScript());
+			ConstructorCache.Register(() => new FirePhaserScript());
 		}
 
 		/// <summary>
@@ -53,7 +53,7 @@ namespace Lwar.Gameplay.Server.Scripts
 			_isFiring = Input.FireWeapons[_inputIndex];
 
 			if (_isFiring)
-				_phaser = GameSession.Templates.CreatePhaser(Owner.Player, Entity);
+				_phaser = EntityFactory.CreatePhaser(Owner.Player, Entity);
 			else
 				_phaser.Remove();
 		}

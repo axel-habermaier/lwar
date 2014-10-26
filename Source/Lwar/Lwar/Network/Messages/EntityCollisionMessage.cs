@@ -17,7 +17,7 @@ namespace Lwar.Network.Messages
 		/// </summary>
 		static EntityCollisionMessage()
 		{
-			ConstructorCache.Set(() => new EntityCollisionMessage());
+			ConstructorCache.Register(() => new EntityCollisionMessage());
 		}
 
 		/// <summary>

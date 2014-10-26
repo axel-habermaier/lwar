@@ -22,7 +22,7 @@
 		/// </summary>
 		/// <typeparam name="T">The type the constructor should be cached for.</typeparam>
 		/// <param name="constructor">The constructor that should be registered.</param>
-		public static void Set<T>(Func<T> constructor)
+		public static void Register<T>(Func<T> constructor)
 			where T : class
 		{
 			Assert.ArgumentNotNull(constructor);

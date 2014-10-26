@@ -43,7 +43,7 @@
 		/// </summary>
 		static Client()
 		{
-			ConstructorCache.Set(() => new Client());
+			ConstructorCache.Register(() => new Client());
 		}
 
 		/// <summary>

@@ -20,7 +20,7 @@
 		/// </summary>
 		static Owner()
 		{
-			ConstructorCache.Set(() => new Owner());
+			ConstructorCache.Register(() => new Owner());
 		}
 
 		/// <summary>

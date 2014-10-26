@@ -42,7 +42,6 @@
 				var velocity = motions[i].Velocity;
 				var maxSpeed = motions[i].MaxSpeed;
 
-				// Apply the acceleration to the ship, capping the maximum allowed speed and update the ship position.
 				velocity += motions[i].Acceleration * _elapsedSeconds;
 				velocity = velocity.Length > maxSpeed ? velocity.Normalize() * maxSpeed : velocity;
 

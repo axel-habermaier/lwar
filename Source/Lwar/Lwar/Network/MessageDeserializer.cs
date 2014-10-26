@@ -49,7 +49,7 @@
 		/// </summary>
 		static MessageDeserializer()
 		{
-			ConstructorCache.Set(() => new MessageDeserializer());
+			ConstructorCache.Register(() => new MessageDeserializer());
 		}
 
 		/// <summary>

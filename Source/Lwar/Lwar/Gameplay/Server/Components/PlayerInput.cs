@@ -52,7 +52,7 @@
 		/// </summary>
 		static PlayerInput()
 		{
-			ConstructorCache.Set(() => new PlayerInput());
+			ConstructorCache.Register(() => new PlayerInput());
 		}
 
 		/// <summary>

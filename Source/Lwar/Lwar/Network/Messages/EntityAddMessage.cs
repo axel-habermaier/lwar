@@ -16,7 +16,7 @@ namespace Lwar.Network.Messages
 		/// </summary>
 		static EntityAddMessage()
 		{
-			ConstructorCache.Set(() => new EntityAddMessage());
+			ConstructorCache.Register(() => new EntityAddMessage());
 		}
 
 		/// <summary>

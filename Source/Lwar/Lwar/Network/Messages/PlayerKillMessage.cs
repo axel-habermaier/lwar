@@ -16,7 +16,7 @@ namespace Lwar.Network.Messages
 		/// </summary>
 		static PlayerKillMessage()
 		{
-			ConstructorCache.Set(() => new PlayerKillMessage());
+			ConstructorCache.Register(() => new PlayerKillMessage());
 		}
 
 		/// <summary>

@@ -16,7 +16,7 @@ namespace Lwar.Network.Messages
 		/// </summary>
 		static EntityRemoveMessage()
 		{
-			ConstructorCache.Set(() => new EntityRemoveMessage());
+			ConstructorCache.Register(() => new EntityRemoveMessage());
 		}
 
 		/// <summary>

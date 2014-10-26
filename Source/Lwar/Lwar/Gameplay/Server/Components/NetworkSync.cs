@@ -32,7 +32,7 @@
 		/// </summary>
 		static NetworkSync()
 		{
-			ConstructorCache.Set(() => new NetworkSync());
+			ConstructorCache.Register(() => new NetworkSync());
 		}
 
 		/// <summary>

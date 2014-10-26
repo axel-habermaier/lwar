@@ -109,9 +109,9 @@
 		public PlayerCollection Players { get; private set; }
 
 		/// <summary>
-		///     Gets the entity templates that can be used to create entities.
+		///     Gets an entity factory that can be used to create entities.
 		/// </summary>
-		public EntityTemplates Templates { get; private set; }
+		public EntityFactory EntityFactory { get; private set; }
 
 		/// <summary>
 		///     Initializes a client-side game session.
@@ -120,7 +120,7 @@
 		{
 			_serverMode = false;
 
-			Templates = new EntityTemplates(_allocator, Entities, serverMode: false);
+			EntityFactory = new EntityFactory(_allocator, Entities, serverMode: false);
 			Players = new PlayerCollection(_allocator, serverMode: false);
 
 			_behaviors.Add(_spriteBehavior = new SpriteBehavior());
@@ -138,7 +138,7 @@
 
 			_serverMode = true;
 
-			Templates = new EntityTemplates(_allocator, Entities, serverMode: true);
+			EntityFactory = new EntityFactory(_allocator, Entities, serverMode: true);
 			Players = new PlayerCollection(_allocator, serverMode: true);
 
 			_behaviors.Add(_syncToClientsBehavior = new SyncToClientsBehavior(_allocator, serverLogic));
@@ -207,12 +207,12 @@
 		/// </summary>
 		private void CreateGalaxy()
 		{
-			var sun = Templates.CreateSun(Players.ServerPlayer);
-			var earth = Templates.CreatePlanet(Players.ServerPlayer, sun, EntityType.Earth, 12000, 0.05f, 0);
+			var sun = EntityFactory.CreateSun(Players.ServerPlayer);
+			var earth = EntityFactory.CreatePlanet(Players.ServerPlayer, sun, EntityType.Earth, 12000, 0.05f, 0);
 
-			Templates.CreatePlanet(Players.ServerPlayer, earth, EntityType.Moon, 1500, 0.7f, MathUtils.PiOver4);
-			Templates.CreatePlanet(Players.ServerPlayer, sun, EntityType.Mars, 14000, -0.07f, MathUtils.Pi);
-			Templates.CreatePlanet(Players.ServerPlayer, sun, EntityType.Jupiter, 20000, -0.085f, MathUtils.PiOver2);
+			EntityFactory.CreatePlanet(Players.ServerPlayer, earth, EntityType.Moon, 1500, 0.7f, MathUtils.PiOver4);
+			EntityFactory.CreatePlanet(Players.ServerPlayer, sun, EntityType.Mars, 14000, -0.07f, MathUtils.Pi);
+			EntityFactory.CreatePlanet(Players.ServerPlayer, sun, EntityType.Jupiter, 20000, -0.085f, MathUtils.PiOver2);
 		}
 	}
 }

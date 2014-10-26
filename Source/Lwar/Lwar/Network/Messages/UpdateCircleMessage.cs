@@ -17,7 +17,7 @@ namespace Lwar.Network.Messages
 		/// </summary>
 		static UpdateCircleMessage()
 		{
-			ConstructorCache.Set(() => new UpdateCircleMessage());
+			ConstructorCache.Register(() => new UpdateCircleMessage());
 		}
 
 		/// <summary>

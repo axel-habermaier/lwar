@@ -18,7 +18,7 @@ namespace Lwar.Network.Messages
 		/// </summary>
 		static UpdateShipMessage()
 		{
-			ConstructorCache.Set(() => new UpdateShipMessage());
+			ConstructorCache.Register(() => new UpdateShipMessage());
 		}
 
 		/// <summary>

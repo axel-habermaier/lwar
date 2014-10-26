@@ -21,7 +21,7 @@
 		/// </summary>
 		static Sprite()
 		{
-			ConstructorCache.Set(() => new Sprite());
+			ConstructorCache.Register(() => new Sprite());
 		}
 
 		/// <summary>

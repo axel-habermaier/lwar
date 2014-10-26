@@ -25,7 +25,7 @@
 		/// </summary>
 		static Rotation()
 		{
-			ConstructorCache.Set(() => new Rotation());
+			ConstructorCache.Register(() => new Rotation());
 		}
 
 		/// <summary>

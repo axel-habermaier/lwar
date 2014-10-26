@@ -17,7 +17,7 @@ namespace Lwar.Network.Messages
 		/// </summary>
 		static PlayerChatMessage()
 		{
-			ConstructorCache.Set(() => new PlayerChatMessage());
+			ConstructorCache.Register(() => new PlayerChatMessage());
 		}
 
 		/// <summary>

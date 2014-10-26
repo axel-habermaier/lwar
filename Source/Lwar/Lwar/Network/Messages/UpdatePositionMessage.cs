@@ -17,7 +17,7 @@ namespace Lwar.Network.Messages
 		/// </summary>
 		static UpdatePositionMessage()
 		{
-			ConstructorCache.Set(() => new UpdatePositionMessage());
+			ConstructorCache.Register(() => new UpdatePositionMessage());
 		}
 
 		/// <summary>

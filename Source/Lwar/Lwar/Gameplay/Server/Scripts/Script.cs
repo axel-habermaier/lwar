@@ -32,6 +32,14 @@
 		private Transform _transform;
 
 		/// <summary>
+		///     Gets an entity factory that can be used to create entities.
+		/// </summary>
+		protected EntityFactory EntityFactory
+		{
+			get { return GameSession.EntityFactory; }
+		}
+
+		/// <summary>
 		///     Gets the player input component of the entity the script is attached to.
 		/// </summary>
 		protected PlayerInput Input

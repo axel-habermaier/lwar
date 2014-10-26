@@ -16,7 +16,7 @@ namespace Lwar.Network.Messages
 		/// </summary>
 		static PlayerStatsMessage()
 		{
-			ConstructorCache.Set(() => new PlayerStatsMessage());
+			ConstructorCache.Register(() => new PlayerStatsMessage());
 		}
 
 		/// <summary>

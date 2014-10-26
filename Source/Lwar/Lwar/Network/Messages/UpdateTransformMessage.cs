@@ -17,7 +17,7 @@ namespace Lwar.Network.Messages
 		/// </summary>
 		static UpdateTransformMessage()
 		{
-			ConstructorCache.Set(() => new UpdateTransformMessage());
+			ConstructorCache.Register(() => new UpdateTransformMessage());
 		}
 
 		/// <summary>

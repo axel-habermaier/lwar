@@ -16,7 +16,7 @@
 		/// <summary>
 		///     Manages the input bindings registered for this window.
 		/// </summary>
-		private readonly Bindings _bindings;
+		private readonly BindingCollection _bindings;
 
 		/// <summary>
 		///     The logical input device that is used to handle all of the global user input of this window.
@@ -35,7 +35,7 @@
 			: base(title, position, size, mode)
 		{
 			_inputDevice = new LogicalInputDevice(this, usePreviewEvents: true);
-			_bindings = new Bindings(_inputDevice);
+			_bindings = new BindingCollection(_inputDevice);
 
 			InputBindings.Add(new ScanCodeBinding(PlatformInfo.ConsoleKey, "ToggleConsole", triggerOnRepeat: false) { Preview = true });
 			DataContext = dataContext;

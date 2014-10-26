@@ -284,7 +284,7 @@
 				return;
 
 			Log.DebugIf(EnableTracing, "(Server) Respawning player '{0}' ({1}).", player.Name, player.Identity);
-			player.ControlledEntity = _gameSession.Templates.CreateShip(player, position: new Vector2(0, 30000));
+			player.ControlledEntity = _gameSession.EntityFactory.CreateShip(player, position: new Vector2(0, 30000));
 			var scripts = player.ControlledEntity.GetComponent<ScriptCollection>();
 
 			for (var i = 0; i < NetworkProtocol.WeaponSlotCount; ++i)

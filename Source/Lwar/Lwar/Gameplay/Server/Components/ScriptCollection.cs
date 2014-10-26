@@ -27,7 +27,7 @@
 		/// </summary>
 		static ScriptCollection()
 		{
-			ConstructorCache.Set(() => new ScriptCollection());
+			ConstructorCache.Register(() => new ScriptCollection());
 		}
 
 		/// <summary>

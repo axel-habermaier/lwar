@@ -26,7 +26,7 @@
 		/// </summary>
 		static Transform()
 		{
-			ConstructorCache.Set(() => new Transform());
+			ConstructorCache.Register(() => new Transform());
 		}
 
 		/// <summary>

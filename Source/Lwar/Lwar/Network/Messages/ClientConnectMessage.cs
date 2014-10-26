@@ -16,7 +16,7 @@ namespace Lwar.Network.Messages
 		/// </summary>
 		static ClientConnectMessage()
 		{
-			ConstructorCache.Set(() => new ClientConnectMessage());
+			ConstructorCache.Register(() => new ClientConnectMessage());
 		}
 
 		/// <summary>

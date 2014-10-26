@@ -17,7 +17,7 @@ namespace Lwar.Network.Messages
 		/// </summary>
 		static PlayerLoadoutMessage()
 		{
-			ConstructorCache.Set(() => new PlayerLoadoutMessage());
+			ConstructorCache.Register(() => new PlayerLoadoutMessage());
 		}
 
 		/// <summary>

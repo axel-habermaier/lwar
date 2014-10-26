@@ -17,7 +17,7 @@ namespace Lwar.Network.Messages
 		/// </summary>
 		static UpdateRayMessage()
 		{
-			ConstructorCache.Set(() => new UpdateRayMessage());
+			ConstructorCache.Register(() => new UpdateRayMessage());
 		}
 
 		/// <summary>

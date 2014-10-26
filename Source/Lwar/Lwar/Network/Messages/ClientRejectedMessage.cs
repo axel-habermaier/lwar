@@ -15,7 +15,7 @@ namespace Lwar.Network.Messages
 		/// </summary>
 		static ClientRejectedMessage()
 		{
-			ConstructorCache.Set(() => new ClientRejectedMessage());
+			ConstructorCache.Register(() => new ClientRejectedMessage());
 		}
 
 		/// <summary>

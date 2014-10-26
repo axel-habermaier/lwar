@@ -173,7 +173,7 @@
 			where T : class, new()
 		{
 			if (!ConstructorCache.IsCached<T>())
-				ConstructorCache.Set(() => new T());
+				ConstructorCache.Register(() => new T());
 
 			return Allocator.Allocate<T>();
 		}

@@ -18,7 +18,7 @@ namespace Lwar.Network.Messages
 		/// </summary>
 		static PlayerInputMessage()
 		{
-			ConstructorCache.Set(() => new PlayerInputMessage());
+			ConstructorCache.Register(() => new PlayerInputMessage());
 		}
 
 		/// <summary>

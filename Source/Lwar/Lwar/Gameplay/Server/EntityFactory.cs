@@ -12,7 +12,7 @@
 	/// <summary>
 	///     Provides factory methods for the creation of entity types.
 	/// </summary>
-	public class EntityTemplates
+	public class EntityFactory
 	{
 		/// <summary>
 		///     The allocator that is used to allocate components and entities.
@@ -35,7 +35,7 @@
 		/// <param name="allocator">The allocator that should be used to allocate components and entities.</param>
 		/// <param name="entityCollection">The entity collection that should be used to create the entities.</param>
 		/// <param name="serverMode">Indicates whether the entities are created for use by a server.</param>
-		public EntityTemplates(PoolAllocator allocator, EntityCollection entityCollection, bool serverMode)
+		public EntityFactory(PoolAllocator allocator, EntityCollection entityCollection, bool serverMode)
 		{
 			Assert.ArgumentNotNull(allocator);
 			Assert.ArgumentNotNull(entityCollection);

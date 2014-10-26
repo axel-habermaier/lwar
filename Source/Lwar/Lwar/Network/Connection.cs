@@ -60,7 +60,7 @@
 		/// </summary>
 		static Connection()
 		{
-			ConstructorCache.Set(() => new Connection());
+			ConstructorCache.Register(() => new Connection());
 		}
 
 		/// <summary>

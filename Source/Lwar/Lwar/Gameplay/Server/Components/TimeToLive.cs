@@ -20,7 +20,7 @@
 		/// </summary>
 		static TimeToLive()
 		{
-			ConstructorCache.Set(() => new TimeToLive());
+			ConstructorCache.Register(() => new TimeToLive());
 		}
 
 		/// <summary>

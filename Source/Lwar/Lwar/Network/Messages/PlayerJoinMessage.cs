@@ -17,7 +17,7 @@ namespace Lwar.Network.Messages
 		/// </summary>
 		static PlayerJoinMessage()
 		{
-			ConstructorCache.Set(() => new PlayerJoinMessage());
+			ConstructorCache.Register(() => new PlayerJoinMessage());
 		}
 
 		/// <summary>

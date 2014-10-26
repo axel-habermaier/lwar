@@ -601,7 +601,7 @@
     <Compile Include="Scripting\Parsing\BasicParsers\NumberParser.cs" />
     <Compile Include="Scripting\InstructionParser.cs" />
     <Compile Include="UserInterface\Input\InputState.cs" />
-    <Compile Include="Scripting\Bindings.cs" />
+    <Compile Include="Scripting\BindingCollection.cs" />
     <Compile Include="UserInterface\Input\Keyboard.cs" />
     <Compile Include="UserInterface\Input\LogicalInputDevice.cs" />
     <Compile Include="UserInterface\Input\Mouse.cs" />

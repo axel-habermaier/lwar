@@ -30,7 +30,7 @@
 		/// </summary>
 		static Ray()
 		{
-			ConstructorCache.Set(() => new Ray());
+			ConstructorCache.Register(() => new Ray());
 		}
 
 		/// <summary>

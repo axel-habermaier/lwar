@@ -31,7 +31,7 @@
 		/// </summary>
 		static RelativeTransform()
 		{
-			ConstructorCache.Set(() => new RelativeTransform());
+			ConstructorCache.Register(() => new RelativeTransform());
 		}
 
 		/// <summary>

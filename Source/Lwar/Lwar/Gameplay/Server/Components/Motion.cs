@@ -36,7 +36,7 @@
 		/// </summary>
 		static Motion()
 		{
-			ConstructorCache.Set(() => new Motion());
+			ConstructorCache.Register(() => new Motion());
 		}
 
 		/// <summary>

@@ -30,7 +30,7 @@
 		/// </summary>
 		static Orbit()
 		{
-			ConstructorCache.Set(() => new Orbit());
+			ConstructorCache.Register(() => new Orbit());
 		}
 
 		/// <summary>
