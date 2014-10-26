@@ -20,7 +20,7 @@
 		/// <summary>
 		///     If tracing is enabled, all server-specific gameplay events are shown in the debug output.
 		/// </summary>
-		private const bool EnableTracing = true;
+		private const bool EnableTracing = false;
 
 		/// <summary>
 		///     The allocator that is used to allocate pooled objects.

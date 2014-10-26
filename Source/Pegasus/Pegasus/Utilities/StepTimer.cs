@@ -13,6 +13,7 @@
 	///     However, MaxDelta limits the maximum elapsed time between two calls to Tick(), as unreasonably long
 	///     pauses are usually due to the app being inactive for some time or due to the debugger pausing the app.
 	/// </summary>
+	/// <remarks>Adopted from a Visual Studio C++ WinRT template.</remarks>
 	public class StepTimer
 	{
 		/// <summary>
@@ -36,11 +37,6 @@
 		private double _secondCounter;
 
 		/// <summary>
-		///     The number of updates this second.
-		/// </summary>
-		private uint _updatesThisSecond;
-
-		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		public StepTimer()
@@ -60,22 +56,12 @@
 		public double TotalSeconds { get; private set; }
 
 		/// <summary>
-		///     Gets the total number of updates since the creation of the timer.
-		/// </summary>
-		public uint TotalUpdateCount { get; private set; }
-
-		/// <summary>
-		///     Gets the current number of updates per second, updated once per second.
-		/// </summary>
-		public uint UpdatesPerSecond { get; private set; }
-
-		/// <summary>
 		///     Gets or sets a value indicating whether the fixed or the variable timestep mode should be used.
 		/// </summary>
 		public bool IsFixedTimeStep { get; set; }
 
 		/// <summary>
-		///     Gets or sets the target elapsed time between two consecutive updates in fixed timestep mode.
+		///     Gets or sets the target elapsed time in seconds between two consecutive updates in fixed timestep mode.
 		/// </summary>
 		public double TargetElapsedSeconds { get; set; }
 
@@ -87,8 +73,6 @@
 		{
 			_lastTime = Clock.SystemTime;
 			_leftOverTime = 0;
-			UpdatesPerSecond = 0;
-			_updatesThisSecond = 0;
 			_secondCounter = 0;
 		}
 
@@ -114,8 +98,6 @@
 			if (timeDelta > MaxDelta)
 				timeDelta = MaxDelta;
 
-			var lastUpdateCount = TotalUpdateCount;
-
 			if (IsFixedTimeStep)
 			{
 				// If the app is running very close to the target elapsed time (within 1/4 of a millisecond) just clamp
@@ -134,7 +116,6 @@
 					ElapsedSeconds = TargetElapsedSeconds;
 					TotalSeconds += TargetElapsedSeconds;
 					_leftOverTime -= TargetElapsedSeconds;
-					++TotalUpdateCount;
 
 					UpdateRequired();
 				}
@@ -144,22 +125,14 @@
 				ElapsedSeconds = timeDelta;
 				TotalSeconds += timeDelta;
 				_leftOverTime = 0;
-				++TotalUpdateCount;
 
 				UpdateRequired();
 			}
-
-			// If we've performed at least one update, add another update to the current second.
-			// The update framerate discards catch-up updates.
-			if (TotalUpdateCount != lastUpdateCount)
-				++_updatesThisSecond;
 
 			// Reset the second counter if it exceeds one second (the time delta never exceeds MaxDelta seconds).
 			if (!(_secondCounter >= 1.0))
 				return;
 
-			UpdatesPerSecond = _updatesThisSecond;
-			_updatesThisSecond = 0;
 			_secondCounter -= 1.0;
 		}
 	}

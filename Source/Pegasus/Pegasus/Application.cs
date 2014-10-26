@@ -44,7 +44,6 @@
 		/// </summary>
 		protected Application()
 		{
-			Commands.OnExit += Exit;
 			Current = this;
 		}
 
@@ -165,6 +164,7 @@
 				{
 					Initialize();
 					Commands.Help();
+					Commands.OnExit += Exit;
 
 					while (_running)
 					{

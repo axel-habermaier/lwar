@@ -124,7 +124,7 @@
 			Commands.Initialize();
 			Cvars.Initialize();
 
-			Bootstrapper<LwarApplication>.Run(args, "Lwar");
+			Bootstrapper.Run(new LwarApplication(), args, "Lwar");
 		}
 	}
 }

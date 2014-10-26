@@ -15,17 +15,17 @@
 	/// <summary>
 	///     Starts up the application and handles command line arguments and fatal application exceptions.
 	/// </summary>
-	/// <typeparam name="TApp">The type of the application that should be run.</typeparam>
-	public static class Bootstrapper<TApp>
-		where TApp : Application, new()
+	public static class Bootstrapper
 	{
 		/// <summary>
 		///     Runs the application. This method does not return until the application is shut down.
 		/// </summary>
+		/// <param name="application">The application that should be run.</param>
 		/// <param name="arguments">The command line arguments that have been passed to the application.</param>
 		/// <param name="appName">The name of the application.</param>
-		public static void Run(string[] arguments, string appName)
+		public static void Run(Application application, string[] arguments, string appName)
 		{
+			Assert.ArgumentNotNull(application);
 			Assert.ArgumentNotNullOrWhitespace(appName);
 
 			TaskScheduler.UnobservedTaskException += (o, e) => { throw e.Exception.InnerException; };
@@ -58,8 +58,7 @@
 						CommandLineParser.Parse(arguments);
 						CvarRegistry.ExecuteDeferredUpdates();
 
-						var app = new TApp();
-						app.Run(appName, consoleViewModel);
+						application.Run(appName, consoleViewModel);
 
 						Commands.Persist(ConfigurationFile.AutoExec);
 					}
