@@ -13,6 +13,16 @@
 	public sealed class PlayerCollection : DisposableObject
 	{
 		/// <summary>
+		///     The allocator that is used to allocate network identities for the players.
+		/// </summary>
+		private readonly IdentityAllocator _identityAllocator;
+
+		/// <summary>
+		///     Maps network identities to actual player objects.
+		/// </summary>
+		private readonly IdentityMap<Player> _identityMap;
+
+		/// <summary>
 		///     The list of active players.
 		/// </summary>
 		private readonly List<Player> _players = new List<Player>();
@@ -21,16 +31,6 @@
 		///     Indicates whether players are managed in server mode.
 		/// </summary>
 		private readonly bool _serverMode;
-
-		/// <summary>
-		///     The allocator that is used to allocate network identities for the players.
-		/// </summary>
-		private IdentityAllocator _identityAllocator;
-
-		/// <summary>
-		///     Maps network identities to actual player objects.
-		/// </summary>
-		private IdentityMap<Player> _identityMap;
 
 		/// <summary>
 		///     Initializes a new instance.

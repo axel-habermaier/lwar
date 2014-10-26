@@ -25,24 +25,24 @@
 		private readonly PoolAllocator _allocator;
 
 		/// <summary>
+		///     Maps active entities to their entity info object.
+		/// </summary>
+		private readonly IdentityMap<EntityInfo> _entityInfoMap;
+
+		/// <summary>
 		///     The event dispatcher that is used to dispatch entity events to the behaviors.
 		/// </summary>
 		private readonly EventDispatcher _eventDispatcher;
 
 		/// <summary>
+		///     The allocator that is used to allocate entity identities.
+		/// </summary>
+		private readonly IdentityAllocator _identityAllocator;
+
+		/// <summary>
 		///     The list of removed entities.
 		/// </summary>
 		private readonly IntrusiveList _removedEntities = new IntrusiveList();
-
-		/// <summary>
-		///     Maps active entities to their entity info object.
-		/// </summary>
-		private IdentityMap<EntityInfo> _entityInfoMap;
-
-		/// <summary>
-		///     The allocator that is used to allocate entity identities.
-		/// </summary>
-		private IdentityAllocator _identityAllocator;
 
 		/// <summary>
 		///     Initializes a new instance.

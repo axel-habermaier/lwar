@@ -20,9 +20,9 @@
 		private readonly PoolAllocator _allocator;
 
 		/// <summary>
-		/// The entity collection that is used to create the entities.
+		///     The entity collection that is used to create the entities.
 		/// </summary>
-		private EntityCollection _entityCollection;
+		private readonly EntityCollection _entityCollection;
 
 		/// <summary>
 		///     Indicates whether entities are created for use by a server.
@@ -35,7 +35,7 @@
 		/// <param name="allocator">The allocator that should be used to allocate components and entities.</param>
 		/// <param name="entityCollection">The entity collection that should be used to create the entities.</param>
 		/// <param name="serverMode">Indicates whether the entities are created for use by a server.</param>
-		public EntityTemplates(PoolAllocator allocator,EntityCollection entityCollection, bool serverMode)
+		public EntityTemplates(PoolAllocator allocator, EntityCollection entityCollection, bool serverMode)
 		{
 			Assert.ArgumentNotNull(allocator);
 			Assert.ArgumentNotNull(entityCollection);
@@ -83,7 +83,7 @@
 		{
 			Assert.ArgumentNotNull(player);
 
-			var entity =  _entityCollection.CreateEntity();
+			var entity = _entityCollection.CreateEntity();
 			entity.Add(Transform.Create(_allocator, position));
 			entity.Add(NetworkSync.Create(_allocator, identity, EntityType.Sun, MessageType.UpdatePosition));
 			entity.Add(Owner.Create(_allocator, player));
@@ -108,8 +108,7 @@
 		{
 			Assert.ArgumentNotNull(player);
 			Assert.ArgumentSatisfies(planetType == EntityType.Earth || planetType == EntityType.Mars ||
-									 planetType == EntityType.Jupiter || planetType == EntityType.Moon,
-				"Invalid planet type.");
+									 planetType == EntityType.Jupiter || planetType == EntityType.Moon, "Invalid planet type.");
 
 			var entity = _entityCollection.CreateEntity();
 			entity.Add(Transform.Create(_allocator));
@@ -128,12 +127,11 @@
 		/// <param name="position">The initial position of the bullet.</param>
 		/// <param name="velocity">The initial velocity of the bullet.</param>
 		/// <param name="identity">The network identity of the bullet.</param>
-		public Entity CreateBullet(Player player, Vector2 position, Vector2 velocity,
-								   Identity identity = default(Identity))
+		public Entity CreateBullet(Player player, Vector2 position, Vector2 velocity, Identity identity = default(Identity))
 		{
 			Assert.ArgumentNotNull(player);
 
-			var entity =  _entityCollection.CreateEntity();
+			var entity = _entityCollection.CreateEntity();
 			entity.Add(Transform.Create(_allocator, position));
 			entity.Add(NetworkSync.Create(_allocator, identity, EntityType.Bullet, MessageType.UpdatePosition));
 			entity.Add(Owner.Create(_allocator, player));

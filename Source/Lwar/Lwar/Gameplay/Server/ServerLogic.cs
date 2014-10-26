@@ -33,6 +33,11 @@
 		private readonly List<Player> _inactivePlayers = new List<Player>();
 
 		/// <summary>
+		///     The allocator for networked identities.
+		/// </summary>
+		private readonly IdentityAllocator _networkIdentities = new IdentityAllocator(UInt16.MaxValue);
+
+		/// <summary>
 		///     A cached set that is used to sync parent entities before their children. The set contains the network identities of all
 		///     entities that have already been synced.
 		/// </summary>
@@ -43,11 +48,6 @@
 		///     yet been synced.
 		/// </summary>
 		private readonly Queue<Entity> _unsyncedEntities = new Queue<Entity>();
-
-		/// <summary>
-		///     The allocator for networked identities.
-		/// </summary>
-		private IdentityAllocator _networkIdentities = new IdentityAllocator(UInt16.MaxValue);
 
 		/// <summary>
 		///     Initializes a new instance.
