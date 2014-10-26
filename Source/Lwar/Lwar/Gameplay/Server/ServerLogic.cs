@@ -7,6 +7,7 @@
 	using Network.Messages;
 	using Pegasus.Entities;
 	using Pegasus.Math;
+	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Utilities;
 	using Scripts;
@@ -16,6 +17,11 @@
 	/// </summary>
 	public class ServerLogic
 	{
+		/// <summary>
+		///     If tracing is enabled, all server-specific gameplay events are shown in the debug output.
+		/// </summary>
+		private const bool EnableTracing = true;
+
 		/// <summary>
 		///     The allocator that is used to allocate pooled objects.
 		/// </summary>
@@ -86,9 +92,17 @@
 			Assert.ArgumentNotNull(connection);
 			Assert.ArgumentNotNull(clientPlayer);
 
+			Log.DebugIf(EnableTracing, "(Server) Sending game state snapshot to {0}, player '{1}' ({2}).",
+				connection.RemoteEndPoint, clientPlayer.Name, clientPlayer.Identity);
+
 			// Synchronize all players
 			foreach (var player in _gameSession.Players)
-				connection.Send(PlayerJoinMessage.Create(_allocator, player.Identity, player.Name));
+			{
+				var message = PlayerJoinMessage.Create(_allocator, player.Identity, player.Name);
+				connection.Send(message);
+
+				Log.DebugIf(EnableTracing, "(Server)    {0}", message);
+			}
 
 			// Synchronize all network-synced entities
 			foreach (var entity in _gameSession.Entities)
@@ -99,7 +113,9 @@
 			_syncedIdentities.Clear();
 
 			// Mark the end of the synchronization
-			connection.Send(ClientSyncedMessage.Create(_allocator, clientPlayer.Identity));
+			var syncedMessage = ClientSyncedMessage.Create(_allocator, clientPlayer.Identity);
+			connection.Send(syncedMessage);
+			Log.DebugIf(EnableTracing, "(Server)    Sync completed.");
 		}
 
 		/// <summary>
@@ -128,8 +144,11 @@
 					}
 				}
 
+				var message = CreateEntityAddMessage(entity);
 				_syncedIdentities.Add(network.Identity);
-				connection.Send(CreateEntityAddMessage(entity));
+				connection.Send(message);
+
+				Log.DebugIf(EnableTracing, "(Server)    {0}", message);
 			}
 		}
 
@@ -150,6 +169,7 @@
 			// Broadcast the news about the new player to all clients (this message is not sent to the new client)
 			Broadcast(PlayerJoinMessage.Create(_allocator, player.Identity, playerName));
 
+			Log.DebugIf(EnableTracing, "(Server) Created player '{0}' ({1})", playerName, player.Identity);
 			return player;
 		}
 
@@ -184,11 +204,18 @@
 				}
 
 				if (hasActiveEntities)
+				{
+					Log.DebugIf(EnableTracing, "(Server) Delayed removal of inactive player '{0}' ({1}) because of active player entities.",
+						player.Name, player.Identity);
+
 					continue;
+				}
 
 				Broadcast(PlayerLeaveMessage.Create(_allocator, player.Identity, player.LeaveReason));
 				_gameSession.Players.Remove(player);
 				_inactivePlayers.RemoveAt(i);
+
+				Log.DebugIf(EnableTracing, "(Server) Removed player '{0}' ({1}).", player.Name, player.Identity);
 			}
 		}
 
@@ -247,12 +274,16 @@
 
 			// Broadcast the changes to all clients
 			if (hasChanged)
+			{
+				Log.DebugIf(EnableTracing, "(Server) Changing loadout of player '{0}' ({1}): {2}.", player.Name, player.Identity, loadout);
 				Broadcast(loadout);
+			}
 
 			// Respawn the player if necessary
 			if (player.ControlledEntity.IsAlive)
 				return;
 
+			Log.DebugIf(EnableTracing, "(Server) Respawning player '{0}' ({1}).", player.Name, player.Identity);
 			player.ControlledEntity = _gameSession.Templates.CreateShip(player, position: new Vector2(0, 30000));
 			var scripts = player.ControlledEntity.GetComponent<ScriptCollection>();
 
@@ -301,6 +332,7 @@
 			// TODO: Assign unique names to all players.
 			// TODO: (only take those players into account with player.LeaveReason == null when checking for shared names)
 
+			Log.DebugIf(EnableTracing, "(Server) Player '{0}' ({1}) is renamed to '{2}'.", player.Name, player.Identity, playerName);
 			player.Name = playerName;
 			Broadcast(PlayerNameMessage.Create(_allocator, player.Identity, playerName));
 		}
@@ -316,6 +348,7 @@
 			Assert.ArgumentNotNullOrWhitespace(message);
 
 			Broadcast(PlayerChatMessage.Create(_allocator, player.Identity, message));
+			Log.DebugIf(EnableTracing, "(Server) Player '{0}' ({1}): {2}", player.Name, player.Identity, message);
 		}
 
 		/// <summary>
@@ -330,6 +363,8 @@
 			var message = CreateEntityAddMessage(entity);
 			Assert.NotNull(message);
 
+			Log.DebugIf(EnableTracing, "(Server) +{1} {0}", message.Entity, message.EntityType);
+
 			Broadcast(message);
 		}
 
@@ -342,6 +377,7 @@
 			var networkSync = entity.GetComponent<NetworkSync>();
 			Assert.NotNull(networkSync);
 
+			Log.DebugIf(EnableTracing, "(Server) -{1} {0}", networkSync.Identity, networkSync.EntityType);
 			Broadcast(EntityRemoveMessage.Create(_allocator, networkSync.Identity));
 			_networkIdentities.Free(networkSync.Identity);
 		}
@@ -360,7 +396,7 @@
 		///     Creates an entity add message for the given entity.
 		/// </summary>
 		/// <param name="entity">The entity the message should be created for.</param>
-		private Message CreateEntityAddMessage(Entity entity)
+		private EntityAddMessage CreateEntityAddMessage(Entity entity)
 		{
 			var networkSync = entity.GetComponent<NetworkSync>();
 			var owner = entity.GetComponent<Owner>();

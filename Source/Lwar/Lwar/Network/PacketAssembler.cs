@@ -17,7 +17,7 @@
 		/// <summary>
 		///     If tracing is enabled, the contents of all sent packets are shown in the debug output.
 		/// </summary>
-		private const bool Trace = true;
+		private const bool EnableTracing = false;
 
 		/// <summary>
 		///     A cached delegate of the sequenced message serialization function.
@@ -186,7 +186,7 @@
 				_writer.WriteByte((byte)count);
 				_writer.WritePosition = position;
 
-				Log.DebugIf(Trace, "   (o) {0}: {1} #{2}", sequenceNumber, batchedMessage.MessageType, count);
+				Log.DebugIf(EnableTracing, "   (o) {0}: {1} #{2}", sequenceNumber, batchedMessage.MessageType, count);
 
 				// If there are any messages left, we've run out of space and have to allocate a new packet for the
 				// next fragment of the batched message.
@@ -229,7 +229,7 @@
 			writer.WriteUInt32(sequencedMessage.SequenceNumber);
 
 			sequencedMessage.Message.Serialize(writer);
-			Log.DebugIf(Trace, "   ({2}) {0}: {1}", sequencedMessage.SequenceNumber, sequencedMessage.Message,
+			Log.DebugIf(EnableTracing, "   ({2}) {0}: {1}", sequencedMessage.SequenceNumber, sequencedMessage.Message,
 				sequencedMessage.Message.IsReliable ? "r" : "u");
 		}
 
@@ -253,7 +253,7 @@
 			_packet = UdpPacket.Allocate(NetworkProtocol.MaxPacketSize);
 			_writer = _packet.CreateWriter();
 
-			Log.DebugIf(Trace, "Packet #{2} to {0}, ack: {1}", _channel.RemoteEndPoint, _acknowledgement, PacketCount + 1);
+			Log.DebugIf(EnableTracing, "Packet #{2} to {0}, ack: {1}", _channel.RemoteEndPoint, _acknowledgement, PacketCount + 1);
 			PacketHeader.Write(_writer, _acknowledgement);
 		}
 
@@ -264,7 +264,7 @@
 		{
 			Assert.NotNull(_packet, "No packet has been allocated.");
 
-			Log.DebugIf(Trace, "Packet length: {0} bytes", _writer.Count);
+			Log.DebugIf(EnableTracing, "Packet length: {0} bytes", _writer.Count);
 
 			_writer.SafeDispose();
 			_writer = null;

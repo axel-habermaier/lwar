@@ -89,8 +89,8 @@ namespace Lwar.Network.Messages
 		/// <param name="player">The player the entity belongs to.</param>
 		/// <param name="parentEntity">The parent entity of the entity that is added.</param>
 		/// <param name="entityType">The type of the entity.</param>
-		public static Message Create(PoolAllocator poolAllocator, Identity entity, Identity player,
-									 Identity parentEntity, EntityType entityType)
+		public static EntityAddMessage Create(PoolAllocator poolAllocator, Identity entity, Identity player,
+											  Identity parentEntity, EntityType entityType)
 		{
 			Assert.ArgumentNotNull(poolAllocator);
 
