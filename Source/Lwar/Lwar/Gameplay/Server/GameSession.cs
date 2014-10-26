@@ -35,11 +35,6 @@
 		private BoundaryBehavior _boundaryBehavior;
 
 		/// <summary>
-		///     The behavior that applies the player inputs to the entities.
-		/// </summary>
-		private PlayerInputBehavior _playerInputBehavior;
-
-		/// <summary>
 		///     The behavior that moves and accelerates entities.
 		/// </summary>
 		private MotionBehavior _motionBehavior;
@@ -48,6 +43,11 @@
 		///     The behavior that lets entities orbit around other entities.
 		/// </summary>
 		private OrbitBehavior _orbitBehavior;
+
+		/// <summary>
+		///     The behavior that applies the player inputs to the entities.
+		/// </summary>
+		private PlayerInputBehavior _playerInputBehavior;
 
 		/// <summary>
 		///     The behavior that updates relative entity transforms.
@@ -109,7 +109,7 @@
 		public PlayerCollection Players { get; private set; }
 
 		/// <summary>
-		///     Gets the entity templates that are can be used to create entities.
+		///     Gets the entity templates that can be used to create entities.
 		/// </summary>
 		public EntityTemplates Templates { get; private set; }
 

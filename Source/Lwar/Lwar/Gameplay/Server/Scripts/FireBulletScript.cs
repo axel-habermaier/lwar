@@ -65,7 +65,7 @@ namespace Lwar.Gameplay.Server.Scripts
 		}
 
 		/// <summary>
-		///     Allocates a transform component using the given allocator.
+		///     Allocates a script instance using the given allocator.
 		/// </summary>
 		/// <param name="allocator">The allocator that should be used to allocate the component.</param>
 		/// <param name="inputIndex">The index of the input trigger that should cause a bullet to be fired.</param>
