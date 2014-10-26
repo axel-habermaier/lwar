@@ -7,7 +7,7 @@ namespace Pegasus.Entities
 	/// <summary>
 	///     Allocates generational identities.
 	/// </summary>
-	public struct IdentityAllocator
+	public sealed class IdentityAllocator
 	{
 		/// <summary>
 		///     The available identifiers that can be reassigned.
@@ -30,7 +30,6 @@ namespace Pegasus.Entities
 		/// </summary>
 		/// <param name="maxIdentities">The maximum number of identities that can be allocated at the same time.</param>
 		public IdentityAllocator(ushort maxIdentities)
-			: this()
 		{
 			_available = new Queue<ushort>();
 			_generations = new ushort[maxIdentities];

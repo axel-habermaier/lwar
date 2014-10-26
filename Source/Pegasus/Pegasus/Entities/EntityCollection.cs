@@ -143,7 +143,7 @@
 			where T : Component
 		{
 			Assert.ArgumentSatisfies(entity.OwningCollection == this, "The entity does not belong to this collection.");
-			Assert.ArgumentSatisfies(IsAlive(entity) || _entityInfoMap.Contains(entity.Identity), 
+			Assert.ArgumentSatisfies(IsAlive(entity) || _entityInfoMap.Contains(entity.Identity),
 				"Cannot search for components when the entity has already been removed from the collection.");
 
 			var info = _entityInfoMap[entity.Identity];
@@ -280,8 +280,11 @@
 					}
 				}
 
+				if (_enumerator.Current == null)
+					return false;
+
 				Current = _enumerator.Current.Entity;
-				return Current != null;
+				return true;
 			}
 		}
 	}

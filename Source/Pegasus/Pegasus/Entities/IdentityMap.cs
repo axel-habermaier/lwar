@@ -7,7 +7,7 @@
 	///     Maps identities to actual objects.
 	/// </summary>
 	/// <typeparam name="T">The type of the mapped objects.</typeparam>
-	public struct IdentityMap<T>
+	public sealed class IdentityMap<T>
 		where T : class
 	{
 		/// <summary>

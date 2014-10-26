@@ -11,7 +11,7 @@
 #include "server.h"
 
 #include <math.h>
-#include <stdlib.h>
+#include <limits.h>
 
 /* accelerate e by absolute a */
 void entity_push(Entity *e, Vec a) {
