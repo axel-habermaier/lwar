@@ -196,7 +196,7 @@
 
 						// Save CPU when there are no focused windows
 						if (!_root.HasFocusedWindows)
-							Thread.Sleep(50);
+							Thread.Sleep(10);
 					}
 
 					// The game loop has been exited; time to clean up

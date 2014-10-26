@@ -5,6 +5,7 @@ namespace Lwar
 	using Network;
 	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Memory;
+	using Pegasus.Platform.Network;
 	using Pegasus.Utilities;
 
 	/// <summary>
@@ -23,6 +24,11 @@ namespace Lwar
 		private readonly GameSession _gameSession;
 
 		/// <summary>
+		///     Listens for incoming UDP connections.
+		/// </summary>
+		private readonly UdpListener _listener;
+
+		/// <summary>
 		///     The server logic that handles the communication between the server and the clients.
 		/// </summary>
 		private readonly ServerLogic _serverLogic;
@@ -37,13 +43,24 @@ namespace Lwar
 		{
 			Assert.ArgumentNotNull(allocator);
 
-			_gameSession = new GameSession(allocator);
-			_serverLogic = new ServerLogic(allocator, _gameSession);
+			try
+			{
+				_gameSession = new GameSession(allocator);
+				_serverLogic = new ServerLogic(allocator, _gameSession);
 
-			_gameSession.InitializeServer(_serverLogic);
-			_clients = new ClientCollection(allocator, _serverLogic, port);
+				_listener = new UdpListener(port, NetworkProtocol.MaxPacketSize);
+				_listener.Start();
 
-			Log.Info("Server started.");
+				_gameSession.InitializeServer(_serverLogic);
+				_clients = new ClientCollection(allocator, _serverLogic, _listener);
+
+				Log.Info("Server started.");
+			}
+			catch (NetworkException)
+			{
+				this.SafeDispose();
+				throw;
+			}
 		}
 
 		/// <summary>
@@ -67,6 +84,7 @@ namespace Lwar
 		{
 			_clients.SafeDispose();
 			_gameSession.SafeDispose();
+			_listener.SafeDispose();
 
 			base.OnDisposing();
 			Log.Info("Server stopped.");

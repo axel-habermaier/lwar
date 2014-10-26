@@ -5,6 +5,8 @@
 	using System.Security;
 	using Network;
 	using Pegasus.Platform.Logging;
+	using Pegasus.Platform.Memory;
+	using Pegasus.Platform.Network;
 
 	/// <summary>
 	///     Represents a native server hosting a game session.
@@ -49,8 +51,11 @@
 			NativeMethods.SetCallbacks(_logCallbacks);
 			_isRunning = NativeMethods.Initialize();
 
-			if (!_isRunning)
-				Log.Error("Failed to initialize the server.");
+			if (_isRunning)
+				return;
+
+			this.SafeDispose();
+			throw new NetworkException("See the console for further details.");
 		}
 
 		/// <summary>
@@ -77,10 +82,14 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			base.OnDisposing();
+
+			if (!_isRunning)
+				return;
+
 			_isRunning = false;
 			NativeMethods.Shutdown();
 
-			base.OnDisposing();
 			Log.Info("Server has shut down.");
 		}
 

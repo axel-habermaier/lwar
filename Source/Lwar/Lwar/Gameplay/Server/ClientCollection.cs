@@ -33,8 +33,8 @@
 		/// </summary>
 		/// <param name="allocator">The allocator that should be used to allocate pooled objects.</param>
 		/// <param name="serverLogic">The server logic that handles the communication between the server and the clients.</param>
-		/// <param name="port">The port that should be used to listen for connecting clients.</param>
-		public ClientCollection(PoolAllocator allocator, ServerLogic serverLogic, ushort port = NetworkProtocol.DefaultServerPort)
+		/// <param name="udpListener">The UDP listener that should be used to listen for connecting clients.</param>
+		public ClientCollection(PoolAllocator allocator, ServerLogic serverLogic, UdpListener udpListener)
 		{
 			Assert.ArgumentNotNull(allocator);
 			Assert.ArgumentNotNull(serverLogic);
@@ -42,7 +42,7 @@
 			serverLogic.Broadcast += Broadcast;
 
 			_allocator = allocator;
-			_listener = new UdpListener(port, NetworkProtocol.MaxPacketSize);
+			_listener = udpListener;
 			_listener.ChannelCreated += channel => _clients.Add(Client.Create(_allocator, Connection.Create(_allocator, channel), serverLogic));
 		}
 
@@ -120,7 +120,6 @@
 				client.Disconnect();
 
 			_clients.SafeDisposeAll();
-			_listener.SafeDispose();
 		}
 	}
 }

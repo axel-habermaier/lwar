@@ -3,6 +3,7 @@
 	using System;
 	using Assets;
 	using Pegasus;
+	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Platform.Network;
 	using Pegasus.UserInterface;
@@ -113,10 +114,21 @@
 		{
 			_server.SafeDispose();
 
-			if (Cvars.UseDebugServer)
-				_server = new DebugServer(_allocator);
-			else
-				_server = new NativeServer();
+			try
+			{
+				if (Cvars.UseDebugServer)
+					_server = new DebugServer(_allocator);
+				else
+					_server = new NativeServer();
+			}
+			catch (NetworkException e)
+			{
+				Log.Error("Unable to start the server: {0}", e.Message);
+				MessageBox.Show("Server Failure", String.Format("Unable to start the server: {0}", e.Message));
+
+				_server.SafeDispose();
+				_server = null;
+			}
 		}
 
 		/// <summary>

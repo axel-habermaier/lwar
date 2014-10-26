@@ -21,6 +21,11 @@
 		private readonly int _maxPacketSize;
 
 		/// <summary>
+		///     The port the underlying socket is bound to.
+		/// </summary>
+		private readonly ushort _port;
+
+		/// <summary>
 		///     The UDP socket that is used for communication over the network.
 		/// </summary>
 		private readonly UdpSocket _socket;
@@ -33,8 +38,16 @@
 		public UdpListener(ushort port, int maxPacketSize)
 		{
 			_socket = new UdpSocket();
-			_socket.Bind(port);
+			_port = port;
 			_maxPacketSize = maxPacketSize;
+		}
+
+		/// <summary>
+		///     Starts listening for incoming connections.
+		/// </summary>
+		public void Start()
+		{
+			_socket.Bind(_port);
 		}
 
 		/// <summary>
