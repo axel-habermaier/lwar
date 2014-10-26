@@ -2,7 +2,6 @@
 {
 	using System;
 	using Entities;
-	using Network;
 	using Pegasus.Entities;
 	using Pegasus.Platform.Logging;
 	using Pegasus.UserInterface;

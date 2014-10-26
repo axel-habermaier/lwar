@@ -5,9 +5,7 @@
 	using System.Runtime.InteropServices;
 	using Assets;
 	using Assets.Effects;
-	using UserInterface;
 	using Math;
-	using Platform;
 	using Platform.Graphics;
 	using Platform.Logging;
 	using Platform.Memory;

@@ -2,7 +2,6 @@
 {
 	using System;
 	using Actors;
-	using Network;
 	using Pegasus.Entities;
 	using Pegasus.Math;
 	using Pegasus.Utilities;

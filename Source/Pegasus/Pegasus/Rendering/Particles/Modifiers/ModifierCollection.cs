@@ -1,7 +1,6 @@
 ﻿namespace Pegasus.Rendering.Particles.Modifiers
 {
 	using System;
-	using UserInterface;
 	using Utilities;
 
 	/// <summary>

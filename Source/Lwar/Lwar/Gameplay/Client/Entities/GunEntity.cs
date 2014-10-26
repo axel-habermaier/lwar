@@ -1,7 +1,6 @@
 namespace Lwar.Gameplay.Client.Entities
 {
 	using System;
-	using Network;
 	using Pegasus.Entities;
 	using Pegasus.Utilities;
 

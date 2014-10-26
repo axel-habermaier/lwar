@@ -2,7 +2,6 @@
 {
 	using System;
 	using System.Collections.Generic;
-	using Platform.Graphics;
 	using Rendering;
 	using Utilities;
 

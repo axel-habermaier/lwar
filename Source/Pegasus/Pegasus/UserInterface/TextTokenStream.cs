@@ -2,7 +2,6 @@
 {
 	using System;
 	using Math;
-	using Platform;
 	using Platform.Graphics;
 	using Utilities;
 
@@ -123,7 +122,7 @@
 			// If allowedWidth is zero, this means that either the line already is perfectly full or
 			// we're about to add the second part of a previously split word; in any case, return a wrap token and
 			// deal with the word on the next iteration
-			if (MathUtils.Equals(allowedWidth,0))
+			if (MathUtils.Equals(allowedWidth, 0))
 			{
 				_lineWidth = 0;
 				return TextToken.Wrap;

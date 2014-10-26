@@ -1,7 +1,6 @@
 ﻿namespace Pegasus.UserInterface
 {
 	using System;
-	using UserInterface;
 
 	/// <summary>
 	///     Untyped base class for setters that apply property values.

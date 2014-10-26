@@ -18,7 +18,7 @@
 		/// <summary>
 		///     The renderers that the context uses to render the scene.
 		/// </summary>
-		private readonly IRenderer[] _renderers = new IRenderer[]
+		private readonly IRenderer[] _renderers =
 		{
 			new SkyboxRenderer(),
 			new StarfieldRenderer(),

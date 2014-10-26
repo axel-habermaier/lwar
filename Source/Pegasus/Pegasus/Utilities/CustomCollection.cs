@@ -3,7 +3,6 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Collections.ObjectModel;
-	using UserInterface;
 
 	/// <summary>
 	///     Represents a base class for custom collections.

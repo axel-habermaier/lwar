@@ -9,7 +9,6 @@
 	using Platform.Logging;
 	using Platform.Memory;
 	using Scripting;
-	using UserInterface;
 	using UserInterface.ViewModels;
 	using Utilities;
 

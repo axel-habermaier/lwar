@@ -1,7 +1,6 @@
 ﻿namespace Pegasus.UserInterface
 {
 	using System;
-	using Platform;
 	using Platform.Graphics;
 	using Utilities;
 

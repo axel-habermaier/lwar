@@ -1,9 +1,7 @@
 ﻿namespace Pegasus.UserInterface.ViewModels
 {
 	using System;
-	using System.Text;
 	using Controls;
-	using UserInterface;
 	using Math;
 	using Platform.Memory;
 	using Scripting;
@@ -15,6 +13,11 @@
 	/// </summary>
 	internal class AppWindowViewModel : DisposableNotifyPropertyChanged
 	{
+		/// <summary>
+		///     The particle effect viewer that is currently open.
+		/// </summary>
+		private static ParticleEffectViewerViewModel _particleEffectViewer;
+
 		/// <summary>
 		///     The view model of the console.
 		/// </summary>
@@ -29,11 +32,6 @@
 		///     Indicates whether the window should be in fullscreen or windowed mode.
 		/// </summary>
 		private bool _fullscreen = Cvars.WindowMode == WindowMode.Fullscreen;
-
-		/// <summary>
-		///     The particle effect viewer that is currently open.
-		/// </summary>
-		private static ParticleEffectViewerViewModel _particleEffectViewer;
 
 		/// <summary>
 		///     Initializes a new instance.

@@ -3,7 +3,6 @@
 	using System;
 	using Controls;
 	using Math;
-	using Platform.Graphics;
 	using Rendering;
 
 	/// <summary>

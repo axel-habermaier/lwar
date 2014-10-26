@@ -18,7 +18,7 @@
 		/// <summary>
 		///     The instruction that is executed when the input is triggered.
 		/// </summary>
-		private readonly Instruction _instruction;
+		private Instruction _instruction;
 
 		/// <summary>
 		///     Initializes a new instance.

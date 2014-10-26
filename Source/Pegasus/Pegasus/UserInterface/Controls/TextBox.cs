@@ -3,8 +3,6 @@
 	using System;
 	using Input;
 	using Math;
-	using Platform;
-	using Platform.Graphics;
 	using Rendering;
 	using Utilities;
 

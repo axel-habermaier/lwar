@@ -1,7 +1,6 @@
 ﻿namespace Pegasus.Entities
 {
 	using System;
-	using Utilities;
 
 	/// <summary>
 	///     A base class for entity behaviors that accesses one component.
