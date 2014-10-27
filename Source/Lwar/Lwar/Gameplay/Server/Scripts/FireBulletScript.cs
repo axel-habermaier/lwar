@@ -76,12 +76,12 @@ namespace Lwar.Gameplay.Server.Scripts
 			Assert.ArgumentNotNull(allocator);
 			Assert.InRange(inputIndex, 0, NetworkProtocol.WeaponSlotCount - 1);
 
-			var component = allocator.Allocate<FireBulletScript>();
-			component.Cooldown = cooldown;
-			component.BaseSpeed = baseSpeed;
-			component._remainingCooldown = 0;
-			component._inputIndex = inputIndex;
-			return component;
+			var script = allocator.Allocate<FireBulletScript>();
+			script.Cooldown = cooldown;
+			script.BaseSpeed = baseSpeed;
+			script._remainingCooldown = 0;
+			script._inputIndex = inputIndex;
+			return script;
 		}
 	}
 }

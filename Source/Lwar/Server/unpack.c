@@ -122,6 +122,7 @@ size_t message_unpack(const char *s, void *p) {
         i += uint8_unpack(s+i, &m->input.turn_right);
         i += uint8_unpack(s+i, &m->input.strafe_left);
         i += uint8_unpack(s+i, &m->input.strafe_right);
+		i += uint8_unpack(s+i, &m->input.after_burner);
         i += uint8_unpack(s+i, &m->input.fire1);
         i += uint8_unpack(s+i, &m->input.fire2);
         i += uint8_unpack(s+i, &m->input.fire3);

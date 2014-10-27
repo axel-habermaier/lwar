@@ -61,9 +61,11 @@
 			entity.Add(Transform.Create(_allocator, position, orientation));
 			entity.Add(NetworkSync.Create(_allocator, identity, EntityType.Ship, MessageType.UpdateShip));
 			entity.Add(Owner.Create(_allocator, player));
-			entity.Add(Motion.Create(_allocator, maxAcceleration: 7000, maxSpeed: 1000));
+			entity.Add(Motion.Create(_allocator));
 			entity.Add(Rotation.Create(_allocator, maxSpeed: 7));
 			entity.Add(ScriptCollection.Create(_allocator));
+			entity.Add(Propulsion.Create(_allocator, maxAcceleration: 7000, maxSpeed: 1000, maxAfterBurnerSpeed: 3000,
+				maxEnergy: 1000, rechargeSpeed: 200, depleteSpeed: 300));
 
 			if (!_serverMode)
 				entity.Add(Sprite.Create(_allocator, null));

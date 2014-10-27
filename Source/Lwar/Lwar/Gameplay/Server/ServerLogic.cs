@@ -243,10 +243,9 @@
 			input.Target = inputMessage.Target;
 			input.Forward = (inputMask & inputMessage.Forward) != 0;
 			input.Backward = (inputMask & inputMessage.Backward) != 0;
-			input.TurnLeft = (inputMask & inputMessage.TurnLeft) != 0;
-			input.TurnRight = (inputMask & inputMessage.TurnRight) != 0;
 			input.StrafeLeft = (inputMask & inputMessage.StrafeLeft) != 0;
 			input.StrafeRight = (inputMask & inputMessage.StrafeRight) != 0;
+			input.AfterBurner = (inputMask & inputMessage.AfterBurner) != 0;
 
 			for (var i = 0; i < NetworkProtocol.WeaponSlotCount; ++i)
 				input.FireWeapons[i] = (inputMask & inputMessage.FireWeapons[i]) != 0;

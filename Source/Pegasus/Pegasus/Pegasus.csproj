@@ -218,6 +218,7 @@
     </Compile>
     <Compile Include="Entities\EntityBehaviorCollection.cs" />
     <Compile Include="Entities\EntityBehavior`1.cs" />
+    <Compile Include="Entities\EntityBehavior`5.cs" />
     <Compile Include="Entities\EntityBehavior`4.cs" />
     <Compile Include="Entities\EntityBehavior`3.cs" />
     <Compile Include="Entities\EntityBehavior`2.cs" />

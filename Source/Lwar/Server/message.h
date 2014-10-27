@@ -159,6 +159,7 @@ struct Message {
             uint8_t  turn_right;
             uint8_t  strafe_left;
             uint8_t  strafe_right;
+			uint8_t  after_burner;
             uint8_t  fire1;
             uint8_t  fire2;
             uint8_t  fire3;

@@ -80,7 +80,7 @@
 		/// <summary>
 		///     The revision number of the network protocol that is implemented by the client.
 		/// </summary>
-		public const byte Revision = 27;
+		public const byte Revision = 28;
 
 		/// <summary>
 		///     The time (in seconds) after which a discovered server has presumably shut down.

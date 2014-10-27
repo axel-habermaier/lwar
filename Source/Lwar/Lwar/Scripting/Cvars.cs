@@ -61,6 +61,11 @@
 		public static Cvar<ConfigurableInput> InputStrafeRightCvar { get; private set; }
 
 		/// <summary>
+		///     When triggered in an active game session, triggers the player's after burner.
+		/// </summary>
+		public static Cvar<ConfigurableInput> InputAfterBurnerCvar { get; private set; }
+
+		/// <summary>
 		///     When triggered in an active game session, fires the player's primary weapon.
 		/// </summary>
 		public static Cvar<ConfigurableInput> InputPrimaryWeaponCvar { get; private set; }
@@ -243,6 +248,20 @@
 			{
 				Assert.ArgumentNotNull((object)value);
 				InputStrafeRightCvar.Value = value;
+			}
+		}
+
+		/// <summary>
+		///     When triggered in an active game session, triggers the player's after burner.
+		/// </summary>
+		public static ConfigurableInput InputAfterBurner
+		{
+			get { return InputAfterBurnerCvar.Value; }
+			[DebuggerHidden]
+			set
+			{
+				Assert.ArgumentNotNull((object)value);
+				InputAfterBurnerCvar.Value = value;
 			}
 		}
 
@@ -577,6 +596,24 @@
 		}
 
 		/// <summary>
+		///     Raised when the 'InputAfterBurner' cvar is changing. The new value is passed to the event handler.
+		/// </summary>
+		public static event Action<ConfigurableInput> InputAfterBurnerChanging
+		{
+			add { InputAfterBurnerCvar.Changing += value; }
+			remove { InputAfterBurnerCvar.Changing -= value; }
+		}
+
+		/// <summary>
+		///     Raised when the 'InputAfterBurner' cvar is changed. The previous value is passed to the event handler.
+		/// </summary>
+		public static event Action<ConfigurableInput> InputAfterBurnerChanged
+		{
+			add { InputAfterBurnerCvar.Changed += value; }
+			remove { InputAfterBurnerCvar.Changed -= value; }
+		}
+
+		/// <summary>
 		///     Raised when the 'InputPrimaryWeapon' cvar is changing. The new value is passed to the event handler.
 		/// </summary>
 		public static event Action<ConfigurableInput> InputPrimaryWeaponChanging
@@ -806,6 +843,7 @@
 			InputBackwardCvar = new Cvar<ConfigurableInput>("input_backward", Key.S, "When triggered in an active game session, moves the player backwards.", UpdateMode.Immediate, true, false);
 			InputStrafeLeftCvar = new Cvar<ConfigurableInput>("input_strafe_left", Key.A, "When triggered in an active game session, moves the player to the left.", UpdateMode.Immediate, true, false);
 			InputStrafeRightCvar = new Cvar<ConfigurableInput>("input_strafe_right", Key.D, "When triggered in an active game session, moves the player to the right.", UpdateMode.Immediate, true, false);
+			InputAfterBurnerCvar = new Cvar<ConfigurableInput>("input_after_burner", Key.LeftShift, "When triggered in an active game session, triggers the player's after burner.", UpdateMode.Immediate, true, false);
 			InputPrimaryWeaponCvar = new Cvar<ConfigurableInput>("input_primary_weapon", MouseButton.Left, "When triggered in an active game session, fires the player's primary weapon.", UpdateMode.Immediate, true, false);
 			InputSecondaryWeaponCvar = new Cvar<ConfigurableInput>("input_secondary_weapon", MouseButton.Right, "When triggered in an active game session, fires the player's secondary weapon.", UpdateMode.Immediate, true, false);
 			InputTertiaryWeaponCvar = new Cvar<ConfigurableInput>("input_tertiary_weapon", Key.Num1, "When triggered in an active game session, fires the player's tertiary weapon.", UpdateMode.Immediate, true, false);
@@ -822,6 +860,7 @@
 			CvarRegistry.Register(InputBackwardCvar);
 			CvarRegistry.Register(InputStrafeLeftCvar);
 			CvarRegistry.Register(InputStrafeRightCvar);
+			CvarRegistry.Register(InputAfterBurnerCvar);
 			CvarRegistry.Register(InputPrimaryWeaponCvar);
 			CvarRegistry.Register(InputSecondaryWeaponCvar);
 			CvarRegistry.Register(InputTertiaryWeaponCvar);

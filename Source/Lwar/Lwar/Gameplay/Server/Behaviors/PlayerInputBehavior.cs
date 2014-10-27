@@ -6,9 +6,9 @@
 	using Pegasus.Math;
 
 	/// <summary>
-	///     Applies the effects of the current player input.
+	///     Applies the effects of the current player input to an entity.
 	/// </summary>
-	public class PlayerInputBehavior : EntityBehavior<PlayerInput, Transform, Motion, Rotation>
+	public class PlayerInputBehavior : EntityBehavior<PlayerInput, Transform, Motion, Rotation, Propulsion>
 	{
 		/// <summary>
 		///     Applies the user input.
@@ -26,13 +26,14 @@
 		/// <param name="transforms">The transform components of the affected entities.</param>
 		/// <param name="motions">The motion components of the affected entities.</param>
 		/// <param name="rotations">The rotation components of the affected entities.</param>
+		/// <param name="propulsions">The propulsion components of the affected entities.</param>
 		/// <param name="count">The number of entities that should be processed.</param>
 		/// <remarks>
 		///     All arrays have the same length. If a component is optional for an entity and the component is missing, a null
 		///     value is placed in the array.
 		/// </remarks>
 		protected override void Process(Entity[] entities, PlayerInput[] inputs, Transform[] transforms, Motion[] motions,
-										Rotation[] rotations, int count)
+										Rotation[] rotations, Propulsion[] propulsions, int count)
 		{
 			for (var i = 0; i < count; ++i)
 			{
@@ -55,8 +56,8 @@
 				if (inputs[i].StrafeRight)
 					acceleration += new Vector2(0, 1);
 
-				acceleration = Vector2.Rotate(acceleration, transforms[i].Orientation);
-				motions[i].Acceleration = acceleration.Normalize() * motions[i].MaxAcceleration;
+				propulsions[i].Acceleration = Vector2.Rotate(acceleration, transforms[i].Orientation).Normalize();
+				propulsions[i].AfterBurnerEnabled = inputs[i].AfterBurner;
 			}
 		}
 	}

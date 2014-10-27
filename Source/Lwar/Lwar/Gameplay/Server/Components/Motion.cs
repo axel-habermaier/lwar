@@ -12,21 +12,6 @@
 	public class Motion : Component
 	{
 		/// <summary>
-		///     The acceleration in 2D space.
-		/// </summary>
-		public Vector2 Acceleration;
-
-		/// <summary>
-		///     The maximum allowed acceleration.
-		/// </summary>
-		public float MaxAcceleration;
-
-		/// <summary>
-		///     The maximum allowed speed.
-		/// </summary>
-		public float MaxSpeed;
-
-		/// <summary>
 		///     The velocity in 2D space.
 		/// </summary>
 		public Vector2 Velocity;
@@ -50,21 +35,13 @@
 		///     Allocates a component using the given allocator.
 		/// </summary>
 		/// <param name="allocator">The allocator that should be used to allocate the component.</param>
-		/// <param name="acceleration">The initial acceleration.</param>
 		/// <param name="velocity">The initial velocity.</param>
-		/// <param name="maxAcceleration">The maximum allowed acceleration.</param>
-		/// <param name="maxSpeed">The maximum allowed speed.</param>
-		public static Motion Create(PoolAllocator allocator,
-									Vector2 acceleration = default(Vector2), Vector2 velocity = default(Vector2),
-									float maxAcceleration = Single.MaxValue, float maxSpeed = Single.MaxValue)
+		public static Motion Create(PoolAllocator allocator, Vector2 velocity = default(Vector2))
 		{
 			Assert.ArgumentNotNull(allocator);
 
 			var component = allocator.Allocate<Motion>();
-			component.Acceleration = acceleration;
-			component.MaxAcceleration = maxAcceleration;
 			component.Velocity = velocity;
-			component.MaxSpeed = maxSpeed;
 			return component;
 		}
 	}
