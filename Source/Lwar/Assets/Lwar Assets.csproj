@@ -269,7 +269,6 @@
     <None Include="Fonts\Liberation Sans 16.font" />
     <None Include="Fonts\Moonhouse 24.font" />
     <None Include="Fonts\Moonhouse 80.font" />
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="AfterBuild">
