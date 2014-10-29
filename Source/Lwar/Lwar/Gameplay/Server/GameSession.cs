@@ -50,6 +50,11 @@
 		private PlayerInputBehavior _playerInputBehavior;
 
 		/// <summary>
+		///     The behavior that simulates propulsion systems.
+		/// </summary>
+		private PropulsionBehavior _propulsionBehavior;
+
+		/// <summary>
 		///     The behavior that updates relative entity transforms.
 		/// </summary>
 		private RelativeTransformBehavior _relativeTransformBehavior;
@@ -150,6 +155,7 @@
 			_behaviors.Add(_orbitBehavior = new OrbitBehavior());
 			_behaviors.Add(_scriptBehavior = new ScriptBehavior(_allocator, this));
 			_behaviors.Add(_relativeTransformBehavior = new RelativeTransformBehavior());
+			_behaviors.Add(_propulsionBehavior = new PropulsionBehavior());
 
 			CreateGalaxy();
 		}
@@ -172,6 +178,7 @@
 			_scriptBehavior.Update(elapsedSeconds);
 			_orbitBehavior.UpdateOrbits(elapsedSeconds);
 			_rotationBehavior.Update(elapsedSeconds);
+			_propulsionBehavior.Simulate(elapsedSeconds);
 			_motionBehavior.Update(elapsedSeconds);
 			_timeToLiveBehavior.RemoveDeadEntities(elapsedSeconds);
 			_relativeTransformBehavior.Update();

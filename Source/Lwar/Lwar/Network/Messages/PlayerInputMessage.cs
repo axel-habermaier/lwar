@@ -45,6 +45,11 @@ namespace Lwar.Network.Messages
 		public uint FrameNumber { get; private set; }
 
 		/// <summary>
+		///     Gets the boolean state value for the after burner input, including the seven previous states.
+		/// </summary>
+		public byte AfterBurner { get; private set; }
+
+		/// <summary>
 		///     Gets the player that generated the input.
 		/// </summary>
 		public Identity Player { get; private set; }
@@ -93,6 +98,7 @@ namespace Lwar.Network.Messages
 			writer.WriteByte(TurnRight);
 			writer.WriteByte(StrafeLeft);
 			writer.WriteByte(StrafeRight);
+			writer.WriteByte(AfterBurner);
 
 			for (var i = 0; i < NetworkProtocol.WeaponSlotCount; ++i)
 				writer.WriteByte(FireWeapons[i]);
@@ -114,6 +120,7 @@ namespace Lwar.Network.Messages
 			TurnRight = reader.ReadByte();
 			StrafeLeft = reader.ReadByte();
 			StrafeRight = reader.ReadByte();
+			AfterBurner = reader.ReadByte();
 
 			for (var i = 0; i < NetworkProtocol.WeaponSlotCount; ++i)
 				FireWeapons[i] = reader.ReadByte();
@@ -144,11 +151,13 @@ namespace Lwar.Network.Messages
 		/// <param name="strafeRight">The boolean state value for the strafe right input, including the seven previous states.</param>
 		/// <param name="turnLeft">The boolean state value for the turn left input, including the seven previous states.</param>
 		/// <param name="turnRight">The boolean state value for the turn right input, including the seven previous states.</param>
+		/// <param name="afterBurner">The boolean state value for the after burner input, including the seven previous states.</param>
 		/// <param name="fireWeapons">The boolean state values for the shooting inputs, including the seven previous states.</param>
 		public static PlayerInputMessage Create(PoolAllocator poolAllocator, Identity player, uint frameNumber, Vector2 target,
 												byte forward, byte backward,
 												byte strafeLeft, byte strafeRight,
 												byte turnLeft, byte turnRight,
+			byte afterBurner,
 												byte[] fireWeapons)
 		{
 			Assert.ArgumentNotNull(poolAllocator);
@@ -165,6 +174,7 @@ namespace Lwar.Network.Messages
 			message.StrafeRight = strafeRight;
 			message.TurnLeft = turnLeft;
 			message.TurnRight = turnRight;
+			message.AfterBurner = afterBurner;
 
 			for (var i = 0; i < NetworkProtocol.WeaponSlotCount; ++i)
 				message.FireWeapons[i] = fireWeapons[i];
@@ -178,9 +188,9 @@ namespace Lwar.Network.Messages
 		public override string ToString()
 		{
 			return String.Format("{0}, Player={1}, FrameNumber={2}, Target={{{3}}}, Forward={4}, Backward={5}, StrafeLeft={6}, StrafeRight={7}, " +
-								 "TurnLeft={8}, TurnRight={9}, {10}",
-				MessageType, Player, FrameNumber, Target, Forward, Backward, StrafeLeft, StrafeRight, TurnLeft,
-				TurnRight, String.Join(", ", FireWeapons.Select((fire, index) => String.Format("FireWeapon{0}={1}", index + 1, fire))));
+								 "TurnLeft={8}, TurnRight={9}, AfterBurner={10}, {11}",
+				MessageType, Player, FrameNumber, Target, Forward, Backward, StrafeLeft, StrafeRight, TurnLeft, TurnRight, AfterBurner,
+				String.Join(", ", FireWeapons.Select((fire, index) => String.Format("FireWeapon{0}={1}", index + 1, fire))));
 		}
 	}
 }

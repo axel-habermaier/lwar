@@ -196,6 +196,7 @@
     <Compile Include="Gameplay\Server\Behaviors\PlayerInputBehavior.cs" />
     <Compile Include="Gameplay\Server\Behaviors\MotionBehavior.cs" />
     <Compile Include="Gameplay\Server\Behaviors\OrbitBehavior.cs" />
+    <Compile Include="Gameplay\Server\Behaviors\PropulsionBehavior.cs" />
     <Compile Include="Gameplay\Server\Behaviors\RelativeTransformBehavior.cs" />
     <Compile Include="Gameplay\Server\Behaviors\RotationBehavior.cs" />
     <Compile Include="Gameplay\Server\Behaviors\ScriptBehavior.cs" />
@@ -204,6 +205,7 @@
     <Compile Include="Gameplay\Server\Behaviors\TimeToLiveBehavior.cs" />
     <Compile Include="Gameplay\Server\ClientCollection.cs" />
     <Compile Include="Gameplay\Server\Components\RelativeTransform.cs" />
+    <Compile Include="Gameplay\Server\Components\Propulsion.cs" />
     <Compile Include="Gameplay\Server\Scripts\FireBulletScript.cs" />
     <Compile Include="Gameplay\Server\Components\PlayerInput.cs" />
     <Compile Include="Gameplay\Server\Components\Motion.cs" />

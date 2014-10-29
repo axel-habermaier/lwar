@@ -13,22 +13,27 @@
 	public class PlayerInput : Component
 	{
 		/// <summary>
-		///     The boolean state value for the backwards input.
+		///     The after burner input.
+		/// </summary>
+		public bool AfterBurner;
+
+		/// <summary>
+		///     The backwards input.
 		/// </summary>
 		public bool Backward;
 
 		/// <summary>
-		///     The boolean state value for the forward input.
+		///     The forward input.
 		/// </summary>
 		public bool Forward;
 
 		/// <summary>
-		///     The boolean state value for the strafe left input.
+		///     The strafe left input.
 		/// </summary>
 		public bool StrafeLeft;
 
 		/// <summary>
-		///     The boolean state value for the strafe right input.
+		///     The strafe right input.
 		/// </summary>
 		public bool StrafeRight;
 
@@ -36,16 +41,6 @@
 		///     The target position relative to the entity's position.
 		/// </summary>
 		public Vector2 Target;
-
-		/// <summary>
-		///     The boolean state value for the turn left input.
-		/// </summary>
-		public bool TurnLeft;
-
-		/// <summary>
-		///     The boolean state value for the turn right input.
-		/// </summary>
-		public bool TurnRight;
 
 		/// <summary>
 		///     Initializes the type.
@@ -64,7 +59,7 @@
 		}
 
 		/// <summary>
-		///     Gets the boolean state values for the weapon slots.
+		///     Gets the inputs for the weapon slots.
 		/// </summary>
 		public bool[] FireWeapons { get; private set; }
 
@@ -82,8 +77,7 @@
 			component.Forward = false;
 			component.StrafeLeft = false;
 			component.StrafeRight = false;
-			component.TurnLeft = false;
-			component.TurnRight = false;
+			component.AfterBurner = false;
 
 			for (var i = 0; i < NetworkProtocol.WeaponSlotCount; ++i)
 				component.FireWeapons[i] = false;

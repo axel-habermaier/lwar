@@ -65,6 +65,12 @@ internal interface ICvars
 	ConfigurableInput InputStrafeRight { get; set; }
 
 	/// <summary>
+	///     When triggered in an active game session, triggers the player's after burner.
+	/// </summary>
+	[Cvar("Key.LeftShift"), Persistent]
+	ConfigurableInput InputAfterBurner { get; set; }
+
+	/// <summary>
 	///     When triggered in an active game session, fires the player's primary weapon.
 	/// </summary>
 	[Cvar("MouseButton.Left"), Persistent]

@@ -47,6 +47,7 @@
 		#region Network-synced input states
 
 		private readonly InputState[] _fireWeapons;
+		private InputState _afterBurner;
 		private InputState _backward;
 		private InputState _forward;
 		private InputState _strafeLeft;
@@ -68,6 +69,7 @@
 			_backward.Input = new LogicalInput(Cvars.InputBackwardCvar, KeyTriggerType.Pressed, MouseTriggerType.Pressed);
 			_strafeLeft.Input = new LogicalInput(Cvars.InputStrafeLeftCvar, KeyTriggerType.Pressed, MouseTriggerType.Pressed);
 			_strafeRight.Input = new LogicalInput(Cvars.InputStrafeRightCvar, KeyTriggerType.Pressed, MouseTriggerType.Pressed);
+			_afterBurner.Input = new LogicalInput(Cvars.InputAfterBurnerCvar, KeyTriggerType.Pressed, MouseTriggerType.Pressed);
 
 			_fireWeapons = new InputState[NetworkProtocol.WeaponSlotCount];
 			_fireWeapons[0].Input = new LogicalInput(Cvars.InputPrimaryWeaponCvar, KeyTriggerType.Pressed, MouseTriggerType.Pressed);
@@ -80,6 +82,7 @@
 			_gameSession.InputDevice.Add(_backward.Input);
 			_gameSession.InputDevice.Add(_strafeLeft.Input);
 			_gameSession.InputDevice.Add(_strafeRight.Input);
+			_gameSession.InputDevice.Add(_afterBurner.Input);
 
 			for (var i = 0; i < NetworkProtocol.WeaponSlotCount; ++i)
 				_gameSession.InputDevice.Add(_fireWeapons[i].Input);
@@ -97,6 +100,7 @@
 			_backward.Triggered |= _backward.Input.IsTriggered;
 			_strafeLeft.Triggered |= _strafeLeft.Input.IsTriggered;
 			_strafeRight.Triggered |= _strafeRight.Input.IsTriggered;
+			_afterBurner.Triggered |= _afterBurner.Input.IsTriggered;
 
 			for (var i = 0; i < NetworkProtocol.WeaponSlotCount; ++i)
 				_fireWeapons[i].Triggered |= _fireWeapons[i].Input.IsTriggered;
@@ -123,6 +127,7 @@
 			_backward.Update();
 			_strafeLeft.Update();
 			_strafeRight.Update();
+			_afterBurner.Update();
 
 			for (var i = 0; i < NetworkProtocol.WeaponSlotCount; ++i)
 			{
@@ -141,6 +146,7 @@
 				_forward.State, _backward.State,
 				_strafeLeft.State, _strafeRight.State,
 				0, 0,
+				_afterBurner.State,
 				_fireWeaponStates));
 		}
 
@@ -154,6 +160,7 @@
 			_gameSession.InputDevice.Remove(_backward.Input);
 			_gameSession.InputDevice.Remove(_strafeLeft.Input);
 			_gameSession.InputDevice.Remove(_strafeRight.Input);
+			_gameSession.InputDevice.Remove(_afterBurner.Input);
 
 			for (var i = 0; i < NetworkProtocol.WeaponSlotCount; ++i)
 				_gameSession.InputDevice.Remove(_fireWeapons[i].Input);

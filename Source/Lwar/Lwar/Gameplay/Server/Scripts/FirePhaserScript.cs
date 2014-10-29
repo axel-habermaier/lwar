@@ -76,11 +76,11 @@ namespace Lwar.Gameplay.Server.Scripts
 			Assert.ArgumentNotNull(allocator);
 			Assert.InRange(inputIndex, 0, NetworkProtocol.WeaponSlotCount - 1);
 
-			var component = allocator.Allocate<FirePhaserScript>();
-			component._inputIndex = inputIndex;
-			component._isFiring = false;
-			component._phaser = Entity.None;
-			return component;
+			var script = allocator.Allocate<FirePhaserScript>();
+			script._inputIndex = inputIndex;
+			script._isFiring = false;
+			script._phaser = Entity.None;
+			return script;
 		}
 	}
 }

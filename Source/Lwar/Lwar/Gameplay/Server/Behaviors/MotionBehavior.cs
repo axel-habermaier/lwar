@@ -38,16 +38,7 @@
 		protected override void Process(Entity[] entities, Transform[] transforms, Motion[] motions, int count)
 		{
 			for (var i = 0; i < count; ++i)
-			{
-				var velocity = motions[i].Velocity;
-				var maxSpeed = motions[i].MaxSpeed;
-
-				velocity += motions[i].Acceleration * _elapsedSeconds;
-				velocity = velocity.Length > maxSpeed ? velocity.Normalize() * maxSpeed : velocity;
-
-				transforms[i].Position += velocity * _elapsedSeconds;
-				motions[i].Velocity = velocity;
-			}
+				transforms[i].Position += motions[i].Velocity * _elapsedSeconds;
 		}
 	}
 }
