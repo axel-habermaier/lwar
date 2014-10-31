@@ -25,7 +25,7 @@
 							where type.IsClass && !type.IsAbstract && typeof(IShaderSignatureProvider).IsAssignableFrom(type)
 							select (IShaderSignatureProvider)Activator.CreateInstance(type);
 
-			ShaderSignatures = providers.SelectMany(p => p.GetShaderSignatures()).ToArray();
+			ShaderSignatures = providers.SelectMany(provider => provider.GetShaderSignatures()).ToArray();
 		}
 
 		/// <summary>
@@ -36,7 +36,7 @@
 		{
 			Assert.ArgumentNotNull(vertexInputBindings);
 
-			// This might be slow, but this doesn't happen often and only at initialization anyway...
+			// This might be slow, but this doesn't happen often anyway...
 			var compatibleSignatures = (from signature in ShaderSignatures
 										where signature.Inputs.Length <= vertexInputBindings.Length
 										let isCompatibleSignature = signature.Inputs.All(input =>
