@@ -1,7 +1,6 @@
 ﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
-	using System.Collections.Generic;
 	using System.Linq;
 	using Logging;
 	using Utilities;
@@ -14,7 +13,7 @@
 		/// <summary>
 		///     The registered shader signatures.
 		/// </summary>
-		private static readonly List<ShaderSignature> ShaderSignatures = new List<ShaderSignature>();
+		private static readonly ShaderSignature[] ShaderSignatures;
 
 		/// <summary>
 		///     Initializes the type.
@@ -26,8 +25,7 @@
 							where type.IsClass && !type.IsAbstract && typeof(IShaderSignatureProvider).IsAssignableFrom(type)
 							select (IShaderSignatureProvider)Activator.CreateInstance(type);
 
-			foreach (var provider in providers)
-				ShaderSignatures.AddRange(provider.GetShaderSignatures());
+			ShaderSignatures = providers.SelectMany(p => p.GetShaderSignatures()).ToArray();
 		}
 
 		/// <summary>
