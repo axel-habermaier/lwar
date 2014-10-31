@@ -53,9 +53,9 @@
 		}
 
 		/// <summary>
-		///     Gets or sets the server player.
+		///     Gets the player representing the server.
 		/// </summary>
-		public Player ServerPlayer { get; set; }
+		public Player ServerPlayer { get; private set; }
 
 		/// <summary>
 		///     Gets the number of active players.
