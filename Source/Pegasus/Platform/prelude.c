@@ -3,9 +3,8 @@
 #define PG_ASSERT_SIZE(type, size)	PG_COMPILE_TIME_ASSERT(type, sizeof(type) == size);
 
 PG_ASSERT_SIZE(pgByte, 1);
+PG_ASSERT_SIZE(pgSByte, 1);
 PG_ASSERT_SIZE(pgChar, 1);
-PG_ASSERT_SIZE(pgUInt8,	1);
-PG_ASSERT_SIZE(pgInt8, 1);
 PG_ASSERT_SIZE(pgUInt16, 2);
 PG_ASSERT_SIZE(pgInt16,	2);
 PG_ASSERT_SIZE(pgUInt32, 4);

@@ -88,7 +88,7 @@
 		/// <summary>
 		///     Gets the name of the application.
 		/// </summary>
-		public string Name { get; private set; }
+		public string Name { get; internal set; }
 
 		/// <summary>
 		///     Gets the application-wide assets manager.
@@ -145,14 +145,10 @@
 		/// <summary>
 		///     Runs the application. This method does not return until the application is shut down.
 		/// </summary>
-		/// <param name="name">The name of the application.</param>
 		/// <param name="consoleViewModel">The view model that should be used for the in-game console.</param>
-		internal unsafe void Run(string name, ConsoleViewModel consoleViewModel)
+		internal unsafe void Run(ConsoleViewModel consoleViewModel)
 		{
-			Assert.ArgumentNotNullOrWhitespace(name);
 			Assert.ArgumentNotNull(consoleViewModel);
-
-			Name = name;
 
 			using (GraphicsDevice = new GraphicsDevice())
 			using (Assets = new AssetsManager(GraphicsDevice, asyncLoading: false))

@@ -1,7 +1,6 @@
 ﻿namespace Pegasus.UserInterface
 {
 	using System;
-	using System.Linq.Expressions;
 	using Platform.Logging;
 	using Utilities;
 
@@ -40,7 +39,7 @@
 		/// <summary>
 		///     The handler registered on the routed event that invokes the target method.
 		/// </summary>
-		private Action<object, object, T> _handler;
+		private Action<object, T> _handler;
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -116,41 +115,32 @@
 			Log.DebugIf(dataContext == null,
 				"Event binding failure: Data context is null while trying to bind method '{0}'.", _methodName);
 
-			var oldDataContext = _dataContext;
 			_dataContext = dataContext;
+			_handler = null;
+			
 			if (dataContext == null)
 				return;
 
-			// Reuse the handler expression if possible.
-			if (oldDataContext != null && oldDataContext.GetType() == _dataContext.GetType())
-				return;
-
-			Expression handler = null;
 			var dataContextType = dataContext.GetType();
-			var target = Expression.Parameter(typeof(object));
-			var sender = Expression.Parameter(typeof(object));
-			var args = Expression.Parameter(typeof(T));
 
 			// First, try to bind to a method of the appropriate name without any parameters.
 			var method = dataContextType.GetMethod(_methodName, Type.EmptyTypes);
 			if (method != null)
-				handler = Expression.Call(Expression.Convert(target, dataContextType), method);
+			{
+				var methodDelegate = (Action)Delegate.CreateDelegate(typeof(Action), dataContext, method);
+				_handler = (s, a) => methodDelegate();
+			}
 			else
 			{
 				// Otherwise, try to bind to a method of the appropriate name with a RoutedEventHandler<T> signature.
 				method = dataContextType.GetMethod(_methodName, new[] { typeof(object), typeof(T) });
 
 				if (method != null)
-					handler = Expression.Call(Expression.Convert(target, dataContextType), method, sender, args);
+					_handler = (Action<object, T>)Delegate.CreateDelegate(typeof(Action<object, T>), dataContext, method);
 			}
 
-			Log.DebugIf(method == null, "Unable to find method '{0}' with the appropriate signature on '{1}'.",
+			Log.DebugIf(_handler == null, "Unable to find method '{0}' with the appropriate signature on '{1}'.",
 				_methodName, dataContextType.FullName);
-
-			if (handler == null)
-				return;
-
-			_handler = Expression.Lambda<Action<object, object, T>>(handler, target, sender, args).Compile();
 		}
 
 		/// <summary>
@@ -161,7 +151,7 @@
 			Log.DebugIf(_dataContext == null, "Event invocation missed: Data context was a null value.");
 
 			if (_dataContext != null && _handler != null)
-				_handler(_dataContext, sender, args);
+				_handler(sender, args);
 		}
 	}
 }

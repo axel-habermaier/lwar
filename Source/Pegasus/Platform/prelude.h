@@ -168,7 +168,6 @@ typedef struct
 {
 	pgBool			initialized;
 	pgLogCallback	logCallback;
-	pgChar*			appName;
 } pgLibraryState;
 
 extern pgLibraryState pgState;
@@ -335,13 +334,6 @@ pgInt32 pgClamp(pgInt32 value, pgInt32 min, pgInt32 max);
 // Graphics device
 //====================================================================================================================
 
-#define PG_INPUT_BINDINGS_COUNT			 8
-#define PG_TEXTURE_SLOT_COUNT			16
-#define PG_SAMPLER_SLOT_COUNT			16
-#define PG_CONSTANT_BUFFER_SLOT_COUNT	14
-#define PG_MAX_MIPMAPS					16
-#define PG_MAX_COLOR_ATTACHMENTS		 4
-
 struct pgGraphicsDevice
 {
 	pgSamplerState*			samplers[PG_SAMPLER_SLOT_COUNT];
@@ -400,8 +392,8 @@ struct pgProgram
 	PG_PROGRAM_PLATFORM
 };
 
-pgVoid pgCreateVertexShaderCore(pgShader* shader, pgUInt8* shaderData, pgUInt8* end);
-pgVoid pgCreateFragmentShaderCore(pgShader* shader, pgUInt8* shaderData, pgUInt8* end);
+pgVoid pgCreateVertexShaderCore(pgShader* shader, pgByte* shaderData, pgByte* end);
+pgVoid pgCreateFragmentShaderCore(pgShader* shader, pgByte* shaderData, pgByte* end);
 pgVoid pgDestroyShaderCore(pgShader* shader);
 
 pgVoid pgCreateProgramCore(pgProgram* program);
@@ -489,7 +481,7 @@ pgVoid pgCreateRenderTargetCore(pgRenderTarget* renderTarget);
 pgVoid pgDestroyRenderTargetCore(pgRenderTarget* renderTarget);
 
 pgVoid pgClearColorCore(pgRenderTarget* renderTarget, pgColor color);
-pgVoid pgClearDepthStencilCore(pgRenderTarget* renderTarget, pgBool clearDepth, pgBool clearStencil, pgFloat32 depth, pgUInt8 stencil);
+pgVoid pgClearDepthStencilCore(pgRenderTarget* renderTarget, pgBool clearDepth, pgBool clearStencil, pgFloat32 depth, pgByte stencil);
 pgVoid pgBindRenderTargetCore(pgRenderTarget* renderTarget);
 
 //====================================================================================================================

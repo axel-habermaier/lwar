@@ -457,9 +457,9 @@ static pgMouseButton TranslateButton(unsigned int button)
 	case Button3:
 		return PG_MOUSE_RIGHT;
 	case 8:
-		return PG_MOUSE_XBUTTON1;
+		return PG_MOUSE_X_BUTTON1;
 	case 9:
-		return PG_MOUSE_XBUTTON2;
+		return PG_MOUSE_X_BUTTON2;
 	default:
 		return PG_MOUSE_UNKNOWN;
 	}
@@ -473,21 +473,21 @@ static pgKey TranslateKey(XKeyEvent* keyEvent)
 	switch (key)
 	{
 	case XK_Shift_L:
-		return PG_KEY_LEFTSHIFT;
+		return PG_KEY_LEFT_SHIFT;
 	case XK_Shift_R:
-		return PG_KEY_RIGHTSHIFT;
+		return PG_KEY_RIGHT_SHIFT;
 	case XK_Control_L:
-		return PG_KEY_LEFTCONTROL;
+		return PG_KEY_LEFT_CONTROL;
 	case XK_Control_R:
-		return PG_KEY_RIGHTCONTROL;
+		return PG_KEY_RIGHT_CONTROL;
 	case XK_Alt_L:
-		return PG_KEY_LEFTALT;
+		return PG_KEY_LEFT_ALT;
 	case XK_Alt_R:
-		return PG_KEY_RIGHTALT;
+		return PG_KEY_RIGHT_ALT;
 	case XK_Super_L:
-		return PG_KEY_LEFTSYSTEM;
+		return PG_KEY_LEFT_SYSTEM;
 	case XK_Super_R:
-		return PG_KEY_RIGHTSYSTEM;
+		return PG_KEY_RIGHT_SYSTEM;
 	case XK_Menu:
 		return PG_KEY_MENU;
 	case XK_Escape:
@@ -503,9 +503,9 @@ static pgKey TranslateKey(XKeyEvent* keyEvent)
 	case XK_minus:
 		return PG_KEY_DASH;
 	case XK_bracketleft:
-		return PG_KEY_LEFTBRACKET;
+		return PG_KEY_LEFT_BRACKET;
 	case XK_bracketright:
-		return PG_KEY_RIGHTBRACKET;
+		return PG_KEY_RIGHT_BRACKET;
 	case XK_comma:
 		return PG_KEY_COMMA;
 	case XK_period:
@@ -513,21 +513,21 @@ static pgKey TranslateKey(XKeyEvent* keyEvent)
 	case XK_apostrophe:
 		return PG_KEY_QUOTE;
 	case XK_backslash:
-		return PG_KEY_BACKSLASH;
+		return PG_KEY_BACK_SLASH;
 	case XK_space:
 		return PG_KEY_SPACE;
 	case XK_Return:
 		return PG_KEY_RETURN;
 	case XK_KP_Enter:
-		return PG_KEY_NUMPADENTER;
+		return PG_KEY_NUMPAD_ENTER;
 	case XK_BackSpace:
 		return PG_KEY_BACK;
 	case XK_Tab:
 		return PG_KEY_TAB;
 	case XK_Prior:
-		return PG_KEY_PAGEUP;
+		return PG_KEY_PAGE_UP;
 	case XK_Next:
-		return PG_KEY_PAGEDOWN;
+		return PG_KEY_PAGE_DOWN;
 	case XK_End:
 		return PG_KEY_END;
 	case XK_Home:
@@ -545,11 +545,11 @@ static pgKey TranslateKey(XKeyEvent* keyEvent)
 	case XK_KP_Divide:
 		return PG_KEY_DIVIDE;
 	case XK_Caps_Lock:
-		return PG_KEY_CAPSLOCK;
+		return PG_KEY_CAPS_LOCK;
 	case XK_Print:
 		return PG_KEY_PRINT;
 	case XK_Num_Lock:
-		return PG_KEY_NUMLOCK;
+		return PG_KEY_NUM_LOCK;
 	case XK_Pause:
 		return PG_KEY_PAUSE;
 	case XK_F1:
@@ -591,7 +591,7 @@ static pgKey TranslateKey(XKeyEvent* keyEvent)
 	case XK_Down:
 		return PG_KEY_DOWN;
 	case XK_KP_Delete:
-		return PG_KEY_NUMPADDECIMAL;
+		return PG_KEY_NUMPAD_DECIMAL;
 	case XK_KP_Insert:
 		return PG_KEY_NUMPAD0;
 	case XK_KP_End:
@@ -615,7 +615,7 @@ static pgKey TranslateKey(XKeyEvent* keyEvent)
 	case XK_Scroll_Lock:
 		return PG_KEY_SCROLL;
 	case XK_less:
-		return PG_KEY_BACKSLASH2;
+		return PG_KEY_BACK_SLASH2;
 	}
 
 	XConvertCase(key, &lower, &key);

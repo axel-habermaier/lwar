@@ -42,7 +42,7 @@
 		</Grid.ColumnDefinitions>
 
 		<TextBlock Grid.Row="0" Grid.Column="0" Text="Platform: " />
-		<TextBlock Grid.Row="1" Grid.Column="0" Text="Debug Mode: " />
+		<TextBlock Grid.Row="1" Grid.Column="0" Text="Build: " />
 		<TextBlock Grid.Row="2" Grid.Column="0" Text="Renderer: " />
 		<TextBlock Grid.Row="3" Grid.Column="0" Text="# of GCs: " />
 		
@@ -56,7 +56,7 @@
 		<TextBlock Grid.Row="12" Grid.Column="0" Text="Particle Draw: " />
 
 		<TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Platform}" />
-		<TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding DebugMode, Converter={converters:BooleanToStringConverter}}" />
+		<TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Build}" />
 		<TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Renderer}" />
 		<TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding GarbageCollections, Converter={converters:Int32ToStringConverter}}" />
 

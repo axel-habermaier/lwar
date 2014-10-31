@@ -30,50 +30,54 @@
 		public string FileName { get; private set; }
 
 		/// <summary>
-		///     Writes the given content into the file, overwriting all previous content. Returns true to indicate that the file
-		///     operation has been successful.
+		///     Writes the given content into the file, overwriting all previous content.
 		/// </summary>
 		/// <param name="content">The content that should be written into the file.</param>
-		/// <param name="onException">
-		///     The action that should be executed if an I/O exception occurs during the execution of the
-		///     method. If null, the exception is propagated to the calling scope.
-		/// </param>
-		public bool Write(string content, Action<Exception> onException = null)
+		public void Write(string content)
 		{
 			Assert.ArgumentNotNull(content);
-			return Execute(() => FileSystem.WriteAllText(FileName, content), onException);
+
+			try
+			{
+				FileSystem.WriteAllText(FileName, content);
+			}
+			catch (Exception e)
+			{
+				throw new FileSystemException(e.Message);
+			}
 		}
 
 		/// <summary>
-		///     Appends the given content to the file. Returns true to indicate that the file operation has been successful.
+		///     Appends the given content to the file.
 		/// </summary>
 		/// <param name="content">The content that should be appended to the file.</param>
-		/// <param name="onException">
-		///     The action that should be executed if an I/O exception occurs during the execution of the
-		///     method. If null, the exception is propagated to the calling scope.
-		/// </param>
-		public bool Append(string content, Action<Exception> onException = null)
+		public void Append(string content)
 		{
 			Assert.ArgumentNotNull(content);
-			return Execute(() => FileSystem.AppendText(FileName, content), onException);
+
+			try
+			{
+				FileSystem.AppendText(FileName, content);
+			}
+			catch (Exception e)
+			{
+				throw new FileSystemException(e.Message);
+			}
 		}
 
 		/// <summary>
-		///     Reads the content of the given file, with the line endings normalized to '\n'. Returns true to indicate that the file
-		///     operation has been successful.
+		///     Reads the content of the given file, with the line endings normalized to '\n'.
 		/// </summary>
-		/// <param name="content">The content that has been read from the file.</param>
-		/// <param name="onException">
-		///     The action that should be executed if an I/O exception occurs during the execution of the
-		///     method. If null, the exception is propagated to the calling scope.
-		/// </param>
-		public bool Read(out string content, Action<Exception> onException = null)
+		public string Read()
 		{
-			var fileContent = String.Empty;
-			var success = Execute(() => fileContent = FileSystem.ReadAllText(FileName), onException);
-
-			content = Normalize(fileContent);
-			return success;
+			try
+			{
+				return Normalize(FileSystem.ReadAllText(FileName));
+			}
+			catch (Exception e)
+			{
+				throw new FileSystemException(e.Message);
+			}
 		}
 
 		/// <summary>
@@ -88,43 +92,17 @@
 		}
 
 		/// <summary>
-		///     Deletes the file. Returns true to indicate that the file operation has been successful.
+		///     Deletes the file.
 		/// </summary>
-		/// <param name="onException">
-		///     The action that should be executed if an I/O exception occurs during the execution of the
-		///     method. If null, the exception is propagated to the calling scope.
-		/// </param>
-		public bool Delete(Action<Exception> onException = null)
+		public void Delete()
 		{
-			return Execute(() => FileSystem.Delete(FileName), onException);
-		}
-
-		/// <summary>
-		///     Executes the given file action. If an exception handler is provided and an I/O exception is thrown, the exception
-		///     handler is invoked. Otherwise, I/O exception propagate to the calling scope. Returns true to indicate that the file
-		///     operation has been successful.
-		/// </summary>
-		/// <param name="action">The file action that should be executed.</param>
-		/// <param name="onException">
-		///     The action that should be executed if an I/O exception occurs during the execution of the
-		///     method. If null, the exception is propagated to the calling scope.
-		/// </param>
-		private static bool Execute(Action action, Action<Exception> onException)
-		{
-			Assert.ArgumentNotNull(action);
-
 			try
 			{
-				action();
-				return true;
+				FileSystem.Delete(FileName);
 			}
 			catch (Exception e)
 			{
-				if (onException == null)
-					throw;
-
-				onException(e);
-				return false;
+				throw new FileSystemException(e.Message);
 			}
 		}
 	}

@@ -52,7 +52,7 @@
 		/// </summary>
 		public void Update()
 		{
-			if (_device.TextInputEnabled)
+			if (_device.TextInputEnabled || Application.Current.IsConsoleOpen)
 				return;
 
 			foreach (var binding in _bindings)
@@ -84,12 +84,13 @@
 									 orderby bindingGroup.Key
 									 select new { Command = bindingGroup.Key, Bindings = bindingGroup.ToArray() }).ToArray();
 
+				builder.Append("\n");
 				foreach (var group in bindingGroups)
 				{
-					builder.AppendFormat("\n'\\yellow{0}\\\0'", group.Command);
-
-					foreach (var binding in group.Bindings)
-						builder.AppendFormat("\n   on {0}", TypeRegistry.ToString(binding.Input.Trigger));
+					builder.AppendFormat("'\\lightgrey{0}\\\0' on ", group.Command);
+					builder.Append(String.Join(", ",
+						group.Bindings.Select(binding => String.Format("\\lightgrey{0}\\\0", TypeRegistry.ToString(binding.Input.Trigger)))));
+					builder.Append("\n");
 				}
 
 				if (bindingGroups.Length == 0)
@@ -98,7 +99,6 @@
 					return;
 				}
 
-				builder.Append("\n");
 				Log.Info("{0}", builder);
 			}
 		}

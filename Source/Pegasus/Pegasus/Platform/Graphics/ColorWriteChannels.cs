@@ -3,7 +3,7 @@
 	using System;
 
 	/// <summary>
-	///     Indicates the color channels for which writes are enabled.
+	///     Identifies the color channels for which writes are enabled.
 	/// </summary>
 	[Flags]
 	public enum ColorWriteChannels

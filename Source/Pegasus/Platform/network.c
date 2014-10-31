@@ -17,7 +17,7 @@ static pgVoid pgMapIPAddress(struct in_addr ipv4, pgIPAddress* ipv6);
 // Address functions
 //====================================================================================================================
 
-PG_API_EXPORT pgBool pgTryParseIPAddress(pgString address, pgIPAddress* ipAddress)
+pgBool pgTryParseIPAddress(pgString address, pgIPAddress* ipAddress)
 {
 	struct in_addr ipv4 = { 0 };
 	int result;
@@ -43,7 +43,7 @@ PG_API_EXPORT pgBool pgTryParseIPAddress(pgString address, pgIPAddress* ipAddres
 	return PG_TRUE;
 }
 
-PG_API_EXPORT pgString pgIPAddressToString(pgIPAddress* address)
+pgString pgIPAddressToString(pgIPAddress* address)
 {
 	static pgChar str[INET6_ADDRSTRLEN];
 	pgString result;
@@ -62,7 +62,7 @@ PG_API_EXPORT pgString pgIPAddressToString(pgIPAddress* address)
 // UDP socket functions
 //====================================================================================================================
 
-PG_API_EXPORT pgSocket* pgCreateUdpSocket()
+pgSocket* pgCreateUdpSocket()
 {
 	pgSocket* sock = NULL;
 	PG_ALLOC(pgSocket, sock);
@@ -95,7 +95,7 @@ PG_API_EXPORT pgSocket* pgCreateUdpSocket()
 	return sock;
 }
 
-PG_API_EXPORT pgBool pgDestroyUdpSocket(pgSocket* socket)
+pgBool pgDestroyUdpSocket(pgSocket* socket)
 {
 	if (socket == NULL)
 		return PG_TRUE;
@@ -110,7 +110,7 @@ PG_API_EXPORT pgBool pgDestroyUdpSocket(pgSocket* socket)
 	return PG_TRUE;
 }
 
-PG_API_EXPORT pgBool pgBindUdpSocket(pgSocket* socket, pgUInt16 port)
+pgBool pgBindUdpSocket(pgSocket* socket, pgUInt16 port)
 {
 	struct sockaddr_in6 addr = { 0 };
 	PG_ASSERT_NOT_NULL(socket);
@@ -128,7 +128,7 @@ PG_API_EXPORT pgBool pgBindUdpSocket(pgSocket* socket, pgUInt16 port)
 	return PG_TRUE;
 }
 
-PG_API_EXPORT pgBool pgBindUdpSocketMulticast(pgSocket* socket, pgInt32 timeToLive, pgIPAddress* ipAddress, pgUInt16 port)
+pgBool pgBindUdpSocketMulticast(pgSocket* socket, pgInt32 timeToLive, pgIPAddress* ipAddress, pgUInt16 port)
 {
 	int loop = 1;
 	struct sockaddr_in6 addr;
@@ -173,7 +173,7 @@ PG_API_EXPORT pgBool pgBindUdpSocketMulticast(pgSocket* socket, pgInt32 timeToLi
 	return PG_TRUE;
 }
 
-PG_API_EXPORT pgReceiveStatus pgTryReceiveUdpPacket(pgSocket* socket, pgPacket* packet)
+pgReceiveStatus pgTryReceiveUdpPacket(pgSocket* socket, pgPacket* packet)
 {
 	struct sockaddr_storage from = { 0 };
 	struct sockaddr_in6* from6 = NULL;
@@ -224,7 +224,7 @@ PG_API_EXPORT pgReceiveStatus pgTryReceiveUdpPacket(pgSocket* socket, pgPacket* 
 	return PG_RECEIVE_DATA_AVAILABLE;
 }
 
-PG_API_EXPORT pgBool pgSendUdpPacket(pgSocket* socket, pgPacket* packet)
+pgBool pgSendUdpPacket(pgSocket* socket, pgPacket* packet)
 {
 	struct sockaddr_in6 ipv6 = { 0 };
 	int sent = 0;
@@ -258,7 +258,7 @@ PG_API_EXPORT pgBool pgSendUdpPacket(pgSocket* socket, pgPacket* packet)
 // Network functions
 //====================================================================================================================
 
-PG_API_EXPORT pgString pgGetLastNetworkError()
+pgString pgGetLastNetworkError()
 {
 	if (!hasError)
 		return NULL;

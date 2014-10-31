@@ -52,7 +52,7 @@ static pgBool pgTryGetFileSize(FILE* file, pgUInt32* size);
 // File system functions
 //====================================================================================================================
 
-PG_API_EXPORT pgBool pgReadAppFile(pgString path, pgByte* buffer, pgUInt32* sizeInBytes)
+pgBool pgReadAppFile(pgString path, pgByte* buffer, pgUInt32* sizeInBytes)
 {
 	PG_ASSERT_NOT_NULL(path);
 
@@ -60,7 +60,7 @@ PG_API_EXPORT pgBool pgReadAppFile(pgString path, pgByte* buffer, pgUInt32* size
 	return pgReadFile(buffer, sizeInBytes);
 }
 
-PG_API_EXPORT pgBool pgReadUserFile(pgString fileName, pgByte* buffer, pgUInt32* sizeInBytes)
+pgBool pgReadUserFile(pgString fileName, pgByte* buffer, pgUInt32* sizeInBytes)
 {
 	PG_ASSERT_NOT_NULL(fileName);
 
@@ -68,7 +68,7 @@ PG_API_EXPORT pgBool pgReadUserFile(pgString fileName, pgByte* buffer, pgUInt32*
 	return pgReadFile(buffer, sizeInBytes);
 }
 
-PG_API_EXPORT pgBool pgWriteUserFile(pgString fileName, pgByte* content, pgUInt32 sizeInBytes)
+pgBool pgWriteUserFile(pgString fileName, pgByte* content, pgUInt32 sizeInBytes)
 {
 	PG_ASSERT_NOT_NULL(fileName);
 
@@ -76,7 +76,7 @@ PG_API_EXPORT pgBool pgWriteUserFile(pgString fileName, pgByte* content, pgUInt3
 	return pgWriteFile(PG_FILE_WRITE, content, sizeInBytes);
 }
 
-PG_API_EXPORT pgBool pgAppendUserFile(pgString fileName, pgByte* content, pgUInt32 sizeInBytes)
+pgBool pgAppendUserFile(pgString fileName, pgByte* content, pgUInt32 sizeInBytes)
 {
 	PG_ASSERT_NOT_NULL(fileName);
 
@@ -84,7 +84,7 @@ PG_API_EXPORT pgBool pgAppendUserFile(pgString fileName, pgByte* content, pgUInt
 	return pgWriteFile(PG_FILE_APPEND, content, sizeInBytes);
 }
 
-PG_API_EXPORT pgBool pgUserFileExists(pgString fileName)
+pgBool pgUserFileExists(pgString fileName)
 {
 	FILE* file;
 
@@ -99,7 +99,7 @@ PG_API_EXPORT pgBool pgUserFileExists(pgString fileName)
 	return PG_TRUE;
 }
 
-PG_API_EXPORT pgBool pgDeleteUserFile(pgString fileName)
+pgBool pgDeleteUserFile(pgString fileName)
 {
 	PG_ASSERT_NOT_NULL(fileName);
 
@@ -112,7 +112,7 @@ PG_API_EXPORT pgBool pgDeleteUserFile(pgString fileName)
 	return PG_TRUE;
 }
 
-PG_API_EXPORT const pgPathChar* pgGetUserDirectory()
+const pgPathChar* pgGetUserDirectory()
 {
 	// On Windows, when compiling with Visual Studio, use the local app data directory to store app files; on all
 	// other platforms and compilers, use the current working directory instead.
@@ -144,7 +144,7 @@ PG_API_EXPORT const pgPathChar* pgGetUserDirectory()
 	return pathBuffer;
 }
 
-PG_API_EXPORT pgString pgGetLastFileError()
+pgString pgGetLastFileError()
 {
 	if (!hasError)
 		return NULL;

@@ -108,7 +108,7 @@ pgVoid pgSwapBuffers(pgContext* context);
 	GLenum			depthFunc;				\
 	pgColor			clearColor;				\
 	pgFloat32		depthClear;				\
-	pgUInt8			stencilClear;			\
+	pgByte			stencilClear;			\
 	GLenum			blendOperation;			\
 	GLenum			blendOperationAlpha;	\
 	GLenum			sourceBlend;			\
@@ -204,7 +204,7 @@ pgVoid pgSetPolygonOffset(pgGraphicsDevice* device, pgFloat32 slopeScaledDepthBi
 pgVoid pgSetDepthFunc(pgGraphicsDevice* device, GLenum func);
 pgVoid pgSetClearColor(pgGraphicsDevice* device, pgColor color);
 pgVoid pgSetClearDepth(pgGraphicsDevice* device, pgFloat32 depth);
-pgVoid pgSetClearStencil(pgGraphicsDevice* device, pgUInt8 stencil);
+pgVoid pgSetClearStencil(pgGraphicsDevice* device, pgByte stencil);
 pgVoid pgSetBlendEquation(pgGraphicsDevice* device, GLenum blendOperation, GLenum blendOperationAlpha);
 pgVoid pgSetBlendFuncs(pgGraphicsDevice* device, GLenum sourceBlend, GLenum destinationBlend, GLenum sourceBlendAlpha, GLenum destinationBlendAlpha);
 pgVoid pgSetColorMask(pgGraphicsDevice* device, GLboolean mask[4]);

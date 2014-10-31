@@ -363,7 +363,7 @@
 		private static class NativeMethods
 		{
 			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetMousePosition")]
-			public static extern IntPtr GetMousePosition(IntPtr window, out int x, out int y);
+			public static extern void GetMousePosition(IntPtr window, out int x, out int y);
 		}
 	}
 }

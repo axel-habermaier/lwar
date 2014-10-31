@@ -171,6 +171,14 @@
 		}
 
 		/// <summary>
+		///     Toggles between the game and the debug camera.
+		/// </summary>
+		public void ToggleDebugCamera()
+		{
+			CameraManager.ToggleDebugCamera();
+		}
+
+		/// <summary>
 		///     Activates the view model, presenting its content and view on the UI.
 		/// </summary>
 		protected override void OnActivated()

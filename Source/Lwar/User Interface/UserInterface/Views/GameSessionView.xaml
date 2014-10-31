@@ -16,7 +16,8 @@
 		<input:ConfigurableBinding Cvar="Lwar.Scripting.Cvars.InputChatCvar" Method="ShowChatInput" />
 		<input:ConfigurableBinding Cvar="Lwar.Scripting.Cvars.InputShowScoreboardCvar" TriggerMode="Activated" Method="ShowScoreboard" />
 		<input:ConfigurableBinding Cvar="Lwar.Scripting.Cvars.InputShowScoreboardCvar" TriggerMode="Deactivated" Method="HideScoreboard" />
-		<input:KeyBinding Key="Escape" Method="ShowInGameMenu"  TriggerOnRepeat="false"></input:KeyBinding>
+		<input:KeyBinding Key="Escape" Method="ShowInGameMenu" TriggerOnRepeat="false"></input:KeyBinding>
+		<input:KeyBinding Key="C" Method="ToggleDebugCamera" Modifiers="Control+Shift" TriggerOnRepeat="false"></input:KeyBinding>
 	</UserControl.InputBindings>
 	<UserControl.Resources>
 		<input:Cursor x:Key="Crosshair" Color="#FF02CDFF" HotSpot="16,16" Texture="Lwar.Assets.Textures.Crosshair" />

@@ -3,7 +3,6 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-	using System.Linq.Expressions;
 	using System.Reflection;
 	using System.Runtime.CompilerServices;
 	using Pegasus.Platform.Memory;
@@ -23,15 +22,14 @@
 		///     Maps a message type to a message instance allocator.
 		/// </summary>
 		private static readonly Dictionary<MessageType, Func<PoolAllocator, Message>> MessageConstructors =
-			new Dictionary<MessageType, Func<PoolAllocator, Message>>();
+			new Dictionary<MessageType, Func<PoolAllocator, Message>>(new MessageTypeComparer());
 
 		/// <summary>
 		///     Initializes the type.
 		/// </summary>
 		static Message()
 		{
-			var allocatorParameter = Expression.Parameter(typeof(PoolAllocator));
-			var allocateMethod = typeof(PoolAllocator).GetMethod("Allocate", BindingFlags.Public | BindingFlags.Instance);
+			var allocateMethod = typeof(Message).GetMethod("CreateAllocator", BindingFlags.NonPublic | BindingFlags.Static);
 
 			var messageTypes = Assembly
 				.GetExecutingAssembly()
@@ -39,6 +37,7 @@
 
 			foreach (var messageType in messageTypes)
 			{
+				var allocator = (Func<PoolAllocator, Message>)allocateMethod.MakeGenericMethod(messageType).Invoke(null, null);
 				var reliable = (ReliableTransmissionAttribute)messageType
 					.GetCustomAttributes(typeof(ReliableTransmissionAttribute), false).FirstOrDefault();
 				var unreliable = (UnreliableTransmissionAttribute)messageType
@@ -49,15 +48,11 @@
 				Assert.That(reliable != null || unreliable != null,
 					"No transmission type has been specified for messages of type '{0}'.", messageType.FullName);
 
-				var typedAllocateMethod = allocateMethod.MakeGenericMethod(messageType);
-				var callAllocateMethod = Expression.Call(allocatorParameter, typedAllocateMethod);
-				var constructMessage = Expression.Lambda<Func<PoolAllocator, Message>>(callAllocateMethod, allocatorParameter).Compile();
-
 				if (reliable != null)
 				{
 					Assert.That((int)reliable.MessageType < 100, "Invalid reliable transmission message type.");
 
-					MessageConstructors.Add(reliable.MessageType, constructMessage);
+					MessageConstructors.Add(reliable.MessageType, allocator);
 					TransmissionInfos.Add(messageType, new TransmissionInfo
 					{
 						BatchedTransmission = false,
@@ -70,7 +65,7 @@
 				{
 					Assert.That((int)unreliable.MessageType > 100, "Invalid unreliable transmission message type.");
 
-					MessageConstructors.Add(unreliable.MessageType, constructMessage);
+					MessageConstructors.Add(unreliable.MessageType, allocator);
 					TransmissionInfos.Add(messageType, new TransmissionInfo
 					{
 						BatchedTransmission = unreliable.EnableBatching,
@@ -120,6 +115,17 @@
 		}
 
 		/// <summary>
+		///     Creates an allocator for a message of the given type.
+		/// </summary>
+		/// <typeparam name="T">The message type the allocator should be created for.</typeparam>
+		[UsedImplicitly]
+		private static Func<PoolAllocator, Message> CreateAllocator<T>()
+			where T : Message
+		{
+			return allocator => allocator.Allocate<T>();
+		}
+
+		/// <summary>
 		///     Serializes the message using the given writer.
 		/// </summary>
 		/// <param name="writer">The writer that should be used to serialize the message.</param>
@@ -139,11 +145,11 @@
 		public abstract void Dispatch(IMessageHandler handler, uint sequenceNumber);
 
 		/// <summary>
-		///     Creates a message instance for a message of the given message transmission type.
+		///     Allocates a message instance for a message of the given message transmission type.
 		/// </summary>
 		/// <param name="allocator">The allocator that should be used to allocate the message.</param>
 		/// <param name="messageType">The message transmission type a message instance should be created for.</param>
-		public static Message Create(PoolAllocator allocator, MessageType messageType)
+		public static Message Allocate(PoolAllocator allocator, MessageType messageType)
 		{
 			Assert.ArgumentNotNull(allocator);
 			Assert.ArgumentInRange(messageType);
@@ -153,6 +159,32 @@
 				throw new InvalidOperationException("Unsupported message type.");
 
 			return constructor(allocator);
+		}
+
+		/// <summary>
+		///     The comparer that is used by the message constructor dictionary to compare the message type keys,
+		///     otherwise boxing would occur.
+		/// </summary>
+		private class MessageTypeComparer : IEqualityComparer<MessageType>
+		{
+			/// <summary>
+			///     Determines whether the specified message types are equal.
+			/// </summary>
+			/// <param name="messageType1">The first message type to compare.</param>
+			/// <param name="messageType2">The second message type to compare.</param>
+			public bool Equals(MessageType messageType1, MessageType messageType2)
+			{
+				return messageType1 == messageType2;
+			}
+
+			/// <summary>
+			///     Returns a hash code for the given message type.
+			/// </summary>
+			/// <param name="messageType">The message type the hash code should be returned for.</param>
+			public int GetHashCode(MessageType messageType)
+			{
+				return (int)messageType;
+			}
 		}
 
 		/// <summary>

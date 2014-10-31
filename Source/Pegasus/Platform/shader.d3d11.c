@@ -6,7 +6,7 @@
 // Core functions
 //====================================================================================================================
 
-pgVoid pgCreateVertexShaderCore(pgShader* shader, pgUInt8* shaderData, pgUInt8* end)
+pgVoid pgCreateVertexShaderCore(pgShader* shader, pgByte* shaderData, pgByte* end)
 {
 	size_t byteCodeLength = end - shaderData;
 
@@ -14,7 +14,7 @@ pgVoid pgCreateVertexShaderCore(pgShader* shader, pgUInt8* shaderData, pgUInt8* 
 		"Failed to create vertex shader.");
 }
 
-pgVoid pgCreateFragmentShaderCore(pgShader* shader, pgUInt8* shaderData, pgUInt8* end)
+pgVoid pgCreateFragmentShaderCore(pgShader* shader, pgByte* shaderData, pgByte* end)
 {
 	size_t byteCodeLength = end - shaderData;
 

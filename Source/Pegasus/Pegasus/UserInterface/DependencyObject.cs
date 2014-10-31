@@ -344,9 +344,10 @@
 			{
 				// Check if the property's value has changed
 				var newValue = _object.GetValue(_property);
+				
 				if (EqualityComparer<T>.Default.Equals(_oldValue, newValue))
 					return;
-
+				
 				var changedEventArgs = new DependencyPropertyChangedEventArgs<T>(_property, _oldValue, newValue);
 
 				// If the property inherits its value, we have to push down the change to all inheriting objects

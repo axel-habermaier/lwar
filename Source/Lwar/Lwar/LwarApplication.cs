@@ -44,7 +44,6 @@
 			Commands.Bind(Key.F5.WentDown(), "reload_assets");
 			Commands.Bind(Key.F6.WentDown(), "toggle use_debug_server");
 
-			Commands.Bind(Key.C.WentDown(), "toggle_debug_camera");
 			Commands.Bind(Key.Escape.WentDown() & Key.LeftShift.IsPressed(), "exit");
 			Commands.Bind(Key.F9.WentDown(), "show_particle_effect_viewer");
 			Commands.Bind(Key.F10.WentDown(), "toggle show_debug_overlay");

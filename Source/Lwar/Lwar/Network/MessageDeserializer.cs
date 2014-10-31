@@ -154,7 +154,7 @@
 			var messageType = _batchedMessageType ?? (MessageType)reader.ReadByte();
 			var sequenceNumber = _batchedMessageType == null ? reader.ReadUInt32() : _batchedSequenceNumber;
 
-			var message = Message.Create(_allocator, messageType);
+			var message = Message.Allocate(_allocator, messageType);
 			message.AcquireOwnership();
 
 			if (message.UseBatchedTransmission)

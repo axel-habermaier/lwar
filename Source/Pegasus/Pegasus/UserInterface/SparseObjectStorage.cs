@@ -14,6 +14,11 @@
 		where T : class
 	{
 		/// <summary>
+		///     The initial capacity of the object storage.
+		/// </summary>
+		private const int InitialCapacity = 16;
+
+		/// <summary>
 		///     The number of stored objects.
 		/// </summary>
 		private int _count;
@@ -43,7 +48,7 @@
 			// Add the object at the beginning of the list if it is empty
 			if (_objects == null)
 			{
-				_objects = new IndexedObject[2];
+				_objects = new IndexedObject[InitialCapacity];
 				_objects[0] = new IndexedObject { Object = obj, Index = objectIndex };
 				_count = 1;
 				return;

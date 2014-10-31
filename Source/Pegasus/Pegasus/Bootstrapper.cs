@@ -32,20 +32,21 @@
 			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
 			Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 
+			application.Name = appName;
+			FileSystem.ApplicationDirectory = appName;
+
 			// Start printing to the console and initialize the console view model here, as we don't want to miss
 			// any log entries while the application initializes itself...
 			PrintToConsole();
 			var consoleViewModel = new ConsoleViewModel();
 
-			using (new NativeLibrary(appName))
+			using (new NativeLibrary())
 			using (var logFile = new LogFile(appName))
 			{
 				try
 				{
-					Log.Info("Starting {0} ({1} x{2}, {3}).", appName, PlatformInfo.Platform,
-						IntPtr.Size == 4 ? "32" : "64", PlatformInfo.GraphicsApi);
+					Log.Info("Starting {0}...", appName);
 
-					ReflectionHelper.Validate();
 					Commands.Initialize();
 					Cvars.Initialize();
 
@@ -58,7 +59,7 @@
 						CommandLineParser.Parse(arguments);
 						CvarRegistry.ExecuteDeferredUpdates();
 
-						application.Run(appName, consoleViewModel);
+						application.Run(consoleViewModel);
 
 						Commands.Persist(ConfigurationFile.AutoExec);
 					}

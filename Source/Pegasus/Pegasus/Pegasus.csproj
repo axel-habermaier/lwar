@@ -430,7 +430,6 @@
     <Compile Include="UserInterface\Controls\Panel.cs" />
     <Compile Include="UserInterface\Trigger`1.cs" />
     <Compile Include="UserInterface\ISealable.cs" />
-    <Compile Include="Utilities\ReflectionHelper.cs" />
     <Compile Include="UserInterface\ResourceBinding.cs" />
     <Compile Include="UserInterface\ResourceDictionary.cs" />
     <Compile Include="UserInterface\Setter`1.cs" />

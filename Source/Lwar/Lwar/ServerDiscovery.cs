@@ -61,6 +61,14 @@
 				_serverName = _serverName.Substring(0, NetworkProtocol.ServerNameLength);
 
 			_serverPort = serverPort;
+
+			using (var writer = BufferWriter.Create(_buffer, Endianess.Big))
+			{
+				writer.WriteUInt32(NetworkProtocol.AppIdentifier);
+				writer.WriteByte(NetworkProtocol.Revision);
+				writer.WriteUInt16(_serverPort);
+				writer.WriteString(_serverName, NetworkProtocol.ServerNameLength);
+			}
 		}
 
 		/// <summary>
@@ -78,16 +86,7 @@
 
 			try
 			{
-				using (var writer = BufferWriter.Create(_buffer, Endianess.Big))
-				{
-					writer.WriteUInt32(NetworkProtocol.AppIdentifier);
-					writer.WriteByte(NetworkProtocol.Revision);
-					writer.WriteUInt16(_serverPort);
-					writer.WriteString(_serverName, NetworkProtocol.ServerNameLength);
-
-					_socket.Send(_buffer, writer.Count, NetworkProtocol.MulticastGroup);
-				}
-
+				_socket.Send(_buffer, _buffer.Length, NetworkProtocol.MulticastGroup);
 				_secondsSinceLastDiscoveryMessage = 0;
 			}
 			catch (NetworkException e)

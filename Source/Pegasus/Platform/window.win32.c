@@ -466,14 +466,14 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPara
 
 	case WM_XBUTTONDOWN:
 		message->type = PG_MESSAGE_MOUSE_DOWN;
-		message->button = HIWORD(wParam) == XBUTTON1 ? PG_MOUSE_XBUTTON1 : PG_MOUSE_XBUTTON2;
+		message->button = HIWORD(wParam) == XBUTTON1 ? PG_MOUSE_X_BUTTON1 : PG_MOUSE_X_BUTTON2;
 		message->x = LOWORD(lParam);
 		message->y = HIWORD(lParam);
 		break;
 
 	case WM_XBUTTONUP:
 		message->type = PG_MESSAGE_MOUSE_UP;
-		message->button = HIWORD(wParam) == XBUTTON1 ? PG_MOUSE_XBUTTON1 : PG_MOUSE_XBUTTON2;
+		message->button = HIWORD(wParam) == XBUTTON1 ? PG_MOUSE_X_BUTTON1 : PG_MOUSE_X_BUTTON2;
 		message->x = LOWORD(lParam);
 		message->y = HIWORD(lParam);
 		break;
@@ -564,14 +564,14 @@ static LRESULT HandleKeyboardInput(LPARAM lParam)
 		{
 		// Right-hand CONTROL and ALT have their e0 bit set
 		case VK_CONTROL:
-			key = isE0 ? PG_KEY_RIGHTCONTROL : PG_KEY_LEFTCONTROL;
+			key = isE0 ? PG_KEY_RIGHT_CONTROL : PG_KEY_LEFT_CONTROL;
 			break;
 		case VK_MENU:
-			key = isE0 ? PG_KEY_RIGHTALT : PG_KEY_LEFTALT;
+			key = isE0 ? PG_KEY_RIGHT_ALT : PG_KEY_LEFT_ALT;
 			break;
 		// NUMPAD ENTER has its e0 bit set
 		case VK_RETURN:
-			key = isE0 ? PG_KEY_NUMPADENTER : PG_KEY_RETURN;
+			key = isE0 ? PG_KEY_NUMPAD_ENTER : PG_KEY_RETURN;
 			break;
 		// The standard INSERT, DELETE, HOME, END, PRIOR and NEXT keys will always have their e0 bit 
 		// set, but the corresponding keys on the NUMPAD will not
@@ -579,7 +579,7 @@ static LRESULT HandleKeyboardInput(LPARAM lParam)
 			key = !isE0 ? PG_KEY_NUMPAD0 : PG_KEY_INSERT;
 			break;
 		case VK_DELETE:
-			key = !isE0 ? PG_KEY_NUMPADDECIMAL : PG_KEY_DELETE;
+			key = !isE0 ? PG_KEY_NUMPAD_DECIMAL : PG_KEY_DELETE;
 			break;
 		case VK_HOME:
 			key = !isE0 ? PG_KEY_NUMPAD7 : PG_KEY_HOME;
@@ -588,10 +588,10 @@ static LRESULT HandleKeyboardInput(LPARAM lParam)
 			key = !isE0 ? PG_KEY_NUMPAD1 : PG_KEY_END;
 			break;
 		case VK_PRIOR:
-			key = !isE0 ? PG_KEY_NUMPAD9 : PG_KEY_PAGEUP;
+			key = !isE0 ? PG_KEY_NUMPAD9 : PG_KEY_PAGE_UP;
 			break;
 		case VK_NEXT:
-			key = !isE0 ? PG_KEY_NUMPAD3 : PG_KEY_PAGEDOWN;
+			key = !isE0 ? PG_KEY_NUMPAD3 : PG_KEY_PAGE_DOWN;
 			break;
 		// The standard arrow keys will always have their e0 bit set, but the corresponding keys on 
 		// the NUMPAD will not
@@ -647,23 +647,23 @@ static pgKey TranslateKey(UINT virtualKey)
 	switch (virtualKey)
 	{
 	case VK_OEM_102:
-		return PG_KEY_BACKSLASH2;
+		return PG_KEY_BACK_SLASH2;
 	case VK_SCROLL:
 		return PG_KEY_SCROLL;
 	case VK_SNAPSHOT:
 		return PG_KEY_PRINT;
 	case VK_NUMLOCK:
-		return PG_KEY_NUMLOCK;
+		return PG_KEY_NUM_LOCK;
 	case VK_DECIMAL:
-		return PG_KEY_NUMPADDECIMAL;
+		return PG_KEY_NUMPAD_DECIMAL;
 	case VK_LSHIFT:
-		return PG_KEY_LEFTSHIFT;
+		return PG_KEY_LEFT_SHIFT;
 	case VK_RSHIFT:
-		return PG_KEY_RIGHTSHIFT;
+		return PG_KEY_RIGHT_SHIFT;
 	case VK_LWIN:
-		return PG_KEY_LEFTSYSTEM;
+		return PG_KEY_LEFT_SYSTEM;
 	case VK_RWIN:
-		return PG_KEY_RIGHTSYSTEM;
+		return PG_KEY_RIGHT_SYSTEM;
 	case VK_APPS:
 		return PG_KEY_MENU;
 	case VK_OEM_1:
@@ -675,9 +675,9 @@ static pgKey TranslateKey(UINT virtualKey)
 	case VK_OEM_MINUS:
 		return PG_KEY_DASH;
 	case VK_OEM_4:
-		return PG_KEY_LEFTBRACKET;
+		return PG_KEY_LEFT_BRACKET;
 	case VK_OEM_6:
-		return PG_KEY_RIGHTBRACKET;
+		return PG_KEY_RIGHT_BRACKET;
 	case VK_OEM_COMMA:
 		return PG_KEY_COMMA;
 	case VK_OEM_PERIOD:
@@ -685,7 +685,7 @@ static pgKey TranslateKey(UINT virtualKey)
 	case VK_OEM_7:
 		return PG_KEY_QUOTE;
 	case VK_OEM_5:
-		return PG_KEY_BACKSLASH;
+		return PG_KEY_BACK_SLASH;
 	case VK_OEM_3:
 		return PG_KEY_GRAVE;
 	case VK_ESCAPE:
@@ -699,9 +699,9 @@ static pgKey TranslateKey(UINT virtualKey)
 	case VK_TAB:
 		return PG_KEY_TAB;
 	case VK_PRIOR:
-		return PG_KEY_PAGEUP;
+		return PG_KEY_PAGE_UP;
 	case VK_NEXT:
-		return PG_KEY_PAGEDOWN;
+		return PG_KEY_PAGE_DOWN;
 	case VK_END:
 		return PG_KEY_END;
 	case VK_HOME:
@@ -759,7 +759,7 @@ static pgKey TranslateKey(UINT virtualKey)
 	case VK_DOWN:
 		return PG_KEY_DOWN;
 	case VK_CAPITAL:
-		return PG_KEY_CAPSLOCK;
+		return PG_KEY_CAPS_LOCK;
 	case VK_NUMPAD0:
 		return PG_KEY_NUMPAD0;
 	case VK_NUMPAD1:

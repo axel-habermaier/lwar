@@ -48,7 +48,6 @@
 			_window = Application.Current.Window;
 
 			ActiveCamera = GameCamera;
-			Commands.OnToggleDebugCamera += ToggleDebugCamera;
 		}
 
 		/// <summary>
@@ -81,7 +80,7 @@
 		/// <summary>
 		///     Toggles between the game and the debug camera.
 		/// </summary>
-		private void ToggleDebugCamera()
+		public void ToggleDebugCamera()
 		{
 			if (ActiveCamera == _debugCamera)
 			{
@@ -110,8 +109,6 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			Commands.OnToggleDebugCamera -= ToggleDebugCamera;
-
 			if (ActiveCamera == _debugCamera)
 				_window.MouseCaptured = false;
 

@@ -65,12 +65,17 @@
 		private IEnumerable<ConfigurationLine> ParseLines(bool silent)
 		{
 			string input;
-			if (!_file.Read(out input, e =>
+			try
+			{
+				input = _file.Read();
+			}
+			catch (FileSystemException e)
 			{
 				if (!silent)
 					Log.Error("Unable to read '{0}': {1}", _file.FileName, e.Message);
-			}))
+
 				yield break;
+			}
 
 			var lineNumber = 0;
 			foreach (var line in input.Split('\n'))
@@ -170,8 +175,16 @@
 			}
 
 			var fileContent = String.Join("\n", lines.Select(line => line.Content));
-			if (_file.Write(fileContent, e => Log.Error("Failed to write '{0}': {1}", _file.FileName, e.Message)))
+
+			try
+			{
+				_file.Write(fileContent);
 				Log.Info("'{0}' has been written.", _file.FileName);
+			}
+			catch (FileSystemException e)
+			{
+				Log.Error("Failed to write '{0}': {1}", _file.FileName, e.Message);
+			}
 		}
 	}
 }

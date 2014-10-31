@@ -39,13 +39,11 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="appName">The name of the application.</param>
-		internal NativeLibrary(string appName)
+		internal NativeLibrary()
 		{
-			Assert.ArgumentNotNullOrWhitespace(appName);
 			Assert.That(!_isInitialized, "The library has already been initialized.");
 
-			NativeMethods.Initialize(_logCallback, appName);
+			NativeMethods.Initialize(_logCallback);
 			_isInitialized = true;
 		}
 
@@ -122,7 +120,7 @@
 			public delegate void LogCallback(LogType type, string message);
 
 			[DllImport(LibraryName, EntryPoint = "pgInitialize")]
-			public static extern void Initialize(LogCallback callback, [MarshalAs(UnmanagedType.LPStr)] string appName);
+			public static extern void Initialize(LogCallback callback);
 
 			[DllImport(LibraryName, EntryPoint = "pgMemCopy")]
 			public static extern void MemCopy(IntPtr destination, IntPtr source, int byteCount);

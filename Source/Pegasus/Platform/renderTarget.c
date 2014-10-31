@@ -74,7 +74,7 @@ pgVoid pgClearColor(pgRenderTarget* renderTarget, pgColor color)
 	pgClearColorCore(renderTarget, color);
 }
 
-pgVoid pgClearDepthStencil(pgRenderTarget* renderTarget, pgBool clearDepth, pgBool clearStencil, pgFloat32 depth, pgUInt8 stencil)
+pgVoid pgClearDepthStencil(pgRenderTarget* renderTarget, pgBool clearDepth, pgBool clearStencil, pgFloat32 depth, pgByte stencil)
 {
 	PG_ASSERT_NOT_NULL(renderTarget);
 	PG_ASSERT(clearDepth || clearStencil, "Either depth or stencil clearing must be enabled.");

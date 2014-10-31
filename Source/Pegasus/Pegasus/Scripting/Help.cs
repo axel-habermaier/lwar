@@ -53,15 +53,15 @@
 			{
 				builder.Append("\nUse the console to set and view cvars and to invoke commands.\n");
 				builder.Append("Cvars:\n");
-				builder.Append("   Type '<cvar-name>' to view the current value of the cvar.\n");
-				builder.Append("   Type '<cvar-name> <value>' to set a cvar to a new value.\n");
-				builder.Append("   Type 'help <cvar-name>' to view a description of the usage and purpose of the cvar.\n");
-				builder.Append("   Type 'list_cvars' to list all available cvars.\n");
+				builder.Append("   Type '\\lightgrey<cvar-name>\\\0' to view the current value of the cvar.\n");
+				builder.Append("   Type '\\lightgrey<cvar-name> <value>\\\0' to set a cvar to a new value.\n");
+				builder.Append("   Type '\\lightgreyhelp <cvar-name>\\\0' to view a description of the usage and purpose of the cvar.\n");
+				builder.Append("   Type '\\lightgreylist_cvars\\\0' to list all available cvars.\n");
 				builder.Append("Commands:\n");
-				builder.Append("   Type '<command-name> <value1> <value2> ...' to invoke the command with parameters value1, value2, ... " +
+				builder.Append("   Type '\\lightgrey<command-name> <value1> <value2> ...\\\0' to invoke the command with parameters value1, value2, ... " +
 							   "Optional parameters can be omitted at the end of the command invocation.\n");
-				builder.Append("   Type 'help <command-name>' to view a description of the usage and purpose of the command.\n");
-				builder.Append("   Type 'list_commands' to list all available commands.\n");
+				builder.Append("   Type '\\lightgreyhelp <command-name>\\\0' to view a description of the usage and purpose of the command.\n");
+				builder.Append("   Type '\\lightgreylist_commands\\\0' to list all available commands.\n");
 
 				Log.Info(builder.ToString());
 			}

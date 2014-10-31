@@ -18,9 +18,9 @@
 			get { return "Windows (x64)"; }
 		}
 
-		public string DebugMode
+		public string Build
 		{
-			get { return "true"; }
+			get { return "64 bit (debug)"; }
 		}
 
 		public string Renderer

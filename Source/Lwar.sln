@@ -29,8 +29,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentat
 	ProjectSection(SolutionItems) = preProject
 		..\Documentation\ideas.txt = ..\Documentation\ideas.txt
 		..\Documentation\network.txt = ..\Documentation\network.txt
-		..\Documentation\todo.txt = ..\Documentation\todo.txt
 		..\Documentation\physics.txt = ..\Documentation\physics.txt
+		..\Documentation\todo.txt = ..\Documentation\todo.txt
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lwar Assets", "Lwar\Assets\Lwar Assets.csproj", "{1F608B12-403C-4639-947A-B559E8EF121C}"
@@ -249,5 +249,8 @@ Global
 		{8FACAC14-48D0-45B8-BB39-F926835C850E} = {6B72745B-9614-4132-81A3-50E42D7E8F61}
 		{1785E559-5B80-4EB1-956F-415B210A6B45} = {2888CBDE-4111-4F27-BECF-3C67562FBABC}
 		{032C4229-B3A4-417F-8ED3-B2470E371F2D} = {2888CBDE-4111-4F27-BECF-3C67562FBABC}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal

@@ -46,7 +46,7 @@ pgVoid pgClearColorCore(pgRenderTarget* renderTarget, pgColor color)
 		ID3D11DeviceContext_ClearRenderTargetView(PG_CONTEXT(renderTarget), renderTarget->cbPtr[i], d3dColor);
 }
 
-pgVoid pgClearDepthStencilCore(pgRenderTarget* renderTarget, pgBool clearDepth, pgBool clearStencil, pgFloat32 depth, pgUInt8 stencil)
+pgVoid pgClearDepthStencilCore(pgRenderTarget* renderTarget, pgBool clearDepth, pgBool clearStencil, pgFloat32 depth, pgByte stencil)
 {
 	UINT flags = 0;
 

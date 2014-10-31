@@ -40,8 +40,15 @@
 			Log.OnInfo += Enqueue;
 			Log.OnDebugInfo += Enqueue;
 
-			_file = new AppFile(String.Format("{0}.log", appName));
-			_file.Delete(e => Log.Warn("Failed to delete the current contents of the log file: {0}", e.Message));
+			try
+			{
+				_file = new AppFile(String.Format("{0}.log", appName));
+				_file.Delete();
+			}
+			catch (FileSystemException e)
+			{
+				Log.Warn("Failed to delete the current contents of the log file: {0}", e.Message);
+			}
 		}
 
 		/// <summary>
@@ -71,8 +78,15 @@
 			if (!force && _logEntries.Count < BatchSize)
 				return;
 
-			if (_file.Append(GenerateLogEntryString(), e => Log.Warn("Failed to append to log file: {0}", e.Message)))
+			try
+			{
+				_file.Append(GenerateLogEntryString());
 				_logEntries.Clear();
+			}
+			catch (FileSystemException e)
+			{
+				Log.Warn("Failed to append to log file: {0}", e.Message);
+			}
 		}
 
 		/// <summary>

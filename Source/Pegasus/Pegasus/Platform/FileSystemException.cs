@@ -1,8 +1,6 @@
 ﻿namespace Pegasus.Platform
 {
 	using System;
-	using System.Runtime.InteropServices;
-	using System.Security;
 
 	/// <summary>
 	///     Raised when a network error occurred.
@@ -12,31 +10,10 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		public FileSystemException()
-			: base(GetLastError())
+		/// <param name="message">A message providing further details about the exception.</param>
+		public FileSystemException(string message)
+			: base(message)
 		{
-		}
-
-		/// <summary>
-		///     Gets a string describing the last file system error that occurred.
-		/// </summary>
-		private static string GetLastError()
-		{
-			var error = NativeMethods.GetLastFileError();
-			if (error == IntPtr.Zero)
-				return "An unknown file system error occurred.";
-
-			return Marshal.PtrToStringAnsi(error);
-		}
-
-		/// <summary>
-		///     Provides access to the native file system functions.
-		/// </summary>
-		[SuppressUnmanagedCodeSecurity]
-		private static class NativeMethods
-		{
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetLastFileError")]
-			public static extern IntPtr GetLastFileError();
 		}
 	}
 }

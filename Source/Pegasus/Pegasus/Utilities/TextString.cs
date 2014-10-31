@@ -41,6 +41,7 @@
 			new ColorSpecifier(ColorMarker + "yellow", new Color(255, 255, 0, 255)),
 			new ColorSpecifier(ColorMarker + "magenta", new Color(255, 0, 255, 255)),
 			new ColorSpecifier(ColorMarker + "grey", new Color(128, 128, 128, 255)),
+			new ColorSpecifier(ColorMarker + "lightgrey", new Color(170, 170, 170, 255)),
 			new ColorSpecifier(ColorMarker + "cyan", new Color(0, 255, 255, 255))
 		};
 

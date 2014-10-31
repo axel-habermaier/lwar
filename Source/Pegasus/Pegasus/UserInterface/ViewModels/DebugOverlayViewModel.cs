@@ -1,7 +1,6 @@
 ﻿namespace Pegasus.UserInterface.ViewModels
 {
 	using System;
-	using UserInterface;
 	using Platform;
 	using Scripting;
 
@@ -95,15 +94,15 @@
 		/// </summary>
 		public string Platform
 		{
-			get { return String.Format("{0} {1}bit", PlatformInfo.Platform, IntPtr.Size * 8); }
+			get { return String.Format("{0} x{1}", PlatformInfo.Platform, Environment.Is64BitOperatingSystem ? "64" : "32"); }
 		}
 
 		/// <summary>
-		///     Gets a string indicating whether the application was built in debug mode.
+		///     Gets a string indicating whether the build is 64 or 32 bits and whether the it is a debug build.
 		/// </summary>
-		public bool DebugMode
+		public string Build
 		{
-			get { return PlatformInfo.IsDebug; }
+			get { return String.Format("{0}bit, {1}", Environment.Is64BitProcess ? "64" : "32", PlatformInfo.IsDebug ? "debug" : "release"); }
 		}
 
 		/// <summary>

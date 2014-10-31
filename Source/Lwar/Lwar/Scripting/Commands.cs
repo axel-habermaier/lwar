@@ -39,11 +39,6 @@
 		public static Command<string> SayCommand { get; private set; }
 
 		/// <summary>
-		///     Toggles between the game and the debugging camera.
-		/// </summary>
-		public static Command ToggleDebugCameraCommand { get; private set; }
-
-		/// <summary>
 		///     Immediately exits the application.
 		/// </summary>
 		public static Command ExitCommand { get; private set; }
@@ -187,15 +182,6 @@
 		{
 			Assert.ArgumentNotNull((object)message);
 			SayCommand.Invoke(message);
-		}
-
-		/// <summary>
-		///     Toggles between the game and the debugging camera.
-		/// </summary>
-		[DebuggerHidden]
-		public static void ToggleDebugCamera()
-		{
-			ToggleDebugCameraCommand.Invoke();
 		}
 
 		/// <summary>
@@ -438,15 +424,6 @@
 		}
 
 		/// <summary>
-		///     Raised when the 'ToggleDebugCamera' command is invoked.
-		/// </summary>
-		public static event Action OnToggleDebugCamera
-		{
-			add { ToggleDebugCameraCommand.Invoked += value; }
-			remove { ToggleDebugCameraCommand.Invoked -= value; }
-		}
-
-		/// <summary>
 		///     Raised when the 'Exit' command is invoked.
 		/// </summary>
 		public static event Action OnExit
@@ -623,14 +600,12 @@
 			DisconnectCommand = new Command("disconnect", "Disconnects from the current game session.", false);
 			SayCommand = new Command<string>("say", "Sends a chat message to all peers.", false, 
 				new CommandParameter("message", typeof(string), false, default(string), "The message that should be sent.", new NotEmptyAttribute(), new MaximumLengthAttribute(NetworkProtocol.ChatMessageLength, true)));
-			ToggleDebugCameraCommand = new Command("toggle_debug_camera", "Toggles between the game and the debugging camera.", false);
 
 			CommandRegistry.Register(StartServerCommand);
 			CommandRegistry.Register(StopServerCommand);
 			CommandRegistry.Register(ConnectCommand);
 			CommandRegistry.Register(DisconnectCommand);
 			CommandRegistry.Register(SayCommand);
-			CommandRegistry.Register(ToggleDebugCameraCommand);
 		}
 
 		/// <summary>

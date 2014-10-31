@@ -6,7 +6,7 @@ using Pegasus.Scripting.Validators;
 // ReSharper disable CheckNamespace
 
 /// <summary>
-///     Declares the lwar-specific commands.
+///     Declares the Lwar-specific commands.
 /// </summary>
 internal interface ICommands
 {
@@ -45,10 +45,4 @@ internal interface ICommands
 	/// <param name="message">The message that should be sent.</param>
 	[Command]
 	void Say([NotEmpty, MaximumLength(NetworkProtocol.ChatMessageLength, true)] string message);
-
-	/// <summary>
-	///     Toggles between the game and the debugging camera.
-	/// </summary>
-	[Command]
-	void ToggleDebugCamera();
 }

@@ -1,8 +1,6 @@
 ﻿namespace Pegasus.UserInterface
 {
 	using System;
-	using System.Linq;
-	using System.Linq.Expressions;
 	using System.Reflection;
 	using Converters;
 	using Platform.Logging;
@@ -19,6 +17,16 @@
 		///     Indicates whether the first property in the property path is the data context of an UI element.
 		/// </summary>
 		private readonly bool _boundToDataContext;
+
+		/// <summary>
+		///     A cached method info.
+		/// </summary>
+		private readonly MethodInfo _convertToSourceMethodInfo;
+
+		/// <summary>
+		///     A cached method info.
+		/// </summary>
+		private readonly MethodInfo _convertToTargetMethodInfo;
 
 		/// <summary>
 		///     The converter that is used to convert the source value to the dependency property type.
@@ -73,9 +81,9 @@
 		private bool _pathHasNullValue;
 
 		/// <summary>
-		///     The compiled expression that is used to get the value from the source.
+		///     The function that is used to get the value from the source.
 		/// </summary>
-		private Func<object, IValueConverter, T> _sourceFunc;
+		private Func<T> _sourceFunc;
 
 		/// <summary>
 		///     Indicates whether the value of the source property is null.
@@ -83,9 +91,9 @@
 		private bool _sourceValueIsNull;
 
 		/// <summary>
-		///     The compiled expression that is used to set the value of the source.
+		///     The function that is used to set the value of the source.
 		/// </summary>
-		private Action<object, T, IValueConverter> _targetFunc;
+		private Action<T> _targetFunc;
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -136,6 +144,12 @@
 			Assert.ArgumentInRange(bindingMode);
 			Assert.ArgumentNotNullOrWhitespace(property1);
 			Assert.ArgumentSatisfies(property3 == null || property2 != null, "Property 2 must be non-null when property 3 is non-null.");
+
+			if (converter != null)
+			{
+				_convertToSourceMethodInfo = GetType().GetMethod("ConvertToSource", BindingFlags.Instance | BindingFlags.NonPublic);
+				_convertToTargetMethodInfo = GetType().GetMethod("ConvertToTarget", BindingFlags.Instance | BindingFlags.NonPublic);
+			}
 
 			_sourceObject = sourceObject;
 			_converter = converter;
@@ -208,6 +222,63 @@
 		}
 
 		/// <summary>
+		///     Gets the declared type of the last property in the property path.
+		/// </summary>
+		private Type DeclaredSourcePropertyType
+		{
+			get
+			{
+				if (_memberAccessCount == 1)
+					return _memberAccess1.PropertyType;
+
+				if (_memberAccessCount == 2)
+					return _memberAccess2.PropertyType;
+
+				if (_memberAccessCount == 3)
+					return _memberAccess3.PropertyType;
+
+				Assert.NotReached("Unexpected number of member accesses.");
+				return null;
+			}
+		}
+
+		/// <summary>
+		///     Gets a delegate that can be used to retrieve the source value.
+		/// </summary>
+		private Func<TSource> GetSourceValueGetterDelegate<TSource>()
+		{
+			if (_memberAccessCount == 1)
+				return _memberAccess1.GetGetterDelegate<TSource>();
+
+			if (_memberAccessCount == 2)
+				return _memberAccess2.GetGetterDelegate<TSource>();
+
+			if (_memberAccessCount == 3)
+				return _memberAccess3.GetGetterDelegate<TSource>();
+
+			Assert.NotReached("Unexpected number of member accesses.");
+			return null;
+		}
+
+		/// <summary>
+		///     Gets a delegate that can be used to set the source value.
+		/// </summary>
+		private Action<TSource> GetSourceValueSetterDelegate<TSource>()
+		{
+			if (_memberAccessCount == 1)
+				return _memberAccess1.GetSetterDelegate<TSource>();
+
+			if (_memberAccessCount == 2)
+				return _memberAccess2.GetSetterDelegate<TSource>();
+
+			if (_memberAccessCount == 3)
+				return _memberAccess3.GetSetterDelegate<TSource>();
+
+			Assert.NotReached("Unexpected number of member accesses.");
+			return null;
+		}
+
+		/// <summary>
 		///     Invoked when the binding has been activated.
 		/// </summary>
 		protected override void Activate()
@@ -250,39 +321,47 @@
 		}
 
 		/// <summary>
-		///     Compiles the function that is used to get the source value.
+		///     Creates the function that is used to get the source value.
 		/// </summary>
-		private void CompileSourceFunction()
+		private void CreateSourceFunction()
 		{
-			var expression = Expressions.GetReadExpression(this, _memberAccessCount);
-
-			if (_converter != null)
-				expression = Expressions.InvokeConvertToTargetMethod(this, expression);
-
-			if (typeof(T) == typeof(string) && ActualSourcePropertyType != typeof(string))
-				expression = Expression.Call(expression, ReflectionHelper.ToStringMethodInfo);
-			else if (!typeof(T).IsValueType && ActualSourcePropertyType.IsValueType)
-				expression = Expression.Convert(expression, typeof(T));
-
-			_sourceFunc = Expression.Lambda<Func<object, IValueConverter, T>>(
-				expression, Expressions.SourceObjectParameter, Expressions.ConverterParameter).Compile();
+			if (_converter == null)
+				_sourceFunc = GetSourceValueGetterDelegate<T>();
+			else
+				_sourceFunc = (Func<T>)_convertToTargetMethodInfo.MakeGenericMethod(ActualSourcePropertyType).Invoke(this, null);
 		}
 
 		/// <summary>
-		///     Compiles the function that is used to set the source value.
+		///     Creates the function that is used to set the source value.
 		/// </summary>
-		private void CompileTargetFunction()
+		private void CreateTargetFunction()
 		{
-			Expression value = Expressions.ValueParameter;
-			if (_converter != null)
-				value = Expressions.InvokeConvertToSourceMethod(this);
+			if (_converter == null)
+				_targetFunc = GetSourceValueSetterDelegate<T>();
+			else
+				_targetFunc = (Action<T>)_convertToSourceMethodInfo.MakeGenericMethod(DeclaredSourcePropertyType).Invoke(this, null);
+		}
 
-			var expression = Expressions.GetWriteExpression(this, value);
-			if (expression == null)
-				return;
+		/// <summary>
+		///     Converts the source value to the target type.
+		/// </summary>
+		/// <typeparam name="TActual">The value type.</typeparam>
+		[UsedImplicitly]
+		private Func<T> ConvertToTarget<TActual>()
+		{
+			var getter = GetSourceValueGetterDelegate<TActual>();
+			return () => ((IValueConverter<TActual, T>)_converter).ConvertToTarget(getter());
+		}
 
-			_targetFunc = Expression.Lambda<Action<object, T, IValueConverter>>(
-				expression, Expressions.SourceObjectParameter, Expressions.ValueParameter, Expressions.ConverterParameter).Compile();
+		/// <summary>
+		///     Converts the target value to the source type.
+		/// </summary>
+		/// <typeparam name="TActual">The value type.</typeparam>
+		[UsedImplicitly]
+		private Action<T> ConvertToSource<TActual>()
+		{
+			var setter = GetSourceValueSetterDelegate<TActual>();
+			return value => setter(((IValueConverter<TActual, T>)_converter).ConvertToSource(value));
 		}
 
 		/// <summary>
@@ -336,6 +415,8 @@
 			{
 				var value = memberAccess.Value;
 				_pathHasNullValue = value == null;
+				_sourceFunc = null;
+				_targetFunc = null;
 
 				// If the value is not null and the type of a value somewhere in the middle of the path has changed,
 				// we have to regenerate the source function
@@ -392,10 +473,10 @@
 				return;
 
 			if (_sourceFunc == null && !_pathHasNullValue && !_sourceValueIsNull)
-				CompileSourceFunction();
+				CreateSourceFunction();
 
 			if (!_pathHasNullValue && !_sourceValueIsNull)
-				_targetObject.SetBoundValue(_targetProperty, _sourceFunc(SourceObject, _converter));
+				_targetObject.SetBoundValue(_targetProperty, _sourceFunc());
 			else
 				_targetObject.SetBoundValue(_targetProperty, _hasFallbackValue ? _fallbackValue : _targetProperty.DefaultValue);
 		}
@@ -409,106 +490,36 @@
 				return;
 
 			if (_targetFunc == null)
-				CompileTargetFunction();
+				CreateTargetFunction();
 
 			// The target function might still be null if a property could not be found on the path
 			if (_targetFunc != null)
-				_targetFunc(SourceObject, _targetObject.GetValue(_targetProperty), _converter);
+				_targetFunc(_targetObject.GetValue(_targetProperty));
 		}
 
 		/// <summary>
-		///     Helper for the compilation of the source and target functions.
+		///     Gets the instance of the dependency property with the given name or null if it could not be found.
 		/// </summary>
-		private static class Expressions
+		/// <param name="type">The type of the dependency object that declares the dependency property.</param>
+		/// <param name="propertyName">The name of the dependency property without the 'Property' suffix.</param>
+		private static DependencyProperty GetDependencyProperty(Type type, string propertyName)
 		{
-			/// <summary>
-			///     Represents the source object parameter of the functions.
-			/// </summary>
-			public static readonly ParameterExpression SourceObjectParameter = Expression.Parameter(typeof(object));
+			Assert.ArgumentNotNull(type);
+			Assert.ArgumentNotNullOrWhitespace(propertyName);
 
-			/// <summary>
-			///     Represents the converter object parameter of the functions.
-			/// </summary>
-			public static readonly ParameterExpression ConverterParameter = Expression.Parameter(typeof(IValueConverter));
+			var fieldName = String.Format("{0}Property", propertyName);
+			var propertyField = type.GetRuntimeField(fieldName);
+			if (propertyField != null && (!propertyField.IsStatic || !propertyField.IsPublic))
+				propertyField = null;
 
-			/// <summary>
-			///     Represents the value parameter of the functions.
-			/// </summary>
-			public static readonly ParameterExpression ValueParameter = Expression.Parameter(typeof(T));
+			// For some reason, inherited static fields are not returned by GetRuntimeFields(), so let's check the base
+			// types explicitly if we didn't find a matching dependency property field on the current type
+			var baseType = type.GetTypeInfo().BaseType;
+			if (propertyField == null && baseType != typeof(object))
+				return GetDependencyProperty(baseType, propertyName);
 
-			/// <summary>
-			///     Invokes the converter method with the given name.
-			/// </summary>
-			/// <param name="binding">The binding the expression is created for.</param>
-			/// <param name="methodName">The name of the converter method that should be invoked.</param>
-			/// <param name="methodParameter">The parameter for the converter method.</param>
-			private static Expression InvokeConverterMethod(DataBinding<T> binding, string methodName, Expression methodParameter)
-			{
-				var converterType = binding._converter.GetType();
-				var castConverter = Expression.Convert(ConverterParameter, converterType);
-				return Expression.Call(castConverter, converterType.GetMethod(methodName), methodParameter);
-			}
-
-			/// <summary>
-			///     Invokes the to source conversion function.
-			/// </summary>
-			/// <param name="binding">The binding the expression is created for.</param>
-			public static Expression InvokeConvertToSourceMethod(DataBinding<T> binding)
-			{
-				return InvokeConverterMethod(binding, "ConvertToSource", ValueParameter);
-			}
-
-			/// <summary>
-			///     Invokes the to target conversion function.
-			/// </summary>
-			/// <param name="binding">The binding the expression is created for.</param>
-			/// <param name="methodParameter">The parameter for the converter method.</param>
-			public static Expression InvokeConvertToTargetMethod(DataBinding<T> binding, Expression methodParameter)
-			{
-				return InvokeConverterMethod(binding, "ConvertToTarget", methodParameter);
-			}
-
-			/// <summary>
-			///     Generates the expression that reads the members of the binding's property path.
-			/// </summary>
-			/// <param name="binding">The binding the expression is created for.</param>
-			/// <param name="readPropertyCount">The number of properties that should be read.</param>
-			public static Expression GetReadExpression(DataBinding<T> binding, int readPropertyCount)
-			{
-				var expression = Expression.Convert(SourceObjectParameter, binding.SourceObject.GetType()) as Expression;
-
-				if (readPropertyCount > 0)
-					expression = binding._memberAccess1.GetReadExpression(expression);
-
-				if (readPropertyCount > 1)
-					expression = binding._memberAccess2.GetReadExpression(expression);
-
-				if (readPropertyCount > 2)
-					expression = binding._memberAccess3.GetReadExpression(expression);
-
-				return expression;
-			}
-
-			/// <summary>
-			///     Generates the expression that writes the last member of the binding's property path.
-			/// </summary>
-			/// <param name="binding">The binding the expression is created for.</param>
-			/// <param name="value">The expression generating the value that should be written.</param>
-			public static Expression GetWriteExpression(DataBinding<T> binding, Expression value)
-			{
-				var expression = GetReadExpression(binding, binding._memberAccessCount - 1);
-
-				if (binding._memberAccessCount == 1)
-					return binding._memberAccess1.GetWriteExpression(expression, value);
-
-				if (binding._memberAccessCount == 2)
-					return binding._memberAccess2.GetWriteExpression(expression, value);
-
-				if (binding._memberAccessCount == 3)
-					return binding._memberAccess3.GetWriteExpression(expression, value);
-
-				throw new InvalidOperationException("Unexpected member count.");
-			}
+			Assert.NotNull(propertyField, "Unable to find dependency property '{0}' on '{1}'.", propertyName, type.FullName);
+			return (DependencyProperty)propertyField.GetValue(null);
 		}
 
 		/// <summary>
@@ -516,6 +527,30 @@
 		/// </summary>
 		private struct MemberAccess
 		{
+			/// <summary>
+			///     A cached method info instance.
+			/// </summary>
+			private static readonly MethodInfo ImplicitStringConversionMethodInfo =
+				typeof(MemberAccess).GetMethod("ImplicitStringConversion", BindingFlags.NonPublic | BindingFlags.Instance);
+
+			/// <summary>
+			///     A cached method info instance.
+			/// </summary>
+			private static readonly MethodInfo DownCastGetterMethodInfo =
+				typeof(MemberAccess).GetMethod("DownCastGetter", BindingFlags.NonPublic | BindingFlags.Instance);
+
+			/// <summary>
+			///     A cached method info instance.
+			/// </summary>
+			private static readonly MethodInfo UpCastGetterMethodInfo =
+				typeof(MemberAccess).GetMethod("UpCastGetter", BindingFlags.NonPublic | BindingFlags.Instance);
+
+			/// <summary>
+			///     A cached method info instance.
+			/// </summary>
+			private static readonly MethodInfo UpCastSetterMethodInfo =
+				typeof(MemberAccess).GetMethod("UpCastSetter", BindingFlags.NonPublic | BindingFlags.Instance);
+
 			/// <summary>
 			///     The name of the accessed property.
 			/// </summary>
@@ -653,43 +688,109 @@
 			}
 
 			/// <summary>
-			///     Gets the read expression for the accessed property or dependency property.
+			///     Gets a delegate that can be used to get the property's value.
 			/// </summary>
-			/// <param name="expression">The expression to the left-hand side of the access expression.</param>
-			public Expression GetReadExpression(Expression expression)
+			public Func<TProperty> GetGetterDelegate<TProperty>()
 			{
-				Assert.ArgumentNotNull(expression);
 				Assert.That(_isRead, "Property cannot be read.");
 				Assert.That(_propertyInfo != null, "Unknown property.");
+				Assert.NotNull(_sourceObject);
 
-				var value = Value;
-				var isNull = !PropertyType.IsValueType && value == null;
-				var targetType = isNull ? PropertyType : value.GetType();
+				if (typeof(TProperty) == PropertyType)
+					return GetGetter<TProperty>();
 
-				return Expression.Convert(Expression.Property(expression, _propertyInfo), targetType);
+				if (PropertyType != typeof(string) && typeof(TProperty) == typeof(string))
+					return (Func<TProperty>)ImplicitStringConversionMethodInfo.MakeGenericMethod(PropertyType).Invoke(this, null);
+
+				if (PropertyType.IsAssignableFrom(typeof(TProperty)))
+					return (Func<TProperty>)DownCastGetterMethodInfo.MakeGenericMethod(PropertyType, typeof(TProperty)).Invoke(this, null);
+
+				return (Func<TProperty>)UpCastGetterMethodInfo.MakeGenericMethod(PropertyType, typeof(TProperty)).Invoke(this, null);
 			}
 
 			/// <summary>
-			///     Gets the write expression for the accessed property or dependency property.
+			///     Gets a delegate that can be used to set the property's value.
 			/// </summary>
-			/// <param name="objectExpression">The expression representing the object on which the property should be written.</param>
-			/// <param name="valueExpression">The expression representing the value that should be written.</param>
-			public Expression GetWriteExpression(Expression objectExpression, Expression valueExpression)
+			public Action<TProperty> GetSetterDelegate<TProperty>()
 			{
-				Assert.ArgumentNotNull(objectExpression);
-				Assert.ArgumentNotNull(valueExpression);
 				Assert.That(_isWritten, "Property cannot be written.");
 
 				if (_propertyInfo == null)
 					return null;
 
-				Expression castExpression;
-				if (_propertyInfo.PropertyType != valueExpression.Type)
-					castExpression = Expression.Convert(valueExpression, _propertyInfo.PropertyType);
-				else
-					castExpression = valueExpression;
+				if (typeof(TProperty) != PropertyType && !PropertyType.IsAssignableFrom(typeof(TProperty)))
+					return (Action<TProperty>)UpCastSetterMethodInfo.MakeGenericMethod(PropertyType, typeof(TProperty)).Invoke(this, null);
 
-				return Expression.Assign(Expression.Property(objectExpression, _propertyInfo), castExpression);
+				return GetSetter<TProperty>();
+			}
+
+			/// <summary>
+			///     Gets a delegate for the getter of the bound property.
+			/// </summary>
+			/// <typeparam name="TProperty">The declared type of the property.</typeparam>
+			private Func<TProperty> GetGetter<TProperty>()
+			{
+				var getter = _sourceObject.GetType().GetProperty(_propertyName, BindingFlags.Public | BindingFlags.Instance).GetGetMethod();
+				Assert.NotNull(getter, "Cannot bind to the property, as it has no public getter.");
+
+				return (Func<TProperty>)Delegate.CreateDelegate(typeof(Func<TProperty>), _sourceObject, getter);
+			}
+
+			/// <summary>
+			///     Gets a delegate for the setter of the bound property.
+			/// </summary>
+			/// <typeparam name="TProperty">The declared type of the property.</typeparam>
+			private Action<TProperty> GetSetter<TProperty>()
+			{
+				var setter = _sourceObject.GetType().GetProperty(_propertyName, BindingFlags.Public | BindingFlags.Instance).GetSetMethod();
+				return (Action<TProperty>)Delegate.CreateDelegate(typeof(Action<TProperty>), _sourceObject, setter);
+			}
+
+			/// <summary>
+			///     Converts the value obtained from the property to a string.
+			/// </summary>
+			/// <typeparam name="TProperty">The declared type of the property.</typeparam>
+			[UsedImplicitly]
+			private Func<string> ImplicitStringConversion<TProperty>()
+			{
+				var getter = GetGetter<TProperty>();
+				return () => getter().ToString();
+			}
+
+			/// <summary>
+			///     Down casts the value obtained from the property to the given type.
+			/// </summary>
+			/// <typeparam name="TDeclared">The declared type of the property.</typeparam>
+			/// <typeparam name="TActual">The actual type the property value should be cast to.</typeparam>
+			[UsedImplicitly]
+			private Func<TActual> DownCastGetter<TDeclared, TActual>() where TActual : TDeclared
+			{
+				var getter = GetGetter<TDeclared>();
+				return () => (TActual)getter();
+			}
+
+			/// <summary>
+			///     Up casts the value obtained from the property to the given type.
+			/// </summary>
+			/// <typeparam name="TDeclared">The declared type of the property.</typeparam>
+			/// <typeparam name="TActual">The actual type the property value should be cast to.</typeparam>
+			[UsedImplicitly]
+			private Func<TActual> UpCastGetter<TDeclared, TActual>() where TDeclared : TActual
+			{
+				var getter = GetGetter<TDeclared>();
+				return () => (TActual)getter();
+			}
+
+			/// <summary>
+			///     Up casts the value obtained from the property to the given type.
+			/// </summary>
+			/// <typeparam name="TDeclared">The declared type of the property.</typeparam>
+			/// <typeparam name="TActual">The actual type the property value should be cast to.</typeparam>
+			[UsedImplicitly]
+			private Action<TActual> UpCastSetter<TDeclared, TActual>() where TDeclared : TActual
+			{
+				var setter = GetSetter<TDeclared>();
+				return value => setter((TDeclared)value);
 			}
 
 			/// <summary>
@@ -714,7 +815,7 @@
 						return;
 
 					_changeHandler = (PropertyChangedHandler)PropertyChanged;
-					ReflectionHelper.AttachPropertyChangedEventHandler(notifyPropertyChanged, (PropertyChangedHandler)_changeHandler);
+					notifyPropertyChanged.PropertyChanged += (PropertyChangedHandler)_changeHandler;
 				}
 			}
 
@@ -736,10 +837,8 @@
 				else if (_propertyInfo != null)
 				{
 					var notifyPropertyChanged = _sourceObject as INotifyPropertyChanged;
-					if (notifyPropertyChanged == null)
-						return;
-
-					ReflectionHelper.DetachPropertyChangedEventHandler(notifyPropertyChanged, (PropertyChangedHandler)_changeHandler);
+					if (notifyPropertyChanged != null)
+						notifyPropertyChanged.PropertyChanged -= (PropertyChangedHandler)_changeHandler;
 				}
 			}
 
@@ -752,13 +851,10 @@
 					return;
 
 				if (_sourceObject is DependencyObject)
-					_dependencyProperty = ReflectionHelper.GetDependencyProperty(_sourceObject.GetType(), _propertyName);
+					_dependencyProperty = GetDependencyProperty(_sourceObject.GetType(), _propertyName);
 
 				var name = _propertyName;
-				_propertyInfo = _sourceObject
-					.GetType()
-					.GetRuntimeProperties()
-					.SingleOrDefault(p => p.Name == name);
+				_propertyInfo = _sourceObject.GetType().GetProperty(name, BindingFlags.Instance | BindingFlags.Public);
 
 				Log.DebugIf(_propertyInfo == null, "Unable to find public, non-static property '{0}' on '{1}'.",
 					_propertyName, _sourceObject.GetType().FullName);

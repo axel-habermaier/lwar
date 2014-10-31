@@ -1,10 +1,8 @@
 ﻿namespace Pegasus.Platform
 {
 	using System;
+	using System.IO;
 	using System.Linq;
-	using System.Runtime.InteropServices;
-	using System.Security;
-	using System.Text;
 	using Utilities;
 
 	/// <summary>
@@ -13,31 +11,23 @@
 	internal static class FileSystem
 	{
 		/// <summary>
-		///     The maximum supported file size in bytes.
-		/// </summary>
-		private const int MaxFileSize = 6 * 1024 * 1024;
-
-		/// <summary>
-		///     The buffer used for all file system operations.
-		/// </summary>
-		private static readonly byte[] Buffer = new byte[MaxFileSize];
-
-		/// <summary>
 		///     Gets the path to the user directory.
 		/// </summary>
-		public static string UserDirectory
-		{
-			get
-			{
-				var error = NativeMethods.GetUserDirectory();
-				if (error == IntPtr.Zero)
-					return "<unknown>";
+		public static string UserDirectory { get; private set; }
 
-#if Windows
-				return Marshal.PtrToStringUni(error);
-#else
-				return Marshal.PtrToStringAnsi(error);
-#endif
+		/// <summary>
+		///     Sets the name of the application's directory.
+		/// </summary>
+		public static string ApplicationDirectory
+		{
+			set
+			{
+				Assert.ArgumentNotNull(value);
+				Assert.That(IsValidFileName(value), "Invalid directory name.");
+				Assert.That(Path.GetFileName(value) == value, "Expected a directory name without a path.");
+
+				UserDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), value);
+				Directory.CreateDirectory(UserDirectory);
 			}
 		}
 
@@ -57,22 +47,16 @@
 
 		/// <summary>
 		///     Reads all bytes of the file at the given path. This method can only read files that were shipped with the application.
-		///     The contents of the returned array segment are invalidated by the next file system operation.
 		/// </summary>
 		/// <param name="path">The path of the file that should be read.</param>
-		public static unsafe ArraySegment<byte> ReadAllBytes(string path)
+		public static byte[] ReadAllBytes(string path)
 		{
 			Assert.ArgumentNotNullOrWhitespace(path);
 			Assert.That(IsValidFileName(path), "Invalid file name.");
+			Assert.That(Path.GetFullPath(path).StartsWith(Environment.CurrentDirectory),
+				"The does not lie in a location accessible by the application.");
 
-			fixed (byte* buffer = Buffer)
-			{
-				var length = (uint)MaxFileSize;
-				if (!NativeMethods.ReadAppFile(path, buffer, ref length))
-					throw new FileSystemException();
-
-				return new ArraySegment<byte>(Buffer, 0, (int)length);
-			}
+			return File.ReadAllBytes(path);
 		}
 
 		/// <summary>
@@ -80,19 +64,9 @@
 		///     the application's user directory.
 		/// </summary>
 		/// <param name="fileName">The name of the file in the application's user directory that should be read.</param>
-		public static unsafe string ReadAllText(string fileName)
+		public static string ReadAllText(string fileName)
 		{
-			Assert.ArgumentNotNullOrWhitespace(fileName);
-			Assert.That(IsValidFileName(fileName), "Invalid file name.");
-
-			fixed (byte* buffer = Buffer)
-			{
-				var length = (uint)MaxFileSize;
-				if (!NativeMethods.ReadUserFile(fileName, buffer, ref length))
-					throw new FileSystemException();
-
-				return Encoding.UTF8.GetString(Buffer, 0, (int)length);
-			}
+			return File.ReadAllText(GetUserFilePath(fileName));
 		}
 
 		/// <summary>
@@ -101,18 +75,10 @@
 		/// </summary>
 		/// <param name="fileName">The name of the file in the application's user directory that should be written.</param>
 		/// <param name="content">The content that should be written to the file.</param>
-		public static unsafe void WriteAllText(string fileName, string content)
+		public static void WriteAllText(string fileName, string content)
 		{
-			Assert.ArgumentNotNullOrWhitespace(fileName);
 			Assert.ArgumentNotNull(content);
-			Assert.That(IsValidFileName(fileName), "Invalid file name.");
-
-			var data = Encoding.UTF8.GetBytes(content);
-			fixed (byte* dataPtr = data)
-			{
-				if (!NativeMethods.WriteUserFile(fileName, dataPtr, (uint)data.Length))
-					throw new FileSystemException();
-			}
+			File.WriteAllText(GetUserFilePath(fileName), content);
 		}
 
 		/// <summary>
@@ -121,18 +87,10 @@
 		/// </summary>
 		/// <param name="fileName">The name of the file in the application's user directory that should be written.</param>
 		/// <param name="content">The content that should be written to the file.</param>
-		public static unsafe void AppendText(string fileName, string content)
+		public static void AppendText(string fileName, string content)
 		{
-			Assert.ArgumentNotNullOrWhitespace(fileName);
 			Assert.ArgumentNotNull(content);
-			Assert.That(IsValidFileName(fileName), "Invalid file name.");
-
-			var data = Encoding.UTF8.GetBytes(content);
-			fixed (byte* dataPtr = data)
-			{
-				if (!NativeMethods.AppendUserFile(fileName, dataPtr, (uint)data.Length))
-					throw new FileSystemException();
-			}
+			File.AppendAllText(GetUserFilePath(fileName), content);
 		}
 
 		/// <summary>
@@ -142,11 +100,7 @@
 		/// <param name="fileName">The name of the file that should be deleted.</param>
 		public static void Delete(string fileName)
 		{
-			Assert.ArgumentNotNullOrWhitespace(fileName);
-			Assert.That(IsValidFileName(fileName), "Invalid file name.");
-
-			if (!NativeMethods.DeleteUserFile(fileName))
-				throw new FileSystemException();
+			File.Delete(GetUserFilePath(fileName));
 		}
 
 		/// <summary>
@@ -156,38 +110,20 @@
 		/// <param name="fileName">The name of the file that should be checked for.</param>
 		public static bool Exists(string fileName)
 		{
-			Assert.ArgumentNotNull(fileName);
-			Assert.That(IsValidFileName(fileName), "Invalid file name.");
-
-			return NativeMethods.UserFileExists(fileName);
+			return File.Exists(GetUserFilePath(fileName));
 		}
 
 		/// <summary>
-		///     Provides access to the native file system functions.
+		///     Gets the full path to the file in the application's user directory.
 		/// </summary>
-		[SuppressUnmanagedCodeSecurity]
-		private static class NativeMethods
+		/// <param name="fileName">The name of the file the path should be returned for.</param>
+		private static string GetUserFilePath(string fileName)
 		{
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgReadAppFile")]
-			public static extern unsafe bool ReadAppFile([MarshalAs(UnmanagedType.LPStr)] string path, byte* buffer, ref uint sizeInBytes);
+			Assert.ArgumentNotNull(fileName);
+			Assert.That(IsValidFileName(fileName), "Invalid file name.");
+			Assert.That(Path.GetFileName(fileName) == fileName, "Expected a file name without a path.");
 
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgReadUserFile")]
-			public static extern unsafe bool ReadUserFile([MarshalAs(UnmanagedType.LPStr)] string fileName, byte* buffer, ref uint sizeInBytes);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgWriteUserFile")]
-			public static extern unsafe bool WriteUserFile([MarshalAs(UnmanagedType.LPStr)] string fileName, byte* content, uint sizeInBytes);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgAppendUserFile")]
-			public static extern unsafe bool AppendUserFile([MarshalAs(UnmanagedType.LPStr)] string fileName, byte* content, uint sizeInBytes);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDeleteUserFile")]
-			public static extern bool DeleteUserFile([MarshalAs(UnmanagedType.LPStr)] string fileName);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgUserFileExists")]
-			public static extern bool UserFileExists([MarshalAs(UnmanagedType.LPStr)] string fileName);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetUserDirectory")]
-			public static extern IntPtr GetUserDirectory();
+			return Path.Combine(UserDirectory, fileName);
 		}
 	}
 }

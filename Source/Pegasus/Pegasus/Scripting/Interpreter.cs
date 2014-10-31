@@ -188,9 +188,8 @@
 			using (StringBuilderPool.Allocate(out builder))
 			{
 				builder.Append("\n");
-
 				foreach (var element in elements)
-					builder.AppendFormat("'\\yellow{0}\\\0'\n   {1}\n", name(element), description(element));
+					builder.AppendFormat("'\\lightgrey{0}\\\0': {1}\n", name(element), description(element));
 
 				Log.Info("{0}", builder);
 			}

@@ -7,6 +7,13 @@
 // Graphics types
 //====================================================================================================================
 
+#define PG_INPUT_BINDINGS_COUNT			 8
+#define PG_TEXTURE_SLOT_COUNT			16
+#define PG_SAMPLER_SLOT_COUNT			16
+#define PG_CONSTANT_BUFFER_SLOT_COUNT	14
+#define PG_MAX_MIPMAPS					16
+#define PG_MAX_COLOR_ATTACHMENTS		 4
+
 typedef struct pgWindow					pgWindow;
 typedef struct pgGraphicsDevice			pgGraphicsDevice;
 typedef struct pgSwapChain				pgSwapChain;
@@ -24,11 +31,11 @@ typedef struct pgQuery					pgQuery;
 
 typedef enum
 {
-	PG_BLEND_OP_ADD = 1001,
-	PG_BLEND_OP_SUBTRACT = 1002,
-	PG_BLEND_OP_REVERSE_SUBTRACT = 1003,
-	PG_BLEND_OP_MINIMUM = 1004,
-	PG_BLEND_OP_MAXIMUM = 1005
+    PG_BLEND_OP_ADD = 1001,
+    PG_BLEND_OP_SUBTRACT = 1002,
+    PG_BLEND_OP_REVERSE_SUBTRACT = 1003,
+    PG_BLEND_OP_MINIMUM = 1004,
+    PG_BLEND_OP_MAXIMUM = 1005
 } pgBlendOperation;
 
 typedef enum
@@ -55,8 +62,7 @@ typedef enum
 	PG_COLOR_WRITE_ENABLE_GREEN = 2,
 	PG_COLOR_WRITE_ENABLE_BLUE = 4,
 	PG_COLOR_WRITE_ENABLE_ALPHA = 8,
-	PG_COLOR_WRITE_ENABLE_ALL = PG_COLOR_WRITE_ENABLE_RED | PG_COLOR_WRITE_ENABLE_GREEN |
-	PG_COLOR_WRITE_ENABLE_BLUE | PG_COLOR_WRITE_ENABLE_ALPHA
+	PG_COLOR_WRITE_ENABLE_ALL = PG_COLOR_WRITE_ENABLE_RED | PG_COLOR_WRITE_ENABLE_GREEN | PG_COLOR_WRITE_ENABLE_BLUE | PG_COLOR_WRITE_ENABLE_ALPHA
 } pgColorWriteChannels;
 
 typedef enum
@@ -228,10 +234,10 @@ typedef enum
 
 typedef struct
 {
-	pgUInt8	 red;
-	pgUInt8	 green;
-	pgUInt8	 blue;
-	pgUInt8	 alpha;
+	pgByte red;
+	pgByte green;
+	pgByte blue;
+	pgByte alpha;
 } pgColor;
 
 typedef struct
@@ -278,8 +284,8 @@ typedef struct
 	pgBool			depthEnabled;
 	pgBool			depthWriteEnabled;
 	pgBool			stencilEnabled;
-	pgUInt8			stencilReadMask;
-	pgUInt8			stencilWriteMask;
+	pgByte			stencilReadMask;
+	pgByte			stencilWriteMask;
 } pgDepthStencilDesc;
 
 typedef struct
@@ -330,7 +336,7 @@ typedef struct
 	pgUInt32 depth;
 	pgUInt32 size;
 	pgUInt32 stride;
-	pgUInt8* data;
+	pgByte* data;
 } pgSurface;
 
 typedef struct
@@ -358,7 +364,7 @@ PG_API_EXPORT pgVoid pgDrawIndexed(pgGraphicsDevice* device, pgInt32 indexCount,
 PG_API_EXPORT pgVoid pgDrawInstanced(pgGraphicsDevice* device, pgInt32 primitiveCountPerInstance,
 									 pgInt32 instanceCount, pgInt32 vertexOffset, pgInt32 instanceOffset);
 
-PG_API_EXPORT pgVoid pgDrawIndexedInstanced(pgGraphicsDevice* device, pgInt32 indexCountPerInstance, pgInt32 instanceCount, 
+PG_API_EXPORT pgVoid pgDrawIndexedInstanced(pgGraphicsDevice* device, pgInt32 indexCountPerInstance, pgInt32 instanceCount,
 											pgInt32 indexOffset, pgInt32 vertexOffset, pgInt32 instanceOffset);
 
 //====================================================================================================================
@@ -429,7 +435,7 @@ PG_API_EXPORT pgVoid pgDestroyRenderTarget(pgRenderTarget* renderTarget);
 
 PG_API_EXPORT pgVoid pgGetRenderTargetSize(pgRenderTarget* renderTarget, pgInt32* width, pgInt32* height);
 PG_API_EXPORT pgVoid pgClearColor(pgRenderTarget* renderTarget, pgColor color);
-PG_API_EXPORT pgVoid pgClearDepthStencil(pgRenderTarget* renderTarget, pgBool clearDepth, pgBool clearStencil, pgFloat32 depth, pgUInt8 stencil);
+PG_API_EXPORT pgVoid pgClearDepthStencil(pgRenderTarget* renderTarget, pgBool clearDepth, pgBool clearStencil, pgFloat32 depth, pgByte stencil);
 PG_API_EXPORT pgVoid pgBindRenderTarget(pgRenderTarget* renderTarget);
 
 //====================================================================================================================

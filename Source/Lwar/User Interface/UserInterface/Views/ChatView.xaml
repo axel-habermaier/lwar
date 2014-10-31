@@ -34,7 +34,7 @@
 				<TextBox Width="600"
 						 input:InputManager.AutoFocus="true"
 						 MaxLength="{Binding MaxMessageLength}"
-						 Text="{Binding Message}" Grid.Row="0"
+						 Text="{Binding Message, Mode=OneWayToSource}" Grid.Row="0"
 						 Grid.Column="1"
 						 HorizontalAlignment="Stretch" />
 				<TextBlock Margin="0,10,0,0" 
