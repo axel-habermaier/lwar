@@ -9,7 +9,6 @@
 	using Pegasus.UserInterface.Controls;
 	using Pegasus.UserInterface.Input;
 	using Pegasus.Utilities;
-	using Scripting;
 
 	/// <summary>
 	///     Manages the game and debug cameras.

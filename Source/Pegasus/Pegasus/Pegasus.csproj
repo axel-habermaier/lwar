@@ -233,7 +233,7 @@
     <Compile Include="Entities\IEventHandler`1.cs" />
     <Compile Include="Entities\IEventHandler.cs" />
     <Compile Include="Entities\EntityCollection.cs" />
-    <Compile Include="Entities\IntrusiveList.cs" />
+    <Compile Include="Entities\EntityInfoList.cs" />
     <Compile Include="Entities\Identity.cs" />
     <Compile Include="Entities\IdentityAllocator.cs" />
     <Compile Include="Entities\IdentityMap.cs" />

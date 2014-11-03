@@ -3,6 +3,7 @@
 	using System;
 	using System.Globalization;
 	using System.Runtime.InteropServices;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a four-component vector.
@@ -216,6 +217,7 @@
 		/// <summary>
 		///     Constructs a new vector instance that is normalized to a length of 1, but still points into the same direction.
 		/// </summary>
+		[Pure]
 		public Vector4 Normalize()
 		{
 			var length = Length;

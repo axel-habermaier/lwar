@@ -8,7 +8,7 @@
 	/// <summary>
 	///     Represents an intrusive doubly-linked list of entity infos.
 	/// </summary>
-	internal class IntrusiveList
+	internal class EntityInfoList
 	{
 		/// <summary>
 		///     The first entity of the list.
@@ -71,7 +71,7 @@
 		///     Adds the given entity to the end of the list.
 		/// </summary>
 		/// <param name="entities">The entities that should be added to the list.</param>
-		public void Add(IntrusiveList entities)
+		public void Add(EntityInfoList entities)
 		{
 			if (entities._first == null)
 				return;

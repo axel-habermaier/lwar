@@ -12,12 +12,12 @@
 		/// <summary>
 		///     The list of active entities.
 		/// </summary>
-		private readonly IntrusiveList _activeEntities = new IntrusiveList();
+		private readonly EntityInfoList _activeEntities = new EntityInfoList();
 
 		/// <summary>
 		///     The list of added entities.
 		/// </summary>
-		private readonly IntrusiveList _addedEntities = new IntrusiveList();
+		private readonly EntityInfoList _addedEntities = new EntityInfoList();
 
 		/// <summary>
 		///     The allocator that is used to allocate pooled objects.
@@ -42,7 +42,7 @@
 		/// <summary>
 		///     The list of removed entities.
 		/// </summary>
-		private readonly IntrusiveList _removedEntities = new IntrusiveList();
+		private readonly EntityInfoList _removedEntities = new EntityInfoList();
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -238,7 +238,7 @@
 			/// <summary>
 			///     The enumerator of the entity list that is currently enumerated.
 			/// </summary>
-			private IntrusiveList.Enumerator _enumerator;
+			private EntityInfoList.Enumerator _enumerator;
 
 			/// <summary>
 			///     Indicates which list of the collection is currently enumerated.

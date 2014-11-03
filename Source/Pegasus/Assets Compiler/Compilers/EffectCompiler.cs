@@ -356,8 +356,6 @@
 
 							writer.AppendLine("yield return new ShaderSignature(new [] {{ {0} }}, new byte[] {{ {1} }});", inputs, byteCode);
 						}
-
-						writer.AppendLine("yield break;");
 					});
 				});
 			});
