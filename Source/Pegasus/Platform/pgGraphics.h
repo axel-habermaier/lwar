@@ -223,15 +223,6 @@ typedef enum
 	PG_TEXTURE_BIND_DEPTH_STENCIL = 4,
 } pgTextureFlags;
 
-typedef enum
-{
-	PG_DEPTH_STENCIL_ATTACHMENT = 3001,
-	PG_COLOR_ATTACHMENT_0 = 3002,
-	PG_COLOR_ATTACHMENT_1 = 3003,
-	PG_COLOR_ATTACHMENT_2 = 3004,
-	PG_COLOR_ATTACHMENT_3 = 3005,
-} pgAttachmentPoint;
-
 typedef struct
 {
 	pgByte red;
@@ -327,7 +318,7 @@ typedef struct
 	pgUInt32		mipmaps;
 	pgUInt32		surfaceCount;
 	pgTextureFlags	flags;
-} pgTextureDescription;
+} pgTextureDesc;
 
 typedef struct
 {
@@ -419,7 +410,7 @@ PG_API_EXPORT pgVoid pgBindInputLayout(pgInputLayout* inputLayout);
 // Texture functions
 //====================================================================================================================
 
-PG_API_EXPORT pgTexture* pgCreateTexture(pgGraphicsDevice* device, pgTextureDescription* description, pgSurface* surfaces);
+PG_API_EXPORT pgTexture* pgCreateTexture(pgGraphicsDevice* device, pgTextureDesc* description, pgSurface* surfaces);
 PG_API_EXPORT pgVoid pgDestroyTexture(pgTexture* texture);
 
 PG_API_EXPORT pgVoid pgBindTexture(pgTexture* texture, pgInt32 slot);

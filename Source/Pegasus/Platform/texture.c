@@ -4,7 +4,7 @@
 // Exported functions
 //====================================================================================================================
 
-pgTexture* pgCreateTexture(pgGraphicsDevice* device, pgTextureDescription* description, pgSurface* surfaces)
+pgTexture* pgCreateTexture(pgGraphicsDevice* device, pgTextureDesc* description, pgSurface* surfaces)
 {
 	pgTexture* texture;
 

@@ -447,7 +447,7 @@ pgVoid pgBindInputLayoutCore(pgInputLayout* inputLayout);
 struct pgTexture
 {
 	pgGraphicsDevice*		device;
-	pgTextureDescription	desc;
+	pgTextureDesc	desc;
 	PG_TEXTURE_PLATFORM
 };
 
