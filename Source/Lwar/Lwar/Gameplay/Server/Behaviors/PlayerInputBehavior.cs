@@ -8,7 +8,7 @@
 	/// <summary>
 	///     Applies the effects of the current player input to an entity.
 	/// </summary>
-	public class PlayerInputBehavior : EntityBehavior<PlayerInput, Transform, Motion, Rotation, Propulsion>
+	public class PlayerInputBehavior : EntityBehavior<PlayerInput, Transform, Rotation, Propulsion>
 	{
 		/// <summary>
 		///     Applies the user input.
@@ -24,7 +24,6 @@
 		/// <param name="entities">The entities affected by the behavior.</param>
 		/// <param name="inputs">The input components of the affected entities.</param>
 		/// <param name="transforms">The transform components of the affected entities.</param>
-		/// <param name="motions">The motion components of the affected entities.</param>
 		/// <param name="rotations">The rotation components of the affected entities.</param>
 		/// <param name="propulsions">The propulsion components of the affected entities.</param>
 		/// <param name="count">The number of entities that should be processed.</param>
@@ -32,7 +31,7 @@
 		///     All arrays have the same length. If a component is optional for an entity and the component is missing, a null
 		///     value is placed in the array.
 		/// </remarks>
-		protected override void Process(Entity[] entities, PlayerInput[] inputs, Transform[] transforms, Motion[] motions,
+		protected override void Process(Entity[] entities, PlayerInput[] inputs, Transform[] transforms,
 										Rotation[] rotations, Propulsion[] propulsions, int count)
 		{
 			for (var i = 0; i < count; ++i)

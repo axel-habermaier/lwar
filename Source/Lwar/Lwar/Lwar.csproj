@@ -204,6 +204,7 @@
     <Compile Include="Gameplay\Server\Behaviors\SpriteBehavior.cs" />
     <Compile Include="Gameplay\Server\Behaviors\TimeToLiveBehavior.cs" />
     <Compile Include="Gameplay\Server\ClientCollection.cs" />
+    <Compile Include="Gameplay\Server\Components\AfterBurnerState.cs" />
     <Compile Include="Gameplay\Server\Components\RelativeTransform.cs" />
     <Compile Include="Gameplay\Server\Components\Propulsion.cs" />
     <Compile Include="Gameplay\Server\Scripts\FireBulletScript.cs" />

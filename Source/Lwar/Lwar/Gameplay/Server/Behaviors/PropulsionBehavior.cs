@@ -4,6 +4,7 @@ namespace Lwar.Gameplay.Server.Behaviors
 	using Components;
 	using Pegasus.Entities;
 	using Pegasus.Math;
+	using Pegasus.Platform.Logging;
 
 	/// <summary>
 	///     Simulates propulsion systems affecting the motion of entities.
@@ -40,28 +41,55 @@ namespace Lwar.Gameplay.Server.Behaviors
 		{
 			for (var i = 0; i < count; ++i)
 			{
-				motions[i].Velocity += propulsions[i].Acceleration * _elapsedSeconds * propulsions[i].MaxAcceleration;
+				var isAlreadyEnabled = propulsions[i].AfterBurnerState == AfterBurnerState.Active;
+				var canEnable = propulsions[i].RemainingEnergy > propulsions[i].MinRequiredEnergy;
+				var afterBurnerEnabled = propulsions[i].AfterBurnerEnabled && propulsions[i].RemainingEnergy > 0 && (isAlreadyEnabled || canEnable);
+				float maxSpeed;
 
-				if (propulsions[i].AfterBurnerEnabled && propulsions[i].RemainingEnergy > 0)
+				if (afterBurnerEnabled)
 				{
+					propulsions[i].AfterBurnerState = AfterBurnerState.Active;
 					propulsions[i].RemainingEnergy -= propulsions[i].DepleteSpeed * _elapsedSeconds;
-
-					var velocity = motions[i].Velocity;
-					var maxSpeed = propulsions[i].MaxAfterBurnerSpeed;
-
-					motions[i].Velocity = velocity.Length > maxSpeed ? velocity.Normalize() * maxSpeed : velocity;
+					maxSpeed = propulsions[i].MaxAfterBurnerSpeed;
 				}
 				else
 				{
-					propulsions[i].RemainingEnergy += propulsions[i].RechargeSpeed * _elapsedSeconds;
+					switch (propulsions[i].AfterBurnerState)
+					{
+						case AfterBurnerState.FullyCharged:
+							break;
+						case AfterBurnerState.Recharging:
+							propulsions[i].RemainingEnergy += propulsions[i].RechargeSpeed * _elapsedSeconds;
+							if (propulsions[i].RemainingEnergy >= propulsions[i].MaxEnergy)
+								propulsions[i].AfterBurnerState = AfterBurnerState.FullyCharged;
+							break;
+						case AfterBurnerState.Active:
+							propulsions[i].AfterBurnerState = AfterBurnerState.WaitingForRecharging;
+							propulsions[i].RemainingRechargeDelay = propulsions[i].RechargeDelay;
+							break;
+						case AfterBurnerState.WaitingForRecharging:
+							propulsions[i].RemainingRechargeDelay -= _elapsedSeconds;
+							if (propulsions[i].RemainingRechargeDelay < 0)
+								propulsions[i].AfterBurnerState = AfterBurnerState.Recharging;
+							break;
+						default:
+							throw new InvalidOperationException("Unknown after burner state.");
+					}
 
-					var velocity = motions[i].Velocity;
-					var maxSpeed = propulsions[i].MaxSpeed;
-
-					motions[i].Velocity = velocity.Length > maxSpeed ? velocity.Normalize() * maxSpeed : velocity;
+					maxSpeed = propulsions[i].MaxSpeed;
 				}
 
+				var acceleration = propulsions[i].Acceleration;
+				var velocity = propulsions[i].Velocity;
+				if (velocity.Length > maxSpeed)
+					acceleration -= velocity.Normalize() * 1.5f;
+
+				acceleration *= propulsions[i].MaxAcceleration * _elapsedSeconds;
+				propulsions[i].Velocity += acceleration;
+				motions[i].Velocity += acceleration;
+
 				propulsions[i].RemainingEnergy = MathUtils.Clamp(propulsions[i].RemainingEnergy, 0, propulsions[i].MaxEnergy);
+				Log.Info("{0}", propulsions[i].RemainingEnergy );
 			}
 		}
 	}

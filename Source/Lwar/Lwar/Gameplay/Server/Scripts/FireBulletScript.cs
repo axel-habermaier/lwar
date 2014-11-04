@@ -61,6 +61,7 @@ namespace Lwar.Gameplay.Server.Scripts
 			var position = Transform.Position;
 			var direction = Vector2.FromAngle(Transform.Orientation);
 			var velocity = direction.Normalize() * BaseSpeed + Motion.Velocity;
+
 			EntityFactory.CreateBullet(Owner.Player, position, velocity);
 		}
 
