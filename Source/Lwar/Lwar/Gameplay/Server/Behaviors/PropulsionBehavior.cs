@@ -4,7 +4,6 @@ namespace Lwar.Gameplay.Server.Behaviors
 	using Components;
 	using Pegasus.Entities;
 	using Pegasus.Math;
-	using Pegasus.Platform.Logging;
 
 	/// <summary>
 	///     Simulates propulsion systems affecting the motion of entities.
@@ -89,7 +88,6 @@ namespace Lwar.Gameplay.Server.Behaviors
 				motions[i].Velocity += acceleration;
 
 				propulsions[i].RemainingEnergy = MathUtils.Clamp(propulsions[i].RemainingEnergy, 0, propulsions[i].MaxEnergy);
-				Log.Info("{0}", propulsions[i].RemainingEnergy );
 			}
 		}
 	}
