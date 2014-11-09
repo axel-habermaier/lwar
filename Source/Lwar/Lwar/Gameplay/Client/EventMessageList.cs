@@ -3,7 +3,6 @@
 	using System;
 	using System.Collections.Generic;
 	using Network;
-	using Pegasus.Entities;
 	using Pegasus.Platform;
 	using Pegasus.Platform.Logging;
 	using Pegasus.UserInterface;
@@ -59,7 +58,7 @@
 		/// </summary>
 		/// <param name="player">The identity of the player that sent the chat message.</param>
 		/// <param name="chatMessage">The chat message that has been sent.</param>
-		public void AddChatMessage(Identity player, string chatMessage)
+		public void AddChatMessage(NetworkIdentity player, string chatMessage)
 		{
 			Assert.ArgumentNotNullOrWhitespace(chatMessage);
 
@@ -72,7 +71,7 @@
 		///     Adds a player joined message to the event list.
 		/// </summary>
 		/// <param name="player">The identity of the player that has joined the session.</param>
-		public void AddJoinMessage(Identity player)
+		public void AddJoinMessage(NetworkIdentity player)
 		{
 			var message = new EventMessage(EventType.Join);
 			if (TryGetPlayer(player, out message.Player))
@@ -83,7 +82,7 @@
 		///     Adds a player left message to the event list.
 		/// </summary>
 		/// <param name="player">The identity of the player that has left the session.</param>
-		public void AddLeaveMessage(Identity player)
+		public void AddLeaveMessage(NetworkIdentity player)
 		{
 			var message = new EventMessage(EventType.Leave);
 			if (TryGetPlayer(player, out message.Player))
@@ -95,7 +94,7 @@
 		/// </summary>
 		/// <param name="player">The identity of the player that has been kicked from the session.</param>
 		/// <param name="reason">The reason for the kick.</param>
-		public void AddKickedMessage(Identity player, string reason)
+		public void AddKickedMessage(NetworkIdentity player, string reason)
 		{
 			var message = new EventMessage(EventType.Kicked, reason);
 			if (TryGetPlayer(player, out message.Player))
@@ -106,7 +105,7 @@
 		///     Adds a player timed out message to the event list.
 		/// </summary>
 		/// <param name="player">The identity of the player that has timed out.</param>
-		public void AddTimeoutMessage(Identity player)
+		public void AddTimeoutMessage(NetworkIdentity player)
 		{
 			var message = new EventMessage(EventType.Timeout);
 			if (TryGetPlayer(player, out message.Player))
@@ -118,7 +117,7 @@
 		/// </summary>
 		/// <param name="killer">The identity of the player that has scored the kill.</param>
 		/// <param name="victim">The identity of the player that has been killed.</param>
-		public void AddKillMessage(Identity killer, Identity victim)
+		public void AddKillMessage(NetworkIdentity killer, NetworkIdentity victim)
 		{
 			EventType type;
 			if (killer.Identifier == victim.Identifier)
@@ -138,7 +137,7 @@
 		/// </summary>
 		/// <param name="player">The identity of the player that has changed the name.</param>
 		/// <param name="previousName">The previous player name.</param>
-		public void AddNameChangeMessage(Identity player, string previousName)
+		public void AddNameChangeMessage(NetworkIdentity player, string previousName)
 		{
 			Assert.ArgumentNotNullOrWhitespace(previousName);
 
@@ -184,7 +183,7 @@
 		/// </summary>
 		/// <param name="playerId">The identity of the player instance that should be returned.</param>
 		/// <param name="player">Returns the player instance, if found.</param>
-		private bool TryGetPlayer(Identity playerId, out Player player)
+		private bool TryGetPlayer(NetworkIdentity playerId, out Player player)
 		{
 			player = _gameSession.Players[playerId];
 			return player != null;

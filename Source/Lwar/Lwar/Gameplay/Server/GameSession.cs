@@ -1,12 +1,12 @@
 ﻿namespace Lwar.Gameplay.Server
 {
 	using System;
-	using Behaviors;
+	using Entities;
 	using Network;
-	using Pegasus.Entities;
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
+	using Pegasus.Scene;
 	using Pegasus.Utilities;
 
 	/// <summary>
@@ -15,79 +15,9 @@
 	public class GameSession : DisposableObject
 	{
 		/// <summary>
-		///     The allocator that is used to allocate game objects.
-		/// </summary>
-		private readonly PoolAllocator _allocator;
-
-		/// <summary>
-		///     The entity behaviors used by the game session.
-		/// </summary>
-		private readonly EntityBehaviorCollection _behaviors;
-
-		/// <summary>
-		///     Dispatches entity events.
-		/// </summary>
-		private readonly EventDispatcher _eventDispatcher = new EventDispatcher();
-
-		/// <summary>
-		///     The behavior that removes entities at invalid positions.
-		/// </summary>
-		private BoundaryBehavior _boundaryBehavior;
-
-		/// <summary>
-		///     The behavior that moves and accelerates entities.
-		/// </summary>
-		private MotionBehavior _motionBehavior;
-
-		/// <summary>
-		///     The behavior that lets entities orbit around other entities.
-		/// </summary>
-		private OrbitBehavior _orbitBehavior;
-
-		/// <summary>
-		///     The behavior that applies the player inputs to the entities.
-		/// </summary>
-		private PlayerInputBehavior _playerInputBehavior;
-
-		/// <summary>
-		///     The behavior that simulates propulsion systems.
-		/// </summary>
-		private PropulsionBehavior _propulsionBehavior;
-
-		/// <summary>
-		///     The behavior that updates relative entity transforms.
-		/// </summary>
-		private RelativeTransformBehavior _relativeTransformBehavior;
-
-		/// <summary>
-		///     The behavior that rotates entities based on their angular velocity.
-		/// </summary>
-		private RotationBehavior _rotationBehavior;
-
-		/// <summary>
-		///     The behavior that executes entity scripts.
-		/// </summary>
-		private ScriptBehavior _scriptBehavior;
-
-		/// <summary>
 		///     Indicates whether the game session is used by a server.
 		/// </summary>
 		private bool _serverMode;
-
-		/// <summary>
-		///     The sprite behavior that is used to draw sprite components.
-		/// </summary>
-		private SpriteBehavior _spriteBehavior;
-
-		/// <summary>
-		///     The server network behavior that is used to synchronize entities with all connected clients.
-		/// </summary>
-		private SyncToClientsBehavior _syncToClientsBehavior;
-
-		/// <summary>
-		///     The behavior that removes entities after their lifetime ran out.
-		/// </summary>
-		private TimeToLiveBehavior _timeToLiveBehavior;
 
 		/// <summary>
 		///     Initializes a new client-side instance.
@@ -97,16 +27,22 @@
 		{
 			Assert.ArgumentNotNull(allocator);
 
-			Entities = new EntityCollection(allocator, _eventDispatcher);
+			Allocator = allocator;
+			SceneGraph = new SceneGraph(allocator);
 
-			_allocator = allocator;
-			_behaviors = new EntityBehaviorCollection(_eventDispatcher);
+			SceneGraph.NodeAdded += OnNodeAdded;
+			SceneGraph.NodeRemoved += OnNodeRemoved;
 		}
 
 		/// <summary>
-		///     Gets the entities of the game session.
+		///     Gets the allocator that is used to allocate game objects.
 		/// </summary>
-		public EntityCollection Entities { get; private set; }
+		public PoolAllocator Allocator { get; private set; }
+
+		/// <summary>
+		///     Gets the scene graph of the game session.
+		/// </summary>
+		public SceneGraph SceneGraph { get; private set; }
 
 		/// <summary>
 		///     Gets the collection of players that are participating in the game session.
@@ -114,9 +50,51 @@
 		public PlayerCollection Players { get; private set; }
 
 		/// <summary>
-		///     Gets an entity factory that can be used to create entities.
+		///     Gets the physics simulation of the game session.
 		/// </summary>
-		public EntityFactory EntityFactory { get; private set; }
+		public PhysicsSimulation Physics { get; private set; }
+
+		/// <summary>
+		///     Allocates an instance of the given type using the game session's allocator.
+		/// </summary>
+		/// <typeparam name="T">The type of the object that should be allocated.</typeparam>
+		public T Allocate<T>()
+			where T : class
+		{
+			return Allocator.Allocate<T>();
+		}
+
+		/// <summary>
+		///     Raised when an entity has been added to the game session.
+		/// </summary>
+		public event Action<Entity> EntityAdded;
+
+		/// <summary>
+		///     Raised when an entity has been removed from the game session.
+		/// </summary>
+		public event Action<Entity> EntityRemoved;
+
+		/// <summary>
+		///     If an entity has been added, raises the entity added event.
+		/// </summary>
+		/// <param name="sceneNode">The scene node that has been added.</param>
+		private void OnNodeAdded(SceneNode sceneNode)
+		{
+			var entity = sceneNode as Entity;
+			if (entity != null && EntityAdded != null)
+				EntityAdded(entity);
+		}
+
+		/// <summary>
+		///     If an entity has been removed, raises the entity removed event.
+		/// </summary>
+		/// <param name="sceneNode">The scene node that has been removed.</param>
+		private void OnNodeRemoved(SceneNode sceneNode)
+		{
+			var entity = sceneNode as Entity;
+			if (entity != null && EntityRemoved != null)
+				EntityRemoved(entity);
+		}
 
 		/// <summary>
 		///     Initializes a client-side game session.
@@ -125,12 +103,7 @@
 		{
 			_serverMode = false;
 
-			EntityFactory = new EntityFactory(_allocator, Entities, serverMode: false);
-			Players = new PlayerCollection(_allocator, serverMode: false);
-
-			_behaviors.Add(_spriteBehavior = new SpriteBehavior());
-			_behaviors.Add(_scriptBehavior = new ScriptBehavior(_allocator, this));
-			_behaviors.Add(_relativeTransformBehavior = new RelativeTransformBehavior());
+			Players = new PlayerCollection(Allocator, serverMode: false);
 		}
 
 		/// <summary>
@@ -143,19 +116,8 @@
 
 			_serverMode = true;
 
-			EntityFactory = new EntityFactory(_allocator, Entities, serverMode: true);
-			Players = new PlayerCollection(_allocator, serverMode: true);
-
-			_behaviors.Add(_syncToClientsBehavior = new SyncToClientsBehavior(_allocator, serverLogic));
-			_behaviors.Add(_motionBehavior = new MotionBehavior());
-			_behaviors.Add(_rotationBehavior = new RotationBehavior());
-			_behaviors.Add(_playerInputBehavior = new PlayerInputBehavior());
-			_behaviors.Add(_boundaryBehavior = new BoundaryBehavior());
-			_behaviors.Add(_timeToLiveBehavior = new TimeToLiveBehavior());
-			_behaviors.Add(_orbitBehavior = new OrbitBehavior());
-			_behaviors.Add(_scriptBehavior = new ScriptBehavior(_allocator, this));
-			_behaviors.Add(_relativeTransformBehavior = new RelativeTransformBehavior());
-			_behaviors.Add(_propulsionBehavior = new PropulsionBehavior());
+			Physics = new PhysicsSimulation(this);
+			Players = new PlayerCollection(Allocator, serverMode: true);
 
 			CreateGalaxy();
 		}
@@ -166,24 +128,11 @@
 		/// <param name="elapsedSeconds">The number of seconds that have elapsed since the last update.</param>
 		public void Update(float elapsedSeconds)
 		{
-			Entities.ApplyChanges();
+			foreach (var entity in SceneGraph.EnumeratePreOrder<Entity>())
+				entity.ServerUpdate(elapsedSeconds);
 
-			if (!_serverMode)
-			{
-				_relativeTransformBehavior.Update();
-				return;
-			}
-
-			_playerInputBehavior.ApplyInput();
-			_scriptBehavior.Update(elapsedSeconds);
-			_orbitBehavior.UpdateOrbits(elapsedSeconds);
-			_rotationBehavior.Update(elapsedSeconds);
-			_propulsionBehavior.Simulate(elapsedSeconds);
-			_motionBehavior.Update(elapsedSeconds);
-			_timeToLiveBehavior.RemoveDeadEntities(elapsedSeconds);
-			_relativeTransformBehavior.Update();
-			_boundaryBehavior.RemoveEntitiesWithInvalidPositions();
-			_syncToClientsBehavior.SendEntityUpdates();
+			SceneGraph.ExecuteBehaviors(elapsedSeconds);
+			Physics.Simulate(elapsedSeconds);
 		}
 
 		/// <summary>
@@ -194,8 +143,6 @@
 		{
 			Assert.ArgumentNotNull(renderOutput);
 			Assert.That(!_serverMode, "A server cannot draw the game session.");
-
-			_spriteBehavior.Draw(renderOutput);
 		}
 
 		/// <summary>
@@ -203,10 +150,8 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_behaviors.SafeDispose();
-
+			SceneGraph.SafeDispose();
 			Players.SafeDispose();
-			Entities.SafeDispose();
 		}
 
 		/// <summary>
@@ -214,12 +159,14 @@
 		/// </summary>
 		private void CreateGalaxy()
 		{
-			var sun = EntityFactory.CreateSun(Players.ServerPlayer);
-			var earth = EntityFactory.CreatePlanet(Players.ServerPlayer, sun, EntityType.Earth, 12000, 0.05f, 0);
+			var sun = Sun.Create(this, Vector2.Zero);
+			sun.AttachTo(SceneGraph.Root);
 
-			EntityFactory.CreatePlanet(Players.ServerPlayer, earth, EntityType.Moon, 1500, 0.7f, MathUtils.PiOver4);
-			EntityFactory.CreatePlanet(Players.ServerPlayer, sun, EntityType.Mars, 14000, -0.07f, MathUtils.Pi);
-			EntityFactory.CreatePlanet(Players.ServerPlayer, sun, EntityType.Jupiter, 20000, -0.085f, MathUtils.PiOver2);
+			var earth = Planet.Create(this, sun, EntityType.Earth, 12000, 0.05f, 0);
+
+			Planet.Create(this, earth, EntityType.Moon, 1500, 0.7f, MathUtils.PiOver4);
+			Planet.Create(this, sun, EntityType.Mars, 14000, -0.07f, MathUtils.Pi);
+			Planet.Create(this, sun, EntityType.Jupiter, 20000, -0.085f, MathUtils.PiOver2);
 		}
 	}
 }

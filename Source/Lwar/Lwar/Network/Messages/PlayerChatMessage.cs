@@ -2,7 +2,6 @@ namespace Lwar.Network.Messages
 {
 	using System;
 	using System.Text;
-	using Pegasus.Entities;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Utilities;
 
@@ -35,7 +34,7 @@ namespace Lwar.Network.Messages
 		/// <summary>
 		///     Gets the player that sent the message.
 		/// </summary>
-		public Identity Player { get; private set; }
+		public NetworkIdentity Player { get; private set; }
 
 		/// <summary>
 		///     Serializes the message using the given writer.
@@ -73,7 +72,7 @@ namespace Lwar.Network.Messages
 		/// <param name="poolAllocator">The pool allocator that should be used to allocate the message.</param>
 		/// <param name="player">The player who wrote the chat message.</param>
 		/// <param name="message">The message that should be sent.</param>
-		public static PlayerChatMessage Create(PoolAllocator poolAllocator, Identity player, string message)
+		public static PlayerChatMessage Create(PoolAllocator poolAllocator, NetworkIdentity player, string message)
 		{
 			Assert.ArgumentNotNull(poolAllocator);
 			Assert.ArgumentNotNullOrWhitespace(message);

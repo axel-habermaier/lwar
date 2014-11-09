@@ -1,7 +1,6 @@
 namespace Lwar.Network.Messages
 {
 	using System;
-	using Pegasus.Entities;
 	using Pegasus.Math;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Utilities;
@@ -30,7 +29,7 @@ namespace Lwar.Network.Messages
 		/// <summary>
 		///     Gets the entity that is updated.
 		/// </summary>
-		public Identity Entity { get; private set; }
+		public NetworkIdentity Entity { get; private set; }
 
 		/// <summary>
 		///     Gets the new entity position.
@@ -73,7 +72,7 @@ namespace Lwar.Network.Messages
 		/// <param name="poolAllocator">The pool allocator that should be used to allocate the message.</param>
 		/// <param name="entity">The entity that is updated.</param>
 		/// <param name="position">The updated position of the entity.</param>
-		public static Message Create(PoolAllocator poolAllocator, Identity entity, Vector2 position)
+		public static Message Create(PoolAllocator poolAllocator, NetworkIdentity entity, Vector2 position)
 		{
 			Assert.ArgumentNotNull(poolAllocator);
 

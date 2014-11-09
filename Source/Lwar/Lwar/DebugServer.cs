@@ -54,8 +54,8 @@ namespace Lwar
 				_listener = new UdpListener(port, NetworkProtocol.MaxPacketSize);
 				_listener.Start();
 
-				_gameSession.InitializeServer(_serverLogic);
 				_clients = new ClientCollection(_allocator, _serverLogic, _listener);
+				_gameSession.InitializeServer(_serverLogic);
 
 				Log.Info("Server started.");
 			}
@@ -76,7 +76,7 @@ namespace Lwar
 
 			_clients.DispatchClientMessages();
 			_gameSession.Update((float)elapsedSeconds);
-			_serverLogic.RemoveInactivePlayers();
+			_serverLogic.BroadcastEntityUpdates();
 			_clients.SendQueuedMessages();
 		}
 

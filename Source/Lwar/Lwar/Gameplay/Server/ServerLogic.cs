@@ -1,16 +1,14 @@
 ﻿namespace Lwar.Gameplay.Server
 {
 	using System;
-	using System.Collections.Generic;
-	using Components;
+	using Entities;
 	using Network;
 	using Network.Messages;
-	using Pegasus.Entities;
 	using Pegasus.Math;
 	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Utilities;
-	using Scripts;
+	using Templates;
 
 	/// <summary>
 	///     Implements the server logic for handling incoming client messages and the synchronization of client game states.
@@ -28,32 +26,25 @@
 		private readonly PoolAllocator _allocator;
 
 		/// <summary>
+		///     A cached array that indicates which weapons a ship should fire.
+		/// </summary>
+		private readonly bool[] _fireWeapons = new bool[NetworkProtocol.WeaponSlotCount];
+
+		/// <summary>
 		///     The game session that is being played.
 		/// </summary>
 		private readonly GameSession _gameSession;
 
 		/// <summary>
-		///     The players that have been removed from the game session. They have to be kept active for as long as there still are
-		///     active entities belonging to them.
+		///     A cached array that stores the weapon energy levels of ship updates.
 		/// </summary>
-		private readonly List<Player> _inactivePlayers = new List<Player>();
+		// TODO: Remove this
+		private readonly int[] _weaponEnergyLevels = new int[NetworkProtocol.WeaponSlotCount];
 
 		/// <summary>
 		///     The allocator for networked identities.
 		/// </summary>
-		private readonly IdentityAllocator _networkIdentities = new IdentityAllocator(UInt16.MaxValue);
-
-		/// <summary>
-		///     A cached set that is used to sync parent entities before their children. The set contains the network identities of all
-		///     entities that have already been synced.
-		/// </summary>
-		private readonly HashSet<Identity> _syncedIdentities = new HashSet<Identity>();
-
-		/// <summary>
-		///     A cached list that is used to sync parent entities before their children. The queue contains all entities that have not
-		///     yet been synced.
-		/// </summary>
-		private readonly Queue<Entity> _unsyncedEntities = new Queue<Entity>();
+		private NetworkIdentityAllocator _networkIdentities = new NetworkIdentityAllocator(UInt16.MaxValue);
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -67,6 +58,9 @@
 
 			_allocator = allocator;
 			_gameSession = gameSession;
+
+			_gameSession.EntityAdded += OnEntityAdded;
+			_gameSession.EntityRemoved += OnEntityRemoved;
 		}
 
 		/// <summary>
@@ -75,6 +69,37 @@
 		public int PlayerCount
 		{
 			get { return _gameSession.Players.Count; }
+		}
+
+		/// <summary>
+		///     Synchronizes the added entity with all clients.
+		/// </summary>
+		/// <param name="entity">The entity that has been added.</param>
+		private void OnEntityAdded(Entity entity)
+		{
+			Assert.InRange(entity.NetworkType);
+			Assert.InRange(entity.UpdateMessageType);
+
+			entity.NetworkIdentity = _networkIdentities.Allocate();
+
+			var message = CreateEntityAddMessage(entity);
+			Broadcast(message);
+
+			Log.DebugIf(EnableTracing, "(Server) +{1} {0}", message.Entity, message.EntityType);
+			entity.OnServerAdded();
+		}
+
+		/// <summary>
+		///     Synchronizes the removed entity with all clients.
+		/// </summary>
+		/// <param name="entity">The entity that has been removed.</param>
+		private void OnEntityRemoved(Entity entity)
+		{
+			Log.DebugIf(EnableTracing, "(Server) -{1} {0}", entity.NetworkIdentity, entity.NetworkType);
+			entity.OnServerRemoved();
+
+			Broadcast(EntityRemoveMessage.Create(_allocator, entity.NetworkIdentity));
+			_networkIdentities.Free(entity.NetworkIdentity);
 		}
 
 		/// <summary>
@@ -104,52 +129,20 @@
 				Log.DebugIf(EnableTracing, "(Server)    {0}", message);
 			}
 
-			// Synchronize all network-synced entities
-			foreach (var entity in _gameSession.Entities)
-				_unsyncedEntities.Enqueue(entity);
-
-			SendEntities(connection);
-			_unsyncedEntities.Clear();
-			_syncedIdentities.Clear();
-
-			// Mark the end of the synchronization
-			var syncedMessage = ClientSyncedMessage.Create(_allocator, clientPlayer.Identity);
-			connection.Send(syncedMessage);
-			Log.DebugIf(EnableTracing, "(Server)    Sync completed.");
-		}
-
-		/// <summary>
-		///     Sends add messages for all active entities to the given connection. This method ensures that a child entity is always
-		///     synced after its parent.
-		/// </summary>
-		/// <param name="connection">The connection the add messages should be sent to.</param>
-		private void SendEntities(Connection connection)
-		{
-			// Note: This algorithm will not terminate if the entity graph contains cycles.
-			while (_unsyncedEntities.Count > 0)
+			// Synchronize all entities
+			foreach (var entity in _gameSession.SceneGraph.EnumeratePreOrder<Entity>())
 			{
-				var entity = _unsyncedEntities.Dequeue();
-				var network = entity.GetComponent<NetworkSync>();
-				if (network == null)
-					continue;
-
-				var relativeTransform = entity.GetComponent<RelativeTransform>();
-				if (relativeTransform != null)
-				{
-					var childNetwork = relativeTransform.ParentEntity.GetComponent<NetworkSync>();
-					if (childNetwork != null && !_syncedIdentities.Contains(childNetwork.Identity))
-					{
-						_unsyncedEntities.Enqueue(entity);
-						continue;
-					}
-				}
-
 				var message = CreateEntityAddMessage(entity);
-				_syncedIdentities.Add(network.Identity);
 				connection.Send(message);
 
 				Log.DebugIf(EnableTracing, "(Server)    {0}", message);
 			}
+
+			// Mark the end of the synchronization
+			var syncedMessage = ClientSyncedMessage.Create(_allocator, clientPlayer.Identity);
+			connection.Send(syncedMessage);
+
+			Log.DebugIf(EnableTracing, "(Server)    Sync completed.");
 		}
 
 		/// <summary>
@@ -166,7 +159,7 @@
 			var player = Player.Create(_allocator, playerName);
 			_gameSession.Players.Add(player);
 
-			// Broadcast the news about the new player to all clients (this message is not sent to the new client)
+			// Broadcast the news about the new player to all clients (this message is not sent to the new client yet)
 			Broadcast(PlayerJoinMessage.Create(_allocator, player.Identity, playerName));
 
 			Log.DebugIf(EnableTracing, "(Server) Created player '{0}' ({1})", playerName, player.Identity);
@@ -180,43 +173,17 @@
 		public void RemovePlayer(Player player)
 		{
 			Assert.ArgumentNotNull(player);
-			_inactivePlayers.Add(player);
-		}
 
-		/// <summary>
-		///     Removes all inactive players that no longer have any active entities.
-		/// </summary>
-		public void RemoveInactivePlayers()
-		{
-			for (var i = _inactivePlayers.Count - 1; i >= 0; --i)
+			foreach (var entity in _gameSession.SceneGraph.EnumeratePostOrder<Entity>())
 			{
-				var player = _inactivePlayers[i];
-				var hasActiveEntities = false;
-
-				foreach (var entity in _gameSession.Entities)
-				{
-					var owner = entity.GetComponent<Owner>();
-					if (owner == null || owner.Player != player)
-						continue;
-
-					_gameSession.Entities.Remove(entity);
-					hasActiveEntities = true;
-				}
-
-				if (hasActiveEntities)
-				{
-					Log.DebugIf(EnableTracing, "(Server) Delayed removal of inactive player '{0}' ({1}) because of active player entities.",
-						player.Name, player.Identity);
-
-					continue;
-				}
-
-				Broadcast(PlayerLeaveMessage.Create(_allocator, player.Identity, player.LeaveReason));
-				_gameSession.Players.Remove(player);
-				_inactivePlayers.RemoveAt(i);
-
-				Log.DebugIf(EnableTracing, "(Server) Removed player '{0}' ({1}).", player.Name, player.Identity);
+				if (entity.Player == player)
+					entity.Remove();
 			}
+
+			Broadcast(PlayerLeaveMessage.Create(_allocator, player.Identity, player.LeaveReason));
+			_gameSession.Players.Remove(player);
+
+			Log.DebugIf(EnableTracing, "(Server) Removed player '{0}' ({1}).", player.Name, player.Identity);
 		}
 
 		/// <summary>
@@ -233,22 +200,20 @@
 			Assert.ArgumentNotNull(player);
 			Assert.ArgumentNotNull(inputMessage);
 
-			var entity = player.ControlledEntity;
-			if (!entity.IsAlive)
+			if (player.Ship == null || player.Ship.IsRemoved)
 				return;
 
-			var input = entity.GetComponent<PlayerInput>();
-			Assert.NotNull(input);
-
-			input.Target = inputMessage.Target;
-			input.Forward = (inputMask & inputMessage.Forward) != 0;
-			input.Backward = (inputMask & inputMessage.Backward) != 0;
-			input.StrafeLeft = (inputMask & inputMessage.StrafeLeft) != 0;
-			input.StrafeRight = (inputMask & inputMessage.StrafeRight) != 0;
-			input.AfterBurner = (inputMask & inputMessage.AfterBurner) != 0;
-
 			for (var i = 0; i < NetworkProtocol.WeaponSlotCount; ++i)
-				input.FireWeapons[i] = (inputMask & inputMessage.FireWeapons[i]) != 0;
+				_fireWeapons[i] = (inputMask & inputMessage.FireWeapons[i]) != 0;
+
+			player.Ship.HandlePlayerInput(
+				inputMessage.Target,
+				(inputMask & inputMessage.Forward) != 0,
+				(inputMask & inputMessage.Backward) != 0,
+				(inputMask & inputMessage.StrafeLeft) != 0,
+				(inputMask & inputMessage.StrafeRight) != 0,
+				(inputMask & inputMessage.AfterBurner) != 0,
+				_fireWeapons);
 		}
 
 		/// <summary>
@@ -279,40 +244,15 @@
 			}
 
 			// Respawn the player if necessary
-			if (player.ControlledEntity.IsAlive)
+			if (player.Ship != null && !player.Ship.IsRemoved)
 				return;
 
 			Log.DebugIf(EnableTracing, "(Server) Respawning player '{0}' ({1}).", player.Name, player.Identity);
-			player.ControlledEntity = _gameSession.EntityFactory.CreateShip(player, position: new Vector2(0, 30000));
-			var scripts = player.ControlledEntity.GetComponent<ScriptCollection>();
 
-			for (var i = 0; i < NetworkProtocol.WeaponSlotCount; ++i)
-				AddWeaponScript(player, scripts, i);
-		}
-
-		/// <summary>
-		///     Adds a weapon script to the given entity for the given input index.
-		/// </summary>
-		/// <param name="player">The player the weapon script should be added for.</param>
-		/// <param name="scripts">The script collection the weapon script should be added to.</param>
-		/// <param name="inputIndex">The input index that should trigger the weapon.</param>
-		private void AddWeaponScript(Player player, ScriptCollection scripts, int inputIndex)
-		{
-			Assert.ArgumentNotNull(player);
-			Assert.ArgumentNotNull(scripts);
-			Assert.ArgumentInRange(inputIndex, 0, NetworkProtocol.WeaponSlotCount - 1);
-
-			switch (player.WeaponTypes[inputIndex])
-			{
-				case EntityType.Gun:
-					scripts.Add(FireBulletScript.Create(_allocator, inputIndex, cooldown: 0.15f));
-					break;
-				case EntityType.Phaser:
-					scripts.Add(FirePhaserScript.Create(_allocator, inputIndex));
-					break;
-				default:
-					throw new InvalidOperationException("Unsupported weapon type.");
-			}
+			player.Ship.SafeDispose();
+			player.Ship = Ship.Create(_gameSession, ShipTemplate.DefaultShip, player, position: new Vector2(0, 30000));
+			player.Ship.AcquireOwnership();
+			player.Ship.AttachTo(_gameSession.SceneGraph.Root);
 		}
 
 		/// <summary>
@@ -351,68 +291,61 @@
 		}
 
 		/// <summary>
-		///     Synchronizes the addition of given new entity to all connected clients.
-		/// </summary>
-		/// <param name="entity">The entity that has been added.</param>
-		public void EntityAdded(Entity entity)
-		{
-			var networkSync = entity.GetComponent<NetworkSync>();
-			networkSync.Identity = _networkIdentities.Allocate();
-
-			var message = CreateEntityAddMessage(entity);
-			Assert.NotNull(message);
-
-			Log.DebugIf(EnableTracing, "(Server) +{1} {0}", message.Entity, message.EntityType);
-
-			Broadcast(message);
-		}
-
-		/// <summary>
-		///     Synchronizes the removal of the given entity to all connected clients.
-		/// </summary>
-		/// <param name="entity">The entity that has been removed.</param>
-		public void EntityRemoved(Entity entity)
-		{
-			var networkSync = entity.GetComponent<NetworkSync>();
-			Assert.NotNull(networkSync);
-
-			Log.DebugIf(EnableTracing, "(Server) -{1} {0}", networkSync.Identity, networkSync.EntityType);
-			Broadcast(EntityRemoveMessage.Create(_allocator, networkSync.Identity));
-			_networkIdentities.Free(networkSync.Identity);
-		}
-
-		/// <summary>
-		///     Sends the given entity update to all connected clients.
-		/// </summary>
-		/// <param name="message">The update message that should be sent.</param>
-		public void SendEntityUpdate(Message message)
-		{
-			Assert.ArgumentNotNull(message);
-			Broadcast(message);
-		}
-
-		/// <summary>
 		///     Creates an entity add message for the given entity.
 		/// </summary>
 		/// <param name="entity">The entity the message should be created for.</param>
 		private EntityAddMessage CreateEntityAddMessage(Entity entity)
 		{
-			var networkSync = entity.GetComponent<NetworkSync>();
-			var owner = entity.GetComponent<Owner>();
+			var parentIdentity = NetworkProtocol.ReservedEntityIdentity;
+			var parentEntity = entity.Parent as Entity;
+			if (parentEntity != null)
+				parentIdentity = parentEntity.NetworkIdentity;
 
-			if (networkSync == null || owner == null)
-				return null;
+			return EntityAddMessage.Create(_allocator, entity.NetworkIdentity, entity.Player.Identity, parentIdentity, entity.NetworkType);
+		}
 
-			var parentEntity = NetworkProtocol.ReservedEntityIdentity;
-			var relativeTransform = entity.GetComponent<RelativeTransform>();
-			if (relativeTransform != null)
+		/// <summary>
+		///     Broadcasts all entity updates to all connected clients.
+		/// </summary>
+		public void BroadcastEntityUpdates()
+		{
+			foreach (var entity in _gameSession.SceneGraph.EnumeratePreOrder<Entity>())
 			{
-				var network = relativeTransform.ParentEntity.GetComponent<NetworkSync>();
-				if (network != null)
-					parentEntity = network.Identity;
-			}
+				Assert.InRange(entity.NetworkType);
+				Assert.That(entity.UpdateMessageType == MessageType.UpdateCircle ||
+							entity.UpdateMessageType == MessageType.UpdatePosition ||
+							entity.UpdateMessageType == MessageType.UpdateTransform ||
+							entity.UpdateMessageType == MessageType.UpdateShip ||
+							entity.UpdateMessageType == MessageType.UpdateRay, "Unsupported update message type.");
 
-			return EntityAddMessage.Create(_allocator, networkSync.Identity, owner.Player.Identity, parentEntity, networkSync.EntityType);
+				Broadcast(CreateUpdateMessage(entity));
+			}
+		}
+
+		/// <summary>
+		///     Creates the update message for the given entity.
+		/// </summary>
+		/// <param name="entity">The entity the update message should be created for.</param>
+		private Message CreateUpdateMessage(Entity entity)
+		{
+			var orientation = MathUtils.RadToDeg360(-entity.Orientation);
+
+			switch (entity.UpdateMessageType)
+			{
+				case MessageType.UpdateTransform:
+					return UpdateTransformMessage.Create(_allocator, entity.NetworkIdentity, entity.Position2D, orientation);
+				case MessageType.UpdatePosition:
+					return UpdatePositionMessage.Create(_allocator, entity.NetworkIdentity, entity.Position2D);
+				case MessageType.UpdateRay:
+					var target = NetworkProtocol.ReservedEntityIdentity;
+					return UpdateRayMessage.Create(_allocator, entity.NetworkIdentity, target, entity.Position2D, 2000, orientation);
+				case MessageType.UpdateShip:
+					return UpdateShipMessage.Create(_allocator, entity.NetworkIdentity, entity.Position2D, orientation, 100, 0, _weaponEnergyLevels);
+				case MessageType.UpdateCircle:
+					throw new NotImplementedException();
+				default:
+					throw new InvalidOperationException("Unsupported update message type.");
+			}
 		}
 	}
 }

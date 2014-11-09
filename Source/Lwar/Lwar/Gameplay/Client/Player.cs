@@ -2,7 +2,7 @@
 {
 	using System;
 	using Entities;
-	using Pegasus.Entities;
+	using Network;
 	using Pegasus.Platform.Logging;
 	using Pegasus.UserInterface;
 	using Pegasus.Utilities;
@@ -125,7 +125,7 @@
 		/// <summary>
 		///     Gets the player's identity.
 		/// </summary>
-		public Identity Identity { get; private set; }
+		public NetworkIdentity Identity { get; private set; }
 
 		/// <summary>
 		///     Checks whether the player accepts an update with the given sequence number. All following player updates are only
@@ -150,7 +150,7 @@
 		/// <param name="gameSession">The game session the instance should be created for.</param>
 		/// <param name="id">The identity of the player.</param>
 		/// <param name="name">The name of the player.</param>
-		public static Player Create(ClientGameSession gameSession, Identity id, string name)
+		public static Player Create(ClientGameSession gameSession, NetworkIdentity id, string name)
 		{
 			Assert.ArgumentNotNull(gameSession);
 			Assert.ArgumentNotNullOrWhitespace(name);

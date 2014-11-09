@@ -14,24 +14,17 @@ namespace Pegasus.UserInterface
 		private readonly int _index;
 
 		/// <summary>
-		///     The item that was changed.
-		/// </summary>
-		private readonly object _item;
-
-		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="action">Indicates what kind of change was made to the collection.</param>
-		/// <param name="item">The item that was changed.</param>
 		/// <param name="index">The zero-based index of the item within the collection.</param>
-		private CollectionChangedEventArgs(CollectionChangedAction action, object item, int index)
+		private CollectionChangedEventArgs(CollectionChangedAction action, int index)
 			: this()
 		{
 			Assert.ArgumentInRange(action);
 			Assert.ArgumentSatisfies(index >= 0, "Invalid index.");
 
 			Action = action;
-			_item = item;
 			_index = index;
 		}
 
@@ -39,18 +32,6 @@ namespace Pegasus.UserInterface
 		///     Gets a value indicating what kind of change was made to the collection.
 		/// </summary>
 		public CollectionChangedAction Action { get; private set; }
-
-		/// <summary>
-		///     Gets the item that was changed.
-		/// </summary>
-		public object Item
-		{
-			get
-			{
-				Assert.That(Action != CollectionChangedAction.Reset, "The collection has been reset.");
-				return _item;
-			}
-		}
 
 		/// <summary>
 		///     Gets the zero-based index of the item within the collection.
@@ -67,34 +48,28 @@ namespace Pegasus.UserInterface
 		/// <summary>
 		///     Initializes a new instance describing the addition of a new item to the collection.
 		/// </summary>
-		/// <param name="item">The item that was added.</param>
 		/// <param name="index">The zero-based index of the new item within the collection.</param>
-		public static CollectionChangedEventArgs ItemAdded(object item, int index)
+		public static CollectionChangedEventArgs ItemAdded(int index)
 		{
-			Assert.ArgumentNotNull(item);
-			return new CollectionChangedEventArgs(CollectionChangedAction.Add, item, index);
+			return new CollectionChangedEventArgs(CollectionChangedAction.Add, index);
 		}
 
 		/// <summary>
 		///     Initializes a new instance describing the removal of an item to the collection.
 		/// </summary>
-		/// <param name="item">The item that was removed.</param>
 		/// <param name="index">The zero-based index of the item within the collection.</param>
-		public static CollectionChangedEventArgs ItemRemoved(object item, int index)
+		public static CollectionChangedEventArgs ItemRemoved(int index)
 		{
-			Assert.ArgumentNotNull(item);
-			return new CollectionChangedEventArgs(CollectionChangedAction.Remove, item, index);
+			return new CollectionChangedEventArgs(CollectionChangedAction.Remove, index);
 		}
 
 		/// <summary>
 		///     Initializes a new instance describing a replacement of an item in the collection.
 		/// </summary>
-		/// <param name="item">The new item that replaces the old one at the given index.</param>
 		/// <param name="index">The zero-based index of the item within the collection.</param>
-		public static CollectionChangedEventArgs ItemReplaced(object item, int index)
+		public static CollectionChangedEventArgs ItemReplaced(int index)
 		{
-			Assert.ArgumentNotNull(item);
-			return new CollectionChangedEventArgs(CollectionChangedAction.Replace, item, index);
+			return new CollectionChangedEventArgs(CollectionChangedAction.Replace, index);
 		}
 
 		/// <summary>
@@ -102,7 +77,7 @@ namespace Pegasus.UserInterface
 		/// </summary>
 		public static CollectionChangedEventArgs Reset()
 		{
-			return new CollectionChangedEventArgs(CollectionChangedAction.Reset, null, 0);
+			return new CollectionChangedEventArgs(CollectionChangedAction.Reset, 0);
 		}
 	}
 }

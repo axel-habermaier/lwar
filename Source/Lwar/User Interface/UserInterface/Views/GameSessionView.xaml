@@ -27,7 +27,6 @@
 								HasDepthStencil="true"
 								DrawMethod="OnDraw"
 								input:Cursor.Cursor="{StaticResource Crosshair}"
-								Resolution="{Binding Resolution}"
 								ResolutionSource="{Binding ResolutionSource}">
 		<controls:AreaPanel x:Name="LayoutRoot">
 

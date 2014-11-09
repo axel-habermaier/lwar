@@ -9,7 +9,7 @@
 	///     Represents a two-component vector.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
-	public struct Vector2 : IEquatable<Vector2>
+	public struct Vector2 : IEquatable<Vector2>, IFormattable
 	{
 		/// <summary>
 		///     A vector with all components set to zero.
@@ -125,6 +125,16 @@
 		}
 
 		/// <summary>
+		///     Formats the value of the current instance using the specified format.
+		/// </summary>
+		/// <param name="format">The format to use.</param>
+		/// <param name="formatProvider">The provider to use to format the value</param>
+		public string ToString(string format, IFormatProvider formatProvider)
+		{
+			return String.Format(formatProvider, String.Format("X: {{0:{0}}}, Y: {{1:{0}}}", format), X, Y);
+		}
+
+		/// <summary>
 		///     Returns a string representation of this vector.
 		/// </summary>
 		public override string ToString()
@@ -228,7 +238,8 @@
 		/// <param name="matrix">The transformation matrix that should be applied.</param>
 		public static Vector2 Transform(ref Vector2 vector, ref Matrix matrix)
 		{
-			return new Vector2(matrix.M11 * vector.X + matrix.M21 * vector.Y + matrix.M41,
+			return new Vector2(
+				matrix.M11 * vector.X + matrix.M21 * vector.Y + matrix.M41,
 				matrix.M12 * vector.X + matrix.M22 * vector.Y + matrix.M42);
 		}
 
@@ -240,7 +251,8 @@
 		/// <param name="result">The vector that stores the result of the transformation.</param>
 		public static void Transform(ref Vector2 vector, ref Matrix matrix, out Vector2 result)
 		{
-			result = new Vector2(matrix.M11 * vector.X + matrix.M21 * vector.Y + matrix.M41,
+			result = new Vector2(
+				matrix.M11 * vector.X + matrix.M21 * vector.Y + matrix.M41,
 				matrix.M12 * vector.X + matrix.M22 * vector.Y + matrix.M42);
 		}
 

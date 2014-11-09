@@ -1,7 +1,6 @@
 namespace Lwar.Network.Messages
 {
 	using System;
-	using Pegasus.Entities;
 	using Pegasus.Math;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Utilities;
@@ -30,7 +29,7 @@ namespace Lwar.Network.Messages
 		/// <summary>
 		///     Gets the entity that is updated.
 		/// </summary>
-		public Identity Entity { get; private set; }
+		public NetworkIdentity Entity { get; private set; }
 
 		/// <summary>
 		///     Gets the orientation of the ray.
@@ -50,7 +49,7 @@ namespace Lwar.Network.Messages
 		/// <summary>
 		///     Gets the target entity that is hit by the ray, if any.
 		/// </summary>
-		public Identity Target { get; private set; }
+		public NetworkIdentity Target { get; private set; }
 
 		/// <summary>
 		///     Serializes the message using the given writer.
@@ -97,7 +96,7 @@ namespace Lwar.Network.Messages
 		/// <param name="origin">The origin of the ray.</param>
 		/// <param name="length">The length of the ray.</param>
 		/// <param name="orientation">The orientation of the ray.</param>
-		public static Message Create(PoolAllocator poolAllocator, Identity entity, Identity target, Vector2 origin,
+		public static Message Create(PoolAllocator poolAllocator, NetworkIdentity entity, NetworkIdentity target, Vector2 origin,
 									 float length, float orientation)
 		{
 			Assert.ArgumentNotNull(poolAllocator);

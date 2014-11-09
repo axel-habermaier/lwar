@@ -192,38 +192,27 @@
       <Link>Assets\ShaderSignatures.cs</Link>
     </Compile>
     <Compile Include="DebugServer.cs" />
-    <Compile Include="Gameplay\Server\Behaviors\BoundaryBehavior.cs" />
-    <Compile Include="Gameplay\Server\Behaviors\PlayerInputBehavior.cs" />
-    <Compile Include="Gameplay\Server\Behaviors\MotionBehavior.cs" />
-    <Compile Include="Gameplay\Server\Behaviors\OrbitBehavior.cs" />
-    <Compile Include="Gameplay\Server\Behaviors\PropulsionBehavior.cs" />
-    <Compile Include="Gameplay\Server\Behaviors\RelativeTransformBehavior.cs" />
-    <Compile Include="Gameplay\Server\Behaviors\RotationBehavior.cs" />
-    <Compile Include="Gameplay\Server\Behaviors\ScriptBehavior.cs" />
-    <Compile Include="Gameplay\Server\Behaviors\SyncToClientsBehavior.cs" />
-    <Compile Include="Gameplay\Server\Behaviors\SpriteBehavior.cs" />
-    <Compile Include="Gameplay\Server\Behaviors\TimeToLiveBehavior.cs" />
     <Compile Include="Gameplay\Server\ClientCollection.cs" />
-    <Compile Include="Gameplay\Server\Components\AfterBurnerState.cs" />
-    <Compile Include="Gameplay\Server\Components\RelativeTransform.cs" />
-    <Compile Include="Gameplay\Server\Components\Propulsion.cs" />
-    <Compile Include="Gameplay\Server\Scripts\FireBulletScript.cs" />
-    <Compile Include="Gameplay\Server\Components\PlayerInput.cs" />
-    <Compile Include="Gameplay\Server\Components\Motion.cs" />
-    <Compile Include="Gameplay\Server\Components\Orbit.cs" />
-    <Compile Include="Gameplay\Server\Components\Rotation.cs" />
-    <Compile Include="Gameplay\Server\Components\ScriptCollection.cs" />
-    <Compile Include="Gameplay\Server\Components\NetworkSync.cs" />
-    <Compile Include="Gameplay\Server\Components\Owner.cs" />
-    <Compile Include="Gameplay\Server\Components\Ray.cs" />
-    <Compile Include="Gameplay\Server\Components\TimeToLive.cs" />
-    <Compile Include="Gameplay\Server\Components\Transform.cs" />
-    <Compile Include="Gameplay\Server\Components\Sprite.cs" />
-    <Compile Include="Gameplay\Server\EntityFactory.cs" />
+    <Compile Include="Gameplay\Server\Behaviors\BoundaryBehavior.cs" />
+    <Compile Include="Gameplay\Server\Behaviors\GunBehavior.cs" />
+    <Compile Include="Gameplay\Server\Behaviors\PhaserBehavior.cs" />
+    <Compile Include="Gameplay\Server\Behaviors\OrbitBehavior.cs" />
+    <Compile Include="Gameplay\Server\Behaviors\WeaponBehavior.cs" />
+    <Compile Include="Gameplay\Server\Entities\Bullet.cs" />
+    <Compile Include="Gameplay\Server\Entities\Entity.cs" />
+    <Compile Include="Gameplay\Server\Entities\Phaser.cs" />
+    <Compile Include="Gameplay\Server\Entities\Planet.cs" />
+    <Compile Include="Gameplay\Server\Entities\Ship.Server.cs" />
+    <Compile Include="Gameplay\Server\Entities\Ship.cs" />
+    <Compile Include="Gameplay\Server\Entities\Sun.cs" />
+    <Compile Include="Gameplay\Server\Entities\Weapon.Server.cs" />
+    <Compile Include="Gameplay\Server\Entities\Weapon.cs" />
     <Compile Include="Gameplay\Server\GameSession.cs" />
-    <Compile Include="Gameplay\Server\Scripts\FirePhaserScript.cs" />
-    <Compile Include="Gameplay\Server\Scripts\Script.cs" />
+    <Compile Include="Gameplay\Server\PhysicsSimulation.cs" />
     <Compile Include="Gameplay\Server\ServerLogic.cs" />
+    <Compile Include="Gameplay\Server\Templates\ShipTemplate.cs" />
+    <Compile Include="Gameplay\Server\Templates\WarpDriveTemplate.cs" />
+    <Compile Include="Gameplay\Server\Templates\WeaponTemplate.cs" />
     <Compile Include="Network\EntityType.cs" />
     <Compile Include="Gameplay\Server\Player.cs" />
     <Compile Include="Gameplay\Server\PlayerCollection.cs" />
@@ -234,6 +223,9 @@
       <DependentUpon>MessageHandler.cs</DependentUpon>
     </Compile>
     <Compile Include="Gameplay\Client\MessageHandler.cs" />
+    <Compile Include="Network\NetworkIdentity.cs" />
+    <Compile Include="Network\NetworkIdentityAllocator.cs" />
+    <Compile Include="Network\NetworkIdentityMap.cs" />
     <Compile Include="Network\ReliableTransmissionAttribute.cs" />
     <Compile Include="Network\UnreliableTransmissionAttribute.cs" />
     <Compile Include="ServerDiscovery.cs" />

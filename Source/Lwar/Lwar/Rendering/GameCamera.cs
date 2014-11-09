@@ -17,17 +17,17 @@
 		/// <summary>
 		///     The maximum allowed distance to the XZ plane.
 		/// </summary>
-		private const float MaxZoom = 20000.0f;
+		private const float MaxZoom = 10000.0f;
 
 		/// <summary>
 		///     The minimum allowed distance to the XZ plane.
 		/// </summary>
-		private const float MinZoom = 1000.0f;
+		private const float MinZoom = 2000.0f;
 
 		/// <summary>
 		///     The default distance to the XZ plane.
 		/// </summary>
-		private const float DefaultZoom = 3000.0f;
+		private const float DefaultZoom = 6000.0f;
 
 		/// <summary>
 		///     Determines how fast the zoom level changes when the user scrolls the mouse wheel.

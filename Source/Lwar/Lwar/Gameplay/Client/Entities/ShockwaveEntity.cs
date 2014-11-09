@@ -1,7 +1,7 @@
 ﻿namespace Lwar.Gameplay.Client.Entities
 {
 	using System;
-	using Pegasus.Entities;
+	using Network;
 	using Pegasus.Math;
 	using Pegasus.Utilities;
 
@@ -31,7 +31,7 @@
 		/// </summary>
 		/// <param name="gameSession">The game session the instance should be created for.</param>
 		/// <param name="id">The generational identity of the shockwave.</param>
-		public static ShockwaveEntity Create(ClientGameSession gameSession, Identity id)
+		public static ShockwaveEntity Create(ClientGameSession gameSession, NetworkIdentity id)
 		{
 			Assert.ArgumentNotNull(gameSession);
 

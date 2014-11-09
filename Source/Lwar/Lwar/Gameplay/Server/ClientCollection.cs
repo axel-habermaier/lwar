@@ -119,7 +119,11 @@
 			foreach (var client in _clients)
 				client.Disconnect();
 
-			_clients.SafeDisposeAll();
+			while (_clients.Count > 0)
+			{
+				_clients[_clients.Count - 1].SafeDispose();
+				_clients.RemoveAt(_clients.Count - 1);
+			}
 		}
 	}
 }

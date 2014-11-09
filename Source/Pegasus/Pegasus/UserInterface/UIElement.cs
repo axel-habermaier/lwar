@@ -525,7 +525,7 @@
 		public void CreateDataBinding<T>(object sourceObject, DependencyProperty<T> targetProperty,
 										 BindingMode bindingMode,
 										 string property1, string property2 = null, string property3 = null,
-										 IValueConverter converter = null)
+										 IValueConverter<T> converter = null)
 		{
 			Assert.ArgumentNotNull(sourceObject);
 			Assert.ArgumentNotNull(targetProperty);
@@ -550,7 +550,7 @@
 		public void CreateDataBinding<T>(object sourceObject, DependencyProperty<T> targetProperty,
 										 T fallbackValue, BindingMode bindingMode,
 										 string property1, string property2 = null, string property3 = null,
-										 IValueConverter converter = null)
+										 IValueConverter<T> converter = null)
 		{
 			Assert.ArgumentNotNull(sourceObject);
 			Assert.ArgumentNotNull(targetProperty);
@@ -571,7 +571,7 @@
 		/// <param name="converter">The convert that should be used to convert the source value to the property type.</param>
 		public void CreateDataBinding<T>(DependencyProperty<T> targetProperty, BindingMode bindingMode,
 										 string property1 = null, string property2 = null,
-										 IValueConverter converter = null)
+										 IValueConverter<T> converter = null)
 		{
 			CreateDataBinding(this, targetProperty, bindingMode, "DataContext", property1, property2, converter);
 		}
@@ -588,7 +588,7 @@
 		/// <param name="converter">The convert that should be used to convert the source value to the property type.</param>
 		public void CreateDataBinding<T>(DependencyProperty<T> targetProperty, T fallbackValue, BindingMode bindingMode,
 										 string property1 = null, string property2 = null,
-										 IValueConverter converter = null)
+										 IValueConverter<T> converter = null)
 		{
 			CreateDataBinding(this, targetProperty, fallbackValue, bindingMode, "DataContext", property1, property2, converter);
 		}

@@ -7,7 +7,7 @@
 	/// </summary>
 	/// <typeparam name="TSource">The source type of the conversion.</typeparam>
 	/// <typeparam name="TTarget">The target type of the conversion.</typeparam>
-	public interface IValueConverter<TSource, TTarget> : IValueConverter
+	public interface IValueConverter<TSource, TTarget> : IValueConverter<TTarget>
 	{
 		/// <summary>
 		///     Converts the given value to the target type.

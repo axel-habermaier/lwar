@@ -41,7 +41,7 @@
 
 			OnPropertyChanged("Count");
 			OnPropertyChanged("Item[]");
-			OnCollectionChanged(CollectionChangedEventArgs.ItemAdded(item, index));
+			OnCollectionChanged(CollectionChangedEventArgs.ItemAdded(index));
 		}
 
 		/// <summary>
@@ -50,12 +50,11 @@
 		/// <param name="index">The zero-based index of the element that should be removed.</param>
 		protected override void RemoveItem(int index)
 		{
-			var item = this[index];
 			base.RemoveItem(index);
 
 			OnPropertyChanged("Count");
 			OnPropertyChanged("Item[]");
-			OnCollectionChanged(CollectionChangedEventArgs.ItemRemoved(item, index));
+			OnCollectionChanged(CollectionChangedEventArgs.ItemRemoved(index));
 		}
 
 		/// <summary>
@@ -68,7 +67,7 @@
 			base.SetItem(index, item);
 
 			OnPropertyChanged("Item[]");
-			OnCollectionChanged(CollectionChangedEventArgs.ItemReplaced(item, index));
+			OnCollectionChanged(CollectionChangedEventArgs.ItemReplaced(index));
 		}
 
 		/// <summary>

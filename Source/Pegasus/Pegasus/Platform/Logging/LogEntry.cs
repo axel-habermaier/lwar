@@ -7,7 +7,7 @@
 	/// <summary>
 	///     Represents a log entry with a specific type and message.
 	/// </summary>
-	public struct LogEntry
+	public struct LogEntry : IEquatable<LogEntry>
 	{
 		/// <summary>
 		///     Used to measure the time since the start of the application.
@@ -52,6 +52,57 @@
 		///     Gets the date and time of the creation of the log entry.
 		/// </summary>
 		public double Time { get; private set; }
+
+		/// <summary>
+		///     Indicates whether the current object is equal to another object of the same type.
+		/// </summary>
+		/// <param name="other">An object to compare with this object.</param>
+		public bool Equals(LogEntry other)
+		{
+			return LogType == other.LogType && string.Equals(Message, other.Message) && Time.Equals(other.Time);
+		}
+
+		/// <summary>
+		///     Indicates whether this instance and a specified object are equal.
+		/// </summary>
+		/// <param name="obj">Another object to compare to. </param>
+		public override bool Equals(object obj)
+		{
+			if (ReferenceEquals(null, obj))
+				return false;
+
+			return obj is LogEntry && Equals((LogEntry)obj);
+		}
+
+		/// <summary>
+		///     Returns the hash code for this instance.
+		/// </summary>
+		public override int GetHashCode()
+		{
+			unchecked
+			{
+				var hashCode = (int)LogType;
+				hashCode = (hashCode * 397) ^ (Message != null ? Message.GetHashCode() : 0);
+				hashCode = (hashCode * 397) ^ Time.GetHashCode();
+				return hashCode;
+			}
+		}
+
+		/// <summary>
+		///     Checks whether the given log entries are equal.
+		/// </summary>
+		public static bool operator ==(LogEntry left, LogEntry right)
+		{
+			return left.Equals(right);
+		}
+
+		/// <summary>
+		///     Checks whether the given log entries are not equal.
+		/// </summary>
+		public static bool operator !=(LogEntry left, LogEntry right)
+		{
+			return !left.Equals(right);
+		}
 
 		/// <summary>
 		///     Raises the appropriate log event for the log entries.

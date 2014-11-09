@@ -2,7 +2,7 @@
 {
 	using System;
 	using Actors;
-	using Pegasus.Entities;
+	using Network;
 	using Pegasus.Math;
 	using Pegasus.Utilities;
 
@@ -74,7 +74,7 @@
 		/// <param name="gameSession">The game session the instance should be created for.</param>
 		/// <param name="id">The generational identity of the ship.</param>
 		/// <param name="player">The player the ship belongs to.</param>
-		public static ShipEntity Create(ClientGameSession gameSession, Identity id, Player player)
+		public static ShipEntity Create(ClientGameSession gameSession, NetworkIdentity id, Player player)
 		{
 			Assert.ArgumentNotNull(gameSession);
 			Assert.ArgumentNotNull(player);

@@ -2,7 +2,6 @@ namespace Lwar.Network.Messages
 {
 	using System;
 	using System.Linq;
-	using Pegasus.Entities;
 	using Pegasus.Math;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Utilities;
@@ -52,7 +51,7 @@ namespace Lwar.Network.Messages
 		/// <summary>
 		///     Gets the player that generated the input.
 		/// </summary>
-		public Identity Player { get; private set; }
+		public NetworkIdentity Player { get; private set; }
 
 		/// <summary>
 		///     Gets the boolean state values for the weapon slots, including the seven previous states.
@@ -153,7 +152,7 @@ namespace Lwar.Network.Messages
 		/// <param name="turnRight">The boolean state value for the turn right input, including the seven previous states.</param>
 		/// <param name="afterBurner">The boolean state value for the after burner input, including the seven previous states.</param>
 		/// <param name="fireWeapons">The boolean state values for the shooting inputs, including the seven previous states.</param>
-		public static PlayerInputMessage Create(PoolAllocator poolAllocator, Identity player, uint frameNumber, Vector2 target,
+		public static PlayerInputMessage Create(PoolAllocator poolAllocator, NetworkIdentity player, uint frameNumber, Vector2 target,
 												byte forward, byte backward,
 												byte strafeLeft, byte strafeRight,
 												byte turnLeft, byte turnRight,

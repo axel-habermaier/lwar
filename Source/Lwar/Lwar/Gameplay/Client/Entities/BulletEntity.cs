@@ -1,7 +1,7 @@
 ﻿namespace Lwar.Gameplay.Client.Entities
 {
 	using System;
-	using Pegasus.Entities;
+	using Network;
 	using Pegasus.Utilities;
 
 	/// <summary>
@@ -14,7 +14,7 @@
 		/// </summary>
 		/// <param name="gameSession">The game session the instance should be created for.</param>
 		/// <param name="id">The generational identity of the bullet.</param>
-		public static BulletEntity Create(ClientGameSession gameSession, Identity id)
+		public static BulletEntity Create(ClientGameSession gameSession, NetworkIdentity id)
 		{
 			Assert.ArgumentNotNull(gameSession);
 

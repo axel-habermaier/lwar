@@ -196,8 +196,8 @@
 			style.Triggers.Add(trigger2);
 
 			_control1.Style = style;
-			_control1.IntegerTest1.Should().Be(0);
-			_control1.IntegerTest2.Should().Be(0);
+			_control1.IntegerTest1.Should().Be(TestControl.IntegerTestProperty1.DefaultValue);
+			_control1.IntegerTest2.Should().Be(TestControl.IntegerTestProperty2.DefaultValue);
 
 			_control1.BooleanTest1 = true;
 			_control1.IntegerTest1.Should().Be(value1);
@@ -208,12 +208,12 @@
 			_control1.IntegerTest2.Should().Be(value2);
 
 			_control1.BooleanTest1 = false;
-			_control1.IntegerTest1.Should().Be(0);
+			_control1.IntegerTest1.Should().Be(TestControl.IntegerTestProperty1.DefaultValue);
 			_control1.IntegerTest2.Should().Be(value2);
 
 			_control1.BooleanTest2 = false;
-			_control1.IntegerTest1.Should().Be(0);
-			_control1.IntegerTest2.Should().Be(0);
+			_control1.IntegerTest1.Should().Be(TestControl.IntegerTestProperty1.DefaultValue);
+			_control1.IntegerTest2.Should().Be(TestControl.IntegerTestProperty2.DefaultValue);
 		}
 
 		[Test]
@@ -235,8 +235,8 @@
 			style.Triggers.Add(trigger2);
 
 			_control1.Style = style;
-			_control1.IntegerTest1.Should().Be(0);
-
+			_control1.IntegerTest1.Should().Be(TestControl.IntegerTestProperty1.DefaultValue);
+											 
 			_control1.BooleanTest1 = true;
 			_control1.IntegerTest1.Should().Be(value1);
 
@@ -247,7 +247,7 @@
 			_control1.IntegerTest1.Should().Be(value2);
 
 			_control1.BooleanTest2 = false;
-			_control1.IntegerTest1.Should().Be(0);
+			_control1.IntegerTest1.Should().Be(TestControl.IntegerTestProperty1.DefaultValue);
 		}
 
 		[Test]
@@ -277,13 +277,13 @@
 			style.Triggers.Add(trigger);
 
 			_control1.Style = style;
-			_control1.IntegerTest1.Should().Be(0);
-
+			_control1.IntegerTest1.Should().Be(TestControl.IntegerTestProperty1.DefaultValue);
+											   
 			_control1.BooleanTest1 = true;
 			_control1.IntegerTest1.Should().Be(value);
 
 			_control1.BooleanTest1 = false;
-			_control1.IntegerTest1.Should().Be(0);
+			_control1.IntegerTest1.Should().Be(TestControl.IntegerTestProperty1.DefaultValue);
 		}
 
 		[Test]
@@ -300,7 +300,7 @@
 			style.Setters.Add(new Setter<int>(TestControl.IntegerTestProperty2, value2));
 
 			_control1.Style = style;
-			_control1.IntegerTest1.Should().Be(0);
+			_control1.IntegerTest1.Should().Be(TestControl.IntegerTestProperty1.DefaultValue);
 			_control1.IntegerTest2.Should().Be(value2);
 
 			_control1.BooleanTest1 = true;
@@ -308,7 +308,7 @@
 			_control1.IntegerTest2.Should().Be(value2);
 
 			_control1.BooleanTest1 = false;
-			_control1.IntegerTest1.Should().Be(0);
+			_control1.IntegerTest1.Should().Be(TestControl.IntegerTestProperty1.DefaultValue);
 			_control1.IntegerTest2.Should().Be(value2);
 		}
 
@@ -352,7 +352,7 @@
 			style.Triggers.Add(trigger2);
 
 			_control1.Style = style;
-			_control1.IntegerTest1.Should().Be(0);
+			_control1.IntegerTest1.Should().Be(TestControl.IntegerTestProperty1.DefaultValue);
 
 			_control1.BooleanTest1 = true;
 			_control1.IntegerTest1.Should().Be(value1);
@@ -370,7 +370,7 @@
 			_control1.IntegerTest1.Should().Be(value2);
 
 			_control1.BooleanTest2 = false;
-			_control1.IntegerTest1.Should().Be(0);
+			_control1.IntegerTest1.Should().Be(TestControl.IntegerTestProperty1.DefaultValue);
 		}
 
 		[Test]
@@ -389,13 +389,13 @@
 			_control1.Style = style;
 			_control2.Style = style;
 
-			_control1.IntegerTest1.Should().Be(0);
-			_control2.IntegerTest1.Should().Be(0);
+			_control1.IntegerTest1.Should().Be(TestControl.IntegerTestProperty1.DefaultValue);
+			_control2.IntegerTest1.Should().Be(TestControl.IntegerTestProperty1.DefaultValue);
 			_control1.IntegerTest2.Should().Be(value2);
 			_control2.IntegerTest2.Should().Be(value2);
 
 			_control2.BooleanTest1 = true;
-			_control1.IntegerTest1.Should().Be(0);
+			_control1.IntegerTest1.Should().Be(TestControl.IntegerTestProperty1.DefaultValue);
 			_control2.IntegerTest1.Should().Be(value1);
 			_control1.IntegerTest2.Should().Be(value2);
 			_control2.IntegerTest2.Should().Be(value2);
@@ -408,7 +408,7 @@
 
 			_control2.BooleanTest1 = false;
 			_control1.IntegerTest1.Should().Be(value1);
-			_control2.IntegerTest1.Should().Be(0);
+			_control2.IntegerTest1.Should().Be(TestControl.IntegerTestProperty1.DefaultValue);
 			_control1.IntegerTest2.Should().Be(value2);
 			_control2.IntegerTest2.Should().Be(value2);
 		}
@@ -507,8 +507,8 @@
 
 			_control1.BooleanTest1 = false;
 			_control1.Style = null;
-			_control1.IntegerTest1.Should().Be(0);
-			_control1.IntegerTest2.Should().Be(0);
+			_control1.IntegerTest1.Should().Be(TestControl.IntegerTestProperty1.DefaultValue);
+			_control1.IntegerTest2.Should().Be(TestControl.IntegerTestProperty2.DefaultValue);
 		}
 
 		[Test]
@@ -535,8 +535,8 @@
 			_control1.IntegerTest2.Should().Be(value2);
 
 			_control1.Style = null;
-			_control1.IntegerTest1.Should().Be(0);
-			_control1.IntegerTest2.Should().Be(0);
+			_control1.IntegerTest1.Should().Be(TestControl.IntegerTestProperty1.DefaultValue);
+			_control1.IntegerTest2.Should().Be(TestControl.IntegerTestProperty2.DefaultValue);
 		}
 	}
 }

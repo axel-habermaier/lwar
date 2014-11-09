@@ -3,9 +3,15 @@
 	using System;
 
 	/// <summary>
-	///     Base marker interface for value conversions.
+	///     Converts values from the given source type to the given target type.
 	/// </summary>
-	public interface IValueConverter
+	/// <typeparam name="T">The type of the target value.</typeparam>
+	public interface IValueConverter<out T>
 	{
+		/// <summary>
+		///     Converts the given value to the target type.
+		/// </summary>
+		/// <param name="value">The value that should be converted.</param>
+		T ConvertToTarget(object value);
 	}
 }

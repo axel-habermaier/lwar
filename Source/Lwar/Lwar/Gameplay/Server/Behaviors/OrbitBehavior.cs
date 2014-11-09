@@ -1,50 +1,86 @@
 ﻿namespace Lwar.Gameplay.Server.Behaviors
 {
 	using System;
-	using Components;
-	using Pegasus.Entities;
 	using Pegasus.Math;
+	using Pegasus.Platform.Memory;
+	using Pegasus.Scene;
+	using Pegasus.Utilities;
 
 	/// <summary>
-	///     Updates the positions of entities that orbit around another entity.
+	///     Makes the scene node move in an orbit around its parent.
 	/// </summary>
-	public class OrbitBehavior : EntityBehavior<Orbit, RelativeTransform>
+	public class OrbitBehavior : Behavior
 	{
+		/// <summary>
+		///     An offset to the current position on the orbital trajectory.
+		/// </summary>
+		private float _orbitOffset;
+
+		/// <summary>
+		///     The radius of the orbit.
+		/// </summary>
+		private float _orbitRadius;
+
+		/// <summary>
+		///     The speed of the movement. The sign of the speed determines the direction of the orbital movement.
+		/// </summary>
+		private float _orbitSpeed;
+
 		/// <summary>
 		///     The number of seconds that have elapsed since the first update.
 		/// </summary>
 		private double _totalSeconds;
 
 		/// <summary>
-		///     Removes all entities that crossed the boundaries of the galaxy.
+		///     Initializes the type.
 		/// </summary>
-		/// <param name="elapsedSeconds">The number of seconds that have elapsed since the last update.</param>
-		public void UpdateOrbits(float elapsedSeconds)
+		static OrbitBehavior()
 		{
-			_totalSeconds += elapsedSeconds;
-			Process();
+			ConstructorCache.Register(() => new OrbitBehavior());
 		}
 
 		/// <summary>
-		///     Processes the entities affected by the behavior.
+		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="entities">The entities affected by the behavior.</param>
-		/// <param name="orbits">The orbit components of the affected entities.</param>
-		/// <param name="transforms">The relative transform components of the affected entities.</param>
-		/// <param name="count">The number of entities that should be processed.</param>
-		/// <remarks>
-		///     All arrays have the same length. If a component is optional for an entity and the component is missing, a null
-		///     value is placed in the array.
-		/// </remarks>
-		protected override void Process(Entity[] entities, Orbit[] orbits, RelativeTransform[] transforms, int count)
+		private OrbitBehavior()
 		{
-			for (var i = 0; i < count; ++i)
-			{
-				var time = _totalSeconds * orbits[i].Speed + orbits[i].Offset;
-				var x = Math.Sin(time);
-				var y = Math.Cos(time);
-				transforms[i].Position = new Vector2((float)x, (float)y) * orbits[i].Radius;
-			}
+		}
+
+		/// <summary>
+		///     Invoked when the behavior should execute a step.
+		/// </summary>
+		/// <param name="elapsedSeconds">The elapsed time in seconds since the last execution of the behavior.</param>
+		public override void Execute(float elapsedSeconds)
+		{
+			_totalSeconds += elapsedSeconds;
+			var time = _totalSeconds * _orbitSpeed + _orbitOffset;
+
+			var x = Math.Sin(time);
+			var y = Math.Cos(time);
+
+			SceneNode.Position = new Vector3((float)x, 0, (float)y) * _orbitRadius;
+		}
+
+		/// <summary>
+		///     Creates a new instance.
+		/// </summary>
+		/// <param name="allocator">The allocator that should be used to allocate pool objects.</param>
+		/// <param name="orbitRadius">The radius of the planet's orbit.</param>
+		/// <param name="orbitSpeed">
+		///     The orbital speed of the planet. The sign of the speed determines the direction of the orbital movement.
+		/// </param>
+		/// <param name="orbitOffset">An offset to the position on the orbital trajectory.</param>
+		public static OrbitBehavior Create(PoolAllocator allocator, float orbitRadius, float orbitSpeed, float orbitOffset)
+		{
+			Assert.ArgumentNotNull(allocator);
+
+			var behavior = allocator.Allocate<OrbitBehavior>();
+			behavior._orbitOffset = orbitOffset;
+			behavior._orbitSpeed = orbitSpeed;
+			behavior._orbitRadius = orbitRadius;
+			behavior._totalSeconds = 0;
+
+			return behavior;
 		}
 	}
 }

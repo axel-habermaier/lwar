@@ -3,7 +3,6 @@
 	using System;
 	using Actors;
 	using Network;
-	using Pegasus.Entities;
 	using Pegasus.Math;
 	using Pegasus.Utilities;
 
@@ -61,7 +60,7 @@
 		/// </summary>
 		/// <param name="gameSession">The game session the instance should be created for.</param>
 		/// <param name="id">The generational identity of the ray.</param>
-		public static RayEntity Create(ClientGameSession gameSession, Identity id)
+		public static RayEntity Create(ClientGameSession gameSession, NetworkIdentity id)
 		{
 			Assert.ArgumentNotNull(gameSession);
 

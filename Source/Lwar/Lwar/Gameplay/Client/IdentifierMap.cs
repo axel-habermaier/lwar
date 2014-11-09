@@ -1,7 +1,7 @@
 ﻿namespace Lwar.Gameplay.Client
 {
 	using System;
-	using Pegasus.Entities;
+	using Network;
 	using Pegasus.Utilities;
 
 	/// <summary>
@@ -34,7 +34,7 @@
 		///     be found, or if the generation did not match.
 		/// </summary>
 		/// <param name="identity">The identity of the object that should be returned.</param>
-		public T this[Identity identity]
+		public T this[NetworkIdentity identity]
 		{
 			get
 			{
@@ -53,7 +53,7 @@
 		/// </summary>
 		/// <param name="identity">The identity of the object.</param>
 		/// <param name="obj">The object that should be mapped.</param>
-		public void Add(Identity identity, T obj)
+		public void Add(NetworkIdentity identity, T obj)
 		{
 			Assert.ArgumentInRange(identity.Identifier, 0, _map.Length - 1);
 			Assert.ArgumentNotNull(obj);
@@ -66,7 +66,7 @@
 		///     Removes the mapping for the given object.
 		/// </summary>
 		/// <param name="identity">The identity of the object whose mapping should be removed.</param>
-		public void Remove(Identity identity)
+		public void Remove(NetworkIdentity identity)
 		{
 			Assert.ArgumentInRange(identity.Identifier, 0, _map.Length - 1);
 			Assert.That(_map[identity.Identifier].Object != null, "The object is not mapped.");
@@ -80,7 +80,7 @@
 		///     Gets a value indicating whether the an object with the given identity is currently mapped.
 		/// </summary>
 		/// <param name="identity">The identity that should be checked.</param>
-		public bool Contains(Identity identity)
+		public bool Contains(NetworkIdentity identity)
 		{
 			Assert.ArgumentInRange(identity.Identifier, 0, _map.Length - 1);
 
@@ -99,7 +99,7 @@
 			/// <summary>
 			///     The generational identity of the object.
 			/// </summary>
-			public Identity Identifier;
+			public NetworkIdentity Identifier;
 
 			/// <summary>
 			///     The object with the generational identity.

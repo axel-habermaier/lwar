@@ -2,7 +2,7 @@
 {
 	using System;
 	using Actors;
-	using Pegasus.Entities;
+	using Network;
 	using Pegasus.Math;
 
 	/// <summary>
@@ -13,7 +13,7 @@
 		/// <summary>
 		///     Gets the generational identity of the entity.
 		/// </summary>
-		Identity Identifier { get; }
+		NetworkIdentity Identifier { get; }
 
 		/// <summary>
 		///     Applies the update message sent by the server to the entity's state.

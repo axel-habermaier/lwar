@@ -2,7 +2,6 @@ namespace Lwar.Network.Messages
 {
 	using System;
 	using System.Linq;
-	using Pegasus.Entities;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Utilities;
 
@@ -31,7 +30,7 @@ namespace Lwar.Network.Messages
 		/// <summary>
 		///     Gets the player whose ship and weapons types are changed.
 		/// </summary>
-		public Identity Player { get; private set; }
+		public NetworkIdentity Player { get; private set; }
 
 		/// <summary>
 		///     Gets the selected ship type.
@@ -86,7 +85,7 @@ namespace Lwar.Network.Messages
 		/// <param name="player">The player whose ship and weapon types should be changed.</param>
 		/// <param name="ship">The new ship type.</param>
 		/// <param name="weapons">The types of the selected weapons.</param>
-		public static PlayerLoadoutMessage Create(PoolAllocator poolAllocator, Identity player, EntityType ship, EntityType[] weapons)
+		public static PlayerLoadoutMessage Create(PoolAllocator poolAllocator, NetworkIdentity player, EntityType ship, EntityType[] weapons)
 		{
 			Assert.ArgumentNotNull(poolAllocator);
 			Assert.ArgumentInRange(ship);

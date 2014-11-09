@@ -25,6 +25,11 @@
 		/// <summary>
 		///     Indicates that the data flows from the source to the target and vice versa.
 		/// </summary>
-		TwoWay
+		TwoWay,
+
+		/// <summary>
+		///     Indicates that the binding occurs only once and subsequent changes to the source do not update the target.
+		/// </summary>
+		OneTime
 	}
 }

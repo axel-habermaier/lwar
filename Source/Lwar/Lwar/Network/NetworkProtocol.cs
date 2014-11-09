@@ -1,7 +1,6 @@
 ﻿namespace Lwar.Network
 {
 	using System;
-	using Pegasus.Entities;
 	using Pegasus.Platform.Network;
 
 	/// <summary>
@@ -100,12 +99,12 @@
 		/// <summary>
 		///     The identity of the player that represents the server.
 		/// </summary>
-		public static readonly Identity ServerPlayerIdentity = new Identity(0, 0);
+		public static readonly NetworkIdentity ServerPlayerIdentity = new NetworkIdentity(0, 0);
 
 		/// <summary>
 		///     The reserved entity identity.
 		/// </summary>
-		public static readonly Identity ReservedEntityIdentity = new Identity(UInt16.MaxValue, 0);
+		public static readonly NetworkIdentity ReservedEntityIdentity = new NetworkIdentity(UInt16.MaxValue, 0);
 
 		/// <summary>
 		///     The multicast group that is used for automatic server discovery.

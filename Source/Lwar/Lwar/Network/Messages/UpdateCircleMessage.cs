@@ -1,7 +1,6 @@
 namespace Lwar.Network.Messages
 {
 	using System;
-	using Pegasus.Entities;
 	using Pegasus.Math;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Utilities;
@@ -30,7 +29,7 @@ namespace Lwar.Network.Messages
 		/// <summary>
 		///     Gets the entity that is updated.
 		/// </summary>
-		public Identity Entity { get; private set; }
+		public NetworkIdentity Entity { get; private set; }
 
 		/// <summary>
 		///     Gets the new circle center.
@@ -81,7 +80,7 @@ namespace Lwar.Network.Messages
 		/// <param name="entity">The entity that is updated.</param>
 		/// <param name="center">The updated center of the circle entity.</param>
 		/// <param name="radius">The updated radius of the circle entity.</param>
-		public static Message Create(PoolAllocator poolAllocator, Identity entity, Vector2 center, float radius)
+		public static Message Create(PoolAllocator poolAllocator, NetworkIdentity entity, Vector2 center, float radius)
 		{
 			Assert.ArgumentNotNull(poolAllocator);
 

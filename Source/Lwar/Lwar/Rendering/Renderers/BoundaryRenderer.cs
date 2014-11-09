@@ -41,7 +41,7 @@
 		{
 			const int thickness = 64;
 			var outline = new CircleOutline();
-			outline.Add(Int16.MaxValue + thickness / 2, 265, thickness);
+			outline.Add(Int16.MaxValue + thickness / 2, 256, thickness);
 			_model = outline.ToModel(graphicsDevice);
 		}
 

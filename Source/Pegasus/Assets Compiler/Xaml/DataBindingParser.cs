@@ -31,7 +31,7 @@
 			var converter = Between(String(c => c != '}', "Converter"), openBrace, closeBrace);
 			var converterProperty = ~(String("Converter") + ws + ~Character('=') + ws) + converter + ws;
 
-			var mode = String("OneWayToSource") | String("OneWay") | String("TwoWay");
+			var mode = String("OneWayToSource") | String("OneWay") | String("TwoWay") | String("OneTime");
 			var modeProperty = ~(String("Mode") + ws + ~Character('=') + ws) + mode + ws;
 
 			var quotedString = Between(String(c => c != '\'', "quoted string").Apply(s => "\"" + s + "\""), quote, quote);

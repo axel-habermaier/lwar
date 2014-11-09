@@ -1,39 +1,48 @@
 ﻿namespace Lwar.Gameplay.Server.Behaviors
 {
 	using System;
-	using Components;
-	using Pegasus.Entities;
+	using Pegasus.Platform.Memory;
+	using Pegasus.Scene;
+	using Pegasus.Utilities;
 
 	/// <summary>
-	///     Removes entities that reach the boundaries of the galaxy.
+	///     Removes scene nodes that reach the boundaries of the galaxy.
 	/// </summary>
-	public class BoundaryBehavior : EntityBehavior<Transform>
+	public class BoundaryBehavior : Behavior
 	{
 		/// <summary>
-		///     Removes all entities that crossed the boundaries of the galaxy.
+		///     Initializes the type.
 		/// </summary>
-		public void RemoveEntitiesWithInvalidPositions()
+		static BoundaryBehavior()
 		{
-			Process();
+			ConstructorCache.Register(() => new BoundaryBehavior());
 		}
 
 		/// <summary>
-		///     Processes the entities affected by the behavior.
+		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="entities">The entities affected by the behavior.</param>
-		/// <param name="transforms">The transform components of the affected entities.</param>
-		/// <param name="count">The number of entities that should be processed.</param>
-		/// <remarks>
-		///     All arrays have the same length. If a component is optional for an entity and the component is missing, a null
-		///     value is placed in the array.
-		/// </remarks>
-		protected override void Process(Entity[] entities, Transform[] transforms, int count)
+		private BoundaryBehavior()
 		{
-			for (var i = 0; i < count; ++i)
-			{
-				if (transforms[i].Position.LengthSquared > Int16.MaxValue * Int16.MaxValue)
-					entities[i].Remove();
-			}
+		}
+
+		/// <summary>
+		///     Invoked when the behavior should execute a step.
+		/// </summary>
+		/// <param name="elapsedSeconds">The elapsed time in seconds since the last execution of the behavior.</param>
+		public override void Execute(float elapsedSeconds)
+		{
+			if (SceneNode.Position.LengthSquared > Int16.MaxValue * Int16.MaxValue)
+				SceneNode.Remove();
+		}
+
+		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		/// <param name="allocator">The allocator that should be used to allocate pooled objects.</param>
+		public static BoundaryBehavior Create(PoolAllocator allocator)
+		{
+			Assert.ArgumentNotNull(allocator);
+			return allocator.Allocate<BoundaryBehavior>();
 		}
 	}
 }

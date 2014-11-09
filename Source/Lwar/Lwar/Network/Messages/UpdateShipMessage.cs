@@ -2,7 +2,6 @@ namespace Lwar.Network.Messages
 {
 	using System;
 	using System.Linq;
-	using Pegasus.Entities;
 	using Pegasus.Math;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Utilities;
@@ -42,7 +41,7 @@ namespace Lwar.Network.Messages
 		/// <summary>
 		///     Gets the ship that is updated.
 		/// </summary>
-		public Identity Ship { get; private set; }
+		public NetworkIdentity Ship { get; private set; }
 
 		/// <summary>
 		///     Gets the new hull integrity of the ship in the range [0,100].
@@ -111,7 +110,7 @@ namespace Lwar.Network.Messages
 		/// <param name="hullIntegrity">The updated hull integrity of the ship.</param>
 		/// <param name="shields">The updated shield energy of the ship.</param>
 		/// <param name="weaponEnergyLevels">The updated energy levels of the ship.</param>
-		public static Message Create(PoolAllocator poolAllocator, Identity ship, Vector2 position, float orientation,
+		public static Message Create(PoolAllocator poolAllocator, NetworkIdentity ship, Vector2 position, float orientation,
 									 int hullIntegrity, int shields, int[] weaponEnergyLevels)
 		{
 			Assert.ArgumentNotNull(poolAllocator);

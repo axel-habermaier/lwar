@@ -31,7 +31,7 @@
 		/// <summary>
 		///     The converter that is used to convert the source value to the dependency property type.
 		/// </summary>
-		private readonly IValueConverter _converter;
+		private readonly IValueConverter<T> _converter;
 
 		/// <summary>
 		///     The fallback value that is used when the binding fails or a null value is bound.
@@ -106,7 +106,7 @@
 		/// <param name="property3">The name of the third property in the property path.</param>
 		/// <param name="converter">The converter that should be used to convert the source value to the dependency property type.</param>
 		internal DataBinding(object sourceObject, T fallbackValue, BindingMode bindingMode,
-							 string property1, string property2 = null, string property3 = null, IValueConverter converter = null)
+							 string property1, string property2 = null, string property3 = null, IValueConverter<T> converter = null)
 			: this(sourceObject, bindingMode, fallbackValue, true, property1, property2, property3, converter)
 		{
 		}
@@ -121,7 +121,7 @@
 		/// <param name="property3">The name of the third property in the property path.</param>
 		/// <param name="converter">The converter that should be used to convert the source value to the dependency property type.</param>
 		internal DataBinding(object sourceObject, BindingMode bindingMode,
-							 string property1, string property2 = null, string property3 = null, IValueConverter converter = null)
+							 string property1, string property2 = null, string property3 = null, IValueConverter<T> converter = null)
 			: this(sourceObject, bindingMode, default(T), false, property1, property2, property3, converter)
 		{
 		}
@@ -138,7 +138,7 @@
 		/// <param name="property3">The name of the third property in the property path.</param>
 		/// <param name="converter">The converter that should be used to convert the source value to the dependency property type.</param>
 		private DataBinding(object sourceObject, BindingMode bindingMode, T fallbackValue, bool hasFallbackValue,
-							string property1, string property2, string property3, IValueConverter converter)
+							string property1, string property2, string property3, IValueConverter<T> converter)
 		{
 			Assert.ArgumentNotNull(sourceObject);
 			Assert.ArgumentInRange(bindingMode);
@@ -159,13 +159,20 @@
 			_fallbackValue = fallbackValue;
 			_hasFallbackValue = hasFallbackValue;
 
-			_memberAccess1 = new MemberAccess(property1) { Changed = OnMember1Changed };
+			_memberAccess1 = new MemberAccess(property1);
+			_memberAccess2 = new MemberAccess(property2);
+			_memberAccess3 = new MemberAccess(property3);
+
+			if (_bindingMode == BindingMode.OneTime)
+				return;
+
+			_memberAccess1.Changed = OnMember1Changed;
 
 			if (_memberAccessCount >= 2)
-				_memberAccess2 = new MemberAccess(property2) { Changed = OnMember2Changed };
+				_memberAccess2.Changed = OnMember2Changed;
 
 			if (_memberAccessCount == 3)
-				_memberAccess3 = new MemberAccess(property3) { Changed = OnMember3Changed };
+				_memberAccess3.Changed = OnMember3Changed;
 		}
 
 		/// <summary>
@@ -285,19 +292,48 @@
 		{
 			Assert.ArgumentSatisfies(!_targetProperty.IsDataBindingProhibited, "Data binding is not allowed on the target property.");
 
-			// Check if the default binding mode of the target dependency property should be used
-			if (_bindingMode == BindingMode.Default)
-				_bindingMode = _targetProperty.DefaultBindingMode;
+			// Optimized path for one-time bindings
+			if (_bindingMode == BindingMode.OneTime)
+			{
+				var value = _sourceObject;
 
-			if (_bindingMode != BindingMode.OneWay)
-				_targetObject.AddChangedHandler(_targetProperty, OnTargetPropertyChanged);
+				if (value != null)
+					value = value.GetType().GetProperty(_memberAccess1.MemberName, BindingFlags.Public | BindingFlags.Instance).GetValue(value);
 
-			// Set the access types of the members
-			_memberAccess1.SetAccessTypes(_memberAccessCount == 1, _bindingMode);
-			_memberAccess2.SetAccessTypes(_memberAccessCount == 2, _bindingMode);
-			_memberAccess3.SetAccessTypes(_memberAccessCount == 3, _bindingMode);
+				if (value != null && _memberAccessCount > 1)
+					value = value.GetType().GetProperty(_memberAccess2.MemberName, BindingFlags.Public | BindingFlags.Instance).GetValue(value);
 
-			_memberAccess1.SourceObject = SourceObject;
+				if (value != null && _memberAccessCount > 2)
+					value = value.GetType().GetProperty(_memberAccess3.MemberName, BindingFlags.Public | BindingFlags.Instance).GetValue(value);
+
+				if (value != null)
+				{
+					if (_converter != null)
+						_targetObject.SetBoundValue(_targetProperty, _converter.ConvertToTarget(value));
+					else if (!(value is string) && typeof(T) == typeof(string))
+						_targetObject.SetBoundValue(_targetProperty, (T)(object)value.ToString());
+					else
+						_targetObject.SetBoundValue(_targetProperty, (T)value);
+				}
+				else
+					_targetObject.SetBoundValue(_targetProperty, _hasFallbackValue ? _fallbackValue : _targetProperty.DefaultValue);
+			}
+			else
+			{
+				// Check if the default binding mode of the target dependency property should be used
+				if (_bindingMode == BindingMode.Default)
+					_bindingMode = _targetProperty.DefaultBindingMode;
+
+				if (_bindingMode != BindingMode.OneWay)
+					_targetObject.AddChangedHandler(_targetProperty, OnTargetPropertyChanged);
+
+				// Set the access types of the members
+				_memberAccess1.SetAccessTypes(_memberAccessCount == 1, _bindingMode);
+				_memberAccess2.SetAccessTypes(_memberAccessCount == 2, _bindingMode);
+				_memberAccess3.SetAccessTypes(_memberAccessCount == 3, _bindingMode);
+
+				_memberAccess1.SourceObject = SourceObject;
+			}
 		}
 
 		/// <summary>
@@ -307,6 +343,9 @@
 		/// <param name="overwrittenByLocalValue">Indicates whether the binding is removed because it was overriden by a local value.</param>
 		internal override bool Deactivate(bool overwrittenByLocalValue = false)
 		{
+			if (_bindingMode == BindingMode.OneTime)
+				return true;
+
 			if (overwrittenByLocalValue && _bindingMode != BindingMode.OneWay)
 				return false;
 
@@ -593,7 +632,6 @@
 			public MemberAccess(string propertyName)
 				: this()
 			{
-				Assert.ArgumentNotNullOrWhitespace(propertyName);
 				_propertyName = propertyName;
 			}
 
@@ -639,9 +677,6 @@
 			{
 				set
 				{
-					if (_sourceObject == value && value != null)
-						return;
-
 					DetachFromChangeEvent();
 
 					_sourceObject = value;

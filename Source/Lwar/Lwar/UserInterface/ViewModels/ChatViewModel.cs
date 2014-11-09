@@ -36,7 +36,7 @@
 		/// </summary>
 		public string Message
 		{
-			private get { return _message; }
+			get { return _message; }
 			set
 			{
 				Assert.ArgumentNotNull(value);

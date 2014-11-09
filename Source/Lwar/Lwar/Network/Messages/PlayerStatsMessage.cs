@@ -1,7 +1,6 @@
 namespace Lwar.Network.Messages
 {
 	using System;
-	using Pegasus.Entities;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Utilities;
 
@@ -44,7 +43,7 @@ namespace Lwar.Network.Messages
 		/// <summary>
 		///     Gets the player whose stats are updated.
 		/// </summary>
-		public Identity Player { get; private set; }
+		public NetworkIdentity Player { get; private set; }
 
 		/// <summary>
 		///     Serializes the message using the given writer.
@@ -88,7 +87,7 @@ namespace Lwar.Network.Messages
 		/// <param name="kills">The kills scored by the player.</param>
 		/// <param name="deaths">The number of times the player died.</param>
 		/// <param name="ping">The latency between the server and the client in milliseconds.</param>
-		public static Message Create(PoolAllocator poolAllocator, Identity player, int kills, int deaths, int ping)
+		public static Message Create(PoolAllocator poolAllocator, NetworkIdentity player, int kills, int deaths, int ping)
 		{
 			Assert.ArgumentNotNull(poolAllocator);
 			Assert.ArgumentInRange(kills, 0, UInt16.MaxValue);

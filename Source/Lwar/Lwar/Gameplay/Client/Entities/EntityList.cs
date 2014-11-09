@@ -3,7 +3,6 @@
 	using System;
 	using System.Collections.Generic;
 	using Network;
-	using Pegasus.Entities;
 	using Pegasus.Math;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Utilities;
@@ -53,7 +52,7 @@
 		///     be found, or if the generation did not match.
 		/// </summary>
 		/// <param name="identity">The identity of the entity that should be returned.</param>
-		public IEntity this[Identity identity]
+		public IEntity this[NetworkIdentity identity]
 		{
 			get { return _entityMap[identity]; }
 		}
@@ -65,7 +64,7 @@
 		/// <param name="playerIdentifier">The identity of the player the added entity belongs to.</param>
 		/// <param name="parentEntity">The parent of the added entity.</param>
 		/// <param name="entityType">The type of the entity that should be added.</param>
-		public void Add(Identity entityIdentifier, Identity playerIdentifier, Identity parentEntity, EntityType entityType)
+		public void Add(NetworkIdentity entityIdentifier, NetworkIdentity playerIdentifier, NetworkIdentity parentEntity, EntityType entityType)
 		{
 			var player = _gameSession.Players[playerIdentifier];
 			Assert.NotNull(player, "Cannot add entity for unknown player.");
@@ -140,7 +139,7 @@
 		///     Removes the entity with the given id from the list.
 		/// </summary>
 		/// <param name="entityId">The identity of the entity that should be removed.</param>
-		public void Remove(Identity entityId)
+		public void Remove(NetworkIdentity entityId)
 		{
 			Assert.ArgumentSatisfies(_entityMap.Contains(entityId), "Cannot remove unknown entity.");
 			var entity = _entityMap[entityId];
@@ -175,7 +174,7 @@
 		/// <param name="entityIdentity1">The identity of the first entity of the collision.</param>
 		/// <param name="entityIdentity2">The identity of the second entity of the collision.</param>
 		/// <param name="impactPosition">The position of the impact.</param>
-		public void OnCollision(Identity entityIdentity1, Identity entityIdentity2, Vector2 impactPosition)
+		public void OnCollision(NetworkIdentity entityIdentity1, NetworkIdentity entityIdentity2, Vector2 impactPosition)
 		{
 			var entity1 = _gameSession.Entities[entityIdentity1];
 			var entity2 = _gameSession.Entities[entityIdentity2];

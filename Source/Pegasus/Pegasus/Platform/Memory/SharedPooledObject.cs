@@ -8,7 +8,7 @@
 	///     invoke the AcquireOwnership method when they start using the object, which increases the reference count of the object.
 	///     The object is only returned to the pool when AcquireOwnership and Dispose have been called equally often.
 	/// </summary>
-	public abstract class SharedPooledObject : PooledObject
+	public abstract class SharedPooledObject : PooledObject, ISharedPooledObject
 	{
 		/// <summary>
 		///     The number of times Dispose must be called before the object is returned to the pool.
@@ -34,6 +34,8 @@
 		/// <remarks>Unless, of course, some malicious caller invokes Dispose multiple times...</remarks>
 		public IDisposable AcquireOwnership()
 		{
+			Assert.NotPooled(this);
+
 			++_referenceCount;
 			return this;
 		}

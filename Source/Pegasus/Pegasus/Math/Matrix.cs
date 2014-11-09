@@ -215,6 +215,14 @@
 		}
 
 		/// <summary>
+		///     Extracts the translation vector from the matrix.
+		/// </summary>
+		public Vector3 Translation
+		{
+			get { return new Vector3(M41, M42, M43); }
+		}
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="value">The value that should be assigned to all components.</param>

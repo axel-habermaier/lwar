@@ -3,7 +3,6 @@
 	using System;
 	using Network;
 	using Network.Messages;
-	using Pegasus.Entities;
 	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Utilities;
@@ -58,7 +57,11 @@
 		/// </summary>
 		public bool IsDisconnected
 		{
-			get { return _connection.IsFaulted; }
+			get
+			{
+				Assert.NotPooled(this);
+				return _connection.IsFaulted;
+			}
 		}
 
 		/// <summary>
@@ -73,6 +76,7 @@
 		void IMessageHandler.OnConnect(ClientConnectMessage message)
 		{
 			Assert.IsNull(_player, "The client is already connected.");
+			Assert.NotPooled(this);
 
 			if (NetworkProtocol.Revision != message.NetworkRevision)
 			{
@@ -98,6 +102,8 @@
 		/// <param name="message">The message that should be dispatched.</param>
 		void IMessageHandler.OnDisconnect(DisconnectMessage message)
 		{
+			Assert.NotPooled(this);
+
 			// We always accept disconnect messages, as they might arrive at any time, 
 			// even after we've already removed the client (in which case we re-added
 			// the client just to remove it again).
@@ -113,6 +119,8 @@
 		/// <param name="message">The message that should be dispatched.</param>
 		void IMessageHandler.OnPlayerInput(PlayerInputMessage message)
 		{
+			Assert.NotPooled(this);
+
 			if (!IsClientConnected(message) || !IsClientPlayer(message, message.Player))
 				return;
 
@@ -131,6 +139,8 @@
 		/// <param name="message">The message that should be dispatched.</param>
 		void IMessageHandler.OnPlayerChatMessage(PlayerChatMessage message)
 		{
+			Assert.NotPooled(this);
+
 			if (!IsClientConnected(message) || !IsClientPlayer(message, message.Player))
 				return;
 
@@ -143,6 +153,8 @@
 		/// <param name="message">The message that should be dispatched.</param>
 		void IMessageHandler.OnPlayerName(PlayerNameMessage message)
 		{
+			Assert.NotPooled(this);
+
 			if (!IsClientConnected(message) || !IsClientPlayer(message, message.Player))
 				return;
 
@@ -155,6 +167,8 @@
 		/// <param name="message">The message that should be dispatched.</param>
 		void IMessageHandler.OnPlayerSelection(PlayerLoadoutMessage message)
 		{
+			Assert.NotPooled(this);
+
 			if (!IsClientConnected(message) || !IsClientPlayer(message, message.Player))
 				return;
 
@@ -218,6 +232,8 @@
 		/// </summary>
 		public void Disconnect()
 		{
+			Assert.NotPooled(this);
+
 			if (!IsDisconnected)
 				_connection.Disconnect();
 		}
@@ -264,7 +280,7 @@
 		/// </summary>
 		/// <param name="message">The message that should be dispatched.</param>
 		/// <param name="player">The player that was referenced in the message.</param>
-		private bool IsClientPlayer(Message message, Identity player)
+		private bool IsClientPlayer(Message message, NetworkIdentity player)
 		{
 			if (_player != null && player == _player.Identity)
 				return true;

@@ -186,7 +186,7 @@
 				_writer.WriteByte((byte)count);
 				_writer.WritePosition = position;
 
-				Log.DebugIf(EnableTracing, "   (o) {0}: {1} #{2}", sequenceNumber, batchedMessage.MessageType, count);
+				Log.DebugIf(EnableTracing, "   (b) {0}: {1} #{2}", sequenceNumber, batchedMessage.MessageType, count);
 
 				// If there are any messages left, we've run out of space and have to allocate a new packet for the
 				// next fragment of the batched message.

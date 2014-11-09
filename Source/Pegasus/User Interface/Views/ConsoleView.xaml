@@ -57,10 +57,10 @@
 				<ItemsControl ItemsSource="{Binding LogEntries}" VerticalAlignment="Bottom" MinWidth="600">
 					<ItemsControl.ItemTemplate>
 						<DataTemplate>
-							<TextBlock Text="{Binding Message}"
+							<TextBlock Text="{Binding Message, Mode=OneTime}"
 										Margin="0,2,0,0"
 										TextWrapping="Wrap"
-										Foreground="{Binding LogType, Converter={converters:LogTypeToColorConverter}}" />
+										Foreground="{Binding LogType, Mode=OneTime, Converter={converters:LogTypeToColorConverter}}" />
 						</DataTemplate>
 					</ItemsControl.ItemTemplate>
 				</ItemsControl>

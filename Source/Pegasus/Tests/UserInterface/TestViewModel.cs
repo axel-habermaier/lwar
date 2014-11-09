@@ -9,6 +9,7 @@
 	public class TestViewModel : NotifyPropertyChanged
 	{
 		private bool _bool;
+		private double _double;
 		private int _integer;
 		private TestViewModel _model;
 		private object _object;
@@ -38,6 +39,12 @@
 		{
 			get { return _object; }
 			set { ChangePropertyValue(ref _object, value); }
+		}
+
+		public double Double
+		{
+			get { return _double; }
+			set { ChangePropertyValue(ref _double, value); }
 		}
 
 		public int Integer

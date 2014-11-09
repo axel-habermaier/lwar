@@ -1,7 +1,6 @@
 namespace Lwar.Network.Messages
 {
 	using System;
-	using Pegasus.Entities;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Utilities;
 
@@ -29,7 +28,7 @@ namespace Lwar.Network.Messages
 		/// <summary>
 		///     Gets the player that has left the game session.
 		/// </summary>
-		public Identity Player { get; private set; }
+		public NetworkIdentity Player { get; private set; }
 
 		/// <summary>
 		///     Gets the reason explaining why the player has left the game session.
@@ -72,7 +71,7 @@ namespace Lwar.Network.Messages
 		/// <param name="poolAllocator">The pool allocator that should be used to allocate the message.</param>
 		/// <param name="player">The player that has left the game session.</param>
 		/// <param name="reason">The reason why the player left the game session.</param>
-		public static Message Create(PoolAllocator poolAllocator, Identity player, LeaveReason reason)
+		public static Message Create(PoolAllocator poolAllocator, NetworkIdentity player, LeaveReason reason)
 		{
 			Assert.ArgumentNotNull(poolAllocator);
 			Assert.ArgumentInRange(reason);

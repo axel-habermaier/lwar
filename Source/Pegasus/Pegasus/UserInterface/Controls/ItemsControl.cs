@@ -2,7 +2,7 @@
 {
 	using System;
 	using System.Collections;
-	using UserInterface;
+	using System.Collections.Generic;
 	using Utilities;
 
 	/// <summary>
@@ -36,11 +36,17 @@
 		public static readonly DependencyProperty<DataTemplate> ItemTemplateProperty = new DependencyProperty<DataTemplate>(affectsMeasure: true);
 
 		/// <summary>
+		///     Pools items created from the data template for later reuse.
+		/// </summary>
+		private readonly Queue<UIElement> _pooledItems = new Queue<UIElement>();
+
+		/// <summary>
 		///     Initializes the type.
 		/// </summary>
 		static ItemsControl()
 		{
 			ItemsSourceProperty.Changed += OnItemsSourceChanged;
+			ItemTemplateProperty.Changed += OnTemplateChanged;
 		}
 
 		/// <summary>
@@ -76,6 +82,20 @@
 		}
 
 		/// <summary>
+		///     Invoked when the data template has changed.
+		/// </summary>
+		private static void OnTemplateChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<DataTemplate> args)
+		{
+			var itemsControl = obj as ItemsControl;
+			if (itemsControl == null)
+				return;
+
+			itemsControl.ClearItems();
+			itemsControl._pooledItems.Clear();
+			itemsControl.RegenerateItems();
+		}
+
+		/// <summary>
 		///     Invoked when the items source has changed.
 		/// </summary>
 		private static void OnItemsSourceChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<IEnumerable> args)
@@ -98,13 +118,13 @@
 		/// <summary>
 		///     Replays the changes to the collection to the items host.
 		/// </summary>
-		private void OnCollectionChanged(IEnumerable collection, CollectionChangedEventArgs args)
+		private void OnCollectionChanged(IList collection, CollectionChangedEventArgs args)
 		{
 			switch (args.Action)
 			{
 				case CollectionChangedAction.Add:
 					if (ItemsHost != null)
-						AddItem(args.Item, args.Index);
+						AddItem(collection[args.Index], args.Index);
 					break;
 				case CollectionChangedAction.Remove:
 					if (ItemsHost != null)
@@ -112,7 +132,7 @@
 					break;
 				case CollectionChangedAction.Replace:
 					if (ItemsHost != null)
-						ReplaceItem(args.Item, args.Index);
+						ReplaceItem(collection[args.Index], args.Index);
 					break;
 				case CollectionChangedAction.Reset:
 					RegenerateItems();
@@ -184,6 +204,7 @@
 		/// <param name="index">The zero-based index of the item that should be removed.</param>
 		protected virtual void RemoveItem(int index)
 		{
+			_pooledItems.Enqueue(ItemsHost.Children[index]);
 			ItemsHost.Children.RemoveAt(index);
 		}
 
@@ -194,6 +215,7 @@
 		/// <param name="index">The zero-based index of the item that should be replaced.</param>
 		protected virtual void ReplaceItem(object item, int index)
 		{
+			_pooledItems.Enqueue(ItemsHost.Children[index]);
 			ItemsHost.Children[index] = CreateChildElement(item);
 		}
 
@@ -202,6 +224,9 @@
 		/// </summary>
 		protected virtual void ClearItems()
 		{
+			foreach (var item in ItemsHost.Children)
+				_pooledItems.Enqueue(item);
+
 			ItemsHost.Clear();
 		}
 
@@ -219,9 +244,6 @@
 			if (items == null)
 				return;
 
-			var template = ItemTemplate;
-			Assert.NotNull(template, "ItemTemplate cannot be null.");
-
 			foreach (var item in items)
 				AddItem(item, ItemsHost.Children.Count);
 		}
@@ -235,7 +257,7 @@
 			var template = ItemTemplate;
 			Assert.NotNull(template, "ItemTemplate cannot be null.");
 
-			var child = template();
+			var child = _pooledItems.Count > 0 ? _pooledItems.Dequeue() : template();
 			child.DataContext = item;
 			return child;
 		}

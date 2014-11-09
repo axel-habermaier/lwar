@@ -1,7 +1,6 @@
 namespace Lwar.Network.Messages
 {
 	using System;
-	using Pegasus.Entities;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Utilities;
 
@@ -29,7 +28,7 @@ namespace Lwar.Network.Messages
 		/// <summary>
 		///     Gets the entity that is removed.
 		/// </summary>
-		public Identity Entity { get; private set; }
+		public NetworkIdentity Entity { get; private set; }
 
 		/// <summary>
 		///     Serializes the message using the given writer.
@@ -64,7 +63,7 @@ namespace Lwar.Network.Messages
 		/// </summary>
 		/// <param name="poolAllocator">The pool allocator that should be used to allocate the message.</param>
 		/// <param name="entity">The entity that has been removed.</param>
-		public static Message Create(PoolAllocator poolAllocator, Identity entity)
+		public static Message Create(PoolAllocator poolAllocator, NetworkIdentity entity)
 		{
 			Assert.ArgumentNotNull(poolAllocator);
 

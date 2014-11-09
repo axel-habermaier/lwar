@@ -1,7 +1,6 @@
 namespace Lwar.Network.Messages
 {
 	using System;
-	using Pegasus.Entities;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Utilities;
 
@@ -29,7 +28,7 @@ namespace Lwar.Network.Messages
 		/// <summary>
 		///     Gets the identity of the synced client's local player.
 		/// </summary>
-		public Identity LocalPlayer { get; private set; }
+		public NetworkIdentity LocalPlayer { get; private set; }
 
 		/// <summary>
 		///     Serializes the message using the given writer.
@@ -64,7 +63,7 @@ namespace Lwar.Network.Messages
 		/// </summary>
 		/// <param name="poolAllocator">The pool allocator that should be used to allocate the message.</param>
 		/// <param name="localPlayer">The identity of the synced client's local player.</param>
-		public static Message Create(PoolAllocator poolAllocator, Identity localPlayer)
+		public static Message Create(PoolAllocator poolAllocator, NetworkIdentity localPlayer)
 		{
 			Assert.ArgumentNotNull(poolAllocator);
 

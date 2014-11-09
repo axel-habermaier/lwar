@@ -2,7 +2,6 @@ namespace Lwar.Network.Messages
 {
 	using System;
 	using System.Text;
-	using Pegasus.Entities;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Utilities;
 
@@ -35,7 +34,7 @@ namespace Lwar.Network.Messages
 		/// <summary>
 		///     Gets the player whose name is changed.
 		/// </summary>
-		public Identity Player { get; private set; }
+		public NetworkIdentity Player { get; private set; }
 
 		/// <summary>
 		///     Serializes the message using the given writer.
@@ -73,7 +72,7 @@ namespace Lwar.Network.Messages
 		/// <param name="poolAllocator">The pool allocator that should be used to allocate the message.</param>
 		/// <param name="player">The player whose name should be changed.</param>
 		/// <param name="playerName">The new player name.</param>
-		public static Message Create(PoolAllocator poolAllocator, Identity player, string playerName)
+		public static Message Create(PoolAllocator poolAllocator, NetworkIdentity player, string playerName)
 		{
 			Assert.ArgumentNotNull(poolAllocator);
 			Assert.ArgumentNotNullOrWhitespace(playerName);

@@ -35,8 +35,9 @@
 		///     The vertex buffer storing the particle positions.
 		/// </summary>
 		private DynamicVertexBuffer _positionsBuffer;
+
 		/// <summary>
-		/// The vertex buffer storing the particle scales.
+		///     The vertex buffer storing the particle scales.
 		/// </summary>
 		private DynamicVertexBuffer _scalesBuffer;
 
@@ -113,6 +114,7 @@
 
 			var instanceOffset = _positionsBuffer.GetInstanceOffset(Capacity);
 			Assert.That(_colorsBuffer.GetInstanceOffset(Capacity) == instanceOffset, "Buffer update cycle mismatch.");
+
 			Draw(renderOutput, particles, particleCount, instanceOffset);
 		}
 
@@ -143,7 +145,7 @@
 
 			_positionsBuffer = DynamicVertexBuffer.Create<float>(_graphicsDevice, Capacity * 3, GraphicsDevice.FrameLag);
 			_colorsBuffer = DynamicVertexBuffer.Create<byte>(_graphicsDevice, Capacity * 4, GraphicsDevice.FrameLag);
-			_scalesBuffer = DynamicVertexBuffer.Create<float>(_graphicsDevice, Capacity , GraphicsDevice.FrameLag);
+			_scalesBuffer = DynamicVertexBuffer.Create<float>(_graphicsDevice, Capacity, GraphicsDevice.FrameLag);
 
 			_positionsBuffer.SetName("Particle Positions Buffer");
 			_colorsBuffer.SetName("Particle Colors Buffer");

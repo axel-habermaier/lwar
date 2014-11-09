@@ -143,6 +143,101 @@
 		}
 
 		[Test]
+		public void BindingMode_OneTime_Converter()
+		{
+			_viewModel.Double = Math.PI;
+			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.OneTime, "Double",
+				converter: new FrameTimeToStringConverter());
+			_control.StringTest.Should().Be("3.14");
+		}
+
+		[Test]
+		public void BindingMode_OneTime_ImplicitToString()
+		{
+			_viewModel.Integer = 33;
+			_control.CreateDataBinding(_viewModel, TestControl.StringTestProperty, BindingMode.OneTime, "Integer");
+			_control.StringTest.Should().Be("33");
+		}
+
+		[Test]
+		public void BindingMode_OneTime_SingleProperty()
+		{
+			_viewModel.Integer = 17;
+			_control.CreateDataBinding(_viewModel, TestControl.IntegerTestProperty1, BindingMode.OneTime, "Integer");
+
+			_control.IntegerTest1.Should().Be(17);
+
+			_viewModel.Integer = 8;
+			_control.IntegerTest1.Should().Be(17);
+
+			_control.IntegerTest1 = 33;
+			_viewModel.Integer.Should().Be(8);
+			_control.IntegerTest1.Should().Be(33);
+		}
+
+		[Test]
+		public void BindingMode_OneTime_ThreeProperties()
+		{
+			_viewModel.InitializeRecursively(2);
+			_viewModel.Model.Model.Integer = 17;
+			_control.CreateDataBinding(_viewModel, TestControl.IntegerTestProperty1, BindingMode.OneTime, "Model", "Model", "Integer");
+
+			_control.IntegerTest1.Should().Be(17);
+
+			_viewModel.Model.Model.Integer = 8;
+			_control.IntegerTest1.Should().Be(17);
+
+			_viewModel.Model.Model = new TestViewModel { Integer = 123 };
+			_control.IntegerTest1.Should().Be(17);
+		}
+
+		[Test]
+		public void BindingMode_OneTime_ThreeProperties_FirstNull_Fallback()
+		{
+			_control.CreateDataBinding(_viewModel, TestControl.IntegerTestProperty1, 356, BindingMode.OneTime, "Model", "Model", "Integer");
+			_control.IntegerTest1.Should().Be(356);
+		}
+
+		[Test]
+		public void BindingMode_OneTime_ThreeProperties_FirstNull_NoFallback()
+		{
+			_control.CreateDataBinding(_viewModel, TestControl.IntegerTestProperty1, BindingMode.OneTime, "Model", "Model", "Integer");
+			_control.IntegerTest1.Should().Be(TestControl.IntegerTestProperty1.DefaultValue);
+		}
+
+		[Test]
+		public void BindingMode_OneTime_ThreeProperties_SecondNull_Fallback()
+		{
+			_viewModel.InitializeRecursively(1);
+			_control.CreateDataBinding(_viewModel, TestControl.IntegerTestProperty1, 356, BindingMode.OneTime, "Model", "Model", "Integer");
+			_control.IntegerTest1.Should().Be(356);
+		}
+
+		[Test]
+		public void BindingMode_OneTime_ThreeProperties_SecondNull_NoFallback()
+		{
+			_viewModel.InitializeRecursively(1);
+			_control.CreateDataBinding(_viewModel, TestControl.IntegerTestProperty1, BindingMode.OneTime, "Model", "Model", "Integer");
+			_control.IntegerTest1.Should().Be(TestControl.IntegerTestProperty1.DefaultValue);
+		}
+
+		[Test]
+		public void BindingMode_OneTime_TwoProperties()
+		{
+			_viewModel.InitializeRecursively(1);
+			_viewModel.Model.Integer = 17;
+			_control.CreateDataBinding(_viewModel, TestControl.IntegerTestProperty1, BindingMode.OneTime, "Model", "Integer");
+
+			_control.IntegerTest1.Should().Be(17);
+
+			_viewModel.Model.Integer = 8;
+			_control.IntegerTest1.Should().Be(17);
+
+			_viewModel.Model = new TestViewModel { Integer = 123 };
+			_control.IntegerTest1.Should().Be(17);
+		}
+
+		[Test]
 		public void BindingMode_OneWay()
 		{
 			_viewModel.Integer = 17;
@@ -1069,6 +1164,58 @@
 			viewModel.Value = 33;
 			_control.ObjectTest = obj;
 			viewModel.Value.Should().Be(obj);
+		}
+
+		[Test]
+		public void ValueTypeProperty()
+		{
+			_control.DataContext = 4.0f;
+			_control.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWay);
+			_control.Width.Should().Be(4.0f);
+
+			_control.DataContext = 7.1f;
+			_control.Width.Should().Be(7.1f);
+		}
+
+		[Test]
+		public void ValueTypeProperty_ChangeWhenDeactivated()
+		{
+			_control.DataContext = 4.0f;
+			_control.CreateDataBinding(UIElement.WidthProperty, BindingMode.OneWay);
+			_control.Width.Should().Be(4.0f);
+			_control.IsAttachedToRoot = false;
+
+			_control.DataContext = 7.1f;
+			_control.IsAttachedToRoot = true;
+			_control.Width.Should().Be(7.1f);
+		}
+
+		[Test]
+		public void ReferenceTypeProperty()
+		{
+			var o = new object();
+			_control.DataContext = o;
+			_control.CreateDataBinding(TestControl.ObjectTestProperty, BindingMode.OneWay);
+			_control.ObjectTest.Should().Be(o);
+
+			o = new object();
+			_control.DataContext = o;
+			_control.ObjectTest.Should().Be(o);
+		}
+
+		[Test]
+		public void ReferenceTypeProperty_ChangeWhenDeactivated()
+		{
+			var o = new object();
+			_control.DataContext = o;
+			_control.CreateDataBinding(TestControl.ObjectTestProperty, BindingMode.OneWay);
+			_control.ObjectTest.Should().Be(o);
+			_control.IsAttachedToRoot = false;
+
+			o = new object();
+			_control.DataContext = o;
+			_control.IsAttachedToRoot = true;
+			_control.ObjectTest.Should().Be(o);
 		}
 
 		[Test]

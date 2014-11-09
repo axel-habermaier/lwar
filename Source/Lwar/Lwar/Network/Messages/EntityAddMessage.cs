@@ -1,7 +1,6 @@
 namespace Lwar.Network.Messages
 {
 	using System;
-	using Pegasus.Entities;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Utilities;
 
@@ -29,18 +28,18 @@ namespace Lwar.Network.Messages
 		/// <summary>
 		///     Gets the entity that is added.
 		/// </summary>
-		public Identity Entity { get; private set; }
+		public NetworkIdentity Entity { get; private set; }
 
 		/// <summary>
 		///     Gets the parent entity of the entity that is added. Can be the reserved entity to indicate that the
 		///     added entity has no parent.
 		/// </summary>
-		public Identity ParentEntity { get; private set; }
+		public NetworkIdentity ParentEntity { get; private set; }
 
 		/// <summary>
 		///     Gets the player the entity belongs to.
 		/// </summary>
-		public Identity Player { get; private set; }
+		public NetworkIdentity Player { get; private set; }
 
 		/// <summary>
 		///     Gets the type of the entity that is added.
@@ -89,8 +88,8 @@ namespace Lwar.Network.Messages
 		/// <param name="player">The player the entity belongs to.</param>
 		/// <param name="parentEntity">The parent entity of the entity that is added.</param>
 		/// <param name="entityType">The type of the entity.</param>
-		public static EntityAddMessage Create(PoolAllocator poolAllocator, Identity entity, Identity player,
-											  Identity parentEntity, EntityType entityType)
+		public static EntityAddMessage Create(PoolAllocator poolAllocator, NetworkIdentity entity, NetworkIdentity player,
+											  NetworkIdentity parentEntity, EntityType entityType)
 		{
 			Assert.ArgumentNotNull(poolAllocator);
 

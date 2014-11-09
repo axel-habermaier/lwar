@@ -9,7 +9,7 @@
 	///     Represents a four-component vector.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
-	public struct Vector4 : IEquatable<Vector4>
+	public struct Vector4 : IEquatable<Vector4>, IFormattable
 	{
 		/// <summary>
 		///     A vector with all components set to zero.
@@ -109,6 +109,16 @@
 		public override int GetHashCode()
 		{
 			return X.GetHashCode() + Y.GetHashCode() + Z.GetHashCode() + W.GetHashCode();
+		}
+
+		/// <summary>
+		///     Formats the value of the current instance using the specified format.
+		/// </summary>
+		/// <param name="format">The format to use.</param>
+		/// <param name="formatProvider">The provider to use to format the value</param>
+		public string ToString(string format, IFormatProvider formatProvider)
+		{
+			return String.Format(formatProvider, String.Format("X: {{0:{0}}}, Y: {{1:{0}}}, Z: {{2:{0}}}, W: {{3:{0}}}", format), X, Y, Z, W);
 		}
 
 		/// <summary>
@@ -234,7 +244,23 @@
 		/// <param name="matrix">The transformation matrix that should be applied.</param>
 		public static Vector4 Transform(ref Vector4 vector, ref Matrix matrix)
 		{
-			return new Vector4(matrix.M11 * vector.X + matrix.M21 * vector.Y + matrix.M31 * vector.Z + matrix.M41 * vector.W,
+			return new Vector4(
+				matrix.M11 * vector.X + matrix.M21 * vector.Y + matrix.M31 * vector.Z + matrix.M41 * vector.W,
+				matrix.M12 * vector.X + matrix.M22 * vector.Y + matrix.M32 * vector.Z + matrix.M42 * vector.W,
+				matrix.M13 * vector.X + matrix.M23 * vector.Y + matrix.M33 * vector.Z + matrix.M43 * vector.W,
+				matrix.M14 * vector.X + matrix.M24 * vector.Y + matrix.M34 * vector.Z + matrix.M44 * vector.W);
+		}
+
+		/// <summary>
+		///     Applies the given transformation matrix to the vector.
+		/// </summary>
+		/// <param name="vector">The vector that should be transformed.</param>
+		/// <param name="matrix">The transformation matrix that should be applied.</param>
+		/// <param name="result">The vector that stores the result of the transformation.</param>
+		public static void Transform(ref Vector4 vector, ref Matrix matrix, out Vector4 result)
+		{
+			result = new Vector4(
+				matrix.M11 * vector.X + matrix.M21 * vector.Y + matrix.M31 * vector.Z + matrix.M41 * vector.W,
 				matrix.M12 * vector.X + matrix.M22 * vector.Y + matrix.M32 * vector.Z + matrix.M42 * vector.W,
 				matrix.M13 * vector.X + matrix.M23 * vector.Y + matrix.M33 * vector.Z + matrix.M43 * vector.W,
 				matrix.M14 * vector.X + matrix.M24 * vector.Y + matrix.M34 * vector.Z + matrix.M44 * vector.W);

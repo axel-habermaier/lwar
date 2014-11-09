@@ -9,7 +9,7 @@
 	<ItemsControl ItemsSource="{Binding EventMessages}">
 		<ItemsControl.ItemTemplate>
 			<DataTemplate>
-				<TextBlock Text="{Binding DisplayString}" Margin="2" TextWrapping="Wrap" />
+				<TextBlock Text="{Binding DisplayString, Mode=OneTime}" Margin="2" TextWrapping="Wrap" />
 			</DataTemplate>
 		</ItemsControl.ItemTemplate>
 	</ItemsControl>

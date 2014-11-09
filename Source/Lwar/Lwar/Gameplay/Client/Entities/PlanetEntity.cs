@@ -1,7 +1,7 @@
 ﻿namespace Lwar.Gameplay.Client.Entities
 {
 	using System;
-	using Pegasus.Entities;
+	using Network;
 	using Pegasus.Utilities;
 
 	/// <summary>
@@ -34,7 +34,7 @@
 		/// <param name="gameSession">The game session the instance should be created for.</param>
 		/// <param name="id">The generational identity of the planet.</param>
 		/// <param name="entityTemplate">The template defining the planet's type.</param>
-		public static PlanetEntity Create(ClientGameSession gameSession, Identity id, EntityTemplate entityTemplate)
+		public static PlanetEntity Create(ClientGameSession gameSession, NetworkIdentity id, EntityTemplate entityTemplate)
 		{
 			Assert.ArgumentNotNull(gameSession);
 			Assert.ArgumentNotNull(entityTemplate);

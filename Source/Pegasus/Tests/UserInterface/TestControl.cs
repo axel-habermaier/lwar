@@ -14,7 +14,7 @@
 
 		public static readonly DependencyProperty<object> ObjectTestProperty = new DependencyProperty<object>();
 		public static readonly DependencyProperty<bool> BooleanTestProperty2 = new DependencyProperty<bool>();
-		public static readonly DependencyProperty<int> IntegerTestProperty1 = new DependencyProperty<int>();
+		public static readonly DependencyProperty<int> IntegerTestProperty1 = new DependencyProperty<int>(defaultValue: 166);
 		public static readonly DependencyProperty<int> IntegerTestProperty2 = new DependencyProperty<int>();
 		public static readonly DependencyProperty<string> StringTestProperty = new DependencyProperty<string>();
 		public static readonly DependencyProperty<string> DefaultStringTestProperty = new DependencyProperty<string>("ABCD");

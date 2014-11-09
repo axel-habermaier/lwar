@@ -4,7 +4,6 @@
 	using System.Collections;
 	using System.Collections.Generic;
 	using Network;
-	using Pegasus.Entities;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Utilities;
 
@@ -56,7 +55,7 @@
 		///     be found, or if the generation did not match.
 		/// </summary>
 		/// <param name="identity">The identity of the player that should be returned.</param>
-		public Player this[Identity identity]
+		public Player this[NetworkIdentity identity]
 		{
 			get { return _playerMap[identity]; }
 		}
@@ -82,7 +81,7 @@
 		/// </summary>
 		/// <param name="playerIdentifier">The identity of the player that should be added.</param>
 		/// <param name="name">The name of the new player.</param>
-		public void Add(Identity playerIdentifier, string name)
+		public void Add(NetworkIdentity playerIdentifier, string name)
 		{
 			if (playerIdentifier == NetworkProtocol.ServerPlayerIdentity)
 				return;
@@ -104,7 +103,7 @@
 		///     Removes the player with the given id from the list.
 		/// </summary>
 		/// <param name="playerIdentifier">The id of the player that should be removed.</param>
-		public void Remove(Identity playerIdentifier)
+		public void Remove(NetworkIdentity playerIdentifier)
 		{
 			Assert.ArgumentSatisfies(LocalPlayer == null || playerIdentifier != LocalPlayer.Identity, "Cannot remove the local player.");
 			Assert.ArgumentSatisfies(_playerMap.Contains(playerIdentifier), "Cannot remove unknown player.");
@@ -158,7 +157,7 @@
 		/// </summary>
 		/// <param name="playerIdentifier">The id of the player whose name should be changed.</param>
 		/// <param name="name">The new name of the player.</param>
-		public void ChangeName(Identity playerIdentifier, string name)
+		public void ChangeName(NetworkIdentity playerIdentifier, string name)
 		{
 			Assert.ArgumentNotNull(name);
 
@@ -177,7 +176,7 @@
 		/// <param name="deaths">The number of deaths of the player.</param>
 		/// <param name="ping">The current ping of the player.</param>
 		/// <param name="sequenceNumber">The sequence number of the player update.</param>
-		public void UpdateStats(Identity playerIdentifier, int kills, int deaths, int ping, uint sequenceNumber)
+		public void UpdateStats(NetworkIdentity playerIdentifier, int kills, int deaths, int ping, uint sequenceNumber)
 		{
 			var player = this[playerIdentifier];
 			if (player == null || !player.AcceptUpdate(sequenceNumber))

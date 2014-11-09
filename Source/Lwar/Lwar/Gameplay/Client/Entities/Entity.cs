@@ -2,7 +2,7 @@
 {
 	using System;
 	using Actors;
-	using Pegasus.Entities;
+	using Network;
 	using Pegasus.Math;
 	using Pegasus.Platform.Logging;
 
@@ -49,7 +49,7 @@
 		/// <summary>
 		///     Gets the generational identity of the entity.
 		/// </summary>
-		public Identity Identifier { get; protected set; }
+		public NetworkIdentity Identifier { get; protected set; }
 
 		/// <summary>
 		///     Applies a remote position update to the entity.

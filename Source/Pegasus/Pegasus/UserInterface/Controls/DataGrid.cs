@@ -209,6 +209,9 @@
 		{
 			base.ClearItems();
 
+			if (Columns == null)
+				return;
+
 			foreach (var column in Columns)
 				column.CellElements.Clear();
 

@@ -2,7 +2,6 @@
 {
 	using System;
 	using System.Text;
-	using Pegasus.Entities;
 	using Pegasus.Math;
 	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Memory;
@@ -18,7 +17,7 @@
 		/// </summary>
 		/// <param name="buffer">The buffer the identity should be written into.</param>
 		/// <param name="identity">The identity that should be written into the buffer.</param>
-		public static void WriteIdentifier(this BufferWriter buffer, Identity identity)
+		public static void WriteIdentifier(this BufferWriter buffer, NetworkIdentity identity)
 		{
 			Assert.ArgumentNotNull(buffer);
 
@@ -57,7 +56,7 @@
 		///     Reads an identity from the buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the identity should be read from.</param>
-		public static Identity ReadIdentifier(this BufferReader buffer)
+		public static NetworkIdentity ReadIdentifier(this BufferReader buffer)
 		{
 			Assert.ArgumentNotNull(buffer);
 
@@ -69,7 +68,7 @@
 			Assert.That(id != NetworkProtocol.ServerPlayerIdentity.Identifier || generation == 0,
 				"Generation of reserved server player identity must be 0.");
 
-			return new Identity(id, generation);
+			return new NetworkIdentity(id, generation);
 		}
 
 		/// <summary>

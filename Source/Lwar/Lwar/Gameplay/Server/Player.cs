@@ -1,8 +1,8 @@
 ﻿namespace Lwar.Gameplay.Server
 {
 	using System;
+	using Entities;
 	using Network;
-	using Pegasus.Entities;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Utilities;
 
@@ -53,9 +53,9 @@
 		public int Deaths { get; set; }
 
 		/// <summary>
-		///     Gets or sets the entity controlled by the player.
+		///     Gets or sets the ship controlled by the player.
 		/// </summary>
-		public Entity ControlledEntity { get; set; }
+		public Ship Ship { get; set; }
 
 		/// <summary>
 		///     Gets or sets the selected ship type.
@@ -78,7 +78,7 @@
 		/// <summary>
 		///     Gets or sets the player's network identity.
 		/// </summary>
-		public Identity Identity { get; set; }
+		public NetworkIdentity Identity { get; set; }
 
 		/// <summary>
 		///     Allocates a player using the given allocator.
@@ -86,7 +86,7 @@
 		/// <param name="allocator">The allocator that should be used to allocate the player.</param>
 		/// <param name="name">The name of the player.</param>
 		/// <param name="identity">The network identity of the player.</param>
-		public static Player Create(PoolAllocator allocator, string name, Identity identity = default(Identity))
+		public static Player Create(PoolAllocator allocator, string name, NetworkIdentity identity = default(NetworkIdentity))
 		{
 			Assert.ArgumentNotNull(allocator);
 			Assert.ArgumentNotNullOrWhitespace(name);
@@ -119,7 +119,10 @@
 		/// </summary>
 		protected override void OnReturning()
 		{
-			Assert.That(!IsServerPlayer || ControlledEntity == Entity.None, "The server player cannot control an entity.");
+			Assert.That(!IsServerPlayer || Ship == null, "The server player cannot control an entity.");
+
+			Ship.SafeDispose();
+			Ship = null;
 		}
 	}
 }

@@ -29,6 +29,15 @@
 		///     Converts the given value to the target type.
 		/// </summary>
 		/// <param name="value">The value that should be converted.</param>
+		TTarget IValueConverter<TTarget>.ConvertToTarget(object value)
+		{
+			return ConvertToTarget((TSource)value);
+		}
+
+		/// <summary>
+		///     Converts the given value to the target type.
+		/// </summary>
+		/// <param name="value">The value that should be converted.</param>
 		public abstract TTarget ConvertToTarget(TSource value);
 
 		/// <summary>

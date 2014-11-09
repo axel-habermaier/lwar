@@ -9,7 +9,7 @@
 	///     Represents a three-component vector.
 	/// </summary>
 	[StructLayout(LayoutKind.Sequential)]
-	public struct Vector3 : IEquatable<Vector3>
+	public struct Vector3 : IEquatable<Vector3>, IFormattable
 	{
 		/// <summary>
 		///     A vector with all components set to zero.
@@ -110,6 +110,16 @@
 		public override int GetHashCode()
 		{
 			return X.GetHashCode() + Y.GetHashCode() + Z.GetHashCode();
+		}
+
+		/// <summary>
+		///     Formats the value of the current instance using the specified format.
+		/// </summary>
+		/// <param name="format">The format to use.</param>
+		/// <param name="formatProvider">The provider to use to format the value</param>
+		public string ToString(string format, IFormatProvider formatProvider)
+		{
+			return String.Format(formatProvider, String.Format("X: {{0:{0}}}, Y: {{1:{0}}}, Z: {{2:{0}}}", format), X, Y, Z);
 		}
 
 		/// <summary>
@@ -260,9 +270,10 @@
 		/// <param name="matrix">The transformation matrix that should be applied.</param>
 		public static Vector3 Transform(ref Vector3 vector, ref Matrix matrix)
 		{
-			var v = new Vector4(vector);
-			v = Vector4.Transform(ref v, ref matrix);
-			return new Vector3(v.X, v.Y, v.Z);
+			return new Vector3(
+				matrix.M11 * vector.X + matrix.M21 * vector.Y + matrix.M31 * vector.Z + matrix.M41,
+				matrix.M12 * vector.X + matrix.M22 * vector.Y + matrix.M32 * vector.Z + matrix.M42,
+				matrix.M13 * vector.X + matrix.M23 * vector.Y + matrix.M33 * vector.Z + matrix.M43);
 		}
 
 		/// <summary>
@@ -273,9 +284,10 @@
 		/// <param name="result">The vector that stores the result of the transformation.</param>
 		public static void Transform(ref Vector3 vector, ref Matrix matrix, out Vector3 result)
 		{
-			var v = new Vector4(vector);
-			v = Vector4.Transform(ref v, ref matrix);
-			result = new Vector3(v.X, v.Y, v.Z);
+			result = new Vector3(
+				matrix.M11 * vector.X + matrix.M21 * vector.Y + matrix.M31 * vector.Z + matrix.M41,
+				matrix.M12 * vector.X + matrix.M22 * vector.Y + matrix.M32 * vector.Z + matrix.M42,
+				matrix.M13 * vector.X + matrix.M23 * vector.Y + matrix.M33 * vector.Z + matrix.M43);
 		}
 	}
 }

@@ -1,7 +1,6 @@
 namespace Lwar.Network.Messages
 {
 	using System;
-	using Pegasus.Entities;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Utilities;
 
@@ -29,12 +28,12 @@ namespace Lwar.Network.Messages
 		/// <summary>
 		///     Gets the player that was killed.
 		/// </summary>
-		public Identity Victim { get; private set; }
+		public NetworkIdentity Victim { get; private set; }
 
 		/// <summary>
 		///     Gets the player that scored the kill.
 		/// </summary>
-		public Identity Killer { get; private set; }
+		public NetworkIdentity Killer { get; private set; }
 
 		/// <summary>
 		///     Serializes the message using the given writer.
@@ -72,7 +71,7 @@ namespace Lwar.Network.Messages
 		/// <param name="poolAllocator">The pool allocator that should be used to allocate the message.</param>
 		/// <param name="killer">The entity that scored the kill.</param>
 		/// <param name="victim">The entity that was killed.</param>
-		public static Message Create(PoolAllocator poolAllocator, Identity killer, Identity victim)
+		public static Message Create(PoolAllocator poolAllocator, NetworkIdentity killer, NetworkIdentity victim)
 		{
 			Assert.ArgumentNotNull(poolAllocator);
 
