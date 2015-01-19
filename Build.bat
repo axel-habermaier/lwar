@@ -1,6 +1,11 @@
 @echo off
 
 echo =====================================================================
+echo Installing NuGet packages...
+echo =====================================================================
+"Dependencies/Tools/NuGet.exe" restore "Source/Lwar.sln" -OutputDirectory "Source/packages"
+
+echo =====================================================================
 echo Compiling solution...
 echo =====================================================================
 cd Source
