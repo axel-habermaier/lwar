@@ -2,9 +2,9 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug Direct3D11</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}</ProjectGuid>
@@ -14,186 +14,97 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AssemblyName>Pegasus</AssemblyName>
-    <OutputPath>..\..\..\Binaries\$(Platform)\$(Configuration)</OutputPath>
+    <OutputPath>..\..\..\Build\$(Configuration)\$(Platform)</OutputPath>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <NuGetPackageImportStamp>8201cb4c</NuGetPackageImportStamp>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Direct3D11|x86'">
-    <DebugSymbols>True</DebugSymbols>
-    <DefineConstants>TRACE;DEBUG;Direct3D11; Windows</DefineConstants>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <WarningLevel>4</WarningLevel>
-    <Optimize>False</Optimize>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Direct3D11|x86'">
-    <DefineConstants>TRACE;Direct3D11; Windows</DefineConstants>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <Optimize>True</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <WarningLevel>4</WarningLevel>
-    <UseVSHostingProcess>true</UseVSHostingProcess>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug OpenGL3|x86'">
-    <DebugSymbols>True</DebugSymbols>
-    <DefineConstants>TRACE;DEBUG;OpenGL3; Windows</DefineConstants>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <WarningLevel>4</WarningLevel>
-    <Optimize>False</Optimize>
-    <UseVSHostingProcess>true</UseVSHostingProcess>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|x86'">
-    <DefineConstants>TRACE;OpenGL3; Windows</DefineConstants>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <Optimize>True</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|x86'">
-    <DebugSymbols>True</DebugSymbols>
-    <DefineConstants>TRACE;DEBUG;OpenGL3; Linux</DefineConstants>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <WarningLevel>4</WarningLevel>
-    <Optimize>False</Optimize>
-    <Prefer32Bit>false</Prefer32Bit>
-    <CustomCommands>
-      <CustomCommands>
-        <Command type="BeforeBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(SolutionDir)/Pegasus/User Interface/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
-      </CustomCommands>
-    </CustomCommands>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|x86'">
-    <DefineConstants>TRACE;OpenGL3; Linux</DefineConstants>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <Optimize>True</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-    <CustomCommands>
-      <CustomCommands>
-        <Command type="BeforeBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(SolutionDir)/Pegasus/User Interface/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
-      </CustomCommands>
-    </CustomCommands>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Direct3D11|x64'">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <DefineConstants>TRACE;DEBUG;Direct3D11; Windows;x64</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <WarningLevel>4</WarningLevel>
-    <Optimize>false</Optimize>
-    <WarningsAsErrors>
-    </WarningsAsErrors>
     <UseVSHostingProcess>true</UseVSHostingProcess>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Direct3D11|x64'">
-    <DefineConstants>TRACE;Direct3D11; Windows;x64</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <WarningLevel>4</WarningLevel>
-    <UseVSHostingProcess>true</UseVSHostingProcess>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug OpenGL3|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <DefineConstants>TRACE;DEBUG;OpenGL3; Windows;x64</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|x64'">
-    <DefineConstants>TRACE;OpenGL3; Windows;x64</DefineConstants>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DefineConstants>TRACE</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <DefineConstants>TRACE;DEBUG;OpenGL3; Linux;x64</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <WarningLevel>4</WarningLevel>
-    <Optimize>false</Optimize>
-    <CustomCommands>
-      <CustomCommands>
-        <Command type="BeforeBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(SolutionDir)/Pegasus/User Interface/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
-      </CustomCommands>
-    </CustomCommands>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|x64'">
-    <DefineConstants>TRACE;OpenGL3; Linux;x64</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <WarningLevel>4</WarningLevel>
-    <CustomCommands>
-      <CustomCommands>
-        <Command type="BeforeBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(SolutionDir)/Pegasus/User Interface/Pegasus UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
-      </CustomCommands>
-    </CustomCommands>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Assets\MainBundle.cs" />
-    <Compile Include="Platform\SDL2\EventType.cs" />
+    <Compile Include="Platform\Graphics\BlendState.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Platform\Graphics\BufferDescription.cs" />
+    <Compile Include="Platform\Graphics\DepthStencilState.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Platform\Graphics\Direct3D11\BlendState.D3D11.cs" />
+    <Compile Include="Platform\Graphics\Direct3D11\Buffer.D3D11.cs" />
+    <Compile Include="Platform\Graphics\Direct3D11\DepthStencilState.D3D11.cs" />
+    <Compile Include="Platform\Graphics\Direct3D11\Extensions.cs" />
+    <Compile Include="Platform\Graphics\Direct3D11\GraphicsDevice.D3D11.cs" />
+    <Compile Include="Platform\Graphics\Direct3D11\GraphicsObject.D3D11.cs" />
+    <Compile Include="Platform\Graphics\Direct3D11\RasterizerState.D3D11.cs" />
+    <Compile Include="Platform\Graphics\Direct3D11\RenderTarget.D3D11.cs" />
+    <Compile Include="Platform\Graphics\Direct3D11\SamplerState.D3D11.cs" />
+    <Compile Include="Platform\Graphics\Direct3D11\PixelShaderD3D11.D3D11.cs" />
+    <Compile Include="Platform\Graphics\Direct3D11\ShaderProgram.D3D11.cs" />
+    <Compile Include="Platform\Graphics\Direct3D11\SwapChain.D3D11.cs" />
+    <Compile Include="Platform\Graphics\Direct3D11\Texture.D3D11.cs" />
+    <Compile Include="Platform\Graphics\Direct3D11\Query.D3D11.cs" />
+    <Compile Include="Platform\Graphics\Direct3D11\VertexLayout.D3D11.cs" />
+    <Compile Include="Platform\Graphics\Direct3D11\VertexShaderD3D11.cs" />
+    <Compile Include="Platform\Graphics\Interface\IBlendState.cs" />
+    <Compile Include="Platform\Graphics\Interface\IBuffer.cs" />
+    <Compile Include="Platform\Graphics\Interface\IDepthStencilState.cs" />
+    <Compile Include="Platform\Graphics\Interface\IGraphicsDevice.cs" />
+    <Compile Include="Platform\Graphics\Interface\IQuery.cs" />
+    <Compile Include="Platform\Graphics\Interface\IRasterizerState.cs" />
+    <Compile Include="Platform\Graphics\Interface\IRenderTarget.cs" />
+    <Compile Include="Platform\Graphics\Interface\ISamplerState.cs" />
+    <Compile Include="Platform\Graphics\Interface\IShader.cs" />
+    <Compile Include="Platform\Graphics\Interface\IShaderProgram.cs" />
+    <Compile Include="Platform\Graphics\Interface\ISwapChain.cs" />
+    <Compile Include="Platform\Graphics\Interface\ITexture.cs" />
+    <Compile Include="Platform\Graphics\Interface\IVertexLayout.cs" />
+    <Compile Include="Platform\Graphics\OpenGL3\Bindings\GLState.cs" />
+    <Compile Include="Platform\Graphics\OpenGL3\BlendState.GL3.cs" />
     <Compile Include="Platform\Graphics\OpenGL3\Buffer.GL3.cs" />
-    <Compile Include="Platform\Graphics\OpenGL3\ConstantBuffer.GL3.cs" />
+    <Compile Include="Platform\Graphics\OpenGL3\DepthStencilState.GL3.cs" />
+    <Compile Include="Platform\Graphics\OpenGL3\GraphicsDevice.GL3.cs" />
+    <Compile Include="Platform\Graphics\OpenGL3\GraphicsObject.GL3.cs" />
+    <Compile Include="Platform\Graphics\OpenGL3\TimestampQuery.GL3.cs" />
+    <Compile Include="Platform\Graphics\OpenGL3\TimestampDisjointQuery.GL3.cs" />
+    <Compile Include="Platform\Graphics\OpenGL3\SyncedQuery.GL3.cs" />
+    <Compile Include="Platform\Graphics\OpenGL3\RasterizerState.GL3.cs" />
+    <Compile Include="Platform\Graphics\OpenGL3\RenderTarget.GL3.cs" />
+    <Compile Include="Platform\Graphics\OpenGL3\SamplerState.GL3.cs" />
+    <Compile Include="Platform\Graphics\OpenGL3\Shader.GL3.cs" />
+    <Compile Include="Platform\Graphics\OpenGL3\ShaderProgram.GL3.cs" />
+    <Compile Include="Platform\Graphics\OpenGL3\SwapChain.GL3.cs" />
+    <Compile Include="Platform\Graphics\OpenGL3\Texture.GL3.cs" />
+    <Compile Include="Platform\Graphics\OpenGL3\VertexLayout.GL3.cs" />
+    <Compile Include="Platform\Graphics\RasterizerState.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Platform\Graphics\SamplerState.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Platform\Graphics\VertexLayoutDescription.cs" />
+    <Compile Include="Platform\SDL2\EventType.cs" />
     <Compile Include="Platform\Graphics\DeviceState.cs" />
     <Compile Include="Platform\Graphics\OpenGL3\Bindings\ContextAttribute.cs" />
     <Compile Include="Platform\Graphics\OpenGL3\Bindings\ContextFlags.cs" />
@@ -201,14 +112,6 @@
     <Compile Include="Platform\Graphics\OpenGL3\Bindings\Extensions.cs" />
     <Compile Include="Platform\Graphics\OpenGL3\Bindings\GLContext.cs" />
     <Compile Include="Platform\Graphics\OpenGL3\Bindings\GL.cs" />
-    <Compile Include="Platform\Graphics\OpenGL3\GraphicsDevice.GL3.cs" />
-    <Compile Include="Platform\Graphics\OpenGL3\Query.GL3.cs" />
-    <Compile Include="Platform\Graphics\OpenGL3\RenderTarget.GL3.cs" />
-    <Compile Include="Platform\Graphics\OpenGL3\Shader.GL3.cs" />
-    <Compile Include="Platform\Graphics\OpenGL3\ShaderProgram.GL3.cs" />
-    <Compile Include="Platform\Graphics\OpenGL3\SwapChain.GL3.cs" />
-    <Compile Include="Platform\Graphics\OpenGL3\Texture.GL3.cs" />
-    <Compile Include="Platform\Graphics\OpenGL3\VertexLayout.GL3.cs" />
     <Compile Include="Platform\Memory\MemCopy.cs" />
     <Compile Include="Platform\Network\NetworkException.cs" />
     <Compile Include="Platform\Network\OutgoingUdpPacket.cs" />
@@ -239,7 +142,6 @@
     <Compile Include="Platform\Network\ConnectionDroppedException.cs" />
     <Compile Include="Rendering\RenderContext.States.cs" />
     <Compile Include="Rendering\RenderContext.cs" />
-    <Compile Include="Scene\Behavior`1.cs" />
     <Compile Include="Scene\Behavior.cs" />
     <Compile Include="Scene\IBehavior.cs" />
     <Compile Include="Scene\PostOrderEnumerator.cs" />
@@ -625,25 +527,21 @@
     <Compile Include="Platform\Memory\DisposableObject.cs" />
     <Compile Include="Platform\Graphics\BlendOption.cs" />
     <Compile Include="Platform\Graphics\BlendOperation.cs" />
-    <Compile Include="Platform\Graphics\OpenGL3\BlendState.GL3.cs" />
     <Compile Include="Platform\Graphics\Buffer.cs" />
     <Compile Include="Platform\Graphics\ColorWriteChannels.cs" />
     <Compile Include="Platform\Graphics\Comparison.cs" />
     <Compile Include="Platform\Graphics\ConstantBuffer.cs" />
     <Compile Include="Platform\Graphics\IndexBuffer.cs" />
     <Compile Include="Platform\Graphics\FragmentShader.cs" />
-    <Compile Include="Platform\Graphics\OpenGL3\DepthStencilState.GL3.cs" />
     <Compile Include="Platform\Graphics\IndexSize.cs" />
     <Compile Include="Platform\Graphics\Texture2D.cs" />
     <Compile Include="Platform\Graphics\VertexBinding.cs" />
     <Compile Include="Platform\Graphics\DataSemantics.cs" />
     <Compile Include="Platform\Graphics\VertexLayout.cs" />
     <Compile Include="Platform\Graphics\PrimitiveType.cs" />
-    <Compile Include="Platform\Graphics\OpenGL3\RasterizerState.GL3.cs" />
     <Compile Include="Platform\Graphics\ResourceUsage.cs" />
     <Compile Include="Platform\Graphics\CullMode.cs" />
     <Compile Include="Platform\Graphics\FillMode.cs" />
-    <Compile Include="Platform\Graphics\OpenGL3\SamplerState.GL3.cs" />
     <Compile Include="Platform\Graphics\StencilOperation.cs" />
     <Compile Include="Platform\Graphics\StencilOperationDescription.cs" />
     <Compile Include="Platform\Graphics\SurfaceFormat.cs" />
@@ -716,7 +614,4 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="IL.targets" />
-  <Target Name="AfterBuild">
-    <Copy SourceFiles="$(SolutionDir)../Dependencies/SDL2/Libs/$(Platform)/SDL2.dll" DestinationFolder="$(OutDir)" />
-  </Target>
 </Project>
