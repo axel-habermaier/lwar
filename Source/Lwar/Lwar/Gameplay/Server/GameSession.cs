@@ -4,15 +4,15 @@
 	using Entities;
 	using Network;
 	using Pegasus.Math;
-	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
+	using Pegasus.Rendering;
 	using Pegasus.Scene;
 	using Pegasus.Utilities;
 
 	/// <summary>
 	///     Represents a client- or server-side game session.
 	/// </summary>
-	public class GameSession : DisposableObject
+	internal class GameSession : DisposableObject
 	{
 		/// <summary>
 		///     Indicates whether the game session is used by a server.

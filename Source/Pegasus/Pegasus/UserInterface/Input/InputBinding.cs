@@ -2,7 +2,7 @@
 {
 	using System;
 	using System.Linq;
-	using UserInterface;
+	using System.Reflection;
 	using Platform.Logging;
 	using Utilities;
 
@@ -101,14 +101,16 @@
 				return;
 
 			var dataContextType = dataContext.GetType();
-			var method = dataContextType.GetMethods().SingleOrDefault(m => m.Name == _method && m.ReturnType == typeof(void)
-																		   && m.GetParameters().Length == 0);
+			var method = dataContextType
+				.GetTypeInfo()
+				.GetDeclaredMethods(_method)
+				.SingleOrDefault(m => m.ReturnType == typeof(void) && m.GetParameters().Length == 0);
 
 			Log.DebugIf(method == null, "Input binding failure: Unable to find method 'void {0}.{1}()'.", dataContextType.FullName, _method);
 			if (method == null)
 				return;
 
-			_targetMethod = (Action)Delegate.CreateDelegate(typeof(Action), dataContext, method);
+			_targetMethod = (Action)method.CreateDelegate(typeof(Action), dataContext);
 		}
 
 		/// <summary>

@@ -7,7 +7,7 @@ namespace Lwar.Gameplay.Client.Entities
 	/// <summary>
 	///     Represents a gun.
 	/// </summary>
-	public class GunEntity : Entity<GunEntity>
+	internal class GunEntity : Entity<GunEntity>
 	{
 		/// <summary>
 		///     Creates a new instance.

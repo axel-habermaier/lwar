@@ -1,6 +1,8 @@
 ﻿namespace Pegasus.UserInterface
 {
 	using System;
+	using System.Linq;
+	using System.Reflection;
 	using Platform.Logging;
 	using Utilities;
 
@@ -113,34 +115,41 @@
 		private void InitializeBinding(object dataContext)
 		{
 			Log.DebugIf(dataContext == null,
-				"Event binding failure: Data context is null while trying to bind method '{0}'.", _methodName);
+						"Event binding failure: Data context is null while trying to bind method '{0}'.", _methodName);
 
 			_dataContext = dataContext;
 			_handler = null;
-			
+
 			if (dataContext == null)
 				return;
 
 			var dataContextType = dataContext.GetType();
 
 			// First, try to bind to a method of the appropriate name without any parameters.
-			var method = dataContextType.GetMethod(_methodName, Type.EmptyTypes);
+			var method = dataContextType.GetTypeInfo().GetDeclaredMethods(_methodName).FirstOrDefault(m => m.GetParameters().Length == 0);
 			if (method != null)
 			{
-				var methodDelegate = (Action)Delegate.CreateDelegate(typeof(Action), dataContext, method);
+				var methodDelegate = (Action)method.CreateDelegate(typeof(Action), dataContext);
 				_handler = (s, a) => methodDelegate();
 			}
 			else
 			{
 				// Otherwise, try to bind to a method of the appropriate name with a RoutedEventHandler<T> signature.
-				method = dataContextType.GetMethod(_methodName, new[] { typeof(object), typeof(T) });
+				method = dataContextType.GetTypeInfo().GetDeclaredMethods(_methodName).FirstOrDefault(m =>
+				{
+					var parameters = m.GetParameters();
+					if (parameters.Length != 2)
+						return false;
+
+					return parameters[0].ParameterType == typeof(object) && parameters[1].ParameterType == typeof(T);
+				});
 
 				if (method != null)
-					_handler = (Action<object, T>)Delegate.CreateDelegate(typeof(Action<object, T>), dataContext, method);
+					_handler = (Action<object, T>)method.CreateDelegate(typeof(Action<object, T>), dataContext);
 			}
 
 			Log.DebugIf(_handler == null, "Unable to find method '{0}' with the appropriate signature on '{1}'.",
-				_methodName, dataContextType.FullName);
+						_methodName, dataContextType.FullName);
 		}
 
 		/// <summary>

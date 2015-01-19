@@ -13,17 +13,12 @@
 	/// <summary>
 	///     Manages the game and debug cameras.
 	/// </summary>
-	public class CameraManager : DisposableNotifyPropertyChanged
+	internal class CameraManager : DisposableNotifyPropertyChanged
 	{
 		/// <summary>
 		///     The debug camera that can be used to freely navigate the scene.
 		/// </summary>
 		private readonly DebugCamera _debugCamera;
-
-		/// <summary>
-		///     The window that outputs the scene rendered from the point of view of the active camera.
-		/// </summary>
-		private readonly Window _window;
 
 		/// <summary>
 		///     The active camera that is used to draw the scene.
@@ -44,7 +39,6 @@
 
 			GameCamera = new GameCamera(graphicsDevice, inputDevice, localPlayer);
 			_debugCamera = new DebugCamera(graphicsDevice, inputDevice);
-			_window = Application.Current.Window;
 
 			ActiveCamera = GameCamera;
 		}
@@ -84,13 +78,13 @@
 			if (ActiveCamera == _debugCamera)
 			{
 				ActiveCamera = GameCamera;
-				_window.MouseCaptured = false;
+				Mouse.RelativeMouseMode = false;
 			}
 			else
 			{
 				ActiveCamera = _debugCamera;
 				_debugCamera.Reset();
-				_window.MouseCaptured = true;
+				Mouse.RelativeMouseMode = true;
 			}
 		}
 
@@ -109,7 +103,7 @@
 		protected override void OnDisposing()
 		{
 			if (ActiveCamera == _debugCamera)
-				_window.MouseCaptured = false;
+				Mouse.RelativeMouseMode = false;
 
 			_debugCamera.SafeDispose();
 			GameCamera.SafeDispose();

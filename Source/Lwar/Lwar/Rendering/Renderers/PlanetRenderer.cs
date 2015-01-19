@@ -2,9 +2,9 @@
 {
 	using System;
 	using System.Collections.Generic;
+	using Assets;
 	using Assets.Effects;
 	using Gameplay.Client.Entities;
-	using Pegasus.Assets;
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
@@ -13,7 +13,7 @@
 	/// <summary>
 	///     Renders planets into a 3D scene.
 	/// </summary>
-	public class PlanetRenderer : Renderer<PlanetEntity>
+	internal class PlanetRenderer : Renderer<PlanetEntity>
 	{
 		/// <summary>
 		///     The width of the planet trajectories.
@@ -51,28 +51,21 @@
 		private SimpleVertexEffect _trajectoryEffect;
 
 		/// <summary>
-		///     Loads the required assets of the renderer.
-		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
-		public override void Load(GraphicsDevice graphicsDevice, AssetsManager assets)
-		{
-			_planetEffect = new SphereEffect(graphicsDevice, assets);
-			_trajectoryEffect = new SimpleVertexEffect(graphicsDevice, assets);
-		}
-
-		/// <summary>
 		///     Initializes the renderer.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		public override void Initialize(GraphicsDevice graphicsDevice)
+		/// <param name="renderContext">The render context that should be used for drawing.</param>
+		/// <param name="assets">The asset bundle that provides access to Lwar assets.</param>
+		public override void Initialize(RenderContext renderContext, GameBundle assets)
 		{
+			_planetEffect = assets.SphereEffect;
+			_trajectoryEffect = assets.SimpleVertexEffect;
+
 			foreach (var planet in Elements)
 			{
 				var outline = new CircleOutline();
 				var width = planet.Parent is SunEntity ? TrajectoryWidth : TrajectoryWidth / 2;
 				outline.Add(planet.Position.Length, TrajectoryPrecision, width);
-				_trajectories.Add(planet, outline.ToModel(graphicsDevice));
+				_trajectories.Add(planet, outline.ToModel(renderContext.GraphicsDevice));
 			}
 		}
 
@@ -85,14 +78,14 @@
 			if (ElementCount == 0)
 				return;
 
-			BlendState.Premultiplied.Bind();
-			DepthStencilState.DepthEnabled.Bind();
+			output.RenderContext.BlendStates.Premultiplied.Bind();
+			output.RenderContext.DepthStencilStates.DepthEnabled.Bind();
 
 			foreach (var planet in Elements)
 			{
 				_planetEffect.World = planet.Transform.Matrix;
 				_planetEffect.SunPosition = new Vector3(0, 0.5f, 0);
-				_planetEffect.SphereTexture = new CubeMapView(planet.Template.CubeMap, SamplerState.TrilinearClamp);
+				_planetEffect.SphereTexture = new CubeMapView(planet.Template.CubeMap, output.RenderContext.SamplerStates.TrilinearClamp);
 
 				planet.Template.Model.Draw(output, _planetEffect.Planet);
 
@@ -107,9 +100,6 @@
 		/// </summary>
 		protected override void OnDisposingCore()
 		{
-			_planetEffect.SafeDispose();
-			_trajectoryEffect.SafeDispose();
-
 			foreach (var trajectory in _trajectories.Values)
 				trajectory.SafeDispose();
 		}

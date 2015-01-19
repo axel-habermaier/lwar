@@ -6,8 +6,7 @@
 	using System.Linq;
 	using System.Text.RegularExpressions;
 	using System.Xml.Linq;
-	using Platform.Logging;
-	using Scripting.Parsing;
+	using Commands;
 	using Utilities;
 
 	/// <summary>
@@ -183,7 +182,7 @@
 				foreach (var dictionary in merge.Elements(DefaultNamespace + "ResourceDictionary").ToArray())
 				{
 					var source = dictionary.Attribute("Source").Value;
-					var content = XElement.Parse(File.ReadAllText(Path.Combine(Configuration.SourceDirectory, source)));
+					var content = XElement.Parse(File.ReadAllText(Path.Combine(Configuration.BasePath, source)));
 
 					dictionary.ReplaceWith(content.Elements());
 				}
@@ -676,11 +675,7 @@
 				Assert.That(split.Length == 2, "Expected property element to be of form 'TargetType.PropertyName'.");
 
 				var binding = bindingElement.Value;
-				var parser = new DataBindingParser();
-
-				var dataBinding = parser.Parse(binding);
-				if (dataBinding.Status != ReplyStatus.Success)
-					Log.Die("{0}", dataBinding.Errors.ErrorMessage);
+				var dataBinding = XamlDataBinding.Parse(binding);
 
 				IXamlType xamlType;
 				if (!TryGetClrType(bindingElement.Name.Namespace + split[0], out xamlType))
@@ -692,12 +687,12 @@
 				{
 					// Property data binding
 					var element = new XElement(DefaultNamespace + "Binding", new XAttribute("BindingType", "Data"),
-						new XAttribute("Path", dataBinding.Result.Path),
+						new XAttribute("Path", dataBinding.Path),
 						new XAttribute("TargetProperty", bindingElement.Name.LocalName + "Property"));
 
-					if (dataBinding.Result.Converter != null)
+					if (dataBinding.Converter != null)
 					{
-						var converter = dataBinding.Result.Converter;
+						var converter = dataBinding.Converter;
 						split = converter.Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
 						XName converterType = null;
 
@@ -711,11 +706,11 @@
 						element.Add(new XAttribute("Converter", GetClrType(converterType).FullName));
 					}
 
-					if (dataBinding.Result.BindingMode != null)
-						element.Add(new XAttribute("BindingMode", dataBinding.Result.BindingMode));
+					if (dataBinding.BindingMode != null)
+						element.Add(new XAttribute("BindingMode", dataBinding.BindingMode));
 
-					if (dataBinding.Result.FallbackValue != null)
-						element.Add(new XAttribute("FallbackValue", dataBinding.Result.FallbackValue));
+					if (dataBinding.FallbackValue != null)
+						element.Add(new XAttribute("FallbackValue", dataBinding.FallbackValue));
 
 					bindingElement.SetValue(String.Empty);
 					bindingElement.ReplaceWith(element);
@@ -724,7 +719,7 @@
 				{
 					// Event binding
 					var eventElement = new XElement(DefaultNamespace + "Binding", new XAttribute("BindingType", "Event"),
-						new XAttribute("Method", dataBinding.Result.Path),
+						new XAttribute("Method", dataBinding.Path),
 						new XAttribute("TargetEvent", bindingElement.Name.LocalName + "Event"));
 
 					bindingElement.ReplaceWith(eventElement);

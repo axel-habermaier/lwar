@@ -17,9 +17,6 @@
 	</Class>
 
 	<Class Name="Pegasus.UserInterface.Input.Cursor">
-		<Property Type="Pegasus.Platform.Graphics.Texture2D" Name="Texture"/>
-		<Property Type="Pegasus.Math.Vector2" Name="HotSpot"/>
-		<Property Type="Pegasus.Platform.Graphics.Color" Name="Color"/>
 		<Property Type="Pegasus.UserInterface.Input.Cursor" Name="Cursor"/>
 	</Class>
 
@@ -123,10 +120,10 @@
 	<Class Name="Pegasus.UserInterface.Thickness">
 	</Class>
 
-	<Class Name="Pegasus.Platform.Graphics.Color">
+	<Class Name="Pegasus.Rendering.Color">
 	</Class>
 
-	<Class Name="Pegasus.Platform.Graphics.Color?">
+	<Class Name="Pegasus.Rendering.Color?">
 	</Class>
 
 	<Class Name="Pegasus.Application">
@@ -144,7 +141,7 @@
 
 	<Class Name="Pegasus.UserInterface.UIElement">
 		<Property Type="object" Name="DataContext" />
-		<Property Type="Pegasus.Platform.Graphics.Color?" Name="Background" />
+		<Property Type="Pegasus.Rendering.Color?" Name="Background" />
 		<Property Type="Pegasus.UserInterface.Style" Name="Style" />
 		<Property Type="string" Name="FontFamily" />
 		<Property Type="int" Name="FontSize" />
@@ -187,9 +184,9 @@
 	<!-- Controls ================================================================================================= -->
 
 	<Class Name="Pegasus.UserInterface.Controls.Control" Inherits="Pegasus.UserInterface.UIElement">
-		<Property Type="Pegasus.Platform.Graphics.Color" Name="Foreground" />
+		<Property Type="Pegasus.Rendering.Color" Name="Foreground" />
 		<Property Type="Pegasus.UserInterface.Controls.ControlTemplate" Name="Template" />
-		<Property Type="Pegasus.Platform.Graphics.Color?" Name="BorderBrush"/>
+		<Property Type="Pegasus.Rendering.Color?" Name="BorderBrush"/>
 		<Property Type="Pegasus.UserInterface.Thickness" Name="BorderThickness"/>
 		<Property Type="Pegasus.UserInterface.Thickness" Name="Padding"/>
 		<Property Type="Pegasus.UserInterface.HorizontalAlignment" Name="HorizontalContentAlignment" />
@@ -197,7 +194,7 @@
 	</Class>
 
 	<Class Name="Pegasus.UserInterface.Controls.TextBlock" Inherits="Pegasus.UserInterface.UIElement">
-		<Property Type="Pegasus.Platform.Graphics.Color" Name="Foreground" />
+		<Property Type="Pegasus.Rendering.Color" Name="Foreground" />
 		<Property Type="Pegasus.UserInterface.TextWrapping" Name="TextWrapping" />
 		<Property Type="Pegasus.UserInterface.TextAlignment" Name="TextAlignment" />
 		<Property Type="string" Name="Text" IsContentProperty="true" />
@@ -292,7 +289,7 @@
 	</Class>
 
 	<Class Name="Pegasus.UserInterface.Controls.Border" Inherits="Pegasus.UserInterface.Controls.Decorator">
-		<Property Type="Pegasus.Platform.Graphics.Color?" Name="BorderBrush"/>
+		<Property Type="Pegasus.Rendering.Color?" Name="BorderBrush"/>
 		<Property Type="Pegasus.UserInterface.Thickness" Name="BorderThickness"/>
 		<Property Type="Pegasus.UserInterface.Thickness" Name="Padding"/>
 		<Property Type="Pegasus.UserInterface.HorizontalAlignment" Name="HorizontalContentAlignment" />

@@ -3,6 +3,7 @@
 	using System;
 	using Input;
 	using Math;
+	using Platform;
 	using Rendering;
 	using Utilities;
 
@@ -11,39 +12,6 @@
 	/// </summary>
 	public class TextBox : Control, ITextInputControl
 	{
-		/// <summary>
-		///     The default template that defines the visual appearance of an items control.
-		/// </summary>
-		private static readonly ControlTemplate DefaultTemplate = control =>
-		{
-			var textBlock = new TextBlock();
-			textBlock.CreateTemplateBinding(control, TextProperty, TextBlock.TextProperty);
-
-			var border = new Border { Child = textBlock };
-			border.CreateTemplateBinding(control, BorderBrushProperty, Border.BorderBrushProperty);
-			border.CreateTemplateBinding(control, BorderThicknessProperty, Border.BorderThicknessProperty);
-			border.CreateTemplateBinding(control, PaddingProperty, Border.PaddingProperty);
-			return border;
-		};
-
-		/// <summary>
-		///     The text content of the text block.
-		/// </summary>
-		public static readonly DependencyProperty<string> TextProperty =
-			new DependencyProperty<string>(defaultValue: String.Empty, affectsMeasure: true, prohibitsAnimations: true,
-				defaultBindingMode: BindingMode.TwoWay, validationCallback: ValidateText);
-
-		/// <summary>
-		///     The maximum number of characters that can be manually entered into the text box.
-		/// </summary>
-		public static readonly DependencyProperty<int> MaxLengthProperty = new DependencyProperty<int>(validationCallback: ValidateMaxLength);
-
-		/// <summary>
-		///     Raised when the text contained in the text box has been changed.
-		/// </summary>
-		public static readonly RoutedEvent<TextChangedEventArgs> TextChangedEvent =
-			new RoutedEvent<TextChangedEventArgs>(RoutingStrategy.Bubble);
-
 		/// <summary>
 		///     The caret that is used to insert and delete text.
 		/// </summary>
@@ -174,6 +142,7 @@
 				return;
 
 			textBox._caret.Show();
+			Keyboard.TextInputEnabled = args.NewValue;
 		}
 
 		/// <summary>
@@ -189,7 +158,9 @@
 			if (textBox.MaxLength > 0 && textBox.Text.Length >= textBox.MaxLength)
 				return;
 
-			textBox._caret.InsertCharacter(e.Character);
+			foreach (var character in e.Text)
+				textBox._caret.InsertCharacter(character);
+
 			e.Handled = true;
 		}
 
@@ -222,11 +193,11 @@
 				case Key.End:
 					textBox._caret.MoveToEnd();
 					break;
-				case Key.Back:
+				case Key.Backspace:
 					textBox._caret.RemovePreviousCharacter();
 					break;
 				case Key.Delete:
-				case Key.NumpadDecimal:
+				case Key.NumpadPeriod:
 					textBox._caret.RemoveCurrentCharacter();
 					break;
 				default:
@@ -335,8 +306,44 @@
 		{
 			base.DrawCore(spriteBatch);
 
-			if (_textBlock != null && IsFocused)
-				_caret.Draw(spriteBatch, _textBlock.ComputeCaretPosition(_caret.Position), _textBlock.Font.LineHeight, Foreground);
+			if (_textBlock == null || !IsFocused)
+				return;
+
+			_caret.Draw(spriteBatch, _textBlock.ComputeCaretPosition(_caret.Position), _textBlock.Font.LineHeight, Foreground);
+			Keyboard.ChangeTextInputArea(VisualArea);
 		}
+
+		/// <summary>
+		///     The default template that defines the visual appearance of an items control.
+		/// </summary>
+		private static readonly ControlTemplate DefaultTemplate = control =>
+		{
+			var textBlock = new TextBlock();
+			textBlock.CreateTemplateBinding(control, TextProperty, TextBlock.TextProperty);
+
+			var border = new Border { Child = textBlock };
+			border.CreateTemplateBinding(control, BorderBrushProperty, Border.BorderBrushProperty);
+			border.CreateTemplateBinding(control, BorderThicknessProperty, Border.BorderThicknessProperty);
+			border.CreateTemplateBinding(control, PaddingProperty, Border.PaddingProperty);
+			return border;
+		};
+
+		/// <summary>
+		///     The text content of the text block.
+		/// </summary>
+		public static readonly DependencyProperty<string> TextProperty =
+			new DependencyProperty<string>(defaultValue: String.Empty, affectsMeasure: true, prohibitsAnimations: true,
+				defaultBindingMode: BindingMode.TwoWay, validationCallback: ValidateText);
+
+		/// <summary>
+		///     The maximum number of characters that can be manually entered into the text box.
+		/// </summary>
+		public static readonly DependencyProperty<int> MaxLengthProperty = new DependencyProperty<int>(validationCallback: ValidateMaxLength);
+
+		/// <summary>
+		///     Raised when the text contained in the text box has been changed.
+		/// </summary>
+		public static readonly RoutedEvent<TextChangedEventArgs> TextChangedEvent =
+			new RoutedEvent<TextChangedEventArgs>(RoutingStrategy.Bubble);
 	}
 }

@@ -33,13 +33,18 @@
 		}
 
 		/// <summary>
+		///     Gets or sets the compilation context.
+		/// </summary>
+		public CompilationContext Context { get; set; }
+
+		/// <summary>
 		///     Checks whether the given identifier is reserved.
 		/// </summary>
 		/// <param name="identifier">The identifier that should be checked.</param>
 		protected void ValidateIdentifier(Identifier identifier)
 		{
-			if (identifier.Name.StartsWith(Configuration.ReservedIdentifierPrefix))
-				Error(identifier, "Identifiers starting with '{0}' are reserved.", Configuration.ReservedIdentifierPrefix);
+			if (identifier.Name.StartsWith(CompilationContext.ReservedIdentifierPrefix))
+				Error(identifier, "Identifiers starting with '{0}' are reserved.", CompilationContext.ReservedIdentifierPrefix);
 		}
 
 		/// <summary>

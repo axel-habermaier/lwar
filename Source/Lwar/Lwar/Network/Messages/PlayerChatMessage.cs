@@ -9,7 +9,7 @@ namespace Lwar.Network.Messages
 	///     A chat message sent between clients.
 	/// </summary>
 	[ReliableTransmission(MessageType.PlayerChat)]
-	public sealed class PlayerChatMessage : Message
+	internal sealed class PlayerChatMessage : Message
 	{
 		/// <summary>
 		///     Initializes the type.
@@ -40,9 +40,9 @@ namespace Lwar.Network.Messages
 		///     Serializes the message using the given writer.
 		/// </summary>
 		/// <param name="writer">The writer that should be used to serialize the message.</param>
-		public override void Serialize(BufferWriter writer)
+		public override void Serialize(ref BufferWriter writer)
 		{
-			writer.WriteIdentifier(Player);
+			WriteIdentifier(ref writer, Player);
 			writer.WriteString(Message, NetworkProtocol.ChatMessageLength);
 		}
 
@@ -50,9 +50,9 @@ namespace Lwar.Network.Messages
 		///     Deserializes the message using the given reader.
 		/// </summary>
 		/// <param name="reader">The reader that should be used to deserialize the message.</param>
-		public override void Deserialize(BufferReader reader)
+		public override void Deserialize(ref BufferReader reader)
 		{
-			Player = reader.ReadIdentifier();
+			Player = ReadIdentifier(ref reader);
 			Message = reader.ReadString(NetworkProtocol.ChatMessageLength);
 		}
 

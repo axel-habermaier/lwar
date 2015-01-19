@@ -8,7 +8,7 @@ namespace Lwar.Gameplay.Server.Behaviors
 	/// <summary>
 	///     Fires a phaser when the weapon is triggered.
 	/// </summary>
-	public class PhaserBehavior : WeaponBehavior
+	internal class PhaserBehavior : WeaponBehavior
 	{
 		/// <summary>
 		///     The phaser entity.

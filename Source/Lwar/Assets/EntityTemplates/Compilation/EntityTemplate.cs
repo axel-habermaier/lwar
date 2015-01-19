@@ -1,8 +1,4 @@
-﻿using Pegasus.AssetsCompiler.Assets.Attributes;
-
-[assembly: Ignore("EntityTemplates/Compilation/EntityTemplate.cs")]
-
-namespace Lwar.Assets.EntityTemplates.Compilation
+﻿namespace Lwar.Assets.EntityTemplates.Compilation
 {
 	using System;
 

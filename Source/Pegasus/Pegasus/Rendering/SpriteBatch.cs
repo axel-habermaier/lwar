@@ -9,6 +9,7 @@
 	using Platform.Graphics;
 	using Platform.Logging;
 	using Platform.Memory;
+	using UserInterface;
 	using Utilities;
 
 	/// <summary>
@@ -32,14 +33,14 @@
 		private readonly IndexBuffer _indexBuffer;
 
 		/// <summary>
-		///     The size of a single quad in bytes.
-		/// </summary>
-		private readonly int _quadSize = Marshal.SizeOf(typeof(Quad));
-
-		/// <summary>
 		///     The list of all quads.
 		/// </summary>
 		private readonly Quad[] _quads = new Quad[MaxQuads];
+
+		/// <summary>
+		///     The size of a single quad in bytes.
+		/// </summary>
+		private readonly int _quadSize = Marshal.SizeOf(typeof(Quad));
 
 		/// <summary>
 		///     Rasterizer state for sprite batch rendering with active scissor test.
@@ -54,7 +55,7 @@
 		/// <summary>
 		///     The vertex input layout used by the sprite batch.
 		/// </summary>
-		private readonly VertexInputLayout _vertexLayout;
+		private readonly VertexLayout _vertexLayout;
 
 		/// <summary>
 		///     The blend state that should be used for drawing.
@@ -110,22 +111,22 @@
 		///     Initializes a new instance.
 		/// </summary>
 		public SpriteBatch()
-			: this(Application.Current.GraphicsDevice, Application.Current.Assets)
+			: this(Application.Current.RenderContext)
 		{
 		}
 
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		/// <param name="assets">The assets manager that should be used to load required assets.</param>
-		public SpriteBatch(GraphicsDevice graphicsDevice, AssetsManager assets)
+		/// <param name="renderContext">The render context that should be used for drawing.</param>
+		public SpriteBatch(RenderContext renderContext)
 		{
-			Assert.ArgumentNotNull(graphicsDevice);
-			Assert.ArgumentNotNull(assets);
+			Assert.ArgumentNotNull(renderContext);
 
-			WorldMatrix = Matrix.Identity;
-			_effect = new SpriteEffect(graphicsDevice, assets);
+			var graphicsDevice = renderContext.GraphicsDevice;
+
+			RenderContext = renderContext;
+			_effect = renderContext.GetAssetBundle<MainBundle>().SpriteEffect;
 
 			// Initialize the indices; this can be done once, so after the indices are copied to the index buffer,
 			// we never have to change the index buffer again
@@ -151,19 +152,24 @@
 			_indexBuffer = IndexBuffer.Create(graphicsDevice, indices);
 			_vertexLayout = Quad.GetInputLayout(graphicsDevice, _vertexBuffer.Buffer, _indexBuffer);
 
-			_scissorRasterizerState = new RasterizerState(graphicsDevice)
-			{
-				CullMode = CullMode.None,
-				ScissorEnabled = true
-			};
+			var description = RasterizerDescription.Default();
+			description.CullMode = CullMode.None;
+			description.ScissorEnabled = true;
+			_scissorRasterizerState = new RasterizerState(graphicsDevice, ref description);
 
 			_vertexBuffer.SetName("SpriteBatch.VertexBuffer");
 			_indexBuffer.SetName("SpriteBatch.IndexBuffer");
 			_vertexLayout.SetName("SpriteBatch.VertexLayout");
 			_scissorRasterizerState.SetName("SpriteBatch.Scissor");
 
+			WorldMatrix = Matrix.Identity;
 			Reset();
 		}
+
+		/// <summary>
+		///     Gets the render context that is used for drawing.
+		/// </summary>
+		public RenderContext RenderContext { get; private set; }
 
 		/// <summary>
 		///     Gets or sets the sampler state that should be used for drawing.
@@ -245,7 +251,6 @@
 			_indexBuffer.SafeDispose();
 			_vertexLayout.SafeDispose();
 			_scissorRasterizerState.SafeDispose();
-			_effect.SafeDispose();
 		}
 
 		/// <summary>
@@ -262,20 +267,30 @@
 		}
 
 		/// <summary>
-		///     Draws the given rectangle.
+		///     Draws a textured rectangle.
 		/// </summary>
 		/// <param name="rectangle">The rectangle that should be drawn.</param>
-		/// <param name="texture">The texture that should be used to draw the quad.</param>
+		/// <param name="texture">The texture that should be used to draw the rectangle.</param>
 		public void Draw(Rectangle rectangle, Texture2D texture)
 		{
 			Draw(rectangle, texture, Colors.White);
 		}
 
 		/// <summary>
-		///     Draws the given rectangle.
+		///     Draws a colored rectangle.
 		/// </summary>
 		/// <param name="rectangle">The rectangle that should be drawn.</param>
-		/// <param name="texture">The texture that should be used to draw the quad.</param>
+		/// <param name="color">The color that should be used to draw the rectangle.</param>
+		public void Draw(Rectangle rectangle, Color color)
+		{
+			Draw(rectangle, RenderContext.WhiteTexture2D, color);
+		}
+
+		/// <summary>
+		///     Draws a textured rectangle.
+		/// </summary>
+		/// <param name="rectangle">The rectangle that should be drawn.</param>
+		/// <param name="texture">The texture that should be used to draw the rectangle.</param>
 		/// <param name="color">The color of the quad.</param>
 		/// <param name="texCoords">The texture coordinates that should be used.</param>
 		public void Draw(Rectangle rectangle, Texture2D texture, Color color, Rectangle? texCoords = null)
@@ -332,7 +347,7 @@
 		public void Draw(Texture2D texture, Vector2 position, float angle, Color color)
 		{
 			var size = new Size(texture.Width, texture.Height);
-			var shift = new Vector2(- size.Width, - size.Height) * 0.5f;
+			var shift = new Vector2(-size.Width, -size.Height) * 0.5f;
 			var quad = new Quad(new Rectangle(shift, size), color);
 
 			var rotation = Matrix.CreateRotationZ(angle);
@@ -461,7 +476,7 @@
 								  Matrix.CreateTranslation(start.X, start.Y + width / 2.0f, 0);
 
 			Quad.Transform(ref quad, ref transformMatrix);
-			Draw(ref quad, Texture2D.White);
+			Draw(ref quad, RenderContext.WhiteTexture2D);
 		}
 
 		/// <summary>
@@ -525,7 +540,7 @@
 				sectionList.DepthStencilState.Bind();
 
 				if (!sectionList.UseScissorTest)
-					RasterizerState.CullNone.Bind();
+					RenderContext.RasterizerStates.CullNone.Bind();
 				else
 				{
 					_scissorRasterizerState.Bind();
@@ -540,6 +555,9 @@
 
 			// Reset the internal state
 			Reset();
+
+			// Make sure we don't "leak out" the scissor rasterizer state
+			RenderContext.RasterizerStates.CullNone.Bind();
 		}
 
 		/// <summary>

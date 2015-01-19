@@ -4,12 +4,11 @@
 	using System.Collections.Generic;
 	using System.Diagnostics;
 	using System.Linq;
-	using System.Threading;
 	using Logging;
 	using Utilities;
 
 	/// <summary>
-	///     Pools objects of type T in order to reduce the pressure on the garbage collector. Instead of new'ing up a new
+	///     Pools objects of type T in order to reduce the pressure on the garbage collector. Instead of allocating a new
 	///     object of type T whenever one is needed, the pool's Allocate() method should be used to retrieve a previously allocated
 	///     instance, if any, or allocate a new one. Once the object is no longer being used, it must be returned to the pool
 	///     so that it can be reused later on.
@@ -39,11 +38,6 @@
 		///     The allocated objects that are tracked in debug builds so that memory leaks can be debugged more easily.
 		/// </summary>
 		private readonly List<T> _allocatedObjects = new List<T>();
-
-		/// <summary>
-		///     The identifier of the thread the pool was created on.
-		/// </summary>
-		private readonly int _threadId = Thread.CurrentThread.ManagedThreadId;
 #endif
 
 		/// <summary>
@@ -68,8 +62,6 @@
 		/// </summary>
 		public T Allocate()
 		{
-			ValidateThread();
-
 			T obj;
 			if (_pooledObjects.Count == 0)
 			{
@@ -108,7 +100,6 @@
 			Assert.ArgumentNotNull(obj);
 			Assert.ArgumentSatisfies(!_pooledObjects.Contains(obj), "The object has already been returned.");
 			Assert.That(_pooledObjects.Count < _allocationCount, "More objects returned than allocated.");
-			ValidateThread();
 
 			_pooledObjects.Push(obj);
 		}
@@ -121,18 +112,17 @@
 			if (_allocationCount == 0)
 				return;
 
-			ValidateThread();
-			Log.Debug("Releasing {1} pooled object(s) of type '{0}'...", typeof(T).FullName, _allocationCount);
-
 			foreach (var obj in _pooledObjects.OfType<PooledObject>())
 				obj.Free();
+
+			Log.Debug("Released {1} pooled object(s) of type '{0}'.", typeof(T).FullName, _allocationCount);
 
 #if DEBUG
 			var leakedObjects = _allocatedObjects.Except(_pooledObjects).ToArray();
 			if (leakedObjects.Length > 0)
 				Log.Error("Leaked {1} object(s) of type '{0}'.", typeof(T).FullName, leakedObjects.Length);
 
-			if (leakedObjects.Length > 0 && Debugger.IsAttached)
+			if (leakedObjects.Length > 0 && Debugger.IsAttached && PlatformInfo.Platform == PlatformType.Windows)
 				Debugger.Break();
 
 			_allocatedObjects.Clear();
@@ -140,18 +130,6 @@
 
 			_pooledObjects.Clear();
 			_allocationCount = 0;
-		}
-
-		/// <summary>
-		///     In debug builds, checks that the object pool is only accessed from the thread it was created on.
-		/// </summary>
-		[Conditional("VALIDATETHREAD")]
-		private void ValidateThread()
-		{
-#if DEBUG
-			Assert.That(_threadId == Thread.CurrentThread.ManagedThreadId,
-				"Object pool is accessed from a thread other than the one that created it.");
-#endif
 		}
 
 		/// <summary>

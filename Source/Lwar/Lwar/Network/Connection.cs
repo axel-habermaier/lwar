@@ -5,6 +5,7 @@
 	using System.Diagnostics;
 	using Messages;
 	using Pegasus.Platform;
+	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Platform.Network;
 	using Pegasus.Utilities;
@@ -12,7 +13,7 @@
 	/// <summary>
 	///     Represents a connection to a remote peer, using the Lwar network protocol specification.
 	/// </summary>
-	public class Connection : UniquePooledObject
+	internal class Connection : UniquePooledObject
 	{
 		/// <summary>
 		///     The delivery manager responsible for the delivery guarantees of all incoming and outgoing messages.
@@ -128,11 +129,11 @@
 			// Cap the time so that we don't disconnect when the debugger is suspending the process
 			_timeSinceLastPacket += Math.Min(elapsedTime, 500);
 
-			UdpPacket packet;
+			IncomingUdpPacket packet;
 			while (_channel.TryReceive(out packet))
 			{
 				using (packet)
-				using (var reader = packet.CreateReader())
+				using (var reader = packet.Reader)
 					HandlePacket(reader);
 			}
 
@@ -160,8 +161,7 @@
 			CheckAccess();
 
 			// Send all queued messages to the remote peer
-			using (var packetAssembler = PacketAssembler.Create(_channel, _deliveryManager.LastReceivedReliableSequenceNumber))
-				_outgoingMessages.SendMessages(packetAssembler);
+			_outgoingMessages.SendMessages(new PacketAssembler(_allocator, _channel, _deliveryManager.LastReceivedReliableSequenceNumber));
 
 			// Check if the connection has been dropped
 			if (TimeToDrop > 0)
@@ -179,8 +179,15 @@
 			if (IsFaulted)
 				return;
 
-			Send(DisconnectMessage.Create(_allocator));
-			SendQueuedMessages();
+			try
+			{
+				Send(DisconnectMessage.Create(_allocator));
+				SendQueuedMessages();
+			}
+			catch (NetworkException e)
+			{
+				Log.Debug("Failed to send disconnect message to sever: {0}", e.Message);
+			}
 
 			IsDropped = true;
 		}
@@ -191,10 +198,8 @@
 		/// <param name="buffer">The buffer the packet data should be read from.</param>
 		private void HandlePacket(BufferReader buffer)
 		{
-			Assert.ArgumentNotNull(buffer);
-
 			uint acknowledgement;
-			if (!PacketHeader.TryRead(buffer, out acknowledgement))
+			if (!PacketHeader.TryRead(ref buffer, out acknowledgement))
 				return;
 
 			_deliveryManager.UpdateLastAckedSequenceNumber(acknowledgement);
@@ -205,7 +210,7 @@
 				readBytes = buffer.Count;
 
 				SequencedMessage message;
-				while (_deserializer.TryDeserialize(buffer, out message))
+				while (_deserializer.TryDeserialize(ref buffer, out message))
 					_receivedMessages.Enqueue(message);
 			}
 
@@ -214,7 +219,7 @@
 			if (!buffer.EndOfBuffer)
 				return;
 
-			_timeSinceLastPacket =0;
+			_timeSinceLastPacket = 0;
 		}
 
 		/// <summary>

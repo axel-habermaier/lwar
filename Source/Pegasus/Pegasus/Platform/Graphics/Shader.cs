@@ -1,28 +1,15 @@
 ﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
-	using System.Diagnostics;
-	using System.Runtime.InteropServices;
-	using System.Security;
+	using Interface;
+	using Logging;
+	using Memory;
 
 	/// <summary>
 	///     Represents a shader that controls a programmable stage of the graphics pipeline.
 	/// </summary>
 	public abstract class Shader : GraphicsObject
 	{
-		/// <summary>
-		///     The native shader instance.
-		/// </summary>
-		protected IntPtr _shader;
-
-		/// <summary>
-		///     Gets the native shader instance.
-		/// </summary>
-		internal IntPtr NativePtr
-		{
-			get { return _shader; }
-		}
-
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
@@ -33,12 +20,25 @@
 		}
 
 		/// <summary>
-		///     Destroys the native shader instance.
+		///     Gets the underlying shader object.
 		/// </summary>
-		protected void DestroyShader()
+		internal IShader ShaderObject { get; private set; }
+
+		/// <summary>
+		///     Loads the shader from the given buffer.
+		/// </summary>
+		/// <param name="shaderType">The type of the shader that should be loaded.</param>
+		/// <param name="buffer">The buffer the fragment shader should be read from.</param>
+		protected unsafe void Load(ShaderType shaderType, ref BufferReader buffer)
 		{
-			NativeMethods.DestroyShader(_shader);
-			_shader = IntPtr.Zero;
+			byte* shaderCode;
+			int length;
+			ExtractShaderCode(ref buffer, out shaderCode, out length);
+
+			ShaderObject.SafeDispose();
+			ShaderObject = GraphicsDevice.CreateShader(shaderType, new IntPtr(shaderCode), length);
+
+			SetName();
 		}
 
 		/// <summary>
@@ -46,32 +46,56 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			NativeMethods.DestroyShader(_shader);
+			ShaderObject.SafeDispose();
 		}
 
-#if DEBUG
 		/// <summary>
-		///     Invoked after the name of the graphics object has changed. This method is only available in debug builds.
+		///     Invoked after the name of the graphics object has changed. This method is only invoked in debug builds.
 		/// </summary>
-		protected override void OnRenamed()
+		/// <param name="name">The new name of the graphics object.</param>
+		protected override void OnRenamed(string name)
 		{
-			if (_shader != IntPtr.Zero)
-				NativeMethods.SetName(_shader, Name);
+			ShaderObject.SetName(name);
 		}
-#endif
 
 		/// <summary>
-		///     Provides access to the native shader functions.
+		///     Extracts the graphics API-dependent shader code from the buffer.
 		/// </summary>
-		[SuppressUnmanagedCodeSecurity]
-		private static class NativeMethods
+		/// <param name="buffer">The buffer that should be used to load the shader.</param>
+		/// <param name="shaderCode">The extracted shader source code.</param>
+		/// <param name="length">The length of the extracted shader code in bytes.</param>
+		private unsafe void ExtractShaderCode(ref BufferReader buffer, out byte* shaderCode, out int length)
 		{
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDestroyShader")]
-			public static extern void DestroyShader(IntPtr shader);
+			var containsD3D11Shader = buffer.ReadBoolean();
+			var containsGL3Shader = buffer.ReadBoolean();
 
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetShaderName")]
-			[Conditional("DEBUG")]
-			public static extern void SetName(IntPtr texture, string name);
+			switch (GraphicsDevice.GraphicsApi)
+			{
+				case GraphicsApi.Direct3D11:
+					if (!containsD3D11Shader)
+						Log.Die("The HLSL version of the shader cannot be loaded as it was not compiled into the asset bundle.");
+
+					if (containsGL3Shader)
+						buffer.Skip(buffer.ReadInt32());
+
+					length = buffer.ReadInt32();
+					shaderCode = buffer.Pointer;
+					buffer.Skip(length);
+					break;
+				case GraphicsApi.OpenGL3:
+					if (!containsGL3Shader)
+						Log.Die("The OpenGL 3 version of the shader cannot be loaded as it was not compiled into the asset bundle.");
+
+					length = buffer.ReadInt32();
+					shaderCode = buffer.Pointer;
+					buffer.Skip(length);
+
+					if (containsD3D11Shader)
+						buffer.Skip(buffer.ReadInt32());
+					break;
+				default:
+					throw new InvalidOperationException("Unsupported graphics API.");
+			}
 		}
 	}
 }

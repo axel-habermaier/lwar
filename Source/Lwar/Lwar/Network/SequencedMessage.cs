@@ -7,7 +7,7 @@ namespace Lwar.Network
 	/// <summary>
 	///     Associates a message with a sequence number.
 	/// </summary>
-	public struct SequencedMessage
+	internal struct SequencedMessage
 	{
 		/// <summary>
 		///     Initializes a new instance.

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<AssetBundle Namespace="Lwar.Assets" EffectsCodePath="../Lwar/Assets/Effects" BundleCodePath="../Lwar/Assets" Visibility="internal">
+
+	<Assembly File="Lwar Assets.dll" />
+	
+	<Cursor File="Textures/Crosshair.png" HotSpot="16,16"/>
+	
+	<Texture2D File="Textures/Bullet.png" Compress="false" GenerateMipmaps="false" />
+	<Texture2D File="Textures/BulletGlow.png" Compress="false" GenerateMipmaps="false" />
+	<Texture2D File="Textures/Phaser.png" Compress="false" GenerateMipmaps="false" />
+	<Texture2D File="Textures/PhaserGlow.png" Compress="false" GenerateMipmaps="false" />
+	<Texture2D File="Textures/Heat.png" Compress="false" GenerateMipmaps="false" />
+	<Texture2D File="Textures/Parallax.png" Compress="false" GenerateMipmaps="false" />
+	<Texture2D File="Textures/Rocket.png" Compress="true" GenerateMipmaps="true" />
+	<Texture2D File="Textures/Ship.png" Compress="true" GenerateMipmaps="true" />
+
+	<CubeMap File="Textures/Earth.png" Compress="true" GenerateMipmaps="true" />
+	<CubeMap File="Textures/Jupiter.png" Compress="true" GenerateMipmaps="true" />
+	<CubeMap File="Textures/Mars.png" Compress="true" GenerateMipmaps="true" />
+	<CubeMap File="Textures/Moon.png" Compress="true" GenerateMipmaps="true" />
+	<CubeMap File="Textures/Shields.png" Compress="true" GenerateMipmaps="true" />
+	<CubeMap File="Textures/Space.png" Compress="true" GenerateMipmaps="false" />
+	<CubeMap File="Textures/Sun.png" Compress="true" GenerateMipmaps="true" />
+	<CubeMap File="Textures/SunHeat.png" Compress="true" GenerateMipmaps="true" />
+
+	<Effect File="Effects/BlurEffect.cs" />
+	<Effect File="Effects/ParallaxEffect.cs" />
+	<Effect File="Effects/SimpleVertexEffect.cs" />
+	<Effect File="Effects/SkyboxEffect.cs" />
+	<Effect File="Effects/SphereEffect.cs" />
+	<Effect File="Effects/SunEffect.cs" />
+	<Effect File="Effects/TexturedQuadEffect.cs" />
+
+	<EntityTemplate File="EntityTemplates/PlanetTemplates.cs" />
+	<EntityTemplate File="EntityTemplates/ShipTemplates.cs" />
+	<EntityTemplate File="EntityTemplates/SunTemplates.cs" />
+	<EntityTemplate File="EntityTemplates/WeaponTemplates.cs" />
+
+</AssetBundle>

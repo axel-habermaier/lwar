@@ -10,7 +10,7 @@ namespace Lwar.Network.Messages
 	///     Informs a client about the state of a ship.
 	/// </summary>
 	[UnreliableTransmission(MessageType.UpdateShip, EnableBatching = true)]
-	public sealed class UpdateShipMessage : Message
+	internal sealed class UpdateShipMessage : Message
 	{
 		/// <summary>
 		///     Initializes the type.
@@ -62,11 +62,11 @@ namespace Lwar.Network.Messages
 		///     Serializes the message using the given writer.
 		/// </summary>
 		/// <param name="writer">The writer that should be used to serialize the message.</param>
-		public override void Serialize(BufferWriter writer)
+		public override void Serialize(ref BufferWriter writer)
 		{
-			writer.WriteIdentifier(Ship);
-			writer.WriteVector2(Position);
-			writer.WriteOrientation(Orientation);
+			WriteIdentifier(ref writer, Ship);
+			WriteVector2(ref writer, Position);
+			WriteOrientation(ref writer, Orientation);
 			writer.WriteByte((byte)HullIntegrity);
 			writer.WriteByte((byte)Shields);
 
@@ -78,11 +78,11 @@ namespace Lwar.Network.Messages
 		///     Deserializes the message using the given reader.
 		/// </summary>
 		/// <param name="reader">The reader that should be used to deserialize the message.</param>
-		public override void Deserialize(BufferReader reader)
+		public override void Deserialize(ref BufferReader reader)
 		{
-			Ship = reader.ReadIdentifier();
-			Position = reader.ReadVector2();
-			Orientation = reader.ReadOrientation();
+			Ship = ReadIdentifier(ref reader);
+			Position = ReadVector2(ref reader);
+			Orientation = ReadOrientation(ref reader);
 			HullIntegrity = reader.ReadByte();
 			Shields = reader.ReadByte();
 

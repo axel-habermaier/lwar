@@ -1143,7 +1143,7 @@
 		protected virtual void DrawCore(SpriteBatch spriteBatch)
 		{
 			if (Background.HasValue)
-				spriteBatch.Draw(VisualArea, Texture2D.White, Background.Value);
+				spriteBatch.Draw(VisualArea, Background.Value);
 		}
 
 		/// <summary>

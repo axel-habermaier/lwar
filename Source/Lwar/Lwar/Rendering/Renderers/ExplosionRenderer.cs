@@ -3,10 +3,10 @@
 	using System;
 	using Assets;
 	using Gameplay.Client.Actors;
-	using Pegasus.Assets;
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
+	using Pegasus.Rendering;
 	using Pegasus.Rendering.Particles;
 	using Pegasus.Rendering.Particles.Emitteres;
 	using Pegasus.Rendering.Particles.Modifiers;
@@ -14,21 +14,21 @@
 	/// <summary>
 	///     Renders explosion effects into a 3D scene.
 	/// </summary>
-	public class ExplosionRenderer : Renderer<ExplosionActor>
+	internal class ExplosionRenderer : Renderer<ExplosionActor>
 	{
 		/// <summary>
 		///     The particle effect template used to initialize the explosion particle effects.
 		/// </summary>
-		private readonly ExplosionEffectTemplate _template = new ExplosionEffectTemplate();
+		private ExplosionEffectTemplate _template;
 
 		/// <summary>
-		///     Loads the required assets of the renderer.
+		///     Initializes the renderer.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
-		public override void Load(GraphicsDevice graphicsDevice, AssetsManager assets)
+		/// <param name="renderContext">The render context that should be used for drawing.</param>
+		/// <param name="assets">The asset bundle that provides access to Lwar assets.</param>
+		public override void Initialize(RenderContext renderContext, GameBundle assets)
 		{
-			_template.Load(graphicsDevice, assets);
+			_template = new ExplosionEffectTemplate(renderContext);
 		}
 
 		/// <summary>
@@ -68,25 +68,12 @@
 		private class ExplosionEffectTemplate : ParticleEffectTemplate
 		{
 			/// <summary>
-			///     The texture that is used to draw the particles.
-			/// </summary>
-			private Texture2D _texture;
-
-			/// <summary>
 			///     Initializes a new instance.
 			/// </summary>
-			public ExplosionEffectTemplate()
-				: base("Explosion")
+			/// <param name="renderContext">The render context the particle effect belongs to.</param>
+			public ExplosionEffectTemplate(RenderContext renderContext)
+				: base(renderContext, "Explosion")
 			{
-			}
-
-			/// <summary>
-			///     Loads the required assets of the particle effect template.
-			/// </summary>
-			protected override void Load()
-			{
-				BillboardRenderer.PreloadAssets(Assets);
-				_texture = Assets.Load(Textures.BulletGlow);
 			}
 
 			/// <summary>
@@ -104,11 +91,11 @@
 					InitialLifetime = new Range<float>(0.3f, 0.5f),
 					EmissionRate = 3000,
 					Duration = 0.2f,
-					Renderer = new BillboardRenderer(GraphicsDevice, Assets)
+					Renderer = new BillboardRenderer(RenderContext)
 					{
-						BlendState = BlendState.Additive,
-						Texture = _texture,
-						SamplerState = SamplerState.BilinearClampNoMipmaps
+						BlendState = RenderContext.BlendStates.Additive,
+						Texture = RenderContext.GetAssetBundle<GameBundle>().BulletGlow,
+						SamplerState = RenderContext.SamplerStates.BilinearClampNoMipmaps
 					},
 					Modifiers = new ModifierCollection
 					{

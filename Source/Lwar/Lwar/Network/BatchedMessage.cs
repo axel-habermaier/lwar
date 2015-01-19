@@ -8,7 +8,7 @@ namespace Lwar.Network
 	/// <summary>
 	///     Batches a list of messages for optimized network transmission.
 	/// </summary>
-	public class BatchedMessage
+	internal class BatchedMessage
 	{
 		/// <summary>
 		///     Initializes a new instance.

@@ -92,9 +92,9 @@
 		public static Command ReloadAssetsCommand { get; private set; }
 
 		/// <summary>
-		///     Restarts the graphics subsystem after a resolution or video mode change.
+		///     Exits and restarts the application.
 		/// </summary>
-		public static Command RestartGraphicsCommand { get; private set; }
+		public static Command RestartCommand { get; private set; }
 
 		/// <summary>
 		///     Toggles the value of a Boolean console variable.
@@ -276,12 +276,12 @@
 		}
 
 		/// <summary>
-		///     Restarts the graphics subsystem after a resolution or video mode change.
+		///     Exits and restarts the application.
 		/// </summary>
 		[DebuggerHidden]
-		public static void RestartGraphics()
+		public static void Restart()
 		{
-			RestartGraphicsCommand.Invoke();
+			RestartCommand.Invoke();
 		}
 
 		/// <summary>
@@ -440,12 +440,12 @@
 		}
 
 		/// <summary>
-		///     Raised when the 'RestartGraphics' command is invoked.
+		///     Raised when the 'Restart' command is invoked.
 		/// </summary>
-		public static event Action OnRestartGraphics
+		public static event Action OnRestart
 		{
-			add { RestartGraphicsCommand.Invoked += value; }
-			remove { RestartGraphicsCommand.Invoked -= value; }
+			add { RestartCommand.Invoked += value; }
+			remove { RestartCommand.Invoked -= value; }
 		}
 
 		/// <summary>
@@ -489,7 +489,7 @@
 				new CommandParameter("show", typeof(bool), false, default(bool), "A value of 'true' indicates that the console should be shown."));
 			ShowParticleEffectViewerCommand = new Command("show_particle_effect_viewer", "Shows the particle effect viewer.", false);
 			ReloadAssetsCommand = new Command("reload_assets", "Reloads all currently loaded assets.", false);
-			RestartGraphicsCommand = new Command("restart_graphics", "Restarts the graphics subsystem after a resolution or video mode change.", false);
+			RestartCommand = new Command("restart", "Exits and restarts the application.", false);
 			ToggleCommand = new Command<string>("toggle", "Toggles the value of a Boolean console variable.", false, 
 				new CommandParameter("cvar", typeof(string), false, default(string), "The name of console variable whose value should be toggled.", new NotEmptyAttribute()));
 
@@ -509,7 +509,7 @@
 			CommandRegistry.Register(ShowConsoleCommand);
 			CommandRegistry.Register(ShowParticleEffectViewerCommand);
 			CommandRegistry.Register(ReloadAssetsCommand);
-			CommandRegistry.Register(RestartGraphicsCommand);
+			CommandRegistry.Register(RestartCommand);
 			CommandRegistry.Register(ToggleCommand);
 		}
 

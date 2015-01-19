@@ -17,16 +17,16 @@
 		/// <param name="arguments">The command line arguments that have been passed to the application.</param>
 		public static void Parse(string[] arguments)
 		{
-			if (arguments.Length == 1)
+			if (arguments.Length == 0)
 			{
 				Log.Info("No command line arguments have been provided.");
 				return;
 			}
 
-			Log.Info("Parsing the command line arguments...");
+			Log.Info("Parsing command line arguments...");
 
 			// Skip the first element of the array, as it only contains the file name of the executing program.
-			for (var i = 1; i < arguments.Length; ++i)
+			for (var i = 0; i < arguments.Length; ++i)
 			{
 				// Only cvar set instructions are supported and we require all cvar names to be prefixed with a dash '-'
 				// A cvar is expected now, so if the current argument doesn't start with a dash and is not a valid cvar
@@ -34,7 +34,7 @@
 				if (!arguments[i].StartsWith("-"))
 				{
 					Log.Error("Encountered unexpected token '{0}\\\0' in command line at position {1}. " +
-							  " Expected the name of a cvar, prefixed with a dash ('-').", arguments[i], i);
+							  "Expected the name of a cvar, prefixed with a dash ('-').", arguments[i], i);
 					continue;
 				}
 

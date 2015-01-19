@@ -5,7 +5,7 @@
 	/// <summary>
 	///     Represents an event message. Valid fields depend on the type of the events.
 	/// </summary>
-	public struct EventMessage : IEquatable<EventMessage>
+	internal struct EventMessage : IEquatable<EventMessage>
 	{
 		/// <summary>
 		///     The chat message, new player name, or kick reason.

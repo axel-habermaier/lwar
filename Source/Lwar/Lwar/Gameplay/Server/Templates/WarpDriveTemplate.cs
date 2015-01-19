@@ -5,7 +5,7 @@
 	/// <summary>
 	///     The configurable parameters of a warp drive.
 	/// </summary>
-	public struct WarpDriveTemplate
+	internal struct WarpDriveTemplate
 	{
 		/// <summary>
 		///     The minimum amount of energy required to activate the warp drive.

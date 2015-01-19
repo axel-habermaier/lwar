@@ -10,16 +10,16 @@
 		/// <summary>
 		///     Indicates that no faces should be culled.
 		/// </summary>
-		None = 1301,
+		None,
 
 		/// <summary>
 		///     Indicates that front-facing faces should be culled.
 		/// </summary>
-		Front = 1302,
+		Front,
 
 		/// <summary>
 		///     Indicates that back-facing faces should be culled.
 		/// </summary>
-		Back = 1303
+		Back
 	}
 }

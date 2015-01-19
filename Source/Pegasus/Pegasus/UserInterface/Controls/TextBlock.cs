@@ -22,13 +22,13 @@
 		///     Indicates whether the text should be wrapped when it reaches the edge of the text block.
 		/// </summary>
 		public static readonly DependencyProperty<TextWrapping> TextWrappingProperty =
-			new DependencyProperty<TextWrapping>(defaultValue: TextWrapping.NoWrap, affectsMeasure: true, prohibitsAnimations: true, inherits: true);
+			new DependencyProperty<TextWrapping>(defaultValue: TextWrapping.NoWrap, affectsMeasure: true, prohibitsAnimations: true);
 
 		/// <summary>
 		///     Indicates whether the text should be left-aligned, right-aligned or centered within the text block.
 		/// </summary>
 		public static readonly DependencyProperty<TextAlignment> TextAlignmentProperty =
-			new DependencyProperty<TextAlignment>(defaultValue: TextAlignment.Left, affectsMeasure: true, prohibitsAnimations: true, inherits: true);
+			new DependencyProperty<TextAlignment>(defaultValue: TextAlignment.Left, affectsMeasure: true, prohibitsAnimations: true);
 
 		/// <summary>
 		///     The foreground color of the text.

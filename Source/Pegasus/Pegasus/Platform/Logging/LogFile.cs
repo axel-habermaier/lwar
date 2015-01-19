@@ -2,8 +2,12 @@
 {
 	using System;
 	using System.Collections.Generic;
+	using System.IO;
+	using System.Linq;
 	using System.Text;
+	using System.Threading.Tasks;
 	using Memory;
+	using UserInterface;
 	using Utilities;
 
 	/// <summary>
@@ -14,7 +18,7 @@
 		/// <summary>
 		///     The number of log messages that must be queued before the messages are written to the file system.
 		/// </summary>
-		private const int BatchSize = 250;
+		private const int BatchSize = 200;
 
 		/// <summary>
 		///     The file the log is written to.
@@ -22,9 +26,14 @@
 		private readonly AppFile _file;
 
 		/// <summary>
-		///     The the unwritten log entries that have been generated.
+		///     The unwritten log entries that have been generated.
 		/// </summary>
 		private readonly Queue<LogEntry> _logEntries = new Queue<LogEntry>();
+
+		/// <summary>
+		///     The task that writes the log entries to the file system.
+		/// </summary>
+		private Task _writeTask;
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -42,12 +51,13 @@
 
 			try
 			{
+				// Clear the log file, if it already exists...
 				_file = new AppFile(String.Format("{0}.log", appName));
-				_file.Delete();
+				_file.Write("");
 			}
 			catch (FileSystemException e)
 			{
-				Log.Warn("Failed to delete the current contents of the log file: {0}", e.Message);
+				Log.Warn("Failed to clear the current contents of the log file: {0}", e.Message);
 			}
 		}
 
@@ -56,14 +66,14 @@
 		/// </summary>
 		public string FilePath
 		{
-			get { return String.Format("{0}/{1}", FileSystem.UserDirectory, _file.FileName); }
+			get { return Path.Combine(FileSystem.UserDirectory, _file.FileName).Replace("\\", "/"); }
 		}
 
 		/// <summary>
 		///     Enqueues the given log entry.
 		/// </summary>
 		/// <param name="entry">The log entry that should be enqueued.</param>
-		private void Enqueue(LogEntry entry)
+		internal void Enqueue(LogEntry entry)
 		{
 			_logEntries.Enqueue(entry);
 			WriteToFile();
@@ -78,39 +88,73 @@
 			if (!force && _logEntries.Count < BatchSize)
 				return;
 
+			if (_logEntries.Count == 0)
+				return;
+
 			try
 			{
-				_file.Append(GenerateLogEntryString());
+				WaitForCompletion();
+
+				var logEntries = _logEntries.ToArray();
 				_logEntries.Clear();
+
+				_writeTask = Task.Run(() => _file.Append(ToString(logEntries)));
+
+				if (force)
+					WaitForCompletion();
 			}
-			catch (FileSystemException e)
+			catch (Exception e)
 			{
-				Log.Warn("Failed to append to log file: {0}", e.Message);
+				Log.Error("Failed to append to log file: {0}", e.Message);
 			}
 		}
 
 		/// <summary>
-		///     Generates the string for the queued log entries that must be appended to the log file.
+		///     Waits for the completion of the write task. Any exceptions that have been thrown during the execution of the write task
+		///     are collected into a new exception.
 		/// </summary>
-		private string GenerateLogEntryString()
+		private void WaitForCompletion()
 		{
-			StringBuilder builder;
-			using (StringBuilderPool.Allocate(out builder))
+			if (_writeTask == null)
+				return;
+
+			try
 			{
-				foreach (var entry in _logEntries)
-				{
-					builder.Append("[");
-					builder.Append(entry.LogType.ToDisplayString());
-					builder.Append("]   ");
-					builder.Append(entry.Time.ToString("F4").PadLeft(9));
-
-					builder.Append("   ");
-					TextString.Write(builder, entry.Message);
-					builder.Append("\n");
-				}
-
-				return builder.ToString();
+				if (!_writeTask.IsCompleted)
+					_writeTask.Wait();
+				else if (_writeTask.Exception != null)
+					throw _writeTask.Exception;
 			}
+			catch (AggregateException e)
+			{
+				throw new InvalidOperationException(String.Join("\n", e.InnerExceptions.Select(inner => inner.Message)));
+			}
+			finally
+			{
+				_writeTask = null;
+			}
+		}
+
+		/// <summary>
+		///     Generates the string representation for the given log entries.
+		/// </summary>
+		/// <param name="logEntries">The log entries that should be converted to a string.</param>
+		private static string ToString(LogEntry[] logEntries)
+		{
+			var builder = new StringBuilder();
+			foreach (var entry in logEntries)
+			{
+				builder.Append("[");
+				builder.Append(entry.LogTypeString);
+				builder.Append("]   ");
+				builder.Append(entry.Time.ToString("F4").PadLeft(9));
+
+				builder.Append("   ");
+				TextString.Write(builder, entry.Message);
+				builder.Append("\n");
+			}
+
+			return builder.ToString();
 		}
 
 		/// <summary>

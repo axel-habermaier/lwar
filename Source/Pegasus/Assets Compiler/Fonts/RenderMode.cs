@@ -15,6 +15,6 @@
 		/// <summary>
 		///     Indicates that the glyphs are rendered without applying any anti-aliasing techniques.
 		/// </summary>
-		Aliased = 2,
+		Aliased = 2
 	}
 }

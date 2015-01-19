@@ -37,6 +37,11 @@
 		public static event Action<LogEntry> OnDebugInfo;
 
 		/// <summary>
+		/// The object used for thread synchronization.
+		/// </summary>
+		private static readonly object LockObject = new object();
+
+		/// <summary>
 		///     Raises the OnFatalError event with the given message and terminates the application by throwing
 		///     an InvalidOperationException.
 		/// </summary>
@@ -47,11 +52,14 @@
 		{
 			Assert.ArgumentNotNullOrWhitespace(message);
 
-			var formattedMessage = String.Format(message, arguments);
-			if (OnFatalError != null)
-				OnFatalError(new LogEntry(LogType.Fatal, formattedMessage));
+			lock (LockObject)
+			{
+				var formattedMessage = String.Format(message, arguments);
+				if (OnFatalError != null)
+					OnFatalError(new LogEntry(LogType.Fatal, formattedMessage));
 
-			throw new PegasusException(formattedMessage);
+				throw new PegasusException(formattedMessage);
+			}
 		}
 
 		/// <summary>
@@ -64,8 +72,11 @@
 		{
 			Assert.ArgumentNotNullOrWhitespace(message);
 
-			if (OnError != null)
-				OnError(new LogEntry(LogType.Error, String.Format(message, arguments)));
+			lock (LockObject)
+			{
+				if (OnError != null)
+					OnError(new LogEntry(LogType.Error, String.Format(message, arguments)));
+			}
 		}
 
 		/// <summary>
@@ -78,8 +89,11 @@
 		{
 			Assert.ArgumentNotNullOrWhitespace(message);
 
-			if (OnWarning != null)
-				OnWarning(new LogEntry(LogType.Warning, String.Format(message, arguments)));
+			lock (LockObject)
+			{
+				if (OnWarning != null)
+					OnWarning(new LogEntry(LogType.Warning, String.Format(message, arguments)));
+			}
 		}
 
 		/// <summary>
@@ -92,8 +106,11 @@
 		{
 			Assert.ArgumentNotNullOrWhitespace(message);
 
-			if (OnInfo != null)
-				OnInfo(new LogEntry(LogType.Info, String.Format(message, arguments)));
+			lock (LockObject)
+			{
+				if (OnInfo != null)
+					OnInfo(new LogEntry(LogType.Info, String.Format(message, arguments)));
+			}
 		}
 
 		/// <summary>
@@ -106,8 +123,11 @@
 		{
 			Assert.ArgumentNotNullOrWhitespace(message);
 
-			if (OnDebugInfo != null)
-				OnDebugInfo(new LogEntry(LogType.Debug, String.Format(message, arguments)));
+			lock (LockObject)
+			{
+				if (OnDebugInfo != null)
+					OnDebugInfo(new LogEntry(LogType.Debug, String.Format(message, arguments)));
+			}
 		}
 
 		/// <summary>
@@ -121,8 +141,11 @@
 		{
 			Assert.ArgumentNotNullOrWhitespace(message);
 
-			if (condition && OnDebugInfo != null)
-				OnDebugInfo(new LogEntry(LogType.Debug, String.Format(message, arguments)));
+			lock (LockObject)
+			{
+				if (condition && OnDebugInfo != null)
+					OnDebugInfo(new LogEntry(LogType.Debug, String.Format(message, arguments)));
+			}
 		}
 	}
 }

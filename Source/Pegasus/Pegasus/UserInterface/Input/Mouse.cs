@@ -3,19 +3,19 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Runtime.InteropServices;
-	using System.Security;
 	using Controls;
 	using Math;
-	using Platform;
 	using Platform.Logging;
 	using Platform.Memory;
+	using Platform.SDL2;
 	using Rendering;
+	using Scripting;
 	using Utilities;
 
 	/// <summary>
 	///     Represents the state of the mouse.
 	/// </summary>
-	internal class Mouse : DisposableObject
+	public class Mouse : DisposableObject
 	{
 		/// <summary>
 		///     Stores whether a button is currently being double-clicked.
@@ -38,10 +38,12 @@
 		private UIElement _hoveredElement;
 
 		/// <summary>
-		///     Initializes a new instance for testing purposes.
+		///     Initializes the type.
 		/// </summary>
-		internal Mouse()
+		static Mouse()
 		{
+			Cvars.HardwareCursorChanged += oldValue => ShowHardwareCursor(!oldValue);
+			ShowHardwareCursor(Cvars.HardwareCursor);
 		}
 
 		/// <summary>
@@ -60,22 +62,45 @@
 		}
 
 		/// <summary>
+		///     Gets or sets a value indicating whether relative mouse mode is enabled.
+		/// </summary>
+		public static bool RelativeMouseMode
+		{
+			get { return SDL_GetRelativeMouseMode(); }
+			set
+			{
+				if (value && !RelativeMouseMode)
+				{
+					if (SDL_SetRelativeMouseMode(true) != 0)
+						Log.Die("Failed to enable relative mouse mode: {0}.", NativeLibrary.GetError());
+				}
+				else if (!value && RelativeMouseMode)
+				{
+					if (SDL_SetRelativeMouseMode(false) != 0)
+						Log.Die("Failed to disable relative mouse mode: {0}.", NativeLibrary.GetError());
+
+					var window = SDL_GetMouseFocus();
+					if (window == IntPtr.Zero)
+						return;
+
+					int width, height;
+					SDL_GetWindowSize(window, out width, out height);
+					SDL_WarpMouseInWindow(window, width / 2, height / 2);
+				}
+			}
+		}
+
+		/// <summary>
 		///     Gets a value indicating whether the mouse input is currently captured by an UI element.
 		/// </summary>
 		internal bool InputIsCaptured { get; private set; }
 
 		/// <summary>
-		///     Gets the position of the mouse.
+		///     Gets the position of the mouse relative to the window it belongs to.
 		/// </summary>
 		public Vector2 Position
 		{
-			get
-			{
-				int x, y;
-				NativeMethods.GetMousePosition(Window.NativeWindow.NativePtr, out x, out y);
-
-				return new Vector2(x, y);
-			}
+			get { return GetMousePosition(Window.NativeWindow); }
 		}
 
 		/// <summary>
@@ -91,6 +116,34 @@
 		///     Gets or sets the window the mouse is associated with.
 		/// </summary>
 		public Window Window { get; private set; }
+
+		/// <summary>
+		///     Shows or hides the hardware cursor.
+		/// </summary>
+		/// <param name="show">Indicates whether the cursor should be hidden or shown.</param>
+		private static void ShowHardwareCursor(bool show)
+		{
+			if (SDL_ShowCursor(show) < 0)
+				Log.Error("Failed to hide or show the cursor: {0}.", NativeLibrary.GetError());
+		}
+
+		/// <summary>
+		///     Gets the position of the mouse relative to the current active window.
+		/// </summary>
+		/// <param name="window">The window the mouse position should be retrieved for.</param>
+		private static Vector2 GetMousePosition(NativeWindow window)
+		{
+			var sdlWindow = SDL_GetMouseFocus();
+			if (sdlWindow == IntPtr.Zero)
+				return new Vector2(Single.MaxValue);
+
+			if (NativeWindow.Lookup(sdlWindow) != window)
+				return new Vector2(Single.MaxValue);
+
+			int x, y;
+			SDL_GetMouseState(out x, out y);
+			return new Vector2(x, y);
+		}
 
 		/// <summary>
 		///     Normalizes the given mouse position relative to size of the mouse's window such that both directions lie within the
@@ -168,7 +221,8 @@
 		/// <param name="position">The new position of the mouse.</param>
 		private void OnMove(Vector2 position)
 		{
-			UpdateHoveredElement(position);
+			if (!RelativeMouseMode)
+				UpdateHoveredElement(position);
 
 			if (_hoveredElement == null)
 				return;
@@ -275,7 +329,11 @@
 
 			// We have to check every frame for a new hovered element, as the UI might change at any time
 			// (due to animations, UI elements becoming visible/invisible, etc.).
-			UpdateHoveredElement(Position);
+			// Except, of course, relative mouse mode is enabled; in that case, the mouse has no position so
+			// there can be no new hovered element. However, if the hovered element has been removed from the
+			// UI, do in search for a new hovered element nevertheless.
+			if (!RelativeMouseMode || _hoveredElement == null || !_hoveredElement.IsVisible)
+				UpdateHoveredElement(Position);
 		}
 
 		/// <summary>
@@ -356,14 +414,25 @@
 			cursor.Draw(spriteBatch, Position);
 		}
 
-		/// <summary>
-		///     Provides access to the native mouse functions.
-		/// </summary>
-		[SuppressUnmanagedCodeSecurity]
-		private static class NativeMethods
-		{
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetMousePosition")]
-			public static extern void GetMousePosition(IntPtr window, out int x, out int y);
-		}
+		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
+		private static extern IntPtr SDL_GetMouseFocus();
+
+		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
+		private static extern void SDL_WarpMouseInWindow(IntPtr window, int x, int y);
+
+		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
+		private static extern int SDL_SetRelativeMouseMode(bool enabled);
+
+		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
+		private static extern bool SDL_GetRelativeMouseMode();
+
+		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
+		private static extern uint SDL_GetMouseState(out int x, out int y);
+
+		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
+		private static extern void SDL_GetWindowSize(IntPtr window, out int w, out int h);
+
+		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
+		private static extern int SDL_ShowCursor(bool toggle);
 	}
 }

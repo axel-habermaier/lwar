@@ -13,7 +13,7 @@
 	///     Stores event messages such as 'X killed Y' or received chat messages. Messages are removed from the list
 	///     automatically.
 	/// </summary>
-	public class EventMessageList
+	internal class EventMessageList
 	{
 		/// <summary>
 		///     The maximum number of event messages that can be displayed simultaneously.

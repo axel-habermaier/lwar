@@ -1,9 +1,8 @@
 ﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
-	using System.Diagnostics;
-	using System.Runtime.InteropServices;
-	using System.Security;
+	using Interface;
+	using Memory;
 	using Utilities;
 
 	/// <summary>
@@ -11,11 +10,6 @@
 	/// </summary>
 	public abstract class Query : GraphicsObject
 	{
-		/// <summary>
-		///     The native query instance.
-		/// </summary>
-		private readonly IntPtr _query;
-
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
@@ -25,15 +19,41 @@
 			: base(graphicsDevice)
 		{
 			Assert.ArgumentInRange(type);
-			_query = NativeMethods.CreateQuery(graphicsDevice.NativePtr, type);
+			QueryObject = graphicsDevice.CreateQuery(type);
 		}
+
+		/// <summary>
+		///     Gets the underlying query object.
+		/// </summary>
+		internal IQuery QueryObject { get; private set; }
 
 		/// <summary>
 		///     Gets a value indicating whether the query has completed and whether the result data (if any) is available.
 		/// </summary>
 		public bool Completed
 		{
-			get { return NativeMethods.IsQueryDataAvailable(_query); }
+			get
+			{
+				Assert.NotDisposed(this);
+				return QueryObject.Completed;
+			}
+		}
+
+		/// <summary>
+		///     Invoked after the name of the graphics object has changed. This method is only invoked in debug builds.
+		/// </summary>
+		/// <param name="name">The new name of the graphics object.</param>
+		protected override void OnRenamed(string name)
+		{
+			QueryObject.SetName(name);
+		}
+
+		/// <summary>
+		///     Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
+		{
+			QueryObject.SafeDispose();
 		}
 
 		/// <summary>
@@ -42,84 +62,11 @@
 		/// </summary>
 		public void WaitForCompletion()
 		{
+			Assert.NotDisposed(this);
 			while (!Completed)
 			{
 				// Just check the query's completion status until it has been completed
 			}
-		}
-
-		/// <summary>
-		///     Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		protected override void OnDisposing()
-		{
-			NativeMethods.DestroyQuery(_query);
-		}
-
-		/// <summary>
-		///     Begins the query.
-		/// </summary>
-		protected void BeginQuery()
-		{
-			NativeMethods.BeginQuery(_query);
-		}
-
-		/// <summary>
-		///     Ends the query.
-		/// </summary>
-		protected void EndQuery()
-		{
-			NativeMethods.EndQuery(_query);
-		}
-
-		/// <summary>
-		///     Gets the result of the query.
-		/// </summary>
-		/// <param name="data">The address of the memory the result should be written to.</param>
-		/// <param name="size">The size of the data that should be retrieved.</param>
-		protected unsafe void GetQueryData(void* data, int size)
-		{
-			NativeMethods.GetQueryData(_query, data, size);
-		}
-
-#if DEBUG
-		/// <summary>
-		///   Invoked after the name of the graphics object has changed. This method is only available in debug builds.
-		/// </summary>
-		protected override void OnRenamed()
-		{
-			if (_query != IntPtr.Zero)
-				NativeMethods.SetName(_query, Name);
-		}
-#endif
-
-		/// <summary>
-		///     Provides access to the native query functions.
-		/// </summary>
-		[SuppressUnmanagedCodeSecurity]
-		private static class NativeMethods
-		{
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateQuery")]
-			public static extern IntPtr CreateQuery(IntPtr device, QueryType type);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDestroyQuery")]
-			public static extern void DestroyQuery(IntPtr query);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgBeginQuery")]
-			public static extern void BeginQuery(IntPtr query);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgEndQuery")]
-			public static extern void EndQuery(IntPtr query);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetQueryData")]
-			public static extern unsafe void GetQueryData(IntPtr query, void* data, int size);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgIsQueryDataAvailable")]
-			public static extern bool IsQueryDataAvailable(IntPtr query);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetQueryName")]
-			[Conditional("DEBUG")]
-			public static extern void SetName(IntPtr query, string name);
 		}
 	}
 }

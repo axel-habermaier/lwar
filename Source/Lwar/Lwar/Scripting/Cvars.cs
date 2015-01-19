@@ -7,6 +7,7 @@
 	using Pegasus;
 	using Pegasus.Math;
 	using Pegasus.Platform;
+	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Logging;
 	using Pegasus.Scripting;
 	using Pegasus.Scripting.Validators;
@@ -91,9 +92,9 @@
 		public static Cvar<ConfigurableInput> InputChatCvar { get; private set; }
 
 		/// <summary>
-		///     When true, the debug server is used instead of the actual game server.
+		///     When true, the native server is used instead of the C# server.
 		/// </summary>
-		public static Cvar<bool> UseDebugServerCvar { get; private set; }
+		public static Cvar<bool> UseNativeServerCvar { get; private set; }
 
 		/// <summary>
 		///     The scaling factor that is applied to all time-scaling sensitive timing values.
@@ -124,6 +125,18 @@
 		///     Shows or hides the debug overlay.
 		/// </summary>
 		public static Cvar<bool> ShowDebugOverlayCvar { get; private set; }
+
+		/// <summary>
+		///     Determines the graphics API that should be used for rendering. If the chosen graphics API is not available, the
+		///     application automatically tries to fall back to a supported one.
+		/// </summary>
+		public static Cvar<GraphicsApi> GraphicsApiCvar { get; private set; }
+
+		/// <summary>
+		///     Indicates whether the hardware cursor is enabled. Hardware cursors are frame rate independent and are generally
+		///     preferable where supported.
+		/// </summary>
+		public static Cvar<bool> HardwareCursorCvar { get; private set; }
 
 		/// <summary>
 		///     The name of the player.
@@ -336,16 +349,16 @@
 		}
 
 		/// <summary>
-		///     When true, the debug server is used instead of the actual game server.
+		///     When true, the native server is used instead of the C# server.
 		/// </summary>
-		public static bool UseDebugServer
+		public static bool UseNativeServer
 		{
-			get { return UseDebugServerCvar.Value; }
+			get { return UseNativeServerCvar.Value; }
 			[DebuggerHidden]
 			set
 			{
 				Assert.ArgumentNotNull((object)value);
-				UseDebugServerCvar.Value = value;
+				UseNativeServerCvar.Value = value;
 			}
 		}
 
@@ -430,6 +443,36 @@
 			{
 				Assert.ArgumentNotNull((object)value);
 				ShowDebugOverlayCvar.Value = value;
+			}
+		}
+
+		/// <summary>
+		///     Determines the graphics API that should be used for rendering. If the chosen graphics API is not available, the
+		///     application automatically tries to fall back to a supported one.
+		/// </summary>
+		public static GraphicsApi GraphicsApi
+		{
+			get { return GraphicsApiCvar.Value; }
+			[DebuggerHidden]
+			set
+			{
+				Assert.ArgumentNotNull((object)value);
+				GraphicsApiCvar.Value = value;
+			}
+		}
+
+		/// <summary>
+		///     Indicates whether the hardware cursor is enabled. Hardware cursors are frame rate independent and are generally
+		///     preferable where supported.
+		/// </summary>
+		public static bool HardwareCursor
+		{
+			get { return HardwareCursorCvar.Value; }
+			[DebuggerHidden]
+			set
+			{
+				Assert.ArgumentNotNull((object)value);
+				HardwareCursorCvar.Value = value;
 			}
 		}
 
@@ -704,21 +747,21 @@
 		}
 
 		/// <summary>
-		///     Raised when the 'UseDebugServer' cvar is changing. The new value is passed to the event handler.
+		///     Raised when the 'UseNativeServer' cvar is changing. The new value is passed to the event handler.
 		/// </summary>
-		public static event Action<bool> UseDebugServerChanging
+		public static event Action<bool> UseNativeServerChanging
 		{
-			add { UseDebugServerCvar.Changing += value; }
-			remove { UseDebugServerCvar.Changing -= value; }
+			add { UseNativeServerCvar.Changing += value; }
+			remove { UseNativeServerCvar.Changing -= value; }
 		}
 
 		/// <summary>
-		///     Raised when the 'UseDebugServer' cvar is changed. The previous value is passed to the event handler.
+		///     Raised when the 'UseNativeServer' cvar is changed. The previous value is passed to the event handler.
 		/// </summary>
-		public static event Action<bool> UseDebugServerChanged
+		public static event Action<bool> UseNativeServerChanged
 		{
-			add { UseDebugServerCvar.Changed += value; }
-			remove { UseDebugServerCvar.Changed -= value; }
+			add { UseNativeServerCvar.Changed += value; }
+			remove { UseNativeServerCvar.Changed -= value; }
 		}
 
 		/// <summary>
@@ -830,6 +873,42 @@
 		}
 
 		/// <summary>
+		///     Raised when the 'GraphicsApi' cvar is changing. The new value is passed to the event handler.
+		/// </summary>
+		public static event Action<GraphicsApi> GraphicsApiChanging
+		{
+			add { GraphicsApiCvar.Changing += value; }
+			remove { GraphicsApiCvar.Changing -= value; }
+		}
+
+		/// <summary>
+		///     Raised when the 'GraphicsApi' cvar is changed. The previous value is passed to the event handler.
+		/// </summary>
+		public static event Action<GraphicsApi> GraphicsApiChanged
+		{
+			add { GraphicsApiCvar.Changed += value; }
+			remove { GraphicsApiCvar.Changed -= value; }
+		}
+
+		/// <summary>
+		///     Raised when the 'HardwareCursor' cvar is changing. The new value is passed to the event handler.
+		/// </summary>
+		public static event Action<bool> HardwareCursorChanging
+		{
+			add { HardwareCursorCvar.Changing += value; }
+			remove { HardwareCursorCvar.Changing -= value; }
+		}
+
+		/// <summary>
+		///     Raised when the 'HardwareCursor' cvar is changed. The previous value is passed to the event handler.
+		/// </summary>
+		public static event Action<bool> HardwareCursorChanged
+		{
+			add { HardwareCursorCvar.Changed += value; }
+			remove { HardwareCursorCvar.Changed -= value; }
+		}
+
+		/// <summary>
 		///     Initializes the instances declared by the registry.
 		/// </summary>
 		public static void Initialize()
@@ -849,7 +928,7 @@
 			InputTertiaryWeaponCvar = new Cvar<ConfigurableInput>("input_tertiary_weapon", Key.Num1, "When triggered in an active game session, fires the player's tertiary weapon.", UpdateMode.Immediate, true, false);
 			InputQuaternaryWeaponCvar = new Cvar<ConfigurableInput>("input_quaternary_weapon", Key.Num2, "When triggered in an active game session, fires the player's quaternary weapon.", UpdateMode.Immediate, true, false);
 			InputChatCvar = new Cvar<ConfigurableInput>("input_chat", Key.Return, "When triggered in an active game session, opens the chat input.", UpdateMode.Immediate, true, false);
-			UseDebugServerCvar = new Cvar<bool>("use_debug_server", false, "When true, the debug server is used instead of the actual game server.", UpdateMode.Immediate, true, false);
+			UseNativeServerCvar = new Cvar<bool>("use_native_server", false, "When true, the native server is used instead of the C# server.", UpdateMode.Immediate, true, false);
 
 			CvarRegistry.Register(PlayerNameCvar);
 			CvarRegistry.Register(EventMessageDisplayTimeCvar);
@@ -866,7 +945,7 @@
 			CvarRegistry.Register(InputTertiaryWeaponCvar);
 			CvarRegistry.Register(InputQuaternaryWeaponCvar);
 			CvarRegistry.Register(InputChatCvar);
-			CvarRegistry.Register(UseDebugServerCvar);
+			CvarRegistry.Register(UseNativeServerCvar);
 		}
 
 		/// <summary>
@@ -880,6 +959,8 @@
 			WindowPositionCvar = CvarRegistry.Resolve<Vector2>("window_position");
 			WindowModeCvar = CvarRegistry.Resolve<WindowMode>("window_mode");
 			ShowDebugOverlayCvar = CvarRegistry.Resolve<bool>("show_debug_overlay");
+			GraphicsApiCvar = CvarRegistry.Resolve<GraphicsApi>("graphics_api");
+			HardwareCursorCvar = CvarRegistry.Resolve<bool>("hardware_cursor");
 		}
 	}
 }

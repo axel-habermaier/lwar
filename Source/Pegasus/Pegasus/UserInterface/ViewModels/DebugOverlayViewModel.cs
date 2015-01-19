@@ -94,7 +94,10 @@
 		/// </summary>
 		public string Platform
 		{
-			get { return String.Format("{0} x{1}", PlatformInfo.Platform, Environment.Is64BitOperatingSystem ? "64" : "32"); }
+			get
+			{
+				return String.Format("{0} x{1}", PlatformInfo.Platform, Environment.Is64BitOperatingSystem ? "64" : "32");
+			}
 		}
 
 		/// <summary>
@@ -102,7 +105,10 @@
 		/// </summary>
 		public string Build
 		{
-			get { return String.Format("{0}bit, {1}", Environment.Is64BitProcess ? "64" : "32", PlatformInfo.IsDebug ? "debug" : "release"); }
+			get
+			{
+				return String.Format("{0}bit, {1}", Environment.Is64BitProcess ? "64" : "32", PlatformInfo.IsDebug ? "debug" : "release");
+			}
 		}
 
 		/// <summary>
@@ -110,7 +116,7 @@
 		/// </summary>
 		public string Renderer
 		{
-			get { return PlatformInfo.GraphicsApi.ToString(); }
+			get { return Cvars.GraphicsApi.ToString(); }
 		}
 
 		/// <summary>

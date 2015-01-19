@@ -46,7 +46,7 @@
 		}
 
 		[UsedImplicitly]
-		public void OnEventParameters(object sender, KeyEventArgs args)
+		public void OnEventParameters(object sender, TextChangedEventArgs args)
 		{
 			_parameterMethodInvoked = true;
 			_sender = sender;
@@ -67,19 +67,18 @@
 		}
 
 		[Test]
-		public void BindMethodWithParameters_KeyEvent()
+		public void BindMethodWithParameters_TextChangedEvent()
 		{
-			var button = new Button { DataContext = this, IsAttachedToRoot = true };
-			button.CreateEventBinding(UIElement.KeyUpEvent, "OnEventParameters");
+			var textBox = new TextBox { DataContext = this, IsAttachedToRoot = true };
+			textBox.CreateEventBinding(TextBox.TextChangedEvent, "OnEventParameters");
 
-			button.RaiseEvent(UIElement.KeyUpEvent, KeyEventArgs.Create(new Keyboard(), Key.A, 17, new InputState()));
+			textBox.RaiseEvent(TextBox.TextChangedEvent, TextChangedEventArgs.Create("test"));
 			_parameterMethodInvoked.Should().BeTrue();
 			_parameterlessMethodInvoked.Should().BeFalse();
-			_sender.Should().Be(button);
+			_sender.Should().Be(textBox);
 
-			var args = (KeyEventArgs)_args;
-			args.Key.Should().Be(Key.A);
-			args.ScanCode.Should().Be(17);
+			var args = (TextChangedEventArgs)_args;
+			args.Text.Should().Be("test");
 		}
 
 		[Test]

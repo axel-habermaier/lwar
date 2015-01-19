@@ -10,7 +10,7 @@
 	/// <summary>
 	///     Represents a sun.
 	/// </summary>
-	public class Sun : Entity
+	internal class Sun : Entity
 	{
 		/// <summary>
 		///     Initializes the type.

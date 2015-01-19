@@ -16,6 +16,21 @@
 	public class Window : Decorator, IDisposable
 	{
 		/// <summary>
+		///     The minimum overlap of a window that must always be visible.
+		/// </summary>
+		internal const int MinimumOverlap = 100;
+
+		/// <summary>
+		///     The minimal window size supported by the library.
+		/// </summary>
+		public static readonly Size MinimumSize = new Size(800, 600);
+
+		/// <summary>
+		///     The maximal window size supported by the library.
+		/// </summary>
+		public static readonly Size MaximumSize = new Size(4096, 2160);
+
+		/// <summary>
 		///     Indicates whether the window is in fullscreen or windowed mode.
 		/// </summary>
 		public static readonly DependencyProperty<bool> FullscreenProperty = new DependencyProperty<bool>();
@@ -36,26 +51,6 @@
 		public static readonly DependencyProperty<Size> SizeProperty = new DependencyProperty<Size>(isReadOnly: true);
 
 		/// <summary>
-		///     Gets the swap chain that is used to render the window's contents.
-		/// </summary>
-		internal SwapChain SwapChain { get; private set; }
-
-		/// <summary>
-		///     The native operating system window that is used to display the UI.
-		/// </summary>
-		private NativeWindow _window;
-
-		/// <summary>
-		///     Gets the keyboard state of this window.
-		/// </summary>
-		internal Keyboard Keyboard { get; private set; }
-
-		/// <summary>
-		///     Gets the mouse state of this window.
-		/// </summary>
-		internal Mouse Mouse { get; private set; }
-
-		/// <summary>
 		///     The output the window's contents are rendered to.
 		/// </summary>
 		private readonly RenderOutput _output;
@@ -64,6 +59,11 @@
 		///     The sprite batch that is used for drawing the window's UI elements.
 		/// </summary>
 		private readonly SpriteBatch _spriteBatch;
+
+		/// <summary>
+		///     The native operating system window that is used to display the UI.
+		/// </summary>
+		private NativeWindow _window;
 
 		/// <summary>
 		///     Initializes the type.
@@ -92,28 +92,54 @@
 		{
 			Assert.ArgumentNotNull(title);
 
-			_window = new NativeWindow(title, position, size, mode);
+			var flags = WindowFlags.Resizable;
+			switch (mode)
+			{
+				case WindowMode.Fullscreen:
+					flags |= WindowFlags.FullscreenDesktop | WindowFlags.InputGrabbed;
+					break;
+				case WindowMode.Maximized:
+					flags |= WindowFlags.Maximized;
+					break;
+			}
+
+			_window = new NativeWindow(title, position, size, flags);
 			Keyboard = new Keyboard(this) { FocusedElement = this };
 			Mouse = new Mouse(this);
 
-			var graphicsDevice = Application.Current.GraphicsDevice;
-			SwapChain = new SwapChain(graphicsDevice, _window, _window.Size);
-			_output = new RenderOutput(graphicsDevice)
+			var renderContext = Application.Current.RenderContext;
+			SwapChain = new SwapChain(renderContext.GraphicsDevice, _window);
+			_output = new RenderOutput(renderContext)
 			{
 				RenderTarget = SwapChain.BackBuffer,
-				Camera = new Camera2D(graphicsDevice)
+				Camera = new Camera2D(renderContext.GraphicsDevice)
 			};
 
 			_spriteBatch = new SpriteBatch
 			{
-				BlendState = BlendState.Premultiplied,
-				DepthStencilState = DepthStencilState.DepthDisabled,
-				SamplerState = SamplerState.PointClampNoMipmaps
+				BlendState = renderContext.BlendStates.Premultiplied,
+				DepthStencilState = renderContext.DepthStencilStates.DepthDisabled,
+				SamplerState = renderContext.SamplerStates.PointClampNoMipmaps
 			};
 
 			UpdateDependencyProperties(mode, position, size);
 			Application.Current.AddWindow(this);
 		}
+
+		/// <summary>
+		///     Gets the swap chain that is used to render the window's contents.
+		/// </summary>
+		internal SwapChain SwapChain { get; private set; }
+
+		/// <summary>
+		///     Gets the keyboard state of this window.
+		/// </summary>
+		internal Keyboard Keyboard { get; private set; }
+
+		/// <summary>
+		///     Gets the mouse state of this window.
+		/// </summary>
+		internal Mouse Mouse { get; private set; }
 
 		/// <summary>
 		///     Gets the native operating system window that is used to display the UI.
@@ -124,23 +150,6 @@
 			{
 				CheckWindowOpen();
 				return _window;
-			}
-		}
-
-		/// <summary>
-		///     Gets or sets a value indicating whether the mouse is currently captured by the window.
-		/// </summary>
-		public bool MouseCaptured
-		{
-			get
-			{
-				CheckWindowOpen();
-				return _window.MouseCaptured;
-			}
-			set
-			{
-				CheckWindowOpen();
-				_window.MouseCaptured = value;
 			}
 		}
 
@@ -157,41 +166,11 @@
 		}
 
 		/// <summary>
-		///     Raised when the user requested the window to be closed. The window is not actually closed
-		///     until Dispose() or Close() is called.
-		/// </summary>
-		public event Action Closing
-		{
-			add
-			{
-				CheckWindowOpen();
-				_window.Closing += value;
-			}
-			remove
-			{
-				CheckWindowOpen();
-				_window.Closing -= value;
-			}
-		}
-
-		/// <summary>
 		///     Gets a value indicating whether the window is open.
 		/// </summary>
 		public bool IsOpen
 		{
 			get { return _window != null; }
-		}
-
-		/// <summary>
-		///     Sets the window's title.
-		/// </summary>
-		public string Title
-		{
-			set
-			{
-				CheckWindowOpen();
-				_window.Title = value;
-			}
 		}
 
 		/// <summary>
@@ -228,6 +207,37 @@
 		}
 
 		/// <summary>
+		///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+		/// </summary>
+		void IDisposable.Dispose()
+		{
+			CheckWindowOpen();
+
+			OnClosing();
+			Application.Current.RemoveWindow(this);
+
+			Mouse.SafeDispose();
+			Keyboard.SafeDispose();
+
+			_spriteBatch.SafeDispose();
+			_output.Camera.SafeDispose();
+			SwapChain.SafeDispose();
+			_window.SafeDispose();
+
+			_window = null;
+
+#if DEBUG
+			GC.SuppressFinalize(this);
+#endif
+		}
+
+		/// <summary>
+		///     Raised when the user requested the window to be closed. The window is not actually closed
+		///     until Dispose() or Close() is called.
+		/// </summary>
+		public event Action Closing;
+
+		/// <summary>
 		///     Processes all pending window events and handles the window's user input.
 		/// </summary>
 		internal virtual void HandleInput()
@@ -239,9 +249,14 @@
 			Keyboard.Update();
 			Mouse.Update();
 
-			// Process all pending operating system events
-			_window.ProcessEvents();
+			// Check if the window requested to be closed and raise the event, if necessary
+			if (_window.IsClosing && Closing != null)
+			{
+				// Reset the flag so that we don't raise the event again if the close request is ignored
+				Closing();
+			}
 
+			// Update the mode, position, and size dependency properties
 			UpdateDependencyProperties(_window.Mode, _window.Position, _window.Size);
 		}
 
@@ -288,32 +303,6 @@
 		{
 		}
 
-		/// <summary>
-		///     Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-		/// </summary>
-		void IDisposable.Dispose()
-		{
-			CheckWindowOpen();
-
-			OnClosing();
-			Application.Current.RemoveWindow(this);
-
-			Mouse.SafeDispose();
-			Keyboard.SafeDispose();
-
-			_spriteBatch.SafeDispose();
-			_output.Camera.SafeDispose();
-			_output.SafeDispose();
-			SwapChain.SafeDispose();
-			_window.SafeDispose();
-
-			_window = null;
-
-#if DEBUG
-			GC.SuppressFinalize(this);
-#endif
-		}
-
 #if DEBUG
 		/// <summary>
 		///     Ensures that the instance has been disposed.
@@ -353,15 +342,14 @@
 
 			Assert.That(Background.HasValue, "No background color has been set for the window.");
 			_output.ClearColor(Background.Value);
-			_output.ClearDepth();
 
-			_spriteBatch.BlendState = BlendState.Premultiplied;
+			_spriteBatch.BlendState = _output.RenderContext.BlendStates.Premultiplied;
 			_spriteBatch.Layer = 0;
 
 			Assert.That(VisualChildrenCount == 1, "A window must have exactly one child element.");
 			GetVisualChild(0).Draw(_spriteBatch);
 
-			if (!MouseCaptured)
+			if (!Mouse.RelativeMouseMode)
 				Mouse.DrawCursor(_spriteBatch);
 
 			_spriteBatch.DrawBatch(_output);

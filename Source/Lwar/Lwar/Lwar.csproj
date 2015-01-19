@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug Direct3D11</Configuration>
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{288C9D6B-72B8-4EFF-B636-E8886657AF1A}</ProjectGuid>
@@ -16,182 +16,125 @@
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Direct3D11|x86' ">
-    <DebugSymbols>True</DebugSymbols>
-    <OutputPath>..\..\..\Binaries x86\Debug Direct3D11\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;Windows</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <WarningLevel>4</WarningLevel>
-    <Optimize>False</Optimize>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Direct3D11|x86' ">
-    <OutputPath>..\..\..\Binaries x86\Release Direct3D11\</OutputPath>
-    <DefineConstants>TRACE;Windows</DefineConstants>
-    <Optimize>True</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <UseVSHostingProcess>true</UseVSHostingProcess>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|x86'">
-    <DebugSymbols>True</DebugSymbols>
-    <OutputPath>..\..\..\Binaries x86\Debug OpenGL3\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;Linux</DefineConstants>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-    <WarningLevel>4</WarningLevel>
-    <Optimize>False</Optimize>
-    <CustomCommands>
-      <CustomCommands>
-        <Command type="BeforeBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(SolutionDir)/Lwar/User Interface/Lwar UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
-      </CustomCommands>
-    </CustomCommands>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|x86'">
-    <OutputPath>..\..\..\Binaries x86\Release OpenGL3\</OutputPath>
-    <DefineConstants>TRACE;Linux</DefineConstants>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <Optimize>True</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-    <WarningLevel>4</WarningLevel>
-    <CustomCommands>
-      <CustomCommands>
-        <Command type="BeforeBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(SolutionDir)/Lwar/User Interface/Lwar UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
-      </CustomCommands>
-    </CustomCommands>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|x86'">
-    <OutputPath>..\..\..\Binaries x86\Release OpenGL3\</OutputPath>
-    <DefineConstants>TRACE;Windows</DefineConstants>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <Optimize>True</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-    <WarningLevel>4</WarningLevel>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug OpenGL3|x86'">
-    <DebugSymbols>True</DebugSymbols>
-    <OutputPath>..\..\..\Binaries x86\Debug OpenGL3\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;Windows</DefineConstants>
-    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <UseVSHostingProcess>true</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-    <WarningLevel>4</WarningLevel>
-    <Optimize>False</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Direct3D11|x64'">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Direct3D11|x64' ">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\..\..\Binaries x64\Debug Direct3D11\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;Windows</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
+    <StartArguments>-graphics_api Direct3D11</StartArguments>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
     <UseVSHostingProcess>true</UseVSHostingProcess>
+    <OutputPath>..\..\..\Build\Debug\x64</OutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Direct3D11|x64'">
-    <OutputPath>..\..\..\Binaries x64\Release Direct3D11\</OutputPath>
-    <DefineConstants>TRACE;Windows</DefineConstants>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Direct3D11|x64' ">
+    <DefineConstants>TRACE</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
+    <StartArguments>-graphics_api Direct3D11</StartArguments>
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <WarningLevel>4</WarningLevel>
     <UseVSHostingProcess>true</UseVSHostingProcess>
+    <OutputPath>..\..\..\Build\Release\x64</OutputPath>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug Linux|x64'">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Direct3D11|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\..\..\Binaries x64\Debug OpenGL3\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;Linux</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
+    <StartArguments>-graphics_api Direct3D11</StartArguments>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+    <OutputPath>..\..\..\Build\Debug\AnyCPU</OutputPath>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
-    <CustomCommands>
-      <CustomCommands>
-        <Command type="BeforeBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(SolutionDir)/Lwar/User Interface/Lwar UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
-      </CustomCommands>
-    </CustomCommands>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release Linux|x64'">
-    <OutputPath>..\..\..\Binaries x64\Release OpenGL3\</OutputPath>
-    <DefineConstants>TRACE;Linux</DefineConstants>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Direct3D11|AnyCPU' ">
+    <DefineConstants>TRACE</DefineConstants>
+    <StartArguments>-graphics_api Direct3D11</StartArguments>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <WarningLevel>4</WarningLevel>
-    <CustomCommands>
-      <CustomCommands>
-        <Command type="BeforeBuild" command="mono &quot;$(TargetDir)/pgc.exe&quot; compile &quot;$(SolutionDir)/Lwar/User Interface/Lwar UI.csproj&quot; /ui" workingdir="$(TargetDir)" />
-      </CustomCommands>
-    </CustomCommands>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|x64'">
-    <OutputPath>..\..\..\Binaries x64\Release OpenGL3\</OutputPath>
-    <DefineConstants>TRACE;Windows</DefineConstants>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+    <OutputPath>..\..\..\Build\Release\AnyCPU</OutputPath>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug OpenGL3|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\..\..\Binaries x64\Debug OpenGL3\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;Windows</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
+    <StartArguments>-graphics_api OpenGL3</StartArguments>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+    <OutputPath>..\..\..\Build\Debug\x64</OutputPath>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug OpenGL3|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <StartArguments>-graphics_api OpenGL3</StartArguments>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+    <OutputPath>..\..\..\Build\Debug\AnyCPU</OutputPath>
+    <WarningLevel>4</WarningLevel>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|x64'">
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <StartArguments>-graphics_api OpenGL3</StartArguments>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+    <OutputPath>..\..\..\Build\Release\x64</OutputPath>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release OpenGL3|AnyCPU'">
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <StartArguments>-graphics_api OpenGL3</StartArguments>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+    <OutputPath>..\..\..\Build\Release\AnyCPU</OutputPath>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
   <ItemGroup>
-    <Compile Include="..\Assets\Effects\ShaderSignatures.cs">
-      <Link>Assets\ShaderSignatures.cs</Link>
-    </Compile>
-    <Compile Include="DebugServer.cs" />
+    <Compile Include="Assets\Effects\BlurEffect.cs" />
+    <Compile Include="Assets\Effects\ParallaxEffect.cs" />
+    <Compile Include="Assets\Effects\SimpleVertexEffect.cs" />
+    <Compile Include="Assets\Effects\SkyboxEffect.cs" />
+    <Compile Include="Assets\Effects\SphereEffect.cs" />
+    <Compile Include="Assets\Effects\SunEffect.cs" />
+    <Compile Include="Assets\Effects\TexturedQuadEffect.cs" />
+    <Compile Include="Assets\GameBundle.cs" />
+    <Compile Include="Assets\MenuBundle.cs" />
+    <Compile Include="Network\Server\CSharpServer.cs" />
+    <Compile Include="Gameplay\Client\Entities\EntityTemplates.cs" />
     <Compile Include="Gameplay\Server\ClientCollection.cs" />
     <Compile Include="Gameplay\Server\Behaviors\BoundaryBehavior.cs" />
     <Compile Include="Gameplay\Server\Behaviors\GunBehavior.cs" />
@@ -228,7 +171,7 @@
     <Compile Include="Network\NetworkIdentityMap.cs" />
     <Compile Include="Network\ReliableTransmissionAttribute.cs" />
     <Compile Include="Network\UnreliableTransmissionAttribute.cs" />
-    <Compile Include="ServerDiscovery.cs" />
+    <Compile Include="Network\Server\ServerDiscovery.cs" />
     <Compile Include="Gameplay\Server\Client.Unsupported.cs">
       <DependentUpon>Client.cs</DependentUpon>
     </Compile>
@@ -246,7 +189,7 @@
     <Compile Include="Network\Connection.cs" />
     <Compile Include="Rendering\CircleOutline.cs" />
     <Compile Include="Rendering\Renderers\BoundaryRenderer.cs" />
-    <Compile Include="Server.cs" />
+    <Compile Include="Network\Server\LwarServer.cs" />
     <Compile Include="UserInterface\ViewModels\ChatViewModel.cs" />
     <Compile Include="UserInterface\ViewModels\GameSessionViewModel.cs" />
     <Compile Include="UserInterface\ViewModels\InGameMenuViewModel.cs" />
@@ -258,7 +201,6 @@
     <Compile Include="Gameplay\Client\Actors\ExplosionActor.cs" />
     <Compile Include="Gameplay\Client\Actors\IActor.cs" />
     <Compile Include="Gameplay\Client\Actors\ShieldActor.cs" />
-    <Compile Include="Gameplay\Client\Entities\EntityTemplates.cs" />
     <Compile Include="Gameplay\Client\Entities\RocketEntity.cs" />
     <Compile Include="Gameplay\Client\Entities\ShockwaveEntity.cs" />
     <Compile Include="Gameplay\Client\Entities\RayEntity.cs" />
@@ -315,7 +257,6 @@
     <Compile Include="Rendering\CameraManager.cs" />
     <Compile Include="Gameplay\Client\IdentifierMap.cs" />
     <Compile Include="Gameplay\Client\ClientGameSession.cs" />
-    <Compile Include="Network\BufferExtensions.cs" />
     <Compile Include="Gameplay\Client\InputManager.cs" />
     <Compile Include="Gameplay\Client\Entities\ShipEntity.cs" />
     <Compile Include="Gameplay\Client\Transformation.cs" />
@@ -327,13 +268,13 @@
     <Compile Include="Network\PacketHeader.cs" />
     <Compile Include="Network\Messages\MessageType.cs" />
     <Compile Include="Network\NetworkProtocol.cs" />
-    <Compile Include="NativeServer.cs" />
+    <Compile Include="Network\Server\NativeServer.cs" />
     <Compile Include="Rendering\Renderers\BulletRenderer.cs" />
     <Compile Include="Rendering\GaussianBlur.cs" />
     <Compile Include="Rendering\Renderers\SunRenderer.cs" />
     <Compile Include="Rendering\Renderers\Renderer.cs" />
     <Compile Include="Rendering\Renderers\PlanetRenderer.cs" />
-    <Compile Include="Rendering\RenderContext.cs" />
+    <Compile Include="Rendering\GameSessionRenderer.cs" />
     <Compile Include="Rendering\Renderers\ShipRenderer.cs" />
     <Compile Include="Gameplay\Client\Entities\IEntity.cs" />
     <Compile Include="LwarApplication.cs" />
@@ -341,21 +282,24 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Gameplay\Client\Entities\PlanetEntity.cs" />
     <Compile Include="Rendering\Renderers\SkyBoxRenderer.cs" />
-    <Compile Include="..\Assets\AssetIdentifiers.cs">
-      <Link>Assets\AssetIdentifiers.cs</Link>
-    </Compile>
-    <Compile Include="..\Assets\Effects\Effects.cs">
-      <Link>Assets\Effects.cs</Link>
-    </Compile>
-    <Compile Include="..\Assets\Fonts\FontLoader.cs">
-      <Link>Assets\FontLoader.cs</Link>
-    </Compile>
-    <Compile Include="..\User Interface\UserInterface.cs">
-      <Link>UserInterface\Views\UserInterface.cs</Link>
-    </Compile>
     <Compile Include="UserInterface\ViewModels\StartGameViewModel.cs" />
+    <Compile Include="UserInterface\Views\ChatView.ui.cs" />
+    <Compile Include="UserInterface\Views\EventListView.ui.cs" />
+    <Compile Include="UserInterface\Views\GameSessionView.ui.cs" />
+    <Compile Include="UserInterface\Views\InGameMenuView.ui.cs" />
+    <Compile Include="UserInterface\Views\JoinGameView.ui.cs" />
+    <Compile Include="UserInterface\Views\LoadingView.ui.cs" />
+    <Compile Include="UserInterface\Views\LwarApplication.ui.cs" />
+    <Compile Include="UserInterface\Views\MainMenuView.ui.cs" />
+    <Compile Include="UserInterface\Views\OptionsMenuView.ui.cs" />
+    <Compile Include="UserInterface\Views\RespawnView.ui.cs" />
+    <Compile Include="UserInterface\Views\ScoreboardView.ui.cs" />
     <Compile Include="UserInterface\Views\ShipOverlayPanel.cs" />
+    <Compile Include="UserInterface\Views\ShipOverlayPanel.ui.cs" />
     <Compile Include="UserInterface\Views\ShipOverlayView.cs" />
+    <Compile Include="UserInterface\Views\ShipOverlayView.ui.cs" />
+    <Compile Include="UserInterface\Views\StartGameView.ui.cs" />
+    <Compile Include="UserInterface\Views\WaitingView.ui.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -383,4 +327,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="AfterBuild">
+    <Copy Condition="'$(Platform)' == 'AnyCPU' And '$(OS)' == 'Windows_NT'" SourceFiles="$(SolutionDir)../Dependencies/SDL2/x86/SDL2.dll" DestinationFolder="$(OutDir)" />
+    <Copy Condition="'$(Platform)' != 'AnyCPU' And '$(OS)' == 'Windows_NT'" SourceFiles="$(SolutionDir)../Dependencies/SDL2/x64/SDL2.dll" DestinationFolder="$(OutDir)" />
+  </Target>
 </Project>

@@ -6,6 +6,7 @@
 	using Parsing;
 	using Parsing.BasicParsers;
 	using Parsing.Combinators;
+	using Platform.Graphics;
 	using Platform.Logging;
 	using UserInterface.Controls;
 	using UserInterface.Input;
@@ -53,6 +54,7 @@
 			Register(new SizeParser(), null, s => String.Format("{0}x{1}", s.Width, s.Height), "0x0", "-10x10.5", "1920x1200");
 			Register(new EnumerationLiteralParser<Key>(false), "Keyboard key name", null, "A", "B", "LeftControl", "Return", "F1");
 			Register(new EnumerationLiteralParser<MouseButton>(false), "Mouse button", null, "Left", "Right", "Middle", "XButton1", "XButton2");
+			Register(new EnumerationLiteralParser<GraphicsApi>(true), "Graphics API", null, "OpenGL3", "Direct3D11");
 			Register(new InputTriggerParser(), null, i => String.Format("[{0}]", i), "[Key(Return,WentDown)]", "[Key(A,Pressed)]",
 				"[Key(Left,Repeated)]", "[Mouse(Left,Pressed) | Mouse(Right,Pressed)]");
 			Register(new ConfigurableInputParser(), null, null, "Key.A+Control", "Mouse.Left+Alt", "Mouse.XButton1+Shift+Alt");

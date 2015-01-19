@@ -1,13 +1,14 @@
 ﻿namespace Pegasus.UserInterface.Views
 {
 	using System;
+	using Input;
 
 	partial class ConsoleView
 	{
 		/// <summary>
-		///     Indicates whether the mouse was captured before the console was shown.
+		///     Indicates whether relative mouse mode was enabled before the console was shown.
 		/// </summary>
-		private bool _mouseCaptured;
+		private bool _relativeMouseMode;
 
 		/// <summary>
 		///     Invoked once the UI element and all of its children have been fully loaded.
@@ -34,11 +35,11 @@
 		{
 			if (args.NewValue == Visibility.Visible)
 			{
-				_mouseCaptured = ParentWindow.MouseCaptured;
-				ParentWindow.MouseCaptured = false;
+				_relativeMouseMode = Mouse.RelativeMouseMode;
+				Mouse.RelativeMouseMode = false;
 			}
 			else
-				ParentWindow.MouseCaptured = _mouseCaptured;
+				Mouse.RelativeMouseMode = _relativeMouseMode;
 		}
 	}
 }

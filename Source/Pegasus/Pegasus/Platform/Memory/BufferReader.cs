@@ -3,28 +3,30 @@
 	using System;
 	using System.Diagnostics;
 	using System.Text;
+	using Logging;
 	using Utilities;
 
 	/// <summary>
 	///     Wraps a byte buffer, providing methods for reading fundamental data types from the buffer.
 	/// </summary>
-	public sealed class BufferReader : UniquePooledObject
+	public struct BufferReader : IDisposable
 	{
 		/// <summary>
-		///     The default pool for buffer reader instances.
+		///    Represents a deserialization function.
 		/// </summary>
-		private static readonly ObjectPool<BufferReader> DefaultPool =
-			new ObjectPool<BufferReader>(() => new BufferReader(), hasGlobalLifetime: true);
+		/// <typeparam name="T">The type of the object that should be deserialized.</typeparam>
+		/// <param name="reader">The reader that is used to read the object that should be deserialized.</param>
+		public delegate T Deserializer<out T>(ref BufferReader reader);
+
+		/// <summary>
+		///     Indicates the which endian encoding the buffer uses.
+		/// </summary>
+		private readonly Endianess _endianess;
 
 		/// <summary>
 		///     The buffer from which the data is read.
 		/// </summary>
 		private ArraySegment<byte> _buffer;
-
-		/// <summary>
-		///     Indicates the which endian encoding the buffer uses.
-		/// </summary>
-		private Endianess _endianess;
 
 		/// <summary>
 		///     A pointer to the first byte of the buffer.
@@ -37,10 +39,44 @@
 		private int _readPosition;
 
 		/// <summary>
-		///     Initializes a new instance.
+		///     Reads from the given buffer. The valid data of the buffer can be found within the
+		///     range [0, buffer.Length).
 		/// </summary>
-		private BufferReader()
+		/// <param name="buffer">The buffer from which the data should be read.</param>
+		/// <param name="endianess">Specifies the endianess of the buffer.</param>
+		public BufferReader(byte[] buffer, Endianess endianess)
+			: this(new ArraySegment<byte>(buffer, 0, buffer.Length), endianess)
 		{
+		}
+
+		/// <summary>
+		///     Reads from the given buffer. The valid data of the buffer can be found within the
+		///     range [offset, offset + length).
+		/// </summary>
+		/// <param name="buffer">The buffer from which the data should be read.</param>
+		/// <param name="offset">The offset to the first valid byte in the buffer.</param>
+		/// <param name="length">The length of the buffer in bytes.</param>
+		/// <param name="endianess">Specifies the endianess of the buffer.</param>
+		public BufferReader(byte[] buffer, int offset, int length, Endianess endianess)
+			: this(new ArraySegment<byte>(buffer, offset, length), endianess)
+		{
+		}
+
+		/// <summary>
+		///     Reads from the given buffer. The valid data of the buffer can be found within the
+		///     range [offset, offset + length).
+		/// </summary>
+		/// <param name="buffer">The buffer from which the data should be read.</param>
+		/// <param name="endianess">Specifies the endianess of the buffer.</param>
+		public BufferReader(ArraySegment<byte> buffer, Endianess endianess)
+			: this()
+		{
+			Assert.ArgumentNotNull(buffer.Array);
+
+			_endianess = endianess;
+			_buffer = buffer;
+
+			Reset();
 		}
 
 		/// <summary>
@@ -90,45 +126,13 @@
 		}
 
 		/// <summary>
-		///     Reads from the given buffer. The valid data of the buffer can be found within the
-		///     range [0, buffer.Length).
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
-		/// <param name="buffer">The buffer from which the data should be read.</param>
-		/// <param name="endianess">Specifies the endianess of the buffer.</param>
-		public static BufferReader Create(byte[] buffer, Endianess endianess = Endianess.Little)
+		public void Dispose()
 		{
-			return Create(new ArraySegment<byte>(buffer, 0, buffer.Length), endianess);
-		}
-
-		/// <summary>
-		///     Reads from the given buffer. The valid data of the buffer can be found within the
-		///     range [offset, offset + length).
-		/// </summary>
-		/// <param name="buffer">The buffer from which the data should be read.</param>
-		/// <param name="offset">The offset to the first valid byte in the buffer.</param>
-		/// <param name="length">The length of the buffer in bytes.</param>
-		/// <param name="endianess">Specifies the endianess of the buffer.</param>
-		public static BufferReader Create(byte[] buffer, int offset, int length, Endianess endianess = Endianess.Little)
-		{
-			return Create(new ArraySegment<byte>(buffer, offset, length), endianess);
-		}
-
-		/// <summary>
-		///     Reads from the given buffer. The valid data of the buffer can be found within the
-		///     range [offset, offset + length).
-		/// </summary>
-		/// <param name="buffer">The buffer from which the data should be read.</param>
-		/// <param name="endianess">Specifies the endianess of the buffer.</param>
-		public static BufferReader Create(ArraySegment<byte> buffer, Endianess endianess = Endianess.Little)
-		{
-			Assert.ArgumentNotNull(buffer.Array);
-
-			var bufferReader = DefaultPool.Allocate();
-			bufferReader._endianess = endianess;
-			bufferReader._buffer = buffer;
-			bufferReader.Reset();
-
-			return bufferReader;
+			_pointer.Dispose();
+			_pointer = new BufferPointer();
+			_buffer = new ArraySegment<byte>();
 		}
 
 		/// <summary>
@@ -313,12 +317,85 @@
 		}
 
 		/// <summary>
-		///     Reads an UTF8 string.
+		///     Reads an UTF8-encoded string of unbounded length from the buffer.
 		/// </summary>
 		public string ReadString()
 		{
 			var bytes = ReadByteArray();
 			return Encoding.UTF8.GetString(bytes, 0, bytes.Length);
+		}
+
+		/// <summary>
+		///     Reads an UTF8-encoded string of the given length from the buffer.
+		/// </summary>
+		/// <param name="maxLength">The maximum length of the string.</param>
+		public string ReadString(byte maxLength)
+		{
+			var actualLength = ReadByte();
+			return ReadString(actualLength, maxLength);
+		}
+
+		/// <summary>
+		///     Reads an UTF8-encoded string of the given length from the buffer.
+		/// </summary>
+		/// <param name="maxLength">The maximum length of the string.</param>
+		public string ReadString(ushort maxLength)
+		{
+			var actualLength = ReadUInt16();
+			return ReadString(actualLength, maxLength);
+		}
+
+		/// <summary>
+		///     Reads an UTF8-encoded string of the given length from the buffer.
+		/// </summary>
+		/// <param name="maxLength">The maximum length of the string.</param>
+		public string ReadString(int maxLength)
+		{
+			var actualLength = ReadInt32();
+			return ReadString(actualLength, maxLength);
+		}
+
+		/// <summary>
+		///     Reads an UTF8-encoded string of the given length from the buffer.
+		/// </summary>
+		/// <param name="actualLength">The actual length of the string.</param>
+		/// <param name="maxLength">The maximum length of the string.</param>
+		private string ReadString(int actualLength, int maxLength)
+		{
+			Assert.ArgumentSatisfies(maxLength > 0, "Invalid maximum length.");
+
+			var skipBytes = 0;
+			if (actualLength > maxLength)
+			{
+				Log.Warn("Reading a string that exceeds the maximum allowed length. String truncated.");
+				skipBytes = actualLength - maxLength;
+				actualLength = maxLength;
+			}
+
+			var bytes = new byte[actualLength];
+			Copy(bytes);
+
+			// Skip the remaining bytes if the string is too long
+			for (var i = 0; i < skipBytes; ++i)
+				ReadByte();
+
+			return Encoding.UTF8.GetString(bytes, 0, bytes.Length);
+		}
+
+		/// <summary>
+		///     Reads a byte array of the given length.
+		/// </summary>
+		/// <param name="length">The length of the byte array.</param>
+		public byte[] ReadByteArray(int length)
+		{
+			Assert.ArgumentSatisfies(length > 0, "Invalid length.");
+			ValidateCanRead(length);
+
+			var byteArray = new byte[length];
+			Array.Copy(_buffer.Array, _readPosition, byteArray, 0, length);
+			_readPosition += length;
+
+			return byteArray;
 		}
 
 		/// <summary>
@@ -370,14 +447,14 @@
 		/// <typeparam name="T">The type of the object that should be deserialized.</typeparam>
 		/// <param name="obj">The object that the deserialized values should be written to.</param>
 		/// <param name="deserializer">The deserializer that should be used to deserialize the object.</param>
-		public bool TryRead<T>(out T obj, Func<BufferReader, T> deserializer)
+		public bool TryRead<T>(out T obj, Deserializer<T> deserializer)
 		{
 			Assert.ArgumentNotNull(deserializer);
 
 			var offset = _readPosition;
 			try
 			{
-				obj = deserializer(this);
+				obj = deserializer(ref this);
 				return true;
 			}
 			catch (IndexOutOfRangeException)
@@ -386,16 +463,6 @@
 				obj = default(T);
 				return false;
 			}
-		}
-
-		/// <summary>
-		///     Invoked when the pooled instance is returned to the pool.
-		/// </summary>
-		protected override void OnReturning()
-		{
-			_pointer.Dispose();
-			_pointer = new BufferPointer();
-			_buffer = new ArraySegment<byte>();
 		}
 	}
 }

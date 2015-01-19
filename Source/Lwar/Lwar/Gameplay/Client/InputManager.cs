@@ -12,7 +12,7 @@
 	/// <summary>
 	///     Manages the input state of the local player.
 	/// </summary>
-	public class InputManager : DisposableObject
+	internal class InputManager : DisposableObject
 	{
 		/// <summary>
 		///     A cached array of weapon fire inputs.

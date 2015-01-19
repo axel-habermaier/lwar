@@ -9,7 +9,7 @@
 	///     many messages of the type as possible can be batched together for optimized transmission.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-	public class UnreliableTransmissionAttribute : Attribute
+	internal class UnreliableTransmissionAttribute : Attribute
 	{
 		/// <summary>
 		///     Initializes a new instance.

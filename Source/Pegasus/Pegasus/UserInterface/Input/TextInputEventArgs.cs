@@ -20,26 +20,18 @@
 		}
 
 		/// <summary>
-		///     Gets the character that was entered.
+		///     Gets the text that was entered.
 		/// </summary>
-		public char Character { get; private set; }
-
-		/// <summary>
-		///     Gets the scan code of the key that generated the character. The scan code is independent of the keyboard layout but
-		///     may differ between operating systems.
-		/// </summary>
-		public int ScanCode { get; private set; }
+		public string Text { get; private set; }
 
 		/// <summary>
 		///     Initializes a cached instance.
 		/// </summary>
 		/// <param name="character">The character that was entered.</param>
-		/// <param name="scanCode">The key's scan code.</param>
-		internal static TextInputEventArgs Create(char character, int scanCode)
+		internal static TextInputEventArgs Create(string text)
 		{
 			CachedInstance.Reset();
-			CachedInstance.Character = character;
-			CachedInstance.ScanCode = scanCode;
+			CachedInstance.Text = text;
 
 			return CachedInstance;
 		}

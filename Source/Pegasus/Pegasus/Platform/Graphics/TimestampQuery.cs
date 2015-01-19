@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a query that records the current GPU timestamp. A timestamp query can only be issued when a timestamp
@@ -24,8 +25,10 @@
 		{
 			get
 			{
+				Assert.NotDisposed(this);
+
 				ulong data;
-				GetQueryData(&data, sizeof(ulong));
+				QueryObject.GetResult(&data);
 				return data;
 			}
 		}
@@ -35,7 +38,8 @@
 		/// </summary>
 		public void Query()
 		{
-			EndQuery();
+			Assert.NotDisposed(this);
+			QueryObject.End();
 		}
 	}
 }

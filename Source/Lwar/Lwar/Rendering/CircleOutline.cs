@@ -11,7 +11,7 @@
 	/// <summary>
 	///     Builds up a model containing circle outlines.
 	/// </summary>
-	public struct CircleOutline
+	internal struct CircleOutline
 	{
 		/// <summary>
 		///     Stores the indices of the generated model.
@@ -29,7 +29,7 @@
 		/// <param name="graphicsDevice">The graphics device that should be used to construct the input layout.</param>
 		/// <param name="vertexBuffer">The vertex buffer that holds the vertex data.</param>
 		/// <param name="indexBuffer">The index buffer that holds the vertex indices.</param>
-		private static VertexInputLayout GetInputLayout(GraphicsDevice graphicsDevice, VertexBuffer vertexBuffer, IndexBuffer indexBuffer)
+		private static VertexLayout GetInputLayout(GraphicsDevice graphicsDevice, VertexBuffer vertexBuffer, IndexBuffer indexBuffer)
 		{
 			const int stride = 12;
 			Assert.ArgumentNotNull(graphicsDevice);
@@ -38,10 +38,10 @@
 
 			var inputElements = new[]
 			{
-				new VertexInputBinding(vertexBuffer, VertexDataFormat.Vector3, DataSemantics.Position, stride, 0)
+				new VertexBinding(vertexBuffer, VertexDataFormat.Vector3, DataSemantics.Position, stride, 0)
 			};
 
-			return new VertexInputLayout(graphicsDevice, indexBuffer, inputElements);
+			return new VertexLayout(graphicsDevice, indexBuffer, inputElements);
 		}
 
 		/// <summary>

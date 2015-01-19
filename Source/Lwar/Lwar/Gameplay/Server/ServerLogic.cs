@@ -13,7 +13,7 @@
 	/// <summary>
 	///     Implements the server logic for handling incoming client messages and the synchronization of client game states.
 	/// </summary>
-	public class ServerLogic
+	internal class ServerLogic
 	{
 		/// <summary>
 		///     If tracing is enabled, all server-specific gameplay events are shown in the debug output.

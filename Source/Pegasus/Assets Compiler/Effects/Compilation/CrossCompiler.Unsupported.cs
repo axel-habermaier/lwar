@@ -32,6 +32,11 @@
 			throw new NotSupportedException();
 		}
 
+		public void VisitErrorNode(AstNode errorNode)
+		{
+			throw new NotSupportedException();
+		}
+
 		public void VisitBaseReferenceExpression(BaseReferenceExpression baseReferenceExpression)
 		{
 			throw new NotSupportedException();

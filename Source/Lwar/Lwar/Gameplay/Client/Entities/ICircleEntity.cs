@@ -6,7 +6,7 @@
 	/// <summary>
 	///     Represents an entity that accepts remote circle updates.
 	/// </summary>
-	public interface ICircleEntity : IEntity
+	internal interface ICircleEntity : IEntity
 	{
 		/// <summary>
 		///     Applies the remote circle update to the entity.

@@ -221,7 +221,7 @@
 		/// <param name="value">The value the cvar should be set to.</param>
 		private void UpdateValue(T value)
 		{
-			if (_value.Equals(value))
+			if (_value.Equals(value) && Bootstrapper.Completed)
 			{
 				Log.Warn("'{0}' has not been changed, because the new and the old value are the same.", Name);
 				return;
@@ -244,29 +244,34 @@
 		/// <param name="value"></param>
 		private void DeferredUpdate(T value)
 		{
-			// If both the current and the deferred value are the same as the given one, do nothing
-			if (_value.Equals(value) && (!HasDeferredValue || DeferredValue.Equals(value)))
+			if (!Bootstrapper.Completed)
+				UpdateValue(value);
+			else
 			{
-				Log.Warn("'{0}' will not be changed, because the new and the old value are the same.", Name);
-				return;
+				// If both the current and the deferred value are the same as the given one, do nothing
+				if (_value.Equals(value) && (!HasDeferredValue || DeferredValue.Equals(value)))
+				{
+					Log.Warn("'{0}' will not be changed, because the new and the old value are the same.", Name);
+					return;
+				}
+
+				// If the given value resets the deferred update to the current value, cancel the deferred update
+				if (_value.Equals(value) && HasDeferredValue && !DeferredValue.Equals(value))
+				{
+					HasDeferredValue = false;
+					DeferredValue = default(T);
+
+					Log.Info("'{0}' is now '{1}\\\0'.", Name, TypeRegistry.ToString(value));
+					return;
+				}
+
+				// Otherwise, store the deferred value
+				DeferredValue = value;
+				HasDeferredValue = true;
+
+				Log.Info("'{0}' will be set to '{1}\\\0'.", Name, TypeRegistry.ToString(value));
+				Log.Warn("{0}", UpdateMode.ToDisplayString());
 			}
-
-			// If the given value resets the deferred update to the current value, cancel the deferred update
-			if (_value.Equals(value) && HasDeferredValue && !DeferredValue.Equals(value))
-			{
-				HasDeferredValue = false;
-				DeferredValue = default(T);
-
-				Log.Info("'{0}' is now '{1}\\\0'.", Name, TypeRegistry.ToString(value));
-				return;
-			}
-
-			// Otherwise, store the deferred value
-			DeferredValue = value;
-			HasDeferredValue = true;
-
-			Log.Info("'{0}' will be set to '{1}\\\0'.", Name, TypeRegistry.ToString(value));
-			Log.Warn("{0}", UpdateMode.ToDisplayString());
 		}
 
 		/// <summary>

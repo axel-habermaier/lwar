@@ -4,7 +4,7 @@
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;
-	using Assets;
+	using Commands;
 	using CSharp;
 	using Utilities;
 
@@ -13,21 +13,6 @@
 	/// </summary>
 	internal class CSharpCodeGenerator : IDisposable
 	{
-		/// <summary>
-		///     The name of the context variable of the Effect base class.
-		/// </summary>
-		private const string ContextVariableName = "__context";
-
-		/// <summary>
-		///     The name of the method that binds the constant buffers and textures.
-		/// </summary>
-		private readonly string _bindMethodName = String.Format("_{0}Bind", Configuration.ReservedIdentifierPrefix);
-
-		/// <summary>
-		///     The name of the method that unbinds the textures.
-		/// </summary>
-		private readonly string _unbindMethodName = String.Format("_{0}Unbind", Configuration.ReservedIdentifierPrefix);
-
 		/// <summary>
 		///     The writer that is used to write the generated code.
 		/// </summary>
@@ -53,6 +38,7 @@
 			_writer.AppendLine("using Pegasus.Assets;");
 			_writer.AppendLine("using Pegasus.Platform.Graphics;");
 			_writer.AppendLine("using Pegasus.Platform.Memory;");
+			_writer.AppendLine("using Pegasus.Rendering;");
 			_writer.NewLine();
 		}
 
@@ -87,7 +73,10 @@
 		/// </summary>
 		public void Dispose()
 		{
-			File.WriteAllText(Configuration.CSharpEffectFile, _writer.ToString());
+			var path = Path.Combine(Configuration.EffectCodePath, _effect.Name + ".cs");
+
+			Directory.CreateDirectory(Path.GetDirectoryName(path));
+			File.WriteAllText(path, _writer.ToString());
 		}
 
 		/// <summary>
@@ -104,7 +93,7 @@
 			_writer.AppendBlockStatement(() =>
 			{
 				WriteDocumentation(_effect.Documentation);
-				_writer.AppendLine("public sealed class {0} : Effect", _effect.Name);
+				_writer.AppendLine("{1} sealed class {0} : GraphicsObject", _effect.Name, Configuration.Visibility);
 				_writer.AppendBlockStatement(GenerateClass);
 			});
 
@@ -119,20 +108,21 @@
 			GenerateDirtyFields();
 			GenerateConstantBufferFields();
 			GenerateConstantsFields();
+			GenerateShaderFields();
 
 			GenerateConstructor();
-			GeneratePreloadMethod();
+			GenerateLoadMethods();
 
 			GenerateConstantsProperties();
 			GenerateTextureProperties();
 			GenerateTechniqueProperties();
 
-			GenerateBindMethods();
-			GenerateUnbindMethods();
 			GenerateOnDisposingMethod();
 
 			GenerateConstantBufferStructs();
 			GenerateConstantArrayClasses();
+
+			GenerateTechniqueClasses();
 		}
 
 		/// <summary>
@@ -179,6 +169,18 @@
 		}
 
 		/// <summary>
+		///     Generates the fields for all shaders declared by the effect.
+		/// </summary>
+		private void GenerateShaderFields()
+		{
+			foreach (var shader in _effect.Shaders)
+			{
+				_writer.AppendLine("private {0} {1};", ToCSharpType(shader), GetFieldName(shader.Name));
+				_writer.NewLine();
+			}
+		}
+
+		/// <summary>
 		///     Generates the constructor.
 		/// </summary>
 		private void GenerateConstructor()
@@ -187,29 +189,23 @@
 			_writer.AppendLine("///     Initializes a new instance.");
 			_writer.AppendLine("/// </summary>");
 			_writer.AppendLine("/// <param name=\"graphicsDevice\">The graphics device this instance belongs to.</param>");
-			_writer.AppendLine("/// <param name=\"assets\">The assets manager that should be used to load required assets.</param>");
-
-			_writer.AppendLine("public {0}(GraphicsDevice graphicsDevice, AssetsManager assets)", _effect.Name);
-			_writer.AppendLine("\t: base(graphicsDevice, assets)");
+			_writer.AppendLine("private {0}(GraphicsDevice graphicsDevice)", _effect.Name);
+			_writer.IncreaseIndent();
+			_writer.AppendLine(": base(graphicsDevice)");
+			_writer.DecreaseIndent();
 			_writer.AppendBlockStatement(() =>
 			{
-				_writer.AppendLine("Assert.ArgumentNotNull(graphicsDevice);");
-				_writer.AppendLine("Assert.ArgumentNotNull(assets);");
-				_writer.NewLine();
-
-				foreach (var technique in _effect.Techniques)
-				{
-					_writer.AppendLine("{0} = {1}.CreateTechnique({2}{0}, {3}{0}, {4}, {5});", technique.Name, ContextVariableName,
-						_bindMethodName, _unbindMethodName, GetShaderIdentifier(technique.VertexShader.Name),
-						GetShaderIdentifier(technique.FragmentShader.Name));
-				}
-
+				var first = true;
 				foreach (var buffer in ConstantBuffers)
 				{
-					_writer.NewLine();
-					_writer.AppendLine("{0} = {2}.CreateConstantBuffer({1}.Size, {1}.Slot);", GetFieldName(buffer.Name),
-						GetStructName(buffer), ContextVariableName);
-					_writer.AppendLine("{0}.SetName(\"used by {1}\");", GetFieldName(buffer.Name), _effect.FullName);
+					if (first)
+						first = false;
+					else
+						_writer.NewLine();
+
+					_writer.AppendLine("{0} = new ConstantBuffer(GraphicsDevice, {1}.Size, {1}.Slot);", GetFieldName(buffer.Name),
+						GetStructName(buffer));
+					_writer.AppendLine("{0}.SetName(\"{1}.{2}\");", GetFieldName(buffer.Name), _effect.FullName, buffer.Name);
 				}
 
 				if (Constants.Any(c => c.IsArray))
@@ -223,25 +219,51 @@
 		}
 
 		/// <summary>
-		///     Generates the shader preload method.
+		///     Generates the Load methods.
 		/// </summary>
-		private void GeneratePreloadMethod()
+		private void GenerateLoadMethods()
 		{
 			_writer.AppendLine("/// <summary>");
-			_writer.AppendLine("///     Preloads all shaders used by the effect into the given assets manager.");
+			_writer.AppendLine("///     Loads an effect from the given buffer.");
 			_writer.AppendLine("/// </summary>");
-			_writer.AppendLine("/// <param name=\"assets\">The assets manager the shaders should be preloaded into.</param>");
-
-			_writer.AppendLine("public static void PreloadShaders(AssetsManager assets)");
+			_writer.AppendLine("/// <param name=\"graphicsDevice\">The graphics device the effect should be created for.</param>");
+			_writer.AppendLine("/// <param name=\"buffer\">The buffer the effect should be read from.</param>");
+			_writer.AppendLine("public static {0} Create(GraphicsDevice graphicsDevice, ref BufferReader buffer)", _effect.Name);
 			_writer.AppendBlockStatement(() =>
 			{
-				_writer.AppendLine("Assert.ArgumentNotNull(assets);");
-				_writer.NewLine();
+				_writer.AppendLine("Assert.ArgumentNotNull(graphicsDevice);");
 
-				var vertexShaders = _effect.Techniques.Select(technique => technique.VertexShader.Name);
-				var fragmentShaders = _effect.Techniques.Select(technique => technique.FragmentShader.Name);
-				foreach (var shader in vertexShaders.Union(fragmentShaders).Distinct())
-					_writer.AppendLine("assets.Load({0});", GetShaderIdentifier(shader));
+				_writer.NewLine();
+				_writer.AppendLine("var effect = new {0}(graphicsDevice);", _effect.Name);
+				_writer.AppendLine("effect.Load(ref buffer);");
+				_writer.AppendLine("return effect;");
+			});
+
+			_writer.NewLine();
+			_writer.AppendLine("/// <summary>");
+			_writer.AppendLine("///     Loads the effect from the given buffer.");
+			_writer.AppendLine("/// </summary>");
+			_writer.AppendLine("/// <param name=\"buffer\">The buffer the effect should be initialized from.</param>");
+			_writer.AppendLine("internal void Load(ref BufferReader buffer)");
+			_writer.AppendBlockStatement(() =>
+			{
+				foreach (var shader in _effect.Shaders)
+				{
+					_writer.AppendLine("{0}.SafeDispose();", GetFieldName(shader.Name));
+					_writer.AppendLine("{0} = {1}.Create(GraphicsDevice, ref buffer);", GetFieldName(shader.Name), ToCSharpType(shader));
+					_writer.AppendLine("{0}.SetName(\"{1}.{2}\");", GetFieldName(shader.Name), _effect.FullName, shader.Name);
+					_writer.NewLine();
+				}
+
+				foreach (var technique in _effect.Techniques)
+				{
+					_writer.AppendLine("{0}.SafeDispose();", technique.Name);
+					_writer.AppendLine("{0} = new {1}(GraphicsDevice, {2}, {3}, this);", technique.Name, GetClassName(technique),
+						GetFieldName(technique.VertexShader.Name), GetFieldName(technique.FragmentShader.Name));
+					_writer.NewLine();
+				}
+
+				_writer.AppendLine("ShaderSignature.LoadSignatures(ref buffer);");
 			});
 
 			_writer.NewLine();
@@ -257,7 +279,6 @@
 				foreach (var constant in buffer.Constants)
 				{
 					WriteDocumentation(constant.Documentation);
-					
 
 					if (constant.IsArray)
 						_writer.AppendLine("public {0} {1} {{ get; private set; }}", GetClassName(constant), constant.Name);
@@ -309,95 +330,6 @@
 		}
 
 		/// <summary>
-		///     Generates the state binding methods.
-		/// </summary>
-		private void GenerateBindMethods()
-		{
-			foreach (var technique in _effect.Techniques)
-			{
-				_writer.AppendLine("/// <summary>");
-				_writer.AppendLine("///     Binds all textures and non-shared constant buffers required by the '{0}' technique.", technique.Name);
-				_writer.AppendLine("/// </summary>");
-				_writer.Append("private ");
-				if (Constants.Any())
-					_writer.Append("unsafe ");
-
-				_writer.AppendLine("void {0}{1}()", _bindMethodName, technique.Name);
-				_writer.AppendBlockStatement(() =>
-				{
-					var constantBuffers = ConstantBuffers.Where(constantBuffer => technique.Uses(constantBuffer)).ToArray();
-					var textures = _effect.Textures.Where(texture => technique.Uses(texture)).ToArray();
-
-					if (constantBuffers.Length == 0 && textures.Length == 0)
-						_writer.AppendLine("// Nothing to do here");
-
-					foreach (var buffer in constantBuffers)
-					{
-						var arrayConstants = buffer.Constants.Where(c => c.IsArray).ToArray();
-						_writer.Append("if ({0}", GetDirtyFlagName(buffer.Name));
-						if (arrayConstants.Length > 0)
-						{
-							_writer.Append(" || ");
-							_writer.AppendSeparated(arrayConstants, " || ", c => _writer.Append("{0}.IsDirty", c.Name));
-						}
-						_writer.AppendLine(")");
-
-						_writer.AppendBlockStatement(() =>
-						{
-							_writer.AppendLine("var _{1}data = new {0}();", GetStructName(buffer), Configuration.ReservedIdentifierPrefix);
-							foreach (var constant in buffer.Constants)
-							{
-								if (constant.IsArray)
-									_writer.AppendLine("{0}.WriteToConstantBuffer(_{1}data.{0});", constant.Name, Configuration.ReservedIdentifierPrefix);
-								else
-									_writer.AppendLine("_{1}data.{0} = {0};", constant.Name, Configuration.ReservedIdentifierPrefix);
-							}
-
-							_writer.NewLine();
-							_writer.AppendLine("{0} = false;", GetDirtyFlagName(buffer.Name));
-							_writer.AppendLine("{2}.Update({0}, &_{1}data);", GetFieldName(buffer.Name),
-								Configuration.ReservedIdentifierPrefix, ContextVariableName);
-						});
-						_writer.NewLine();
-					}
-
-					foreach (var texture in textures)
-						_writer.AppendLine("{2}.Bind({0}, {1});", texture.Name, texture.Slot, ContextVariableName);
-
-					foreach (var buffer in constantBuffers)
-						_writer.AppendLine("{1}.Bind({0});", GetFieldName(buffer.Name), ContextVariableName);
-				});
-
-				_writer.NewLine();
-			}
-		}
-
-		/// <summary>
-		///     Generates the texture unbinding methods.
-		/// </summary>
-		private void GenerateUnbindMethods()
-		{
-			foreach (var technique in _effect.Techniques)
-			{
-				_writer.AppendLine("/// <summary>");
-				_writer.AppendLine("///     Unbinds all textures required by the '{0}' technique.", technique.Name);
-				_writer.AppendLine("/// </summary>");
-				_writer.Append("private void {0}{1}()", _unbindMethodName, technique.Name);
-				_writer.AppendBlockStatement(() =>
-				{
-					var textures = _effect.Textures.Where(texture => technique.Uses(texture)).ToArray();
-					if (textures.Length == 0)
-						_writer.AppendLine("// Nothing to do here");
-
-					foreach (var texture in textures)
-						_writer.AppendLine("{2}.Unbind({0}, {1});", texture.Name, texture.Slot, ContextVariableName);
-				});
-
-				_writer.NewLine();
-			}
-		}
-
-		/// <summary>
 		///     Generates the implementation of the OnDisposing() method.
 		/// </summary>
 		private void GenerateOnDisposingMethod()
@@ -405,11 +337,19 @@
 			_writer.AppendLine("/// <summary>");
 			_writer.AppendLine("///     Disposes the object, releasing all managed and unmanaged resources.");
 			_writer.AppendLine("/// </summary>");
-			_writer.AppendLine("protected override void __OnDisposing()");
+			_writer.AppendLine("protected override void OnDisposing()");
 			_writer.AppendBlockStatement(() =>
 			{
 				foreach (var buffer in ConstantBuffers)
 					_writer.AppendLine("{0}.SafeDispose();", GetFieldName(buffer.Name));
+
+				_writer.NewLine();
+				foreach (var shader in _effect.Shaders)
+					_writer.AppendLine("{0}.SafeDispose();", GetFieldName(shader.Name));
+
+				_writer.NewLine();
+				foreach (var technique in _effect.Techniques)
+					_writer.AppendLine("{0}.SafeDispose();", technique.Name);
 			});
 
 			if (ConstantBuffers.Any())
@@ -427,7 +367,7 @@
 				_writer.AppendLine("[StructLayout(LayoutKind.Explicit, Size = Size)]");
 				_writer.Append("private ");
 
-				if (buffers[i].Constants.Any(c=>c.IsArray))
+				if (buffers[i].Constants.Any(c => c.IsArray))
 					_writer.Append("unsafe ");
 
 				_writer.AppendLine("struct {0}", GetStructName(buffers[i]));
@@ -452,7 +392,7 @@
 						_writer.AppendLine("[FieldOffset({0})]", constants[j].Offset);
 
 						if (constants[j].Constant.IsArray)
-							_writer.AppendLine("public fixed byte {0}[{1}.ElementCount * ({1}.ElementSize + {1}.Padding)];", 
+							_writer.AppendLine("public fixed byte {0}[{1}.ElementCount * ({1}.ElementSize + {1}.Padding)];",
 								constants[j].Constant.Name, GetClassName(constants[j].Constant));
 						else
 							_writer.AppendLine("public {0} {1};", ToCSharpType(constants[j].Constant.Type), constants[j].Constant.Name);
@@ -472,7 +412,7 @@
 		/// </summary>
 		private void GenerateConstantArrayClasses()
 		{
-			var constants = ConstantBuffers.SelectMany(b => b.GetLayoutedConstants()).Where(c=>c.Constant.IsArray);
+			var constants = ConstantBuffers.SelectMany(b => b.GetLayoutedConstants()).Where(c => c.Constant.IsArray);
 			foreach (var constant in constants)
 			{
 				_writer.NewLine();
@@ -546,7 +486,8 @@
 					_writer.AppendLine("/// <summary>");
 					_writer.AppendLine("///     Writes the data to the given constant buffer.");
 					_writer.AppendLine("/// </summary>");
-					_writer.AppendLine("/// <param name=\"buffer\">A pointer to a location within a constant buffer where the data should be written to.</param>");
+					_writer.AppendLine(
+						"/// <param name=\"buffer\">A pointer to a location within a constant buffer where the data should be written to.</param>");
 					_writer.AppendLine("internal unsafe void WriteToConstantBuffer(byte* buffer)");
 					_writer.AppendBlockStatement(() =>
 					{
@@ -560,6 +501,112 @@
 							_writer.AppendLine("*typedBuffer = data;");
 							_writer.AppendLine("buffer += ElementSize + Padding;");
 						});
+					});
+				});
+			}
+		}
+
+		/// <summary>
+		///     Generates a class for each technique.
+		/// </summary>
+		private void GenerateTechniqueClasses()
+		{
+			foreach (var technique in _effect.Techniques)
+			{
+				_writer.NewLine();
+				WriteDocumentation(technique.Documentation);
+				_writer.AppendLine("private class {0} : EffectTechnique", GetClassName(technique));
+				_writer.AppendBlockStatement(() =>
+				{
+					_writer.AppendLine("/// <summary>");
+					_writer.AppendLine("///     The effect the technique belongs to.");
+					_writer.AppendLine("/// </summary>");
+					_writer.AppendLine("private {0} _effect;", _effect.Name);
+					_writer.NewLine();
+
+					_writer.AppendLine("/// <summary>");
+					_writer.AppendLine("///     Initializes a new instance.");
+					_writer.AppendLine("/// </summary>");
+					_writer.AppendLine("/// <param name=\"graphicsDevice\">The graphics device that should be used by the technique.</param>");
+					_writer.AppendLine("/// <param name=\"vertexShader\">The vertex shader that should be used by the technique.</param>");
+					_writer.AppendLine("/// <param name=\"fragmentShader\">The fragment shader that should be used by the technique.</param>");
+					_writer.AppendLine("/// <param name=\"effect\">The effect the technique belongs to.</param>");
+					_writer.AppendLine("public {0}(GraphicsDevice graphicsDevice, VertexShader vertexShader, FragmentShader fragmentShader, {1} effect)",
+						GetClassName(technique), _effect.Name);
+					_writer.IncreaseIndent();
+					_writer.AppendLine(": base(graphicsDevice, vertexShader, fragmentShader)");
+					_writer.DecreaseIndent();
+					_writer.AppendBlockStatement(() => _writer.AppendLine("_effect = effect;"));
+
+					_writer.NewLine();
+					_writer.AppendLine("/// <summary>");
+					_writer.AppendLine("///     Binds all textures and non-shared constant buffers required by the technique.");
+					_writer.AppendLine("/// </summary>");
+					_writer.Append("public override ");
+					if (Constants.Any())
+						_writer.Append("unsafe ");
+
+					_writer.AppendLine("void Bind()");
+					_writer.AppendBlockStatement(() =>
+					{
+						var constantBuffers = ConstantBuffers.Where(constantBuffer => technique.Uses(constantBuffer)).ToArray();
+						var textures = _effect.Textures.Where(texture => technique.Uses(texture)).ToArray();
+
+						_writer.AppendLine("ShaderProgram.Bind();");
+
+						if (constantBuffers.Length == 0 && textures.Length == 0)
+							_writer.NewLine();
+
+						foreach (var buffer in constantBuffers)
+						{
+							var arrayConstants = buffer.Constants.Where(c => c.IsArray).ToArray();
+							_writer.Append("if (_effect.{0}", GetDirtyFlagName(buffer.Name));
+							if (arrayConstants.Length > 0)
+							{
+								_writer.Append(" || ");
+								_writer.AppendSeparated(arrayConstants, " || ", c => _writer.Append("_effect.{0}.IsDirty", c.Name));
+							}
+							_writer.AppendLine(")");
+
+							_writer.AppendBlockStatement(() =>
+							{
+								_writer.AppendLine("var _{1}data = new {0}();", GetStructName(buffer), CompilationContext.ReservedIdentifierPrefix);
+								foreach (var constant in buffer.Constants)
+								{
+									if (constant.IsArray)
+										_writer.AppendLine("_effect.{0}.WriteToConstantBuffer(_{1}data.{0});", constant.Name, CompilationContext.ReservedIdentifierPrefix);
+									else
+										_writer.AppendLine("_{1}data.{0} = _effect.{0};", constant.Name, CompilationContext.ReservedIdentifierPrefix);
+								}
+
+								_writer.NewLine();
+								_writer.AppendLine("_effect.{0} = false;", GetDirtyFlagName(buffer.Name));
+								_writer.AppendLine("_effect.{0}.CopyData(&_{1}data);", GetFieldName(buffer.Name),
+									CompilationContext.ReservedIdentifierPrefix);
+							});
+							_writer.NewLine();
+						}
+
+						foreach (var texture in textures)
+							_writer.AppendLine("_effect.{0}.Bind({1});", texture.Name, texture.Slot);
+
+						foreach (var buffer in constantBuffers)
+							_writer.AppendLine("_effect.{0}.Bind();", GetFieldName(buffer.Name));
+					});
+
+					_writer.NewLine();
+					_writer.AppendLine("/// <summary>");
+					_writer.AppendLine("///     Unbinds all textures required by the '{0}' technique.", technique.Name);
+					_writer.AppendLine("/// </summary>");
+					_writer.Append("public override void Unbind()");
+					_writer.AppendBlockStatement(() =>
+					{
+						var textures = _effect.Textures.Where(texture => technique.Uses(texture)).ToArray();
+						if (textures.Length == 0)
+							_writer.AppendLine("// Nothing to do here");
+
+						foreach (var texture in textures)
+							_writer.AppendLine("_effect.{0}.Unbind({1});", texture.Name, texture.Slot);
 					});
 				});
 			}
@@ -611,7 +658,7 @@
 		/// <param name="buffer">The buffer whose struct name should be returned.</param>
 		private static string GetStructName(ConstantBuffer buffer)
 		{
-			return String.Format("_{1}{0}", buffer.Name, Configuration.ReservedIdentifierPrefix);
+			return String.Format("_{1}{0}", buffer.Name, CompilationContext.ReservedIdentifierPrefix);
 		}
 
 		/// <summary>
@@ -624,12 +671,21 @@
 		}
 
 		/// <summary>
+		///     Gets the name of the technique class.
+		/// </summary>
+		/// <param name="technique">The technique whose class name should be returned.</param>
+		private static string GetClassName(EffectTechnique technique)
+		{
+			return String.Format("_{1}{0}Technique", technique.Name, CompilationContext.ReservedIdentifierPrefix);
+		}
+
+		/// <summary>
 		///     Gets the name of the corresponding dirty flag.
 		/// </summary>
 		/// <param name="name">The name whose dirty flag name should be returned.</param>
 		private static string GetDirtyFlagName(string name)
 		{
-			return String.Format("_{1}{0}Dirty", name, Configuration.ReservedIdentifierPrefix);
+			return String.Format("_{1}{0}Dirty", name, CompilationContext.ReservedIdentifierPrefix);
 		}
 
 		/// <summary>
@@ -643,13 +699,20 @@
 		}
 
 		/// <summary>
-		///     Gets the shader identifier for the given shader name.
+		///     Gets the C# type corresponding to the method's shader type.
 		/// </summary>
-		/// <param name="shaderName">The name of the shader.</param>
-		private string GetShaderIdentifier(string shaderName)
+		/// <param name="method">The shader method the C# type should be returned for.</param>
+		protected string ToCSharpType(ShaderMethod method)
 		{
-			return ShaderAsset.GetAssetIdentifier(_effect.Namespace.Replace(".", "/"), _effect.Name + "/" + shaderName)
-							  .Replace("/", ".");
+			switch (method.Type)
+			{
+				case ShaderType.VertexShader:
+					return "VertexShader";
+				case ShaderType.FragmentShader:
+					return "FragmentShader";
+				default:
+					throw new InvalidOperationException("Unknown shader type.");
+			}
 		}
 	}
 }

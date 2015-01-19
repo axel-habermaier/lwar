@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("Pegasus Assets Compiler")]
+[assembly: AssemblyTitle("Asset Compiler")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Pegasus Assets Compiler")]
-[assembly: AssemblyCopyright("Copyright ©  2012")]
+[assembly: AssemblyProduct("Asset Compiler")]
+[assembly: AssemblyCopyright("Copyright (c) 2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -22,7 +22,7 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 
-[assembly: Guid("d5f45263-718c-4852-a09d-f6eb4c0a4da4")]
+[assembly: Guid("d6b90002-cf38-43ca-b721-de175f7e7b0f")]
 
 // Version information for an assembly consists of the following four values:
 //

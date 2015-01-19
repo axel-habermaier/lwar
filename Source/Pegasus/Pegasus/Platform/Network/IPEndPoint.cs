@@ -5,6 +5,10 @@
 	/// <summary>
 	///     Represents an endpoint consisting of an IP address and a port number.
 	/// </summary>
+	/// <remarks>
+	///     We're not using the System.Net.EndPoint in order to reduce the pressure on the garbage collector as each invocation of
+	///     System.Net.Sockets.Socket.ReceiveFrom and System.Net.Sockets.Socket.SendTo allocates memory.
+	/// </remarks>
 	public struct IPEndPoint : IEquatable<IPEndPoint>
 	{
 		/// <summary>
@@ -42,7 +46,7 @@
 		/// </summary>
 		public override string ToString()
 		{
-			if (Address.IsMappedIPv4)
+			if (Address.IsIPv4)
 				return String.Format("{0}:{1}", Address, Port);
 
 			return String.Format("[{0}]:{1}", Address, Port);

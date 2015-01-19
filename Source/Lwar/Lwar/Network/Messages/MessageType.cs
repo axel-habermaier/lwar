@@ -5,7 +5,7 @@
 	/// <summary>
 	///     Identifies the type of a message.
 	/// </summary>
-	public enum MessageType : byte
+	internal enum MessageType : byte
 	{
 		ClientConnect = 1,
 		ClientRejected = 107,

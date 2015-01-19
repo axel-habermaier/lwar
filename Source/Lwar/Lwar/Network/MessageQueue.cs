@@ -10,7 +10,7 @@
 	///     The message queue is responsible for packing all queued messages into a packet and sending it to the remote
 	///     peer. Reliable messages will be resent until their reception has been acknowledged by the remote peer.
 	/// </summary>
-	public class MessageQueue : DisposableObject
+	internal class MessageQueue : DisposableObject
 	{
 		/// <summary>
 		///     The delivery manager that is used to enforce the message delivery constraints.
@@ -98,6 +98,9 @@
 
 			// We've sent all unreliable messages, so we no longer need them.
 			ClearUnreliableMessages();
+
+			// Send the packet (actually, send the last one, if we're sending a lot of data)
+			packetAssembler.SendPacket();
 		}
 
 		/// <summary>

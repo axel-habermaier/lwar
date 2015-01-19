@@ -12,7 +12,7 @@ namespace Lwar.Gameplay.Server.Entities
 	/// <summary>
 	///     Represents a bullet.
 	/// </summary>
-	public class Bullet : Entity
+	internal class Bullet : Entity
 	{
 		/// <summary>
 		///     Initializes the type.

@@ -54,7 +54,7 @@
 				</TextBox>
 			</DockPanel>
 			<controls:ScrollViewer Margin="0,0,0,3" DockPanel.Dock="Bottom" ScrollController="{Binding ScrollController}" VerticalScrollStep="100">
-				<ItemsControl ItemsSource="{Binding LogEntries}" VerticalAlignment="Bottom" MinWidth="600">
+				<ItemsControl ItemsSource="{Binding LogEntries}" VerticalAlignment="Bottom" MinWidth="200">
 					<ItemsControl.ItemTemplate>
 						<DataTemplate>
 							<TextBlock Text="{Binding Message, Mode=OneTime}"

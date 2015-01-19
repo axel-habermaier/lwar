@@ -1,8 +1,7 @@
 ﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
-	using System.Runtime.InteropServices;
-	using System.Security;
+	using Memory;
 	using Utilities;
 
 	/// <summary>
@@ -14,33 +13,32 @@
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
-		public VertexShader(GraphicsDevice graphicsDevice)
+		private VertexShader(GraphicsDevice graphicsDevice)
 			: base(graphicsDevice)
 		{
 		}
 
 		/// <summary>
-		///     Reinitializes the shader.
+		///     Loads a vertex shader from the given buffer.
 		/// </summary>
-		/// <param name="shaderCode">The shader source code.</param>
-		/// <param name="length">The length of the shader code in bytes.</param>
-		internal unsafe void Reinitialize(byte* shaderCode, int length)
+		/// <param name="graphicsDevice">The graphics device the vertex shader should be created for.</param>
+		/// <param name="buffer">The buffer the vertex shader should be read from.</param>
+		public static VertexShader Create(GraphicsDevice graphicsDevice, ref BufferReader buffer)
 		{
-			Assert.ArgumentNotNull(new IntPtr(shaderCode));
-			Assert.ArgumentSatisfies(length > 0, "Invalid shader code length.");
+			Assert.ArgumentNotNull(graphicsDevice);
 
-			DestroyShader();
-			_shader = NativeMethods.CreateShader(GraphicsDevice.NativePtr, shaderCode, length);
+			var shader = new VertexShader(graphicsDevice);
+			shader.Load(ref buffer);
+			return shader;
 		}
 
 		/// <summary>
-		///     Provides access to the native shader functions.
+		///     Loads the vertex shader from the given buffer.
 		/// </summary>
-		[SuppressUnmanagedCodeSecurity]
-		private static class NativeMethods
+		/// <param name="buffer">The buffer the vertex shader should be read from.</param>
+		public void Load(ref BufferReader buffer)
 		{
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateVertexShader")]
-			public static extern unsafe IntPtr CreateShader(IntPtr device, byte* shaderData, int length);
+			Load(ShaderType.VertexShader, ref buffer);
 		}
 	}
 }

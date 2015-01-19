@@ -10,16 +10,16 @@
 		/// <summary>
 		///     Indicates that a shader is a vertex shader.
 		/// </summary>
-		VertexShader = 2601,
+		VertexShader,
 
 		/// <summary>
 		///     Indicates that a shader is a fragment shader.
 		/// </summary>
-		FragmentShader = 2602,
+		FragmentShader,
 
 		/// <summary>
 		///     Indicates that a shader is a geometry shader.
 		/// </summary>
-		GeometryShader = 2603
+		GeometryShader
 	}
 }

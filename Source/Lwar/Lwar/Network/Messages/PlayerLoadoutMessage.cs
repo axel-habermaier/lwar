@@ -9,7 +9,7 @@ namespace Lwar.Network.Messages
 	///     Notifies a server and all of its clients about the ship selection and weapon load out of a client.
 	/// </summary>
 	[ReliableTransmission(MessageType.PlayerLoadout)]
-	public sealed class PlayerLoadoutMessage : Message
+	internal sealed class PlayerLoadoutMessage : Message
 	{
 		/// <summary>
 		///     Initializes the type.
@@ -46,9 +46,9 @@ namespace Lwar.Network.Messages
 		///     Serializes the message using the given writer.
 		/// </summary>
 		/// <param name="writer">The writer that should be used to serialize the message.</param>
-		public override void Serialize(BufferWriter writer)
+		public override void Serialize(ref BufferWriter writer)
 		{
-			writer.WriteIdentifier(Player);
+			WriteIdentifier(ref writer, Player);
 			writer.WriteByte((byte)ShipType);
 
 			for (var i = 0; i < NetworkProtocol.WeaponSlotCount; ++i)
@@ -59,9 +59,9 @@ namespace Lwar.Network.Messages
 		///     Deserializes the message using the given reader.
 		/// </summary>
 		/// <param name="reader">The reader that should be used to deserialize the message.</param>
-		public override void Deserialize(BufferReader reader)
+		public override void Deserialize(ref BufferReader reader)
 		{
-			Player = reader.ReadIdentifier();
+			Player = ReadIdentifier(ref reader);
 			ShipType = (EntityType)reader.ReadByte();
 
 			for (var i = 0; i < NetworkProtocol.WeaponSlotCount; ++i)

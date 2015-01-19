@@ -83,7 +83,7 @@
 				builder.AppendFormat("\nApplication Name:     {0}\n", Application.Current.Name);
 				builder.AppendFormat("Operating System:     {0}\n", PlatformInfo.Platform);
 				builder.AppendFormat("CPU Architecture:     {0}\n", IntPtr.Size == 8 ? "x64" : "x86");
-				builder.AppendFormat("Graphics API:         {0}\n", PlatformInfo.GraphicsApi);
+				builder.AppendFormat("Graphics API:         {0}\n", Cvars.GraphicsApi);
 				builder.AppendFormat("User File Directory:  {0}\n", FileSystem.UserDirectory);
 
 				Log.Info("{0}", builder);

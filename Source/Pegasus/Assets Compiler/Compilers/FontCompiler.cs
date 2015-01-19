@@ -1,16 +1,11 @@
 ﻿namespace Pegasus.AssetsCompiler.Compilers
 {
 	using System;
-	using System.Collections.Generic;
-	using System.IO;
 	using System.Linq;
+	using System.Xml.Linq;
 	using Assets;
-	using CSharp;
 	using Fonts;
-	using Pegasus.Assets;
-	using Platform.Logging;
 	using Utilities;
-	using BinaryWriter = AssetsCompiler.BinaryWriter;
 
 	/// <summary>
 	///     Compiles texture-based fonts.
@@ -19,103 +14,83 @@
 	internal sealed class FontCompiler : AssetCompiler<FontAsset>
 	{
 		/// <summary>
-		///     The freetype library instance that is to generate the font textures.
-		/// </summary>
-		private readonly FreeTypeLibrary _freeType = new FreeTypeLibrary();
-
-		/// <summary>
-		///     A value indicating whether the font loader must be regenerated.
-		/// </summary>
-		private bool _regenerateFontLoader;
-
-		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		public FontCompiler()
+			: base(singleThreaded: true)
 		{
-			SupportsMultithreading = false;
 		}
 
 		/// <summary>
-		///     Gets the path of the temporary font map file.
+		///     Creates an asset instance for the given XML element or returns null if the type of the asset is not
+		///     supported by the compiler.
 		/// </summary>
-		/// <param name="asset">The asset the path should be returned for.</param>
-		private static string GetFontMapPath(Asset asset)
+		/// <param name="assetMetadata">The metadata of the asset that should be compiled.</param>
+		protected override FontAsset CreateAsset(XElement assetMetadata)
 		{
-			return asset.RelativePathWithoutExtension + ".Fontmap.png";
-		}
+			if (assetMetadata.Name == "Font")
+				return new FontAsset(assetMetadata);
 
-		/// <summary>
-		///     Compiles all assets of the compiler's asset source type.
-		/// </summary>
-		/// <param name="assets">The assets that should be compiled.</param>
-		public override void Compile(IEnumerable<Asset> assets)
-		{
-			base.Compile(assets);
-
-			if (_regenerateFontLoader)
-				GenerateFontLoader(assets.OfType<FontAsset>().ToArray());
+			return null;
 		}
 
 		/// <summary>
 		///     Compiles the asset.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
-		/// <param name="writer">The writer the compilation output should be appended to.</param>
-		protected override void Compile(FontAsset asset, BinaryWriter writer)
+		/// <param name="buffer">The writer the compilation output should be appended to.</param>
+		protected override void Compile(FontAsset asset, AssetWriter buffer)
 		{
-			var metadata = new FontMetadata(asset.SourceDirectory, asset.SourcePath);
-			WriteAssetHeader(writer, (byte)AssetType.Font);
-			_regenerateFontLoader = true;
+			Assert.That(!asset.Bold, "Bold fonts are currently not supported.");
+			Assert.That(!asset.Italic, "Italic fonts are currently not supported.");
 
-			// Verify that the font file actually exists
-			if (!File.Exists(metadata.FontFile))
-				Log.Die("Unable to locate '{0}'.", metadata.FontFile);
+			var renderMode = asset.Aliased ? RenderMode.Aliased : RenderMode.Antialiased;
 
 			// Initialize the font data structures
-			var fontPtr = _freeType.CreateFont(metadata.FontFile);
-			using (var font = new Font(fontPtr, metadata))
-			using (var fontMap = new FontMap(font, GetFontMapPath(asset)))
+			using (var freeType = new FreeTypeLibrary())
+			using (var font = freeType.CreateFont(asset.AbsoluteSourcePath, asset.Size, asset.Bold, asset.Italic, renderMode,
+				asset.CharacterRange, asset.InvalidChar))
 			{
 				// Write the font map
-				fontMap.Compile(writer);
+				var fontMap = new FontMap(font, asset.SourcePath + asset.RuntimeName + ".Fontmap.png");
+				fontMap.Compile(buffer);
 
 				// Write the font metadata
-				writer.WriteUInt16(font.LineHeight);
+				buffer.WriteString(asset.Family);
+				buffer.WriteInt32(asset.Size);
+				buffer.WriteBoolean(asset.Bold);
+				buffer.WriteBoolean(asset.Italic);
+				buffer.WriteBoolean(asset.Aliased);
+				buffer.WriteUInt16(font.LineHeight);
 
 				// Write the glyph metadata
-				writer.WriteUInt16((ushort)font.Glyphs.Count());
+				buffer.WriteUInt16((ushort)font.Glyphs.Count());
 
-				var isFirst = true;
 				foreach (var glyph in font.Glyphs)
 				{
-					// Glyphs are identified by their character ASCII id, except for the invalid character
-					// that is guaranteed to by the first glyph, which must lie at index 0
-					if (isFirst)
-					{
-						writer.WriteByte(0);
-						isFirst = false;
-					}
+					// Glyphs are identified by their character ASCII id, except for the invalid character, which must lie at index 0
+					if (glyph.Character == asset.InvalidChar)
+						buffer.WriteByte(0);
 					else
-						writer.WriteByte((byte)glyph.Character);
+						buffer.WriteByte((byte)glyph.Character);
 
 					// Write the font map texture coordinates in pixels
 					var area = fontMap.GetGlyphArea(glyph.Character);
-					writer.WriteInt16((short)area.Left);
-					writer.WriteInt16((short)area.Top);
-					writer.WriteUInt16((ushort)area.Width);
-					writer.WriteUInt16((ushort)area.Height);
+					buffer.WriteInt16((short)area.Left);
+					buffer.WriteInt16((short)area.Top);
+					buffer.WriteUInt16((ushort)area.Width);
+					buffer.WriteUInt16((ushort)area.Height);
 
 					// Write the glyph offsets
-					writer.WriteInt16((short)glyph.OffsetX);
-					writer.WriteInt16((short)(font.Baseline - glyph.OffsetY));
-					writer.WriteInt16((short)glyph.AdvanceX);
+					buffer.WriteInt16((short)glyph.OffsetX);
+					buffer.WriteInt16((short)(font.Baseline - glyph.OffsetY));
+					buffer.WriteInt16((short)glyph.AdvanceX);
 				}
 
 				// Write the kerning information, if any
 				if (!font.HasKerning)
 				{
-					writer.WriteUInt16(0);
+					buffer.WriteUInt16(0);
 					return;
 				}
 
@@ -126,159 +101,15 @@
 							 select new { Left = left, Right = right, Offset = offset }).ToArray();
 
 				Assert.That(pairs.Length < UInt16.MaxValue, "Too many kerning pairs.");
-				writer.WriteUInt16((ushort)pairs.Length);
+				buffer.WriteUInt16((ushort)pairs.Length);
 
 				foreach (var pair in pairs)
 				{
-					writer.WriteUInt16(pair.Left.Character);
-					writer.WriteUInt16(pair.Right.Character);
-					writer.WriteInt16((short)pair.Offset);
+					buffer.WriteUInt16(pair.Left.Character);
+					buffer.WriteUInt16(pair.Right.Character);
+					buffer.WriteInt16((short)pair.Offset);
 				}
 			}
-		}
-
-		/// <summary>
-		///     Removes the compiled asset and all temporary files written by the compiler.
-		/// </summary>
-		/// <param name="asset">The asset that should be cleaned.</param>
-		protected override void Clean(FontAsset asset)
-		{
-			File.Delete(Path.Combine(Configuration.TempDirectory, GetFontMapPath(asset)));
-		}
-
-		/// <summary>
-		///     Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		public override void Dispose()
-		{
-			_freeType.Dispose();
-		}
-
-		/// <summary>
-		///     Generates the font loader class.
-		/// </summary>
-		/// <param name="assets">The font assets that have been compiled.</param>
-		private void GenerateFontLoader(FontAsset[] assets)
-		{
-			var writer = new CodeWriter();
-			writer.WriterHeader();
-
-			writer.AppendLine("namespace {0}", Configuration.AssetsProject.RootNamespace);
-			writer.AppendBlockStatement(() =>
-			{
-				writer.AppendLine("using System;");
-				writer.AppendLine("using Pegasus.Utilities;");
-				writer.AppendLine("using Pegasus.UserInterface;");
-				writer.AppendLine("using Pegasus.Assets;");
-				writer.AppendLine("using Pegasus.Platform.Logging;");
-				writer.AppendLine("using Pegasus.Platform.Graphics;");
-				writer.NewLine();
-
-				writer.AppendLine("/// <summary>");
-				writer.AppendLine("///     Provides a method to search for a font based on certain font settings.");
-				writer.AppendLine("/// </summary>");
-				writer.AppendLine("internal class FontLoader : IFontLoader");
-				writer.AppendBlockStatement(() =>
-				{
-					writer.AppendLine("/// <summary>");
-					writer.AppendLine("///     The assets manager that is used to load the fonts.");
-					writer.AppendLine("/// </summary>");
-					writer.AppendLine("private AssetsManager _assets;");
-
-					writer.NewLine();
-					writer.AppendLine("/// <summary>");
-					writer.AppendLine("///     Initializes a new instance.");
-					writer.AppendLine("/// </summary>");
-					writer.AppendLine("/// <param name=\"assets\">The assets manager that should be used to load the fonts.</param>");
-					writer.AppendLine("public FontLoader(AssetsManager assets)");
-					writer.AppendBlockStatement(() =>
-					{
-						writer.AppendLine("Assert.ArgumentNotNull(assets);");
-						writer.AppendLine("_assets = assets;");
-					});
-
-					writer.NewLine();
-					writer.AppendLine("/// <summary>");
-					writer.AppendLine("///     Sets the next font loader that is used to load the font if the current loader fails to");
-					writer.AppendLine("///     load an appropriate font.");
-					writer.AppendLine("/// </summary>");
-					writer.AppendLine("public IFontLoader Next {{ private get; set; }}");
-
-					writer.NewLine();
-					writer.AppendLine("/// <summary>");
-					writer.AppendLine("///     Gets the font matching the given font settings.");
-					writer.AppendLine("/// </summary>");
-					writer.AppendLine("/// <param name=\"fontFamily\">The family of the font that should be returned.</param>");
-					writer.AppendLine("/// <param name=\"size\">The size of the font that should be returned.</param>");
-					writer.AppendLine("/// <param name=\"bold\">Indicates whether the font should be bold.</param>");
-					writer.AppendLine("/// <param name=\"italic\">Indicates whether the font should be italic.</param>");
-					writer.AppendLine("/// <param name=\"aliased\">Indicates whether the font should be aliased.</param>");
-					writer.AppendLine("public Font LoadFont(string fontFamily, int size, bool bold, bool italic, bool aliased)");
-
-					writer.AppendBlockStatement(() =>
-					{
-						var fonts = assets.Select(font => new FontMetadata(font.SourceDirectory, font.SourcePath));
-
-						writer.AppendLine("Assert.ArgumentNotNullOrWhitespace(fontFamily);");
-						writer.NewLine();
-
-						writer.AppendLine("AssetIdentifier<Font>? font = null;");
-						writer.AppendLine("switch (fontFamily)");
-						writer.AppendBlockStatement(() =>
-						{
-							foreach (var family in fonts.GroupBy(font => font.Family))
-							{
-								writer.AppendLine("case \"{0}\":", family.Key);
-								writer.IncreaseIndent();
-								writer.AppendLine("switch (size)");
-								writer.AppendBlockStatement(() =>
-								{
-									foreach (var size in family.GroupBy(font => font.Size))
-									{
-										writer.AppendLine("case {0}:", size.Key);
-										writer.IncreaseIndent();
-										foreach (var font in size)
-										{
-											var asset = assets.Single(a => a.SourcePath == font.SourceFile);
-
-											writer.AppendLine("if (bold == {0} && italic == {1} && aliased == {2})",
-												(font.Bold).ToString().ToLower(),
-												(font.Italic).ToString().ToLower(),
-												(font.Aliased).ToString().ToLower());
-											writer.IncreaseIndent();
-											writer.AppendLine("font = {0}.{1}.{2};",
-												Configuration.AssetsProject.RootNamespace,
-												Path.GetDirectoryName(asset.RelativePath).Replace("/", "."),
-												asset.FileNameWithoutExtension.Replace(" ", ""));
-											writer.DecreaseIndent();
-										}
-										writer.AppendLine("break;");
-										writer.DecreaseIndent();
-									}
-								});
-								writer.AppendLine("break;");
-								writer.DecreaseIndent();
-							}
-						});
-
-						writer.NewLine();
-						writer.AppendLine("if (font == null && Next != null)");
-						writer.IncreaseIndent();
-						writer.AppendLine("return Next.LoadFont(fontFamily, size, bold, italic, aliased);");
-						writer.DecreaseIndent();
-						writer.AppendLine("else if (font == null)");
-						writer.IncreaseIndent();
-						writer.AppendLine("Log.Die(\"Unable to find a font with family = '{{0}}', size = {{1}}, bold = {{2}}, " +
-										  "italic = {{3}}, aliased = {{4}}.\", fontFamily, size, bold, italic, aliased);");
-						writer.DecreaseIndent();
-
-						writer.NewLine();
-						writer.AppendLine("return _assets.Load(font.Value);");
-					});
-				});
-			});
-
-			File.WriteAllText(Configuration.CSharpFontLoaderFile, writer.ToString());
 		}
 	}
 }

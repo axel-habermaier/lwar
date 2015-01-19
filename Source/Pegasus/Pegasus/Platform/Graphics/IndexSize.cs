@@ -10,11 +10,11 @@
 		/// <summary>
 		///     Indicates that the indices are 16 bit values.
 		/// </summary>
-		SixteenBits = 1601,
+		SixteenBits,
 
 		/// <summary>
 		///     Indicates that the indices are 32 bit values.
 		/// </summary>
-		ThirtyTwoBits = 1602
+		ThirtyTwoBits
 	}
 }

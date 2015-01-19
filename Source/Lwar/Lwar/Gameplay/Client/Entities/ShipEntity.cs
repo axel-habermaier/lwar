@@ -9,7 +9,7 @@
 	/// <summary>
 	///     Represents a ship that is controlled by a local or remote player.
 	/// </summary>
-	public class ShipEntity : Entity<ShipEntity>
+	internal class ShipEntity : Entity<ShipEntity>
 	{
 		/// <summary>
 		///     Gets or sets the player the ship belongs to.

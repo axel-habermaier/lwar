@@ -9,7 +9,7 @@
 	/// <summary>
 	///     Manages the active actors of a game session.
 	/// </summary>
-	public sealed class ActorList : DisposableObject
+	internal sealed class ActorList : DisposableObject
 	{
 		/// <summary>
 		///     The list of active actors.
@@ -24,20 +24,20 @@
 		/// <summary>
 		///     The render context that is used to draw the actors.
 		/// </summary>
-		private readonly RenderContext _renderContext;
+		private readonly GameSessionRenderer _renderer;
 
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="gameSession">The game session the actor list belongs to.</param>
-		/// <param name="renderContext">The render context that should be used to draw the actors.</param>
-		public ActorList(ClientGameSession gameSession, RenderContext renderContext)
+		/// <param name="renderer">The render context that should be used to draw the actors.</param>
+		public ActorList(ClientGameSession gameSession, GameSessionRenderer renderer)
 		{
 			Assert.ArgumentNotNull(gameSession);
-			Assert.ArgumentNotNull(renderContext);
+			Assert.ArgumentNotNull(renderer);
 
 			_gameSession = gameSession;
-			_renderContext = renderContext;
+			_renderer = renderer;
 		}
 
 		/// <summary>
@@ -49,7 +49,7 @@
 			Assert.ArgumentNotNull(actor);
 
 			_actors.Add(actor);
-			actor.Added(_gameSession, _renderContext);
+			actor.Added(_gameSession, _renderer);
 		}
 
 		/// <summary>

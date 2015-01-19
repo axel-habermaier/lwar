@@ -4,6 +4,7 @@
 	using System.Collections.Generic;
 	using Controls;
 	using Math;
+	using Platform;
 	using Platform.Memory;
 	using Utilities;
 
@@ -28,7 +29,7 @@
 		/// <summary>
 		///     The key states.
 		/// </summary>
-		private readonly InputState[] _keyStates = new InputState[Enum.GetValues(typeof(Key)).Length];
+		private readonly InputState[] _keyStates = new InputState[Keyboard.ScanCodeCount];
 
 		/// <summary>
 		///     The mouse button states.
@@ -291,7 +292,7 @@
 		/// </summary>
 		private void OnKeyDown(object sender, KeyEventArgs e)
 		{
-			_keyStates[(int)e.Key].Pressed();
+			_keyStates[(int)e.ScanCode].Pressed();
 
 			if (KeyPressed != null)
 				KeyPressed(e);
@@ -302,7 +303,7 @@
 		/// </summary>
 		private void OnKeyUp(object sender, KeyEventArgs e)
 		{
-			_keyStates[(int)e.Key].Released();
+			_keyStates[(int)e.ScanCode].Released();
 
 			if (KeyReleased != null)
 				KeyReleased(e);
@@ -351,7 +352,7 @@
 			for (var i = 0; i < _keyStates.Length; ++i)
 			{
 				// We might have missed a key up event for a pressed key, so update the input state accordingly
-				if (_keyStates[i].IsPressed && !Keyboard.IsPressed((Key)i))
+				if (_keyStates[i].IsPressed && !Keyboard.IsPressed((ScanCode)i))
 					_keyStates[i].Released();
 
 				_keyStates[i].Update();
@@ -382,8 +383,7 @@
 		/// <param name="key">The key that should be checked.</param>
 		public bool IsPressed(Key key)
 		{
-			Assert.ArgumentInRange(key);
-			return _keyStates[(int)key].IsPressed;
+			return IsPressed(key.ToScanCode());
 		}
 
 		/// <summary>
@@ -393,8 +393,7 @@
 		/// <param name="key">The key that should be checked.</param>
 		public bool WentDown(Key key)
 		{
-			Assert.ArgumentInRange(key);
-			return _keyStates[(int)key].WentDown;
+			return WentDown(key.ToScanCode());
 		}
 
 		/// <summary>
@@ -404,8 +403,7 @@
 		/// <param name="key">The key that should be checked.</param>
 		public bool WentUp(Key key)
 		{
-			Assert.ArgumentInRange(key);
-			return _keyStates[(int)key].WentUp;
+			return WentUp(key.ToScanCode());
 		}
 
 		/// <summary>
@@ -415,8 +413,50 @@
 		/// <param name="key">The key that should be checked.</param>
 		public bool IsRepeated(Key key)
 		{
-			Assert.ArgumentInRange(key);
-			return _keyStates[(int)key].IsRepeated;
+			return IsRepeated(key.ToScanCode());
+		}
+
+		/// <summary>
+		///     Gets a value indicating whether the key is currently being pressed down.
+		/// </summary>
+		/// <param name="scanCode">The scan code of the key that should be checked.</param>
+		public bool IsPressed(ScanCode scanCode)
+		{
+			Assert.ArgumentInRange(scanCode);
+			return _keyStates[(int)scanCode].IsPressed;
+		}
+
+		/// <summary>
+		///     Gets a value indicating whether the key was pressed during the current frame. WentDown is
+		///     only true during the single frame when IsPressed changed from false to true.
+		/// </summary>
+		/// <param name="scanCode">The scan code of the key that should be checked.</param>
+		public bool WentDown(ScanCode scanCode)
+		{
+			Assert.ArgumentInRange(scanCode);
+			return _keyStates[(int)scanCode].WentDown;
+		}
+
+		/// <summary>
+		///     Gets a value indicating whether the key was released during the current frame. WentUp is
+		///     only true during the single frame when IsPressed changed from true to false.
+		/// </summary>
+		/// <param name="scanCode">The scan code of the key that should be checked.</param>
+		public bool WentUp(ScanCode scanCode)
+		{
+			Assert.ArgumentInRange(scanCode);
+			return _keyStates[(int)scanCode].WentUp;
+		}
+
+		/// <summary>
+		///     Gets a value indicating whether a system key repeat event occurred. IsRepeated is also true
+		///     when the key is pressed, i.e., when WentDown is true.
+		/// </summary>
+		/// <param name="scanCode">The scan code of the key that should be checked.</param>
+		public bool IsRepeated(ScanCode scanCode)
+		{
+			Assert.ArgumentInRange(scanCode);
+			return _keyStates[(int)scanCode].IsRepeated;
 		}
 
 		/// <summary>

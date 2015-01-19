@@ -1,87 +1,36 @@
 ﻿namespace Pegasus.AssetsCompiler
 {
 	using System;
-	using System.Diagnostics;
 	using System.Globalization;
-	using System.Threading.Tasks;
-	using Platform;
-	using Platform.Logging;
+	using CommandLine;
+	using CommandLine.Text;
+	using Commands;
 	using Utilities;
 
-	/// <summary>
-	///     Executes the asset compiler.
-	/// </summary>
-	public static class Program
+	internal static class Program
 	{
 		/// <summary>
-		///     Compiles, recompiles, or cleans the assets.
+		///     Runs the application.
 		/// </summary>
-		/// <param name="args">The command line arguments passed by the user.</param>
-		[STAThread]
-		public static int Main(string[] args)
+		/// <param name="args">The arguments the asset compiler has been invoked with.</param>
+		private static int Main(string[] args)
 		{
-			TaskScheduler.UnobservedTaskException += (o, e) => { throw e.Exception.InnerException; };
 			CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
 			CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
 
-			var watch = new Stopwatch();
-			watch.Start();
+			//var index = 0;
+			//foreach (var arg in args)
+			//	Log.Info("{0}: {1}", index++, arg);
+
+			ICommand command = null;
+			var options = new Options();
+
+			if (!Parser.Default.ParseArguments(args, options, (verb, parsedCommand) => command = (ICommand)parsedCommand))
+				return -1;
 
 			try
 			{
-				PrintToConsole();
-				Log.Info("Pegasus Asset Compiler ({0} x{1})", PlatformInfo.Platform, IntPtr.Size == 4 ? "86" : "64");
-
-				Console.WriteLine();
-				var command = args.Length >= 1 ? args[0].Trim().ToLower() : String.Empty;
-				var recompile = command == "recompile";
-				var compile = command == "compile";
-				var clean = command == "clean";
-				var ui = args.Length >= 3 && args[2].Trim().ToLower() == "/ui";
-				var project = args.Length >= 2 ? args[1].Trim() : String.Empty;
-
-				if (String.IsNullOrWhiteSpace(project) || (!recompile && !clean && !compile))
-				{
-					Log.Error("The asset compiler must be invoked with the following arguments: the 'clean', 'compile', or " +
-							  "'recompile' command followed by the path to the assets project that should be compiled, " +
-							  "followed optionally by /ui to compile Xaml files only.");
-					return -1;
-				}
-
-				Configuration.XamlFilesOnly = ui;
-				Configuration.AssetsProjectPath = project;
-
-				if (recompile)
-				{
-					compile = true;
-					clean = true;
-				}
-
-				if (!Configuration.XamlFilesOnly)
-					Configuration.CheckFxcAvailability();
-
-				using (var compilationUnit = new CompilationUnit())
-				{
-					compilationUnit.LoadAssets();
-
-					if (clean || !Configuration.CheckAssetFileVersion())
-						compilationUnit.Clean();
-
-					if (compile)
-						compilationUnit.Compile();
-
-					var elapsedSeconds = watch.ElapsedMilliseconds / 1000.0;
-
-					if (clean && !(recompile || compile))
-						Log.Info("Done.");
-					else
-					{
-						Configuration.StoreAssetFileVersion();
-						Console.WriteLine();
-						Log.Info("Asset compilation completed ({0:F2}s).", elapsedSeconds);
-					}
-				}
-
+				command.Execute();
 				return 0;
 			}
 			catch (AggregateException e)
@@ -91,10 +40,12 @@
 			}
 			catch (PegasusException)
 			{
+				Log.Error("Aborted after fatal compilation error.");
 				return -1;
 			}
 			catch (Exception e)
 			{
+				Log.Error("A fatal compilation error occurred: {0}", e.Message);
 				Log.Error("{0}", e.Message);
 				Log.Error("{0}", e.StackTrace);
 
@@ -133,48 +84,68 @@
 		}
 
 		/// <summary>
-		///     Wires up the events to write all logged messages to the console.
+		///     Provides access to the command line arguments.
 		/// </summary>
-		private static void PrintToConsole()
+		[UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
+		private class Options
 		{
-			Log.OnFatalError += entry => WriteToError(ConsoleColor.Red, entry.Message);
-			Log.OnError += entry => WriteToError(ConsoleColor.Red, entry.Message);
-			Log.OnWarning += entry => WriteToConsole(ConsoleColor.Yellow, entry.Message);
-			Log.OnInfo += entry => WriteToConsole(ConsoleColor.White, entry.Message);
-		}
+			/// <summary>
+			///     Initializes a new instance.
+			/// </summary>
+			public Options()
+			{
+				CompileBundle = new AssetBundleCommand { Actions = CompilationActions.Compile };
+				RecompileBundle = new AssetBundleCommand { Actions = CompilationActions.Compile | CompilationActions.Clean };
+				CleanBundle = new AssetBundleCommand { Actions = CompilationActions.Clean };
+				CompileXaml = new XamlCommand { Actions = CompilationActions.Compile };
+				RecompileXaml = new XamlCommand { Actions = CompilationActions.Compile | CompilationActions.Clean };
+				CleanXaml = new XamlCommand { Actions = CompilationActions.Clean };
+			}
 
-		/// <summary>
-		///     Writes a colored message to the console.
-		/// </summary>
-		/// <param name="color">The color of the message.</param>
-		/// <param name="message">The message that should be written to the console.</param>
-		private static void WriteToConsole(ConsoleColor color, string message)
-		{
-			WriteColored(color, () => Console.WriteLine(message));
-			Debug.WriteLine(message);
-		}
+			/// <summary>
+			///     Gets the asset bundle compilation command.
+			/// </summary>
+			[VerbOption("compile-assets", HelpText = "Compiles an asset bundle.")]
+			public AssetBundleCommand CompileBundle { get; set; }
 
-		/// <summary>
-		///     Writes a colored message to the error output.
-		/// </summary>
-		/// <param name="color">The color of the message.</param>
-		/// <param name="message">The message that should be written to the console.</param>
-		private static void WriteToError(ConsoleColor color, string message)
-		{
-			WriteColored(color, () => Console.Error.WriteLine(message));
-			Debug.WriteLine(message);
-		}
+			/// <summary>
+			///     Gets the asset bundle re-compilation command.
+			/// </summary>
+			[VerbOption("recompile-assets", HelpText = "Cleans and compiles an asset bundle.")]
+			public AssetBundleCommand RecompileBundle { get; set; }
 
-		/// <summary>
-		///     Writes a colored message to the console, ensuring that the color is reset.
-		/// </summary>
-		/// <param name="color">The color of the message.</param>
-		/// <param name="action">Writes the message to the console.</param>
-		private static void WriteColored(ConsoleColor color, Action action)
-		{
-			Console.ForegroundColor = color;
-			action();
-			Console.ResetColor();
+			/// <summary>
+			///     Gets the asset bundle clean command.
+			/// </summary>
+			[VerbOption("clean-assets", HelpText = "Cleans an asset bundle.")]
+			public AssetBundleCommand CleanBundle { get; set; }
+
+			/// <summary>
+			///     Gets the asset bundle compilation command.
+			/// </summary>
+			[VerbOption("compile-xaml", HelpText = "Compiles a Xaml bundle.")]
+			public XamlCommand CompileXaml { get; set; }
+
+			/// <summary>
+			///     Gets the asset bundle re-compilation command.
+			/// </summary>
+			[VerbOption("recompile-xaml", HelpText = "Cleans and compiles a Xaml bundle.")]
+			public XamlCommand RecompileXaml { get; set; }
+
+			/// <summary>
+			///     Gets the asset bundle clean command.
+			/// </summary>
+			[VerbOption("clean-xaml", HelpText = "Cleans a Xaml bundle.")]
+			public XamlCommand CleanXaml { get; set; }
+
+			/// <summary>
+			///     Creates a help message about the usage of the assets compiler.
+			/// </summary>
+			[HelpVerbOption]
+			public string GetUsage(string verb)
+			{
+				return HelpText.AutoBuild(this, verb);
+			}
 		}
 	}
 }

@@ -3,7 +3,6 @@
 	using System;
 	using System.Drawing;
 	using System.Drawing.Imaging;
-	using Platform.Logging;
 	using Utilities;
 
 	/// <summary>
@@ -25,7 +24,7 @@
 			Index = index;
 			Character = character;
 			Size = new Size(glyphInfo.bitmap.width, glyphInfo.bitmap.rows);
-			AdvanceX = (int)glyphInfo.advance_x / 64; // Note: Cast required in Linux 64 bit builds
+			AdvanceX = (int)(glyphInfo.advance_x / 64);
 			OffsetX = glyphInfo.bitmap_left;
 			OffsetY = glyphInfo.bitmap_top;
 

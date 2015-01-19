@@ -4,44 +4,36 @@
 	using System.Drawing;
 	using System.Drawing.Imaging;
 	using System.Runtime.InteropServices;
-	using Platform.Graphics;
+	using System.Xml.Linq;
+	using Textures;
 	using Utilities;
 
 	/// <summary>
 	///     Represents a texture asset that requires compilation.
 	/// </summary>
-	public abstract class TextureAsset : Asset
+	internal abstract class TextureAsset : Asset
 	{
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="relativePath">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
-		protected TextureAsset(string relativePath)
-			: base(relativePath)
+		/// <param name="metadata">The metadata of the asset.</param>
+		/// <param name="basePath">Overrides the default base path of the asset.</param>
+		protected TextureAsset(XElement metadata, string basePath = null)
+			: base(metadata, "File", basePath)
 		{
-			Mipmaps = true;
-			Uncompressed = false;
+			Mipmaps = GetBoolMetadata("GenerateMipmaps");
+			Compressed = GetBoolMetadata("Compress");
 		}
 
 		/// <summary>
-		///     Initializes a new instance.
+		///     Gets a value indicating whether mipmaps should be generated for the texture.
 		/// </summary>
-		/// <param name="relativePath">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
-		/// <param name="sourceDirectory">The source directory of the asset.</param>
-		protected TextureAsset(string relativePath, string sourceDirectory)
-			: base(relativePath, sourceDirectory)
-		{
-		}
+		public bool Mipmaps { get; private set; }
 
 		/// <summary>
-		///     Gets or sets a value indicating whether mipmaps should be generated for the texture. Default is true.
+		///     Gets a value indicating whether the texture should use texture compression.
 		/// </summary>
-		public bool Mipmaps { get; set; }
-
-		/// <summary>
-		///     Gets or sets a value indicating whether the texture should not use texture compression. Default is false.
-		/// </summary>
-		public bool Uncompressed { get; set; }
+		public bool Compressed { get; private set; }
 
 		/// <summary>
 		///     Gets the texture description.
@@ -81,20 +73,33 @@
 		}
 
 		/// <summary>
+		///     Checks whether the texture dimensions are a power of two.
+		/// </summary>
+		public bool IsPowerOfTwo
+		{
+			get
+			{
+				return ((Description.Width & (Description.Width - 1)) == 0) &&
+					   ((Description.Height & (Description.Height - 1)) == 0) &&
+					   ((Description.Depth & (Description.Depth - 1)) == 0);
+			}
+		}
+
+		/// <summary>
 		///     Serializes the uncompressed texture into the given buffer.
 		/// </summary>
 		/// <param name="writer">The writer the DDS image should be serialized into.</param>
-		internal void Write(BinaryWriter writer)
+		internal void Write(AssetWriter writer)
 		{
 			Assert.That(!Mipmaps, "Mipmap generation is not supported for uncompressed cube maps.");
-			Assert.That(Uncompressed, "Texture compression is not supported.");
+			Assert.That(!Compressed, "Texture compression is not supported.");
 
 			writer.WriteUInt32(Description.Width);
 			writer.WriteUInt32(Description.Height);
 			writer.WriteUInt32(Description.Depth);
 			writer.WriteUInt32(Description.ArraySize);
-			writer.WriteInt32((int)Description.Type);
-			writer.WriteInt32((int)Description.Format);
+			writer.WriteUInt32((uint)Description.Type);
+			writer.WriteUInt32((uint)Description.Format);
 			writer.WriteUInt32(Description.Mipmaps);
 			writer.WriteUInt32(Description.SurfaceCount);
 
@@ -109,15 +114,6 @@
 				for (var i = 0; i < surface.Size * surface.Depth; ++i)
 					writer.WriteByte(surface.Data[i]);
 			}
-		}
-
-		/// <summary>
-		///     Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		public override void Dispose()
-		{
-			if (Bitmap != null)
-				Bitmap.Dispose();
 		}
 
 		/// <summary>
@@ -145,7 +141,7 @@
 		///     Loads and converts the image data.
 		/// </summary>
 		/// <param name="bitmap">The bitmap from which the data should be loaded.</param>
-		protected unsafe byte[] GetBitmapData(Bitmap bitmap)
+		protected static unsafe byte[] GetBitmapData(Bitmap bitmap)
 		{
 			uint componentCount;
 			ToSurfaceFormat(bitmap.PixelFormat, out componentCount);
@@ -207,50 +203,43 @@
 		}
 
 		/// <summary>
-		///     Checks whether the texture dimensions are a power of two.
+		///     Converts the bitmap into a premultiplied alpha format.
 		/// </summary>
-		public bool IsPowerOfTwo()
+		/// <param name="bitmap">The bitmap that should be converted.</param>
+		protected static unsafe void ToPremultipliedAlpha(Bitmap bitmap)
 		{
-			return ((Description.Width & (Description.Width - 1)) == 0) &&
-				   ((Description.Height & (Description.Height - 1)) == 0) &&
-				   ((Description.Depth & (Description.Depth - 1)) == 0);
-		}
+			Assert.NotNull(bitmap);
 
-		/// <summary>
-		///     Represents the surface of a texture, i.e., a single mipmap and/or face of a texture.
-		/// </summary>
-		[StructLayout(LayoutKind.Sequential)]
-		public struct Surface
-		{
-			/// <summary>
-			///     The width of the surface.
-			/// </summary>
-			public uint Width;
+			if (bitmap.PixelFormat != PixelFormat.Format32bppArgb)
+				return;
+			
+			var width = bitmap.Width;
+			var height = bitmap.Height;
+			var data = GetBitmapData(bitmap);
 
-			/// <summary>
-			///     The height of the surface.
-			/// </summary>
-			public uint Height;
+			BitmapData imageData = null;
+			try
+			{
+				var rectangle = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
+				imageData = bitmap.LockBits(rectangle, ImageLockMode.ReadOnly, bitmap.PixelFormat);
+				var sourceData = (byte*)imageData.Scan0;
 
-			/// <summary>
-			///     The depth of the surface.
-			/// </summary>
-			public uint Depth;
-
-			/// <summary>
-			///     The size of the surface data in bytes.
-			/// </summary>
-			public uint Size;
-
-			/// <summary>
-			///     The stride between two rows of the surface in bytes.
-			/// </summary>
-			public uint Stride;
-
-			/// <summary>
-			///     The surface data.
-			/// </summary>
-			public byte[] Data;
+				for (var x = 0; x < width; ++x)
+				{
+					for (var y = 0; y < height; ++y)
+					{
+						sourceData[x * 4 + y * 4 * width + 3] = data[x * 4 + y * 4 * width + 3];
+						sourceData[x * 4 + y * 4 * width + 0] = data[x * 4 + y * 4 * width + 0];
+						sourceData[x * 4 + y * 4 * width + 1] = data[x * 4 + y * 4 * width + 1];
+						sourceData[x * 4 + y * 4 * width + 2] = data[x * 4 + y * 4 * width + 2];
+					}
+				}
+			}
+			finally
+			{
+				if (imageData != null)
+					bitmap.UnlockBits(imageData);
+			}
 		}
 	}
 }

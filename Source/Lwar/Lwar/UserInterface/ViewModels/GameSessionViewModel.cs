@@ -10,6 +10,7 @@
 	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Platform.Network;
+	using Pegasus.Rendering;
 	using Pegasus.UserInterface.Controls;
 	using Pegasus.UserInterface.ViewModels;
 	using Pegasus.Utilities;
@@ -20,7 +21,7 @@
 	/// <summary>
 	///     Displays a game session.
 	/// </summary>
-	public class GameSessionViewModel : StackedViewModel
+	internal class GameSessionViewModel : StackedViewModel
 	{
 		/// <summary>
 		///     The game session that is played.
@@ -167,7 +168,7 @@
 		/// <param name="renderOutput">The render output the current scene should be drawn to.</param>
 		public void OnDraw(RenderOutput renderOutput)
 		{
-			_gameSession.RenderContext.Draw(renderOutput);
+			_gameSession.Renderer.Draw(renderOutput);
 		}
 
 		/// <summary>

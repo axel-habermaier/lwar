@@ -30,7 +30,7 @@
 		public LogEntry(LogType logType, string message)
 			: this()
 		{
-			Assert.InRange(logType);
+			Assert.ArgumentInRange(logType);
 			Assert.ArgumentNotNullOrWhitespace(message);
 
 			LogType = logType;
@@ -42,6 +42,31 @@
 		///     Gets the type of the log entry.
 		/// </summary>
 		public LogType LogType { get; private set; }
+
+		/// <summary>
+		///     Gets a string representation of the type of the log entry. Each string is guaranteed to have the same length.
+		/// </summary>
+		public string LogTypeString
+		{
+			get
+			{
+				switch (LogType)
+				{
+					case LogType.Fatal:
+						return "Fatal  ";
+					case LogType.Error:
+						return "Error  ";
+					case LogType.Warning:
+						return "Warning";
+					case LogType.Info:
+						return "Info   ";
+					case LogType.Debug:
+						return "Debug  ";
+					default:
+						throw new InvalidOperationException("Unknown log type.");
+				}
+			}
+		}
 
 		/// <summary>
 		///     Gets the message of the log entry.

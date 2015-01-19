@@ -8,7 +8,7 @@ namespace Lwar.Network.Messages
 	///     Notifies a client about the removal of an entity.
 	/// </summary>
 	[ReliableTransmission(MessageType.EntityRemove)]
-	public sealed class EntityRemoveMessage : Message
+	internal sealed class EntityRemoveMessage : Message
 	{
 		/// <summary>
 		///     Initializes the type.
@@ -34,18 +34,18 @@ namespace Lwar.Network.Messages
 		///     Serializes the message using the given writer.
 		/// </summary>
 		/// <param name="writer">The writer that should be used to serialize the message.</param>
-		public override void Serialize(BufferWriter writer)
+		public override void Serialize(ref BufferWriter writer)
 		{
-			writer.WriteIdentifier(Entity);
+			WriteIdentifier(ref writer, Entity);
 		}
 
 		/// <summary>
 		///     Deserializes the message using the given reader.
 		/// </summary>
 		/// <param name="reader">The reader that should be used to deserialize the message.</param>
-		public override void Deserialize(BufferReader reader)
+		public override void Deserialize(ref BufferReader reader)
 		{
-			Entity = reader.ReadIdentifier();
+			Entity = ReadIdentifier(ref reader);
 		}
 
 		/// <summary>

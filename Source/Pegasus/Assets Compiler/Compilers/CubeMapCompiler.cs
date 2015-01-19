@@ -4,12 +4,10 @@
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;
+	using System.Xml.Linq;
 	using Assets;
-	using Pegasus.Assets;
-	using Platform;
-	using Platform.Logging;
+	using Textures;
 	using Utilities;
-	using BinaryWriter = AssetsCompiler.BinaryWriter;
 
 	/// <summary>
 	///     Compiles cubemap textures.
@@ -18,32 +16,31 @@
 	internal sealed class CubeMapCompiler : AssetCompiler<CubeMapAsset>
 	{
 		/// <summary>
+		///     Creates an asset instance for the given XML element or returns null if the type of the asset is not
+		///     supported by the compiler.
+		/// </summary>
+		/// <param name="assetMetadata">The metadata of the asset that should be compiled.</param>
+		protected override CubeMapAsset CreateAsset(XElement assetMetadata)
+		{
+			if (assetMetadata.Name == "CubeMap")
+				return new CubeMapAsset(assetMetadata);
+
+			return null;
+		}
+
+		/// <summary>
 		///     Compiles the asset.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="writer">The writer the compilation output should be appended to.</param>
-		protected override void Compile(CubeMapAsset asset, BinaryWriter writer)
+		protected override void Compile(CubeMapAsset asset, AssetWriter writer)
 		{
 			asset.Load();
-			WriteAssetHeader(writer, (byte)AssetType.CubeMap);
 
-			if (asset.Uncompressed)
+			if (!asset.Compressed)
 				asset.Write(writer);
 			else
 				CompileCompressed(asset, writer);
-		}
-
-		/// <summary>
-		///     Removes the compiled asset and all temporary files written by the compiler.
-		/// </summary>
-		/// <param name="asset">The asset that should be cleaned.</param>
-		protected override void Clean(CubeMapAsset asset)
-		{
-			File.Delete(GetAssembledFilePath(asset));
-			File.Delete(GetCompressedFilePath(asset));
-
-			foreach (var path in GetFacePaths(asset))
-				File.Delete(path);
 		}
 
 		/// <summary>
@@ -51,9 +48,9 @@
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="writer">The writer the compilation output should be appended to.</param>
-		private static void CompileCompressed(CubeMapAsset asset, BinaryWriter writer)
+		private static void CompileCompressed(CubeMapAsset asset, AssetWriter writer)
 		{
-			if (!asset.IsPowerOfTwo())
+			if (!asset.IsPowerOfTwo)
 				Log.Die("All texture dimensions must be power-of-two.");
 
 			var paths = GetFacePaths(asset).ToArray();
@@ -62,10 +59,10 @@
 			for (var i = 0; i < 6; ++i)
 				faces[i].Save(paths[i]);
 
-			var assembledFile = GetAssembledFilePath(asset);
+			var assembledFile = asset.TempPath + ".dds";
 			ExternalTool.NvAssemble(paths, assembledFile);
 
-			var outFile = GetCompressedFilePath(asset);
+			var outFile = asset.TempPath + "-compressed.dds";
 			ExternalTool.NvCompress(assembledFile, outFile, asset.CompressedFormat, asset.Mipmaps);
 
 			var ddsImage = new DirectDrawSurface(File.ReadAllBytes(outFile));
@@ -79,25 +76,7 @@
 		private static IEnumerable<string> GetFacePaths(Asset asset)
 		{
 			return new[] { "-Z.png", "-X.png", "+Z.png", "+X.png", "-Y.png", "+Y.png" }
-				.Select(path => asset.TempPathWithoutExtension + path);
-		}
-
-		/// <summary>
-		///     Gets the path of the temporary assembled cubemap file.
-		/// </summary>
-		/// <param name="asset">The asset the path should be returned for.</param>
-		private static string GetAssembledFilePath(Asset asset)
-		{
-			return asset.TempPathWithoutExtension + ".dds";
-		}
-
-		/// <summary>
-		///     Gets the path of the temporary compressed cubemap file.
-		/// </summary>
-		/// <param name="asset">The asset the path should be returned for.</param>
-		private static string GetCompressedFilePath(Asset asset)
-		{
-			return asset.TempPathWithoutExtension + "-compressed" + PlatformInfo.AssetExtension;
+				.Select(path => asset.TempPath + path);
 		}
 	}
 }

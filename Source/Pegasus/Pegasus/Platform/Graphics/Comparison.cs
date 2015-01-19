@@ -10,41 +10,41 @@
 		/// <summary>
 		///     Indicates that the comparison never succeeds.
 		/// </summary>
-		Never = 1201,
-
-		/// <summary>
-		///     Indicates that the comparison always succeeds.
-		/// </summary>
-		Always = 1202,
+		Never,
 
 		/// <summary>
 		///     Indicates that the comparison function is the less operation.
 		/// </summary>
-		Less = 1203,
-
-		/// <summary>
-		///     Indicates that the comparison function is the less or equal operation.
-		/// </summary>
-		LessEqual = 1204,
-
-		/// <summary>
-		///     Indicates that the comparison function is the greater operation.
-		/// </summary>
-		Greater = 1205,
-
-		/// <summary>
-		///     Indicates that the comparison function is the greater or equal operation.
-		/// </summary>
-		GreaterEqual = 1206,
+		Less,
 
 		/// <summary>
 		///     Indicates that the comparison function is the equality operation.
 		/// </summary>
-		Equal = 1207,
+		Equal,
+
+		/// <summary>
+		///     Indicates that the comparison function is the less or equal operation.
+		/// </summary>
+		LessEqual,
+
+		/// <summary>
+		///     Indicates that the comparison function is the greater operation.
+		/// </summary>
+		Greater,
 
 		/// <summary>
 		///     Indicates that the comparison function is the inequality operation.
 		/// </summary>
-		NotEqual = 1208
+		NotEqual,
+
+		/// <summary>
+		///     Indicates that the comparison function is the greater or equal operation.
+		/// </summary>
+		GreaterEqual,
+
+		/// <summary>
+		///     Indicates that the comparison always succeeds.
+		/// </summary>
+		Always
 	}
 }

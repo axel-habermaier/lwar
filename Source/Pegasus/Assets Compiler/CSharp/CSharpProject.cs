@@ -9,7 +9,6 @@
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
 	using ICSharpCode.NRefactory.TypeSystem;
-	using Platform.Logging;
 	using Utilities;
 
 	/// <summary>
@@ -85,13 +84,13 @@
 			var parsedFiles = CSharpFiles.Select(file =>
 			{
 				var syntaxTree = parser.Parse(File.ReadAllText(file.SourcePath), file.SourcePath);
-				syntaxTree.FileName = file.RelativePath;
-				PrintParserErrors(file.RelativePath, parser.Errors.ToArray());
+				syntaxTree.FileName = file.SourcePath;
+				PrintParserErrors(file.SourcePath, parser.Errors.ToArray());
 
 				var unresolvedFile = syntaxTree.ToTypeSystem();
 				_project = _project.AddOrUpdateFiles(unresolvedFile);
 
-				return new { FileName = file.RelativePath, SyntaxTree = syntaxTree, UnresolvedFile = unresolvedFile };
+				return new { FileName = file.SourcePath, SyntaxTree = syntaxTree, UnresolvedFile = unresolvedFile };
 			}).ToArray();
 
 			var compilation = _project.CreateCompilation();

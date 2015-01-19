@@ -6,7 +6,7 @@
 	/// <summary>
 	///     Represents an actor.
 	/// </summary>
-	public interface IActor : IDisposable
+	internal interface IActor : IDisposable
 	{
 		/// <summary>
 		///     Gets or sets the parent actor.
@@ -27,8 +27,8 @@
 		///     Adds the actor to the game session and the render context.
 		/// </summary>
 		/// <param name="gameSession">The game session the actor should be added to.</param>
-		/// <param name="renderContext">The render context the actor should be added to.</param>
-		void Added(ClientGameSession gameSession, RenderContext renderContext);
+		/// <param name="renderer">The render context the actor should be added to.</param>
+		void Added(ClientGameSession gameSession, GameSessionRenderer renderer);
 
 		/// <summary>
 		///     Removes the actor from the game session and the render context.

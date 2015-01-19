@@ -9,7 +9,7 @@ namespace Lwar.Gameplay.Server.Behaviors
 	/// <summary>
 	///     Fires a bullet when the weapon is triggered.
 	/// </summary>
-	public class GunBehavior : WeaponBehavior
+	internal class GunBehavior : WeaponBehavior
 	{
 		/// <summary>
 		///     Initializes the type.

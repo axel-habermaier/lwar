@@ -4,7 +4,6 @@
 	using Assets;
 	using Assets.Effects;
 	using Gameplay.Client.Entities;
-	using Pegasus.Assets;
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
@@ -13,7 +12,7 @@
 	/// <summary>
 	///     Renders shockwaves into a 3D scene.
 	/// </summary>
-	public class ShockwaveRenderer : Renderer<ShockwaveEntity>
+	internal class ShockwaveRenderer : Renderer<ShockwaveEntity>
 	{
 		/// <summary>
 		///     The effect that is used to draw the shockwaves.
@@ -28,24 +27,17 @@
 		private CubeMap _texture;
 
 		/// <summary>
-		///     Loads the required assets of the renderer.
-		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
-		public override void Load(GraphicsDevice graphicsDevice, AssetsManager assets)
-		{
-			_texture = assets.Load(Textures.SunHeatCubemap);
-			_effect = new SphereEffect(graphicsDevice, assets);
-		}
-
-		/// <summary>
 		///     Initializes the renderer.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		public override void Initialize(GraphicsDevice graphicsDevice)
+		/// <param name="renderContext">The render context that should be used for drawing.</param>
+		/// <param name="assets">The asset bundle that provides access to Lwar assets.</param>
+		public override void Initialize(RenderContext renderContext, GameBundle assets)
 		{
-			_model = Model.CreateSphere(graphicsDevice, 1, 10);
-			_effect.SphereTexture = new CubeMapView(_texture, SamplerState.BilinearClampNoMipmaps);
+			_texture = assets.SunHeat;
+			_effect = assets.SphereEffect;
+
+			_model = Model.CreateSphere(renderContext.GraphicsDevice, 1, 10);
+			_effect.SphereTexture = new CubeMapView(_texture, renderContext.SamplerStates.BilinearClampNoMipmaps);
 		}
 
 		/// <summary>
@@ -66,7 +58,6 @@
 		/// </summary>
 		protected override void OnDisposingCore()
 		{
-			_effect.SafeDispose();
 			_model.SafeDispose();
 		}
 	}

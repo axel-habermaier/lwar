@@ -3,16 +3,18 @@
 	using System;
 	using System.Drawing;
 	using System.Drawing.Imaging;
+	using System.IO;
 	using System.Linq;
+	using System.Xml.Linq;
 	using Assets;
+	using Commands;
 	using Compilers;
-	using Platform.Logging;
 	using Utilities;
 
 	/// <summary>
 	///     Represents a font as a bitmap, containing all glyphs of a given font.
 	/// </summary>
-	internal class FontMap : Texture2DAsset
+	internal class FontMap
 	{
 		/// <summary>
 		///     The padding around the glyphs in the font map in pixels.
@@ -25,18 +27,21 @@
 		private readonly GlyphArea[] _glyphAreas;
 
 		/// <summary>
+		///     The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.
+		/// </summary>
+		private readonly string _path;
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="font">The font that should be stored in the font map.</param>
-		/// <param name="relativePath">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
-		public FontMap(Font font, string relativePath)
-			: base(relativePath, Configuration.TempDirectory)
+		/// <param name="path">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
+		public FontMap(Font font, string path)
 		{
 			Assert.ArgumentNotNull(font);
+			Assert.ArgumentNotNullOrWhitespace(path);
 
-			Mipmaps = false;
-			Uncompressed = true;
-
+			_path = path;
 			_glyphAreas = font.Glyphs.Select(glyph => new GlyphArea { Glyph = glyph }).ToArray();
 
 			Layout();
@@ -111,18 +116,24 @@
 				foreach (var info in _glyphAreas.Where(g => g.Area.Width != 0 && g.Area.Height != 0))
 					graphics.DrawImage(info.Glyph.Bitmap, new Point(info.Area.Left, info.Area.Top));
 
-				bitmap.Save(SourcePath);
+				bitmap.Save(Path.Combine(Configuration.TempDirectory, _path));
 			}
 		}
 
 		/// <summary>
-		///     Processes the font map and appends it to the given writer.
+		///     Processes the font map and appends it to the given buffer.
 		/// </summary>
-		/// <param name="writer">The writer that should be used to write the font map.</param>
-		public void Compile(BinaryWriter writer)
+		/// <param name="buffer"></param>
+		public void Compile(AssetWriter buffer)
 		{
-			using (var compiler = new Texture2DCompiler())
-				compiler.CompileSingle(this, writer);
+			var asset = new Texture2DAsset(new XElement("Texture2D",
+				new XAttribute("File", _path),
+				new XAttribute("Compress", "false"),
+				new XAttribute("GenerateMipmaps", "false")),
+				Configuration.TempDirectory);
+
+			var compiler = new Texture2DCompiler();
+			compiler.CompileSingle(asset, buffer);
 		}
 
 		/// <summary>
@@ -131,7 +142,7 @@
 		/// <param name="character">The character the glyph are should be returned for.</param>
 		public Rectangle GetGlyphArea(char character)
 		{
-			var glyph = _glyphAreas.FirstOrDefault(g => g.Glyph.Character == character);
+			var glyph = _glyphAreas.First(g => g.Glyph.Character == character);
 			if (glyph == null)
 				Log.Die("The font map does not contain a glyph for character '{0}'.", character);
 

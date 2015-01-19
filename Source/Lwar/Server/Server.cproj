@@ -75,7 +75,7 @@
     <Compile Include="clock.c" />
     <Compile Include="pack.c" />
     <Compile Include="unpack.c" />
-	<Compile Include="stream.c" />
+    <Compile Include="stream.c" />
   </ItemGroup>
   <ItemGroup>
     <None Include="connection.h" />
@@ -112,7 +112,7 @@
     <None Include="attributes.h" />
     <None Include="pack.h" />
     <None Include="server.h" />
-	<None Include="stream.h" />
+    <None Include="stream.h" />
     <None Include="unpack.h" />
   </ItemGroup>
 </Project>

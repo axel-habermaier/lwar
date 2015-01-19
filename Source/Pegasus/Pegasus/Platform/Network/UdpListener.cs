@@ -11,6 +11,11 @@
 	public sealed class UdpListener : DisposableObject
 	{
 		/// <summary>
+		///     The allocator that is used to allocate packets and channels.
+		/// </summary>
+		private readonly PoolAllocator _allocator;
+
+		/// <summary>
 		///     The list of active UDP channels.
 		/// </summary>
 		private readonly List<UdpChannel> _channels = new List<UdpChannel>();
@@ -33,10 +38,14 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
+		/// <param name="allocator">The allocator that should be used to allocate packets and channels.</param>
 		/// <param name="port">The port the underlying socket should be bound to.</param>
 		/// <param name="maxPacketSize">The maximum supported packet size.</param>
-		public UdpListener(ushort port, int maxPacketSize)
+		public UdpListener(PoolAllocator allocator, ushort port, int maxPacketSize)
 		{
+			Assert.ArgumentNotNull(allocator);
+
+			_allocator = allocator;
 			_socket = new UdpSocket();
 			_port = port;
 			_maxPacketSize = maxPacketSize;
@@ -60,13 +69,13 @@
 		/// </summary>
 		public void Update()
 		{
-			UdpPacket packet = null;
+			IncomingUdpPacket packet = null;
 
 			try
 			{
 				while (true)
 				{
-					packet = UdpPacket.Allocate(_maxPacketSize);
+					packet = IncomingUdpPacket.Allocate(_allocator, _maxPacketSize);
 					IPEndPoint sender;
 					int size;
 
@@ -89,7 +98,7 @@
 		/// </summary>
 		/// <param name="packet">The packet that should be handled.</param>
 		/// <param name="sender">The sender of the packet.</param>
-		private void HandlePacket(UdpPacket packet, IPEndPoint sender)
+		private void HandlePacket(IncomingUdpPacket packet, IPEndPoint sender)
 		{
 			// Get the channel that was created for the sender and let it handle the incoming packet
 			foreach (var channel in _channels)
@@ -102,7 +111,7 @@
 			}
 
 			// We don't have a channel yet for this sender, so create one
-			var newChannel = UdpChannel.Create(sender, _socket, this);
+			var newChannel = UdpChannel.Create(_allocator, sender, _socket, this);
 			newChannel.HandlePacket(packet);
 
 			Assert.NotNull(ChannelCreated, "No event handler has been registered on the ChannelCreated event.");

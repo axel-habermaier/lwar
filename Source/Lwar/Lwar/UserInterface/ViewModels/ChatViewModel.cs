@@ -10,7 +10,7 @@
 	/// <summary>
 	///     Shows the chat input field during an active game session.
 	/// </summary>
-	public class ChatViewModel : NotifyPropertyChanged
+	internal class ChatViewModel : NotifyPropertyChanged
 	{
 		/// <summary>
 		///     Indicates whether the scoreboard should be shown.

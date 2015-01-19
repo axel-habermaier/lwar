@@ -3,14 +3,13 @@
 	using System;
 	using Assets;
 	using Gameplay.Client.Entities;
-	using Pegasus.Assets;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Rendering;
 
 	/// <summary>
 	///     Renders ships into a 3D scene.
 	/// </summary>
-	public class ShipRenderer : Renderer<ShipEntity>
+	internal class ShipRenderer : Renderer<ShipEntity>
 	{
 		/// <summary>
 		///     The texture that is used to draw the ship.
@@ -18,13 +17,13 @@
 		private Texture2D _texture;
 
 		/// <summary>
-		///     Loads the required assets of the renderer.
+		///     Initializes the renderer.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
-		public override void Load(GraphicsDevice graphicsDevice, AssetsManager assets)
+		/// <param name="renderContext">The render context that should be used for drawing.</param>
+		/// <param name="assets">The asset bundle that provides access to Lwar assets.</param>
+		public override void Initialize(RenderContext renderContext, GameBundle assets)
 		{
-			_texture = assets.Load(Textures.Ship);
+			_texture = assets.Ship;
 		}
 
 		/// <summary>
@@ -33,8 +32,8 @@
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the 2D elements.</param>
 		public override void Draw(SpriteBatch spriteBatch)
 		{
-			spriteBatch.BlendState = BlendState.Premultiplied;
-			spriteBatch.DepthStencilState = DepthStencilState.DepthDisabled;
+			spriteBatch.BlendState = spriteBatch.RenderContext.BlendStates.Premultiplied;
+			spriteBatch.DepthStencilState = spriteBatch.RenderContext.DepthStencilStates.DepthDisabled;
 
 			foreach (var ship in Elements)
 				spriteBatch.Draw(ship.Position, _texture.Size, _texture, Colors.White, -ship.Orientation);

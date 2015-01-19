@@ -5,7 +5,7 @@
 	/// <summary>
 	///     Indicates why a connect attempt has been rejected by the server.
 	/// </summary>
-	public enum RejectReason
+	internal enum RejectReason
 	{
 		/// <summary>
 		///     Indicates that the server was full.

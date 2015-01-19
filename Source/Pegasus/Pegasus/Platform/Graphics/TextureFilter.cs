@@ -10,33 +10,33 @@
 		/// <summary>
 		///     Indicates that the texture filtering method is point filtering.
 		/// </summary>
-		Nearest = 2301,
+		Nearest,
 
 		/// <summary>
 		///     Indicates that the texture filtering method is bilinear filtering.
 		/// </summary>
-		Bilinear = 2302,
+		Bilinear,
 
 		/// <summary>
 		///     Indicates that the texture filtering method is trilinear filtering.
 		/// </summary>
-		Trilinear = 2303,
+		Trilinear,
 
 		/// <summary>
 		///     Indicates that the texture filtering method is anisotropic filtering.
 		/// </summary>
-		Anisotropic = 2304,
+		Anisotropic,
 
 		/// <summary>
 		///     Indicates that the texture filtering method is point filtering, without using any mipmap levels other than the most
 		///     detailed one.
 		/// </summary>
-		NearestNoMipmaps = 2305,
+		NearestNoMipmaps,
 
 		/// <summary>
 		///     Indicates that the texture filtering method is bilinear filtering, without using any mipmap levels other than the
 		///     most detailed one.
 		/// </summary>
-		BilinearNoMipmaps = 2306,
+		BilinearNoMipmaps
 	}
 }

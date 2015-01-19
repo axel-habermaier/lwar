@@ -3,6 +3,7 @@
 	using System;
 	using System.IO;
 	using System.Linq;
+	using System.Text;
 	using Utilities;
 
 	/// <summary>
@@ -16,19 +17,14 @@
 		public static string UserDirectory { get; private set; }
 
 		/// <summary>
-		///     Sets the name of the application's directory.
+		///     Sets the application's subdirectory within the user directory.
 		/// </summary>
-		public static string ApplicationDirectory
+		public static void SetAppDirectory(string directory)
 		{
-			set
-			{
-				Assert.ArgumentNotNull(value);
-				Assert.That(IsValidFileName(value), "Invalid directory name.");
-				Assert.That(Path.GetFileName(value) == value, "Expected a directory name without a path.");
+			Assert.ArgumentNotNullOrWhitespace(directory);
 
-				UserDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), value);
-				Directory.CreateDirectory(UserDirectory);
-			}
+			UserDirectory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), directory).Replace("\\", "/");
+			Directory.CreateDirectory(UserDirectory);
 		}
 
 		/// <summary>
@@ -53,10 +49,15 @@
 		{
 			Assert.ArgumentNotNullOrWhitespace(path);
 			Assert.That(IsValidFileName(path), "Invalid file name.");
-			Assert.That(Path.GetFullPath(path).StartsWith(Environment.CurrentDirectory),
-				"The does not lie in a location accessible by the application.");
 
-			return File.ReadAllBytes(path);
+			try
+			{
+				return File.ReadAllBytes(path);
+			}
+			catch (Exception e)
+			{
+				throw new FileSystemException(e.Message);
+			}
 		}
 
 		/// <summary>
@@ -66,7 +67,14 @@
 		/// <param name="fileName">The name of the file in the application's user directory that should be read.</param>
 		public static string ReadAllText(string fileName)
 		{
-			return File.ReadAllText(GetUserFilePath(fileName));
+			try
+			{
+				return File.ReadAllText(GetUserFileName(fileName));
+			}
+			catch (Exception e)
+			{
+				throw new FileSystemException(e.Message);
+			}
 		}
 
 		/// <summary>
@@ -78,7 +86,15 @@
 		public static void WriteAllText(string fileName, string content)
 		{
 			Assert.ArgumentNotNull(content);
-			File.WriteAllText(GetUserFilePath(fileName), content);
+
+			try
+			{
+				File.WriteAllText(GetUserFileName(fileName), content, Encoding.UTF8);
+			}
+			catch (Exception e)
+			{
+				throw new FileSystemException(e.Message);
+			}
 		}
 
 		/// <summary>
@@ -90,34 +106,22 @@
 		public static void AppendText(string fileName, string content)
 		{
 			Assert.ArgumentNotNull(content);
-			File.AppendAllText(GetUserFilePath(fileName), content);
+
+			try
+			{
+				File.AppendAllText(GetUserFileName(fileName), content, Encoding.UTF8);
+			}
+			catch (Exception e)
+			{
+				throw new FileSystemException(e.Message);
+			}
 		}
 
 		/// <summary>
-		///     Deletes the user file with the given name, if it exists. This method can only delete files in the application's user
-		///     directory.
+		///     Gets the path to the file with the given name in the application's user directory.
 		/// </summary>
-		/// <param name="fileName">The name of the file that should be deleted.</param>
-		public static void Delete(string fileName)
-		{
-			File.Delete(GetUserFilePath(fileName));
-		}
-
-		/// <summary>
-		///     Checks whether a user file with the given name exists. This method can only check files in the application's user
-		///     directory.
-		/// </summary>
-		/// <param name="fileName">The name of the file that should be checked for.</param>
-		public static bool Exists(string fileName)
-		{
-			return File.Exists(GetUserFilePath(fileName));
-		}
-
-		/// <summary>
-		///     Gets the full path to the file in the application's user directory.
-		/// </summary>
-		/// <param name="fileName">The name of the file the path should be returned for.</param>
-		private static string GetUserFilePath(string fileName)
+		/// <param name="fileName">The name of the file.</param>
+		private static string GetUserFileName(string fileName)
 		{
 			Assert.ArgumentNotNull(fileName);
 			Assert.That(IsValidFileName(fileName), "Invalid file name.");

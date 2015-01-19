@@ -6,7 +6,7 @@
 	/// <summary>
 	///     Represents an entity that accepts remote ray updates.
 	/// </summary>
-	public interface IRayEntity : IEntity
+	internal interface IRayEntity : IEntity
 	{
 		/// <summary>
 		///     Applies the remote ray update to the entity.

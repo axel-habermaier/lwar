@@ -2,13 +2,13 @@
 {
 	using System;
 	using System.Drawing;
-	using Platform.Graphics;
-	using Utilities;
+	using System.Xml.Linq;
+	using Textures;
 
 	/// <summary>
 	///     Represents a cube map asset that requires compilation.
 	/// </summary>
-	public class CubeMapAsset : TextureAsset
+	internal class CubeMapAsset : TextureAsset
 	{
 		/// <summary>
 		///     The image data.
@@ -18,9 +18,9 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="relativePath">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
-		public CubeMapAsset(string relativePath)
-			: base(relativePath)
+		/// <param name="metadata">The metadata of the asset.</param>
+		public CubeMapAsset(XElement metadata)
+			: base(metadata)
 		{
 		}
 
@@ -29,32 +29,15 @@
 		/// </summary>
 		public override byte AssetType
 		{
-			get { return (byte)Pegasus.Assets.AssetType.CubeMap; }
+			get { return 1; }
 		}
 
 		/// <summary>
-		///     The identifier type that should be used for the asset when generating the asset identifier list. If null is
-		///     returned, no asset identifier is generated for this asset instance.
+		///     Gets the runtime type of the asset.
 		/// </summary>
-		public override string IdentifierType
+		public override string RuntimeType
 		{
 			get { return "Pegasus.Platform.Graphics.CubeMap"; }
-		}
-
-		/// <summary>
-		///     The name that should be used for the asset identifier. If null is returned, no asset identifier is generated for
-		///     this asset instance.
-		/// </summary>
-		public override string IdentifierName
-		{
-			get
-			{
-				const string suffix = ".Cubemap";
-				var index = FileNameWithoutExtension.LastIndexOf(suffix, StringComparison.Ordinal);
-				Assert.That(index == FileNameWithoutExtension.Length - suffix.Length, "Unexpected naming convention.");
-
-				return FileNameWithoutExtension.Remove(FileNameWithoutExtension.Length - suffix.Length, 1);
-			}
 		}
 
 		/// <summary>
@@ -62,7 +45,7 @@
 		/// </summary>
 		public void Load()
 		{
-			Bitmap = (Bitmap)Image.FromFile(SourcePath);
+			Bitmap = (Bitmap)Image.FromFile(AbsoluteSourcePath);
 			uint componentCount;
 
 			Description = new TextureDescription
@@ -123,6 +106,13 @@
 			var positiveX = Bitmap.Clone(new Rectangle(3 * width, 0, width, Bitmap.Height), Bitmap.PixelFormat);
 			var negativeY = Bitmap.Clone(new Rectangle(4 * width, 0, width, Bitmap.Height), Bitmap.PixelFormat);
 			var positiveY = Bitmap.Clone(new Rectangle(5 * width, 0, width, Bitmap.Height), Bitmap.PixelFormat);
+
+			ToPremultipliedAlpha(negativeZ);
+			ToPremultipliedAlpha(negativeX);
+			ToPremultipliedAlpha(positiveZ);
+			ToPremultipliedAlpha(positiveX);
+			ToPremultipliedAlpha(negativeY);
+			ToPremultipliedAlpha(positiveY);
 
 			return new[]
 			{

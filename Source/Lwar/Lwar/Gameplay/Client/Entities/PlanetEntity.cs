@@ -7,7 +7,7 @@
 	/// <summary>
 	///     Represents a planet.
 	/// </summary>
-	public class PlanetEntity : Entity<PlanetEntity>
+	internal class PlanetEntity : Entity<PlanetEntity>
 	{
 		/// <summary>
 		///     A cached random number generator.

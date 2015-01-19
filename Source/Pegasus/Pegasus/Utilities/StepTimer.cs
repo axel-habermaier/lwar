@@ -71,7 +71,7 @@
 		/// </summary>
 		public void ResetElapsedTime()
 		{
-			_lastTime = Clock.SystemTime;
+			_lastTime = Clock.GetTime();
 			_leftOverTime = 0;
 			_secondCounter = 0;
 		}
@@ -88,7 +88,7 @@
 		{
 			Assert.That(UpdateRequired != null, "UpdateRequired event has no listeners.");
 
-			var currentTime = Clock.SystemTime;
+			var currentTime = Clock.GetTime();
 			var timeDelta = currentTime - _lastTime;
 
 			_lastTime = currentTime;

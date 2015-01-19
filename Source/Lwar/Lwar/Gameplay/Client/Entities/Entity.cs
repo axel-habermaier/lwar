@@ -10,7 +10,7 @@
 	///     Represents an entity, a special form of an actor that is synchronized with and under control of the server.
 	/// </summary>
 	/// <typeparam name="TEntity">The actual entity type.</typeparam>
-	public abstract class Entity<TEntity> : Actor<TEntity>, IEntity
+	internal abstract class Entity<TEntity> : Actor<TEntity>, IEntity
 		where TEntity : Entity<TEntity>, new()
 	{
 		/// <summary>

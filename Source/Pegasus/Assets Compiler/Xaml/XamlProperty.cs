@@ -2,7 +2,6 @@
 {
 	using System;
 	using System.Xml.Linq;
-	using Platform.Logging;
 	using Utilities;
 
 	/// <summary>

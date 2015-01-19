@@ -5,7 +5,6 @@
 	using CSharp;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.TypeSystem;
-	using Platform.Graphics;
 	using Utilities;
 
 	/// <summary>

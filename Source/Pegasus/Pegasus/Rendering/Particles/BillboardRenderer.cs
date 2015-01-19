@@ -6,7 +6,6 @@
 	using Math;
 	using Platform.Graphics;
 	using Platform.Memory;
-	using Utilities;
 
 	/// <summary>
 	///     Renders particles as 2D billboard sprites.
@@ -26,19 +25,16 @@
 		/// <summary>
 		///     The input binding required to draw a single particle instance.
 		/// </summary>
-		private readonly VertexInputBinding[] _particleBindings = new VertexInputBinding[1];
+		private readonly VertexBinding[] _particleBindings = new VertexBinding[1];
 
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used to draw the particles.</param>
-		/// <param name="assets">The assets manager that should be used to load required assets.</param>
-		public unsafe BillboardRenderer(GraphicsDevice graphicsDevice, AssetsManager assets)
-			: base(graphicsDevice)
+		/// <param name="renderContext">The render context that should be used to draw the particles.</param>
+		public unsafe BillboardRenderer(RenderContext renderContext)
+			: base(renderContext)
 		{
-			Assert.ArgumentNotNull(assets);
-
-			_buffer = VertexBuffer.Create(graphicsDevice, new[]
+			_buffer = VertexBuffer.Create(renderContext.GraphicsDevice, new[]
 			{
 				new Vector2(-0.5f, -0.5f),
 				new Vector2(-0.5f, 0.5f),
@@ -47,8 +43,9 @@
 			});
 
 			_buffer.SetName("Particle Billboard Renderer");
-			_effect = new BillboardParticleEffect(graphicsDevice, assets) { World = Matrix.Identity };
-			_particleBindings[0] = new VertexInputBinding(_buffer, VertexDataFormat.Vector2, DataSemantics.Position, sizeof(Vector2), 0);
+			_effect = renderContext.GetAssetBundle<MainBundle>().BillboardParticleEffect;
+			_effect.World = Matrix.Identity;
+			_particleBindings[0] = new VertexBinding(_buffer, VertexDataFormat.Vector2, DataSemantics.Position, sizeof(Vector2), 0);
 		}
 
 		/// <summary>
@@ -60,15 +57,6 @@
 		///     Gets or sets the sampler state that is used to draw the particles.
 		/// </summary>
 		public SamplerState SamplerState { get; set; }
-
-		/// <summary>
-		///     Preloads the assets required by the billboard renderer into the given assets manager.
-		/// </summary>
-		/// <param name="assets">The assets manager the assets should be preloaded into.</param>
-		public static void PreloadAssets(AssetsManager assets)
-		{
-			BillboardParticleEffect.PreloadShaders(assets);
-		}
 
 		/// <summary>
 		///     Draws the particles.
@@ -94,7 +82,7 @@
 		/// <summary>
 		///     Gets the input bindings required to draw a single particle instance.
 		/// </summary>
-		protected override VertexInputBinding[] GetParticleInputBindings()
+		protected override VertexBinding[] GetParticleInputBindings()
 		{
 			return _particleBindings;
 		}
@@ -105,8 +93,6 @@
 		protected override void OnDisposing()
 		{
 			base.OnDisposing();
-
-			_effect.SafeDispose();
 			_buffer.SafeDispose();
 		}
 	}

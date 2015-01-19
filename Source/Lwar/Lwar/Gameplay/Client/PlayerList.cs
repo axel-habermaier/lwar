@@ -5,12 +5,13 @@
 	using System.Collections.Generic;
 	using Network;
 	using Pegasus.Platform.Memory;
+	using Pegasus.UserInterface;
 	using Pegasus.Utilities;
 
 	/// <summary>
 	///     Manages the active players that participate in a game session.
 	/// </summary>
-	public sealed class PlayerList : DisposableObject, IEnumerable<Player>
+	internal sealed class PlayerList : DisposableObject, IEnumerable<Player>
 	{
 		/// <summary>
 		///     The game session  the player list belongs to.

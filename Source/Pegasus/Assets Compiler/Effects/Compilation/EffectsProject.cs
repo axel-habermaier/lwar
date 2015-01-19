@@ -1,11 +1,12 @@
 ﻿namespace Pegasus.AssetsCompiler.Effects.Compilation
 {
 	using System;
+	using System.Collections.Generic;
 	using CSharp;
 	using ICSharpCode.NRefactory;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
-	using Platform.Logging;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a C# project with effect declarations that have to be cross-compiled.
@@ -13,9 +14,35 @@
 	internal class EffectsProject : CSharpProject<EffectFile>
 	{
 		/// <summary>
-		///     The C# code generator that is used to generate the C# effects file.
+		///     The effect files contained in the project.
 		/// </summary>
-		private readonly CSharpCodeGenerator _generator = new CSharpCodeGenerator();
+		private readonly List<EffectFile> _effectFiles = new List<EffectFile>();
+
+		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		/// <param name="file">The file that should be compiled.</param>
+		/// <param name="context">The compilation context of the effect.</param>
+		public EffectsProject(CSharpFile file, CompilationContext context)
+		{
+			Assert.ArgumentNotNull(context);
+
+			Context = context;
+			CSharpFiles = new[] { file };
+		}
+
+		/// <summary>
+		///     Gets the compilation context.
+		/// </summary>
+		public CompilationContext Context { get; private set; }
+
+		/// <summary>
+		///     Gets the effect files contained in the project.
+		/// </summary>
+		public IEnumerable<EffectFile> EffectFiles
+		{
+			get { return _effectFiles; }
+		}
 
 		/// <summary>
 		///     Outputs a compilation message.
@@ -41,7 +68,9 @@
 		/// <param name="resolver">The resolver that should be used to resolve type information within the file.</param>
 		protected override EffectFile CreateFile(string fileName, SyntaxTree syntaxTree, CSharpAstResolver resolver)
 		{
-			return new EffectFile(this, syntaxTree, resolver);
+			var effectFile = new EffectFile(this, syntaxTree, resolver) { Context = Context };
+			_effectFiles.Add(effectFile);
+			return effectFile;
 		}
 
 		/// <summary>
@@ -50,15 +79,7 @@
 		/// <param name="file">The file that should be compiled.</param>
 		protected override void Compile(EffectFile file)
 		{
-			file.Compile(_generator);
-		}
-
-		/// <summary>
-		///     Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		public override void Dispose()
-		{
-			_generator.Dispose();
+			file.Compile();
 		}
 	}
 }

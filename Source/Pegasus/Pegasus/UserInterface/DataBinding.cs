@@ -147,8 +147,8 @@
 
 			if (converter != null)
 			{
-				_convertToSourceMethodInfo = GetType().GetMethod("ConvertToSource", BindingFlags.Instance | BindingFlags.NonPublic);
-				_convertToTargetMethodInfo = GetType().GetMethod("ConvertToTarget", BindingFlags.Instance | BindingFlags.NonPublic);
+				_convertToSourceMethodInfo = GetType().GetTypeInfo().GetDeclaredMethod("ConvertToSource");
+				_convertToTargetMethodInfo = GetType().GetTypeInfo().GetDeclaredMethod("ConvertToTarget");
 			}
 
 			_sourceObject = sourceObject;
@@ -298,13 +298,13 @@
 				var value = _sourceObject;
 
 				if (value != null)
-					value = value.GetType().GetProperty(_memberAccess1.MemberName, BindingFlags.Public | BindingFlags.Instance).GetValue(value);
+					value = GetPropertyInfo(value.GetType(), _memberAccess1.MemberName).GetValue(value);
 
 				if (value != null && _memberAccessCount > 1)
-					value = value.GetType().GetProperty(_memberAccess2.MemberName, BindingFlags.Public | BindingFlags.Instance).GetValue(value);
+					value = GetPropertyInfo(value.GetType(), _memberAccess2.MemberName).GetValue(value);
 
 				if (value != null && _memberAccessCount > 2)
-					value = value.GetType().GetProperty(_memberAccess3.MemberName, BindingFlags.Public | BindingFlags.Instance).GetValue(value);
+					value = GetPropertyInfo(value.GetType(), _memberAccess3.MemberName).GetValue(value);
 
 				if (value != null)
 				{
@@ -481,9 +481,9 @@
 					// of value type - changes to these properties are likely to occur often and we want to avoid  
 					// boxing the value every time the property is changed.
 					var propertyType = memberAccess.PropertyType;
-					_sourceValueIsNull = propertyType == null || (!propertyType.IsValueType && memberAccess.Value == null);
+					_sourceValueIsNull = propertyType == null || (!propertyType.GetTypeInfo().IsValueType && memberAccess.Value == null);
 
-					if (!_sourceValueIsNull && propertyType != null && !propertyType.IsValueType)
+					if (!_sourceValueIsNull && propertyType != null && !propertyType.GetTypeInfo().IsValueType)
 					{
 						var type = memberAccess.Value.GetType();
 
@@ -494,7 +494,7 @@
 							memberAccess.ValueType = type;
 						}
 					}
-					else if (propertyType != null && propertyType.IsValueType)
+					else if (propertyType != null && propertyType.GetTypeInfo().IsValueType)
 						memberAccess.ValueType = propertyType;
 				}
 
@@ -562,6 +562,27 @@
 		}
 
 		/// <summary>
+		///     Gets the property with the given name declared by the type or one of its base types.
+		/// </summary>
+		/// <param name="type">The type that declares the property.</param>
+		/// <param name="propertyName">The name of the property.</param>
+		private static PropertyInfo GetPropertyInfo(Type type, string propertyName)
+		{
+			Assert.ArgumentNotNull(type);
+			Assert.ArgumentNotNullOrWhitespace(propertyName);
+
+			var property = type.GetTypeInfo().GetDeclaredProperty(propertyName);
+			if (property != null)
+				return property;
+
+			var baseType = type.GetTypeInfo().BaseType;
+			if (baseType != typeof(object) && baseType != null)
+				return GetPropertyInfo(baseType, propertyName);
+
+			return null;
+		}
+
+		/// <summary>
 		///     Provides information about a member access in the source expression.
 		/// </summary>
 		private struct MemberAccess
@@ -570,25 +591,25 @@
 			///     A cached method info instance.
 			/// </summary>
 			private static readonly MethodInfo ImplicitStringConversionMethodInfo =
-				typeof(MemberAccess).GetMethod("ImplicitStringConversion", BindingFlags.NonPublic | BindingFlags.Instance);
+				typeof(MemberAccess).GetTypeInfo().GetDeclaredMethod("ImplicitStringConversion");
 
 			/// <summary>
 			///     A cached method info instance.
 			/// </summary>
 			private static readonly MethodInfo DownCastGetterMethodInfo =
-				typeof(MemberAccess).GetMethod("DownCastGetter", BindingFlags.NonPublic | BindingFlags.Instance);
+				typeof(MemberAccess).GetTypeInfo().GetDeclaredMethod("DownCastGetter");
 
 			/// <summary>
 			///     A cached method info instance.
 			/// </summary>
 			private static readonly MethodInfo UpCastGetterMethodInfo =
-				typeof(MemberAccess).GetMethod("UpCastGetter", BindingFlags.NonPublic | BindingFlags.Instance);
+				typeof(MemberAccess).GetTypeInfo().GetDeclaredMethod("UpCastGetter");
 
 			/// <summary>
 			///     A cached method info instance.
 			/// </summary>
 			private static readonly MethodInfo UpCastSetterMethodInfo =
-				typeof(MemberAccess).GetMethod("UpCastSetter", BindingFlags.NonPublic | BindingFlags.Instance);
+				typeof(MemberAccess).GetTypeInfo().GetDeclaredMethod("UpCastSetter");
 
 			/// <summary>
 			///     The name of the accessed property.
@@ -737,7 +758,7 @@
 				if (PropertyType != typeof(string) && typeof(TProperty) == typeof(string))
 					return (Func<TProperty>)ImplicitStringConversionMethodInfo.MakeGenericMethod(PropertyType).Invoke(this, null);
 
-				if (PropertyType.IsAssignableFrom(typeof(TProperty)))
+				if (PropertyType.GetTypeInfo().IsAssignableFrom(typeof(TProperty).GetTypeInfo()))
 					return (Func<TProperty>)DownCastGetterMethodInfo.MakeGenericMethod(PropertyType, typeof(TProperty)).Invoke(this, null);
 
 				return (Func<TProperty>)UpCastGetterMethodInfo.MakeGenericMethod(PropertyType, typeof(TProperty)).Invoke(this, null);
@@ -753,7 +774,7 @@
 				if (_propertyInfo == null)
 					return null;
 
-				if (typeof(TProperty) != PropertyType && !PropertyType.IsAssignableFrom(typeof(TProperty)))
+				if (typeof(TProperty) != PropertyType && !PropertyType.GetTypeInfo().IsAssignableFrom(typeof(TProperty).GetTypeInfo()))
 					return (Action<TProperty>)UpCastSetterMethodInfo.MakeGenericMethod(PropertyType, typeof(TProperty)).Invoke(this, null);
 
 				return GetSetter<TProperty>();
@@ -765,10 +786,10 @@
 			/// <typeparam name="TProperty">The declared type of the property.</typeparam>
 			private Func<TProperty> GetGetter<TProperty>()
 			{
-				var getter = _sourceObject.GetType().GetProperty(_propertyName, BindingFlags.Public | BindingFlags.Instance).GetGetMethod();
+				var getter = _propertyInfo.GetMethod;
 				Assert.NotNull(getter, "Cannot bind to the property, as it has no public getter.");
 
-				return (Func<TProperty>)Delegate.CreateDelegate(typeof(Func<TProperty>), _sourceObject, getter);
+				return (Func<TProperty>)getter.CreateDelegate(typeof(Func<TProperty>), _sourceObject);
 			}
 
 			/// <summary>
@@ -777,8 +798,8 @@
 			/// <typeparam name="TProperty">The declared type of the property.</typeparam>
 			private Action<TProperty> GetSetter<TProperty>()
 			{
-				var setter = _sourceObject.GetType().GetProperty(_propertyName, BindingFlags.Public | BindingFlags.Instance).GetSetMethod();
-				return (Action<TProperty>)Delegate.CreateDelegate(typeof(Action<TProperty>), _sourceObject, setter);
+				var setter = _propertyInfo.SetMethod;
+				return (Action<TProperty>)setter.CreateDelegate(typeof(Action<TProperty>), _sourceObject);
 			}
 
 			/// <summary>
@@ -888,8 +909,7 @@
 				if (_sourceObject is DependencyObject)
 					_dependencyProperty = GetDependencyProperty(_sourceObject.GetType(), _propertyName);
 
-				var name = _propertyName;
-				_propertyInfo = _sourceObject.GetType().GetProperty(name, BindingFlags.Instance | BindingFlags.Public);
+				_propertyInfo = GetPropertyInfo(_sourceObject.GetType(), _propertyName);
 
 				Log.DebugIf(_propertyInfo == null, "Unable to find public, non-static property '{0}' on '{1}'.",
 					_propertyName, _sourceObject.GetType().FullName);

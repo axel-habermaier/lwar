@@ -11,7 +11,7 @@
 	/// <summary>
 	///     Displays the options menu.
 	/// </summary>
-	public class OptionsMenuViewModel : StackedViewModel
+	internal class OptionsMenuViewModel : StackedViewModel
 	{
 		/// <summary>
 		///     The player name entered by the user.

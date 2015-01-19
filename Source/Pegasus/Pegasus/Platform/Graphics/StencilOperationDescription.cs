@@ -10,23 +10,37 @@
 	public struct StencilOperationDescription
 	{
 		/// <summary>
-		///     Gets or sets the fail operation.
+		///     The fail operation.
 		/// </summary>
-		public StencilOperation FailOperation { get; set; }
+		public StencilOperation FailOperation;
 
 		/// <summary>
-		///     Gets or sets the depth fail operation.
+		///     The depth fail operation.
 		/// </summary>
-		public StencilOperation DepthFailOperation { get; set; }
+		public StencilOperation DepthFailOperation;
 
 		/// <summary>
-		///     Gets or sets the pass operation.
+		///     The pass operation.
 		/// </summary>
-		public StencilOperation PassOperation { get; set; }
+		public StencilOperation PassOperation;
 
 		/// <summary>
-		///     Gets or sets the stencil function.
+		///     The stencil function.
 		/// </summary>
-		public Comparison StencilFunction { get; set; }
+		public Comparison StencilFunction;
+
+		/// <summary>
+		///     Gets a description initialized to the default values.
+		/// </summary>
+		public static StencilOperationDescription Default()
+		{
+			return new StencilOperationDescription
+			{
+				FailOperation = StencilOperation.Keep,
+				DepthFailOperation = StencilOperation.Keep,
+				PassOperation = StencilOperation.Keep,
+				StencilFunction = Comparison.Always
+			};
+		}
 	}
 }

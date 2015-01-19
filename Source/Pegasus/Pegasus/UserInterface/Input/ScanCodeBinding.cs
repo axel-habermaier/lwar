@@ -17,7 +17,7 @@
 		/// <summary>
 		///     The scan code of the key that activates the binding.
 		/// </summary>
-		private int _scanCode;
+		private ScanCode _scanCode;
 
 		/// <summary>
 		///     Indicates whether the binding is also triggered when the OS reports a repeated key press.
@@ -40,7 +40,7 @@
 		/// <param name="triggerOnRepeat">
 		///     Indicates whether the binding should also be triggered when the OS reports a repeated key press.
 		/// </param>
-		public ScanCodeBinding(int scanCode, string method, KeyModifiers modifiers = KeyModifiers.None, bool triggerOnRepeat = true)
+		public ScanCodeBinding(ScanCode scanCode, string method, KeyModifiers modifiers = KeyModifiers.None, bool triggerOnRepeat = true)
 		{
 			Assert.ArgumentNotNullOrWhitespace(method);
 
@@ -53,7 +53,7 @@
 		/// <summary>
 		///     Gets or sets the scan code of the key that activates the binding.
 		/// </summary>
-		public int ScanCode
+		public ScanCode ScanCode
 		{
 			get { return _scanCode; }
 			set

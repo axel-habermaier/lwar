@@ -5,11 +5,9 @@
 	using System.IO;
 	using System.Linq;
 	using System.Threading.Tasks;
+	using System.Xml.Linq;
 	using Assets;
-	using Platform;
-	using Platform.Logging;
 	using Utilities;
-	using BinaryWriter = AssetsCompiler.BinaryWriter;
 
 	/// <summary>
 	///     Represents a compiler that compiles source assets into a binary format that the runtime can load more efficiently.
@@ -19,118 +17,109 @@
 		where TAsset : Asset
 	{
 		/// <summary>
+		///     The assets compiled by the asset compiler.
+		/// </summary>
+		private readonly List<Asset> _assets = new List<Asset>();
+
+		/// <summary>
+		///     Indicates whether the asset compiler supports single threaded compilation only.
+		/// </summary>
+		private readonly bool _singleThreaded;
+
+		/// <summary>
+		///     The object used for thread synchronization.
+		/// </summary>
+		private readonly object _syncObject = new object();
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		protected AssetCompiler()
+		/// <param name="singleThreaded">Indicates whether the asset compiler supports single threaded compilation only.</param>
+		protected AssetCompiler(bool singleThreaded = false)
 		{
-			SupportsMultithreading = true;
+			_singleThreaded = singleThreaded;
 		}
 
 		/// <summary>
-		///     Gets or sets a value indicating whether the asset compiler supported multi-threaded compilation.
+		///     Gets the assets compiled by the asset compiler.
 		/// </summary>
-		protected bool SupportsMultithreading { get; set; }
-
-		/// <summary>
-		///     Gets the additional assets created by the compiler.
-		/// </summary>
-		public virtual IEnumerable<Asset> AdditionalAssets
+		public IEnumerable<Asset> Assets
 		{
-			get { return Enumerable.Empty<Asset>(); }
+			get { return _assets; }
 		}
 
 		/// <summary>
-		///     Compiles all assets of the compiler's asset source type.
+		///     Compiles the assets.
 		/// </summary>
-		/// <param name="assets">The assets that should be compiled.</param>
-		public virtual void Compile(IEnumerable<Asset> assets)
+		/// <param name="assets">The metadata of the assets that should be compiled.</param>
+		public async Task<bool> Compile(IEnumerable<XElement> assets)
 		{
-			if (SupportsMultithreading)
+			var compiled = await Task.WhenAll(assets.Select(Compile));
+			return compiled.Any(c => c);
+		}
+
+		/// <summary>
+		///     Cleans the asset if the compiler supports the given asset type.
+		/// </summary>
+		/// <param name="assetMetadata">The metadata of the asset that should be cleaned.</param>
+		public void Clean(XElement assetMetadata)
+		{
+			var asset = CreateAsset(assetMetadata);
+			if (asset != null)
+				asset.DeleteMetadata();
+		}
+
+		/// <summary>
+		///     Compiles the asset if the compiler supports the given asset type.
+		/// </summary>
+		/// <param name="assetMetadata">The metadata of the asset that should be compiled.</param>
+		private async Task<bool> Compile(XElement assetMetadata)
+		{
+			var asset = CreateAsset(assetMetadata);
+			if (asset == null)
+				return false;
+
+			_assets.Add(asset);
+
+			return await Task.Factory.StartNew(() =>
 			{
-				var tasks = assets.OfType<TAsset>().Select(Compile).ToArray();
-				Task.WaitAll(tasks);
-			}
-			else
-			{
-				foreach (var asset in assets.OfType<TAsset>())
-					Compile(asset).Wait();
-			}
+				if (_singleThreaded)
+				{
+					lock (_syncObject)
+						return CompileAsset(asset);
+				}
+
+				return CompileAsset(asset);
+			}, TaskCreationOptions.LongRunning);
 		}
 
 		/// <summary>
-		///     Removes the compiled assets and all temporary files written by the compiler.
+		///     Creates an asset instance for the given XML element or returns null if the type of the asset is not
+		///     supported by the compiler.
 		/// </summary>
-		/// <param name="assets">The assets that should be cleaned.</param>
-		public virtual void Clean(IEnumerable<Asset> assets)
-		{
-			foreach (var asset in assets.OfType<TAsset>())
-			{
-				File.Delete(asset.TempPath);
-				File.Delete(asset.TargetPath);
-				File.Delete(asset.HashPath);
-
-				Clean(asset);
-			}
-		}
-
-		/// <summary>
-		///     Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		public virtual void Dispose()
-		{
-		}
-
-		/// <summary>
-		///     Writes the asset file header into the given buffer.
-		/// </summary>
-		/// <param name="writer">The writer the asset file header should be written to.</param>
-		/// <param name="assetType">The type of the asset that will subsequently be written into the buffer.</param>
-		protected static void WriteAssetHeader(BinaryWriter writer, byte assetType)
-		{
-			Assert.ArgumentNotNull(writer);
-
-			writer.WriteByte((byte)'p');
-			writer.WriteByte((byte)'g');
-			writer.WriteUInt16(PlatformInfo.AssetFileVersion);
-			writer.WriteByte(assetType);
-		}
+		/// <param name="assetMetadata">The metadata of the asset that should be compiled.</param>
+		protected abstract TAsset CreateAsset(XElement assetMetadata);
 
 		/// <summary>
 		///     Compiles the asset.
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
-		protected Task Compile(TAsset asset)
+		private bool CompileAsset(TAsset asset)
 		{
-			var action = asset.GetRequiredAction();
+			if (!asset.RequiresCompilation)
+				return false;
 
-			switch (action)
+			using (var writer = new AssetWriter())
 			{
-				case CompilationAction.Skip:
-					Log.Info("Skipping '{0}' (no changes detected).", asset.RelativePath);
-					return Task.FromResult(true);
-				case CompilationAction.Copy:
-					Log.Info("Copying '{0}' to target directory (compilation skipped; no changes detected).", asset.RelativePath);
-					File.Copy(asset.TempPath, asset.TargetPath, true);
-					return Task.FromResult(true);
-				case CompilationAction.Process:
-					return Task.Factory.StartNew(() => CompileAsset(asset), TaskCreationOptions.LongRunning);
-				default:
-					throw new InvalidOperationException("Unknown action type.");
+				asset.WriteHeader(writer);
+				CompileAndHandleExceptions(asset, writer);
+				File.WriteAllBytes(asset.TempPath, writer.ToArray());
 			}
-		}
 
-		/// <summary>
-		///     Compiles the asset.
-		/// </summary>
-		/// <param name="asset">The asset that should be compiled.</param>
-		private void CompileAsset(TAsset asset)
-		{
-			Log.Info("Compiling '{0}'...", asset.RelativePath);
+			Log.Info("Compiled {1} '{0}'.", asset.RuntimeName, asset.GetType().Name.Substring(0, asset.GetType().Name.Length - 5));
 
-			using (var writer = new AssetWriter(asset))
-				CompileAndHandleExceptions(asset, writer.Writer);
-
-			asset.WriteHash();
+			asset.WriteMetadata();
+			return true;
 		}
 
 		/// <summary>
@@ -138,7 +127,7 @@
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="writer">The writer the compilation output should be appended to.</param>
-		internal void CompileSingle(TAsset asset, BinaryWriter writer)
+		internal void CompileSingle(TAsset asset, AssetWriter writer)
 		{
 			CompileAndHandleExceptions(asset, writer);
 		}
@@ -148,7 +137,7 @@
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="writer">The writer the compilation output should be appended to.</param>
-		private void CompileAndHandleExceptions(TAsset asset, BinaryWriter writer)
+		private void CompileAndHandleExceptions(TAsset asset, AssetWriter writer)
 		{
 			try
 			{
@@ -156,8 +145,8 @@
 			}
 			catch (Exception e)
 			{
-				Log.Error("Compiling of '{0}' failed: {1}", asset.RelativePath, e.Message);
-				File.Delete(asset.HashPath);
+				Log.Error("Compilation of '{0}' failed: ({2}) {1}\n{3}", asset.SourcePath, e.Message, e.GetType().FullName, e.StackTrace);
+				asset.DeleteMetadata();
 				throw;
 			}
 		}
@@ -167,16 +156,6 @@
 		/// </summary>
 		/// <param name="asset">The asset that should be compiled.</param>
 		/// <param name="writer">The writer the compilation output should be appended to.</param>
-		protected virtual void Compile(TAsset asset, BinaryWriter writer)
-		{
-		}
-
-		/// <summary>
-		///     Removes the compiled asset and all temporary files written by the compiler.
-		/// </summary>
-		/// <param name="asset">The asset that should be cleaned.</param>
-		protected virtual void Clean(TAsset asset)
-		{
-		}
+		protected abstract void Compile(TAsset asset, AssetWriter writer);
 	}
 }

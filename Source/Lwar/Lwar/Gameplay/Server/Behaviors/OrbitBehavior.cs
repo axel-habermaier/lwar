@@ -9,7 +9,7 @@
 	/// <summary>
 	///     Makes the scene node move in an orbit around its parent.
 	/// </summary>
-	public class OrbitBehavior : Behavior
+	internal class OrbitBehavior : Behavior<SceneNode>
 	{
 		/// <summary>
 		///     An offset to the current position on the orbital trajectory.
@@ -55,10 +55,10 @@
 			_totalSeconds += elapsedSeconds;
 			var time = _totalSeconds * _orbitSpeed + _orbitOffset;
 
-			var x = Math.Sin(time);
-			var y = Math.Cos(time);
+			var x = MathUtils.Sin(time);
+			var y = MathUtils.Cos(time);
 
-			SceneNode.Position = new Vector3((float)x, 0, (float)y) * _orbitRadius;
+			SceneNode.Position = new Vector3(x, 0, y) * _orbitRadius;
 		}
 
 		/// <summary>

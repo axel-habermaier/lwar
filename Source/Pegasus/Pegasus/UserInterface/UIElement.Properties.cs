@@ -6,6 +6,7 @@
 	using Math;
 	using Platform.Graphics;
 	using Platform.Logging;
+	using Rendering;
 	using Utilities;
 
 	public partial class UIElement
@@ -399,12 +400,12 @@
 			{
 				if (_cachedFont == null)
 				{
-					IFontLoader fontLoader;
-					if (!TryFindResource(typeof(IFontLoader), out fontLoader))
-						Log.Die("Unable to find a font loader implementing '{0}' in the UI element's resources.", typeof(IFontLoader).FullName);
+					RenderContext renderContext;
+					if (!TryFindResource(typeof(RenderContext), out renderContext))
+						Log.Die("Unable to find a render context.");
 
 					var aliased = TextOptions.GetTextRenderingMode(this) == TextRenderingMode.Aliased;
-					_cachedFont = fontLoader.LoadFont(FontFamily, FontSize, FontBold, FontItalic, aliased);
+					_cachedFont = renderContext.GetFont(FontFamily, FontSize, FontBold, FontItalic, aliased);
 				}
 
 				return _cachedFont;

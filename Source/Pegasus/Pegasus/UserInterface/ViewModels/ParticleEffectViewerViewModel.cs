@@ -2,13 +2,12 @@
 {
 	using System;
 	using System.Linq;
-	using UserInterface;
 	using Input;
 	using Platform;
-	using Platform.Graphics;
 	using Platform.Memory;
 	using Rendering;
 	using Rendering.Particles;
+	using Utilities;
 	using Views;
 
 	/// <summary>
@@ -22,14 +21,19 @@
 		private readonly ParticleEffectViewerView _view;
 
 		/// <summary>
+		///     The asset bundles loaded by the viewer.
+		/// </summary>
+		private AssetBundle[] _assetBundles;
+
+		/// <summary>
 		///     The clock used for time measurements.
 		/// </summary>
 		private Clock _clock;
 
 		/// <summary>
-		///     A value other than zero indicates that input is captured and the preview camera is controlled.
+		///     Indicates that input is captured and the preview camera is controlled.
 		/// </summary>
-		private int _inputCaptured;
+		private bool _inputCaptured;
 
 		/// <summary>
 		///     The input device that is used to control the camera.
@@ -37,14 +41,20 @@
 		private LogicalInputDevice _inputDevice;
 
 		/// <summary>
-		///     Indicates whether the mouse was captured when the viewer was opened.
-		/// </summary>
-		private bool _mouseWasCaptured;
-
-		/// <summary>
 		///     The particle effect that is previewed.
 		/// </summary>
 		private ParticleEffect _particleEffect = new ParticleEffect();
+
+		/// <summary>
+		///     Indicates whether relative mouse mode was enabled when the viewer was opened.
+		/// </summary>
+		private bool _relativeMouseMode;
+
+		/// <summary>
+		///     We're using a separate render context for the particle effect viewer as we have to load and unload all asset bundles.
+		///     This way, we are guaranteed not to interfere with the usual application logic.
+		/// </summary>
+		private RenderContext _renderContext;
 
 		/// <summary>
 		///     The particle effect template that is currently selected.
@@ -56,26 +66,24 @@
 		/// </summary>
 		public ParticleEffectViewerViewModel()
 		{
-			var templates = from assembly in AppDomain.CurrentDomain.GetAssemblies()
-							from type in assembly.GetTypes()
-							where type.IsClass && !type.IsAbstract && typeof(ParticleEffectTemplate).IsAssignableFrom(type)
-							let template = (ParticleEffectTemplate)Activator.CreateInstance(type)
-							orderby template.DisplayName
-							select template;
-
-			_mouseWasCaptured = Application.Current.Window.MouseCaptured;
+			_renderContext = new RenderContext(Application.Current.GraphicsDevice);
+			_relativeMouseMode = Mouse.RelativeMouseMode;
 			_view = new ParticleEffectViewerView();
 			_inputDevice = new LogicalInputDevice(_view, usePreviewEvents: true);
 			_view.DataContext = this;
+			Camera = new DebugCamera(Application.Current.GraphicsDevice, _inputDevice) { MoveSpeed = 250, IsActive = false };
 
-			ParticleTemplates = templates.ToArray();
-			Camera = new DebugCamera(Application.Current.GraphicsDevice, _inputDevice) { MoveSpeed = 250 };
+			// Load all asset bundles
+			_assetBundles = AssemblyCache.CreateInstancesOfType<AssetBundle>(_renderContext).ToArray();
+			foreach (var bundle in _assetBundles)
+				bundle.Load();
 
-			foreach (var template in ParticleTemplates)
-				template.Load(Application.Current.GraphicsDevice, Application.Current.Assets);
+			// Load all templates
+			var templates = AssemblyCache.CreateInstancesOfType<ParticleEffectTemplate>(_renderContext);
+			ParticleTemplates = templates.OrderBy(t => t.DisplayName).ToArray();
 
 			Application.Current.Window.LayoutRoot.Add(_view);
-			Application.Current.Window.MouseCaptured = false;
+			Mouse.RelativeMouseMode = false;
 			MessageBox.CloseAll();
 
 			ResetCamera();
@@ -131,7 +139,7 @@
 			renderOutput.ClearColor(Colors.Black);
 			renderOutput.ClearDepth();
 
-			if (_inputCaptured != 0)
+			if (_inputCaptured)
 			{
 				_inputDevice.Update();
 				Camera.Update();
@@ -145,8 +153,6 @@
 
 			_particleEffect.Update(elapsedSeconds);
 			_particleEffect.Draw(renderOutput);
-
-			Camera.IsActive = _inputCaptured != 0;
 		}
 
 		/// <summary>
@@ -154,8 +160,12 @@
 		/// </summary>
 		public void CaptureInput()
 		{
-			if (_inputCaptured++ == 0)
-				Application.Current.Window.MouseCaptured = true;
+			if (_inputCaptured)
+				return;
+
+			_inputCaptured = true;
+			Mouse.RelativeMouseMode = true;
+			Camera.IsActive = true;
 		}
 
 		/// <summary>
@@ -163,8 +173,12 @@
 		/// </summary>
 		public void ReleaseInput()
 		{
-			if (--_inputCaptured == 0)
-				Application.Current.Window.MouseCaptured = false;
+			if (!_inputCaptured)
+				return;
+
+			_inputCaptured = false;
+			Mouse.RelativeMouseMode = false;
+			Camera.IsActive = false;
 		}
 
 		/// <summary>
@@ -173,7 +187,7 @@
 		public void Close()
 		{
 			if (!IsDisposing)
-				Application.Current.Window.MouseCaptured = _mouseWasCaptured;
+				Mouse.RelativeMouseMode = _relativeMouseMode;
 
 			if (Application.Current.Window.LayoutRoot.Children.Contains(_view))
 				Application.Current.Window.LayoutRoot.Remove(_view);
@@ -190,6 +204,9 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			_assetBundles.SafeDisposeAll();
+			_renderContext.SafeDispose();
+
 			Close();
 		}
 	}

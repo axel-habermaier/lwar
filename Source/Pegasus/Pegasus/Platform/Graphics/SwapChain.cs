@@ -1,8 +1,7 @@
 ﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
-	using System.Runtime.InteropServices;
-	using System.Security;
+	using Interface;
 	using Math;
 	using Memory;
 	using UserInterface;
@@ -15,26 +14,36 @@
 	public sealed class SwapChain : GraphicsObject
 	{
 		/// <summary>
-		///     The native swap chain instance.
+		///     The underlying swap chain object.
 		/// </summary>
-		private readonly IntPtr _swapChain;
+		private readonly ISwapChain _swapChain;
+
+		/// <summary>
+		///     The window the swap chain belongs to.
+		/// </summary>
+		private readonly NativeWindow _window;
 
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="window">The window the swap chain should be bound to.</param>
-		/// <param name="resolution">Indicates the swap chain's default resolution in full screen mode.</param>
-		internal SwapChain(GraphicsDevice graphicsDevice, NativeWindow window, Size resolution)
+		internal SwapChain(GraphicsDevice graphicsDevice, NativeWindow window)
 			: base(graphicsDevice)
 		{
 			Assert.ArgumentNotNull(window);
+			Assert.ArgumentSatisfies(window.SwapChain == null, "A swap chain has already been allocated for the given window.");
 
-			_swapChain = NativeMethods.CreateSwapChain(graphicsDevice.NativePtr, window.NativePtr,
-				resolution.IntegralWidth, resolution.IntegralHeight);
-			BackBuffer = new RenderTarget(graphicsDevice, NativeMethods.GetBackBuffer(_swapChain));
+			_window = window;
+			_window.SwapChain = this;
+
+			_swapChain = graphicsDevice.CreateSwapChain(window);
+
+			BackBuffer = new RenderTarget(graphicsDevice, _swapChain.BackBuffer);
+			Resize(window.Size);
 
 			BackBuffer.Bind();
+			BackBuffer.SetName("BackBuffer");
 		}
 
 		/// <summary>
@@ -48,7 +57,21 @@
 		public void Present()
 		{
 			Assert.NotDisposed(this);
-			NativeMethods.Present(_swapChain);
+			_swapChain.Present();
+		}
+
+		/// <summary>
+		///     Resizes the swap chain to the given size.
+		/// </summary>
+		/// <param name="size">The new size of the swap chain.</param>
+		public void Resize(Size size)
+		{
+			Assert.NotDisposed(this);
+
+			if (BackBuffer.Size == size || size.IntegralWidth == 0 || size.IntegralHeight == 0)
+				return;
+
+			_swapChain.Resize(size);
 		}
 
 		/// <summary>
@@ -56,27 +79,12 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			DeviceState.Unset(ref GraphicsDevice.State.RenderTarget, BackBuffer);
+
+			_swapChain.SafeDispose();
 			BackBuffer.SafeDispose();
-			NativeMethods.DestroySwapChain(_swapChain);
-		}
 
-		/// <summary>
-		///     Provides access to the native swap chain functions.
-		/// </summary>
-		[SuppressUnmanagedCodeSecurity]
-		private static class NativeMethods
-		{
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateSwapChain")]
-			public static extern IntPtr CreateSwapChain(IntPtr device, IntPtr window, int width, int height);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDestroySwapChain")]
-			public static extern void DestroySwapChain(IntPtr swapChain);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgPresent")]
-			public static extern void Present(IntPtr swapChain);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetBackBuffer")]
-			public static extern IntPtr GetBackBuffer(IntPtr swapChain);
+			_window.SwapChain = null;
 		}
 	}
 }

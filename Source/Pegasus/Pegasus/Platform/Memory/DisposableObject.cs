@@ -46,7 +46,7 @@
 		[Conditional("DEBUG"), StringFormatMethod("description")]
 		public void SetDescription(string description, params object[] arguments)
 		{
-			Assert.ArgumentNotNullOrWhitespace(description);
+			Assert.ArgumentNotNull(description);
 
 #if DEBUG
 			_description = String.Format(description, arguments);

@@ -9,7 +9,7 @@ namespace Lwar.UserInterface.ViewModels
 	/// <summary>
 	///     Displays the score board.
 	/// </summary>
-	public class ScoreboardViewModel : DisposableNotifyPropertyChanged
+	internal class ScoreboardViewModel : DisposableNotifyPropertyChanged
 	{
 		/// <summary>
 		///     Indicates whether the player list is potentially dirty.

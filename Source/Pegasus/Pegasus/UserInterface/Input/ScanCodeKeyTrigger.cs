@@ -12,7 +12,7 @@
 		/// <summary>
 		///     The scan code of the key that the trigger monitors.
 		/// </summary>
-		private readonly int _scanCode;
+		private readonly ScanCode _scanCode;
 
 		/// <summary>
 		///     Determines the type of the trigger.
@@ -35,7 +35,7 @@
 		/// </summary>
 		/// <param name="triggerType">Determines the type of the trigger.</param>
 		/// <param name="scanCode">The scan code of the key that the trigger monitors.</param>
-		internal ScanCodeKeyTrigger(KeyTriggerType triggerType, int scanCode)
+		internal ScanCodeKeyTrigger(KeyTriggerType triggerType, ScanCode scanCode)
 		{
 			Assert.ArgumentInRange(triggerType);
 

@@ -81,7 +81,7 @@
 			inputDevice.Add(_left);
 			inputDevice.Add(_right);
 
-			RotationSpeed = 5f;
+			RotationSpeed = .005f;
 			MoveSpeed = 3000.0f;
 			IsActive = true;
 
@@ -189,8 +189,8 @@
 		/// <param name="eventArgs">Contains the new position of the mouse.</param>
 		private void MouseMoved(MouseEventArgs eventArgs)
 		{
-			if (IsActive)
-				_mouseDelta += eventArgs.NormalizedPosition;
+			if (IsActive && Mouse.RelativeMouseMode)
+				_mouseDelta += eventArgs.Position;
 		}
 
 		/// <summary>

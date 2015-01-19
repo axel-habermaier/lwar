@@ -8,7 +8,7 @@
 	/// <summary>
 	///     Represents a shockwave.
 	/// </summary>
-	public class ShockwaveEntity : Entity<ShockwaveEntity>, ICircleEntity
+	internal class ShockwaveEntity : Entity<ShockwaveEntity>, ICircleEntity
 	{
 		/// <summary>
 		///     Gets the current radius of the shockwave.

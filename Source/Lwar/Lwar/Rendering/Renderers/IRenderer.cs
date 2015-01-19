@@ -1,27 +1,20 @@
 ﻿namespace Lwar.Rendering.Renderers
 {
 	using System;
-	using Pegasus.Assets;
-	using Pegasus.Platform.Graphics;
+	using Assets;
 	using Pegasus.Rendering;
 
 	/// <summary>
 	///     Represents a renderer that renders an object into a 3D scene.
 	/// </summary>
-	public interface IRenderer : IDisposable
+	internal interface IRenderer : IDisposable
 	{
-		/// <summary>
-		///     Loads the required assets of the renderer.
-		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
-		void Load(GraphicsDevice graphicsDevice, AssetsManager assets);
-
 		/// <summary>
 		///     Initializes the renderer.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		void Initialize(GraphicsDevice graphicsDevice);
+		/// <param name="renderContext">The render context that should be used for drawing.</param>
+		/// <param name="assets">The asset bundle that provides access to Lwar assets.</param>
+		void Initialize(RenderContext renderContext, GameBundle assets);
 
 		/// <summary>
 		///     Draws the 3D content of the renderer.

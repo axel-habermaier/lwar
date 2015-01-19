@@ -1,0 +1,24 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<ItemGroup>
+		<AvailableItemName Include="IL" />  
+	</ItemGroup>
+
+	<PropertyGroup>
+		<ILAssembly>$(OutDir)/Pegasus.IL.dll</ILAssembly>
+	</PropertyGroup>
+	<Target Name="BeforeBuild" Inputs="$(MSBuildAllProjects);@(IL);" Outputs="$(ILAssembly);$(NonExistentFile);">
+		<GetFrameworkPath>
+			<Output TaskParameter="Path" PropertyName="FrameworkPath" />
+		</GetFrameworkPath>
+		<PropertyGroup>
+			<IlAsmCommand>"$(FrameworkPath)\Ilasm.exe" /nologo /quiet /dll /output:"$(ILAssembly)" </IlAsmCommand>
+		</PropertyGroup>
+		<PropertyGroup Condition=" '$(Configuration)' == 'Debug'">
+			<IlAsmCommand>$(IlAsmCommand) /debug /include:"$(ProjectDir)Properties\Debug" </IlAsmCommand>
+		</PropertyGroup>
+		<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+			<IlAsmCommand>$(IlAsmCommand) /optimize /include:"$(ProjectDir)Properties\Release" </IlAsmCommand>
+		</PropertyGroup>
+		<Exec Command="$(IlAsmCommand) @(IL->'&quot;%(FullPath)&quot;', ' ')" Outputs="$(ILAssembly)" Condition="'$(OS)' == 'Windows_NT'" />
+	</Target>
+</Project>

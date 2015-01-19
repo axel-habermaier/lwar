@@ -1,9 +1,8 @@
 ﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
-	using System.Diagnostics;
-	using System.Runtime.InteropServices;
-	using System.Security;
+	using Interface;
+	using Memory;
 	using Utilities;
 
 	/// <summary>
@@ -12,14 +11,9 @@
 	public abstract class Buffer : GraphicsObject
 	{
 		/// <summary>
-		///     The native buffer instance.
+		///     Indicates whether the buffer is currently mapped.
 		/// </summary>
-		private readonly IntPtr _buffer;
-
-		/// <summary>
-		///     Gets the size of the buffer in bytes.
-		/// </summary>
-		public int SizeInBytes { get; private set; }
+		private bool _isMapped;
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -28,46 +22,40 @@
 		/// <param name="type">The type of the buffer.</param>
 		/// <param name="usage">A value describing the usage pattern of the buffer.</param>
 		/// <param name="data">The data that should be copied into the buffer.</param>
-		/// <param name="size">The size of the buffer in bytes.</param>
-		protected Buffer(GraphicsDevice graphicsDevice, BufferType type, ResourceUsage usage, IntPtr data, int size)
+		/// <param name="sizeInBytes">The size of the buffer in bytes.</param>
+		protected Buffer(GraphicsDevice graphicsDevice, BufferType type, ResourceUsage usage, IntPtr data, int sizeInBytes)
 			: base(graphicsDevice)
 		{
-			Assert.ArgumentSatisfies(size > 0, "A buffer must have a size greater than 0.");
+			Assert.ArgumentInRange(type);
+			Assert.ArgumentInRange(usage);
+			Assert.ArgumentSatisfies(sizeInBytes > 0, "A buffer must have a size greater than 0.");
 
-			SizeInBytes = size;
-			_buffer = NativeMethods.CreateBuffer(graphicsDevice.NativePtr, type, usage, data, size);
+			var description = new BufferDescription
+			{
+				Data = data,
+				SizeInBytes = sizeInBytes,
+				Type = type,
+				Usage = usage
+			};
+
+			BufferObject = graphicsDevice.CreateBuffer(ref description);
 		}
 
 		/// <summary>
-		///     Gets the native buffer instance.
+		///     Gets the underlying buffer object.
 		/// </summary>
-		internal IntPtr NativePtr
-		{
-			get { return _buffer; }
-		}
+		internal IBuffer BufferObject { get; private set; }
 
 		/// <summary>
-		///     Maps the buffer and returns a pointer that the CPU can access. The operations that are allowed on the
-		///     returned pointer depend on the given map mode.
+		///     Gets the size of the buffer in bytes.
 		/// </summary>
-		/// <param name="mapMode">Indicates which CPU operations are allowed on the buffer memory.</param>
-		public BufferData Map(MapMode mapMode)
+		public int SizeInBytes
 		{
-			Assert.NotDisposed(this);
-			return new BufferData(this, NativeMethods.MapBuffer(_buffer, mapMode));
-		}
-
-		/// <summary>
-		///     Maps the buffer and returns a pointer that the CPU can access. The operations that are allowed on the
-		///     returned pointer depend on the given map mode.
-		/// </summary>
-		/// <param name="mapMode">Indicates which CPU operations are allowed on the buffer memory.</param>
-		/// <param name="offset">A zero-based index denoting the first byte of the buffer that should be mapped.</param>
-		/// <param name="byteCount">The number of bytes that should be mapped.</param>
-		public BufferData MapRange(MapMode mapMode, int offset, int byteCount)
-		{
-			Assert.NotDisposed(this);
-			return new BufferData(this, NativeMethods.MapBufferRange(_buffer, mapMode, offset, byteCount));
+			get
+			{
+				Assert.NotDisposed(this);
+				return BufferObject.SizeInBytes;
+			}
 		}
 
 		/// <summary>
@@ -75,96 +63,63 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			NativeMethods.DestroyBuffer(_buffer);
+			BufferObject.SafeDispose();
+		}
+
+		/// <summary>
+		///     Invoked after the name of the graphics object has changed. This method is only invoked in debug builds.
+		/// </summary>
+		/// <param name="name">The new name of the graphics object.</param>
+		protected override void OnRenamed(string name)
+		{
+			BufferObject.SetName(name);
+		}
+
+		/// <summary>
+		///     Maps the buffer and returns a pointer that the CPU can access. The operations that are allowed on the
+		///     returned pointer depend on the given map mode.
+		/// </summary>
+		/// <param name="mapMode">Indicates which CPU operations are allowed on the buffer memory.</param>
+		public unsafe BufferData Map(MapMode mapMode)
+		{
+			Assert.NotDisposed(this);
+			Assert.ArgumentInRange(mapMode);
+			Assert.That(!_isMapped, "Buffer is already mapped.");
+
+			_isMapped = true;
+			return new BufferData(this, BufferObject.Map(mapMode));
+		}
+
+		/// <summary>
+		///     Maps the buffer and returns a pointer that the CPU can access. The operations that are allowed on the
+		///     returned pointer depend on the given map mode.
+		/// </summary>
+		/// <param name="mapMode">Indicates which CPU operations are allowed on the buffer memory.</param>
+		/// <param name="offsetInBytes">A zero-based index denoting the first byte of the buffer that should be mapped.</param>
+		/// <param name="byteCount">The number of bytes that should be mapped.</param>
+		public unsafe BufferData MapRange(MapMode mapMode, int offsetInBytes, int byteCount)
+		{
+			Assert.NotDisposed(this);
+			Assert.ArgumentInRange(mapMode);
+			Assert.That(offsetInBytes < SizeInBytes, "Invalid offset.");
+			Assert.InRange(byteCount, 1, SizeInBytes - 1);
+			Assert.That(offsetInBytes + byteCount <= SizeInBytes, "Buffer overflow.");
+			Assert.That(!_isMapped, "Buffer is already mapped.");
+
+			_isMapped = true;
+			return new BufferData(this, BufferObject.MapRange(mapMode, offsetInBytes, byteCount));
 		}
 
 		/// <summary>
 		///     Unmaps the buffer.
 		/// </summary>
-		public void Unmap()
+		internal void Unmap()
 		{
 			Assert.NotDisposed(this);
-			NativeMethods.UnmapBuffer(_buffer);
-		}
+			Assert.That(_isMapped, "Buffer is not mapped.");
 
-		/// <summary>
-		///     Copies the given data to the buffer, overwriting all previous data.
-		/// </summary>
-		/// <param name="data">The data that should be copied.</param>
-		/// <param name="size">The size of the data that should be copied in bytes.</param>
-		protected void CopyData(IntPtr data, int size)
-		{
-			Assert.ArgumentNotNull(data);
-			Assert.ArgumentSatisfies(size >= 0, "Invalid size.");
-			Assert.NotDisposed(this);
-
-			using (var gpuData = Map(MapMode.WriteDiscard))
-				gpuData.Write(data, 0, size);
-		}
-
-		/// <summary>
-		///     Updates the content of a constant buffer.
-		/// </summary>
-		/// <param name="data">The data that should be copied to the constant buffer.</param>
-		protected void UpdateConstantBuffer(IntPtr data)
-		{
-			Assert.ArgumentNotNull(data);
-			Assert.NotDisposed(this);
-
-			NativeMethods.UpdateConstantBuffer(_buffer, data);
-		}
-
-		/// <summary>
-		///     Binds the buffer to the given slot.
-		/// </summary>
-		/// <param name="slot">The slot the constant buffer should be bound to.</param>
-		protected void BindBuffer(int slot)
-		{
-			Assert.NotDisposed(this);
-			NativeMethods.BindConstantBuffer(_buffer, slot);
-		}
-
-#if DEBUG
-		/// <summary>
-		///     Invoked after the name of the graphics object has changed. This method is only available in debug builds.
-		/// </summary>
-		protected override void OnRenamed()
-		{
-			if (_buffer != IntPtr.Zero)
-				NativeMethods.SetName(_buffer, Name);
-		}
-#endif
-
-		/// <summary>
-		///     Provides access to the native buffer functions.
-		/// </summary>
-		[SuppressUnmanagedCodeSecurity]
-		private static class NativeMethods
-		{
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateBuffer")]
-			public static extern IntPtr CreateBuffer(IntPtr device, BufferType type, ResourceUsage usage, IntPtr data, int size);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDestroyBuffer")]
-			public static extern void DestroyBuffer(IntPtr buffer);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgMapBuffer")]
-			public static extern IntPtr MapBuffer(IntPtr buffer, MapMode mode);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgMapBufferRange")]
-			public static extern IntPtr MapBufferRange(IntPtr buffer, MapMode mode, int offset, int byteCount);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgUnmapBuffer")]
-			public static extern void UnmapBuffer(IntPtr buffer);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgBindConstantBuffer")]
-			public static extern void BindConstantBuffer(IntPtr buffer, int slot);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgUpdateConstantBuffer")]
-			public static extern IntPtr UpdateConstantBuffer(IntPtr buffer, IntPtr data);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetBufferName")]
-			[Conditional("DEBUG")]
-			public static extern void SetName(IntPtr texture, string name);
+			_isMapped = false;
+			BufferObject.Unmap();
 		}
 	}
 }

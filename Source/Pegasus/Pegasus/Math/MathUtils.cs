@@ -233,5 +233,79 @@
 		{
 			return (float)Math.Sqrt(value);
 		}
+
+		/// <summary>
+		///     Returns the cosine of the given angle.
+		/// </summary>
+		/// <param name="value">The angle, measured in radians.</param>
+		public static float Cos(double value)
+		{
+			return (float)Math.Cos(value);
+		}
+
+		/// <summary>
+		///     Returns the sine of the given angle.
+		/// </summary>
+		/// <param name="value">The angle, measured in radians.</param>
+		public static float Sin(double value)
+		{
+			return (float)Math.Sin(value);
+		}
+
+		/// <summary>
+		///     Returns the tangent of the given angle.
+		/// </summary>
+		/// <param name="value">The angle, measured in radians.</param>
+		public static float Tan(double value)
+		{
+			return (float)Math.Tan(value);
+		}
+
+		/// <summary>
+		///     Returns the angle in radians whose cosine is the given number.
+		/// </summary>
+		/// <param name="value">A value between -1 and 1.</param>
+		public static float Acos(double value)
+		{
+			Assert.ArgumentInRange(value, -1, 1);
+			return (float)Math.Acos(value);
+		}
+
+		/// <summary>
+		///     Returns the angle in radians whose sine is the given number.
+		/// </summary>
+		/// <param name="value">A value between -1 and 1.</param>
+		public static float Asin(double value)
+		{
+			return (float)Math.Asin(value);
+		}
+
+		/// <summary>
+		///     Returns the angle in radians whose tangent is the given number.
+		/// </summary>
+		/// <param name="value">A value representing a tangent.</param>
+		public static float Atan(double value)
+		{
+			return (float)Math.Atan(value);
+		}
+
+		/// <summary>
+		///     Returns the angle in radians whose tangent is the quotient of the two given numbers.
+		/// </summary>
+		/// <param name="y">The Y-coordinate of a point.</param>
+		/// <param name="x">The X-coordinate of a point.</param>
+		public static float Atan2(double y, double x)
+		{
+			return (float)Math.Atan2(y, x);
+		}
+
+		/// <summary>
+		///     Returns the square root of the given value.
+		/// </summary>
+		/// <param name="value">The value the square root should be returned for.</param>
+		public static float Sqrt(double value)
+		{
+			return (float)Math.Sqrt(value);
+		}
 	}
 }

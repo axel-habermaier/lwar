@@ -9,7 +9,7 @@
 	/// <summary>
 	///     Represents a player that is participating in a game session.
 	/// </summary>
-	public class Player : UniquePooledObject
+	internal class Player : UniquePooledObject
 	{
 		/// <summary>
 		///     Initializes the type.

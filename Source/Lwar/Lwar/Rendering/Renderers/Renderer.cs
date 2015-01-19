@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Collections.Generic;
+	using Assets;
 	using Pegasus.Assets;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
@@ -12,7 +13,7 @@
 	///     Renders elements into a 3D scene.
 	/// </summary>
 	/// <typeparam name="TElement">The type of the elements that the renderer draws.</typeparam>
-	public abstract class Renderer<TElement> : DisposableObject, IRenderer
+	internal abstract class Renderer<TElement> : DisposableObject, IRenderer
 		where TElement : class
 	{
 		/// <summary>
@@ -37,19 +38,11 @@
 		}
 
 		/// <summary>
-		///     Loads the required assets of the renderer.
-		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
-		public virtual void Load(GraphicsDevice graphicsDevice, AssetsManager assets)
-		{
-		}
-
-		/// <summary>
 		///     Initializes the renderer.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		public virtual void Initialize(GraphicsDevice graphicsDevice)
+		/// <param name="renderContext">The render context that should be used for drawing.</param>
+		/// <param name="assets">The asset bundle that provides access to Lwar assets.</param>
+		public virtual void Initialize(RenderContext renderContext, GameBundle assets)
 		{
 		}
 
@@ -148,7 +141,7 @@
 			///     Initializes a new instance.
 			/// </summary>
 			/// <param name="enumerator">The enumerator that should be used in a foreach statement.</param>
-			public Enumerator(List<TElement>.Enumerator enumerator)
+			internal Enumerator(List<TElement>.Enumerator enumerator)
 			{
 				_enumerator = enumerator;
 			}

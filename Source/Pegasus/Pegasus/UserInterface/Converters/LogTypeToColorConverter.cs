@@ -3,6 +3,7 @@
 	using System;
 	using Platform.Graphics;
 	using Platform.Logging;
+	using Rendering;
 	using Utilities;
 
 	/// <summary>

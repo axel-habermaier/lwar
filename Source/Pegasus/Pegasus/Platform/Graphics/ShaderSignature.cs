@@ -1,101 +1,106 @@
 ﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
+	using System.Collections.Generic;
 	using System.Linq;
+	using Logging;
+	using Memory;
 	using Utilities;
 
 	/// <summary>
 	///     Represents a shader signature.
 	/// </summary>
-	public struct ShaderSignature : IEquatable<ShaderSignature>
+	public struct ShaderSignature
 	{
+		/// <summary>
+		///     The list of known shader signatures.
+		/// </summary>
+		private static readonly List<ShaderSignature> Signatures = new List<ShaderSignature>();
+
 		/// <summary>
 		///     The compiled shader signature byte code.
 		/// </summary>
-		public readonly byte[] ByteCode;
+		private byte[] _byteCode;
 
 		/// <summary>
 		///     The inputs of the shader.
 		/// </summary>
-		public readonly ShaderInput[] Inputs;
+		private ShaderInput[] _inputs;
 
 		/// <summary>
-		///     Initializes a new instance.
+		///     Gets the number of shader inputs.
 		/// </summary>
-		/// <param name="inputs">The inputs of the shader.</param>
-		public ShaderSignature(ShaderInput[] inputs)
+		private int InputCount
 		{
-			Assert.ArgumentNotNull(inputs);
-			Assert.ArgumentSatisfies(inputs.Length > 0, "Expected at least one input.");
-
-			Inputs = inputs;
-			ByteCode = null;
+			get { return _inputs.Length; }
 		}
 
 		/// <summary>
-		///     Initializes a new instance.
+		///     Gets a shader signature for the given vertex inputs.
 		/// </summary>
-		/// <param name="inputs">The inputs of the shader.</param>
-		/// <param name="byteCode">The compiled shader signature byte code.</param>
-		public ShaderSignature(ShaderInput[] inputs, byte[] byteCode)
+		/// <param name="vertexBindings">The vertex inputs the shader signature should be retrieved for.</param>
+		internal static byte[] GetShaderSignature(VertexBinding[] vertexBindings)
 		{
-			Assert.ArgumentNotNull(inputs);
-			Assert.ArgumentNotNull(byteCode);
-			Assert.ArgumentSatisfies(inputs.Length > 0, "Expected at least one input.");
+			Assert.ArgumentNotNull(vertexBindings);
 
-			Inputs = inputs;
-			ByteCode = byteCode;
+			// This might be slow, but this doesn't happen often anyway...
+			var compatibleSignatures = (from signature in Signatures
+										where signature._inputs.Length <= vertexBindings.Length
+										let isCompatibleSignature = signature._inputs.All(input =>
+											vertexBindings.Any(binding => input.Format == binding.Format && input.Semantics == binding.Semantics))
+										where isCompatibleSignature
+										select signature).ToArray();
+
+			if (compatibleSignatures.Length == 0)
+				Log.Die("No compatible shader signature could be found for the requested vertex input bindings.");
+
+			return compatibleSignatures[0]._byteCode;
 		}
 
 		/// <summary>
-		///     Indicates whether the current object is equal to another object of the same type.
+		///     Loads the shader signatures from the given buffer.
 		/// </summary>
-		/// <param name="other">An object to compare with this object.</param>
-		public bool Equals(ShaderSignature other)
+		/// <param name="buffer">The buffer the shader signature should be loaded from.</param>
+		public static void LoadSignatures(ref BufferReader buffer)
 		{
-			var byteCodeEqual = ReferenceEquals(ByteCode, other.ByteCode) ||
-								(ByteCode != null && other.ByteCode != null && ByteCode.SequenceEqual(other.ByteCode));
+			var count = buffer.ReadInt32();
+			Assert.That(count <= GraphicsDevice.MaxVertexBindings, "Too many shader inputs.");
 
-			var inputsEqual = ReferenceEquals(Inputs, other.Inputs) ||
-							  (Inputs != null && other.Inputs != null && Inputs.SequenceEqual(other.Inputs));
-
-			return byteCodeEqual && inputsEqual;
-		}
-
-		/// <summary>
-		///     Indicates whether this instance and a specified object are equal.
-		/// </summary>
-		/// <param name="obj">Another object to compare to. </param>
-		public override bool Equals(object obj)
-		{
-			if (ReferenceEquals(null, obj))
-				return false;
-
-			return obj is ShaderSignature && Equals((ShaderSignature)obj);
-		}
-
-		/// <summary>
-		///     Returns the hash code for this instance.
-		/// </summary>
-		public override int GetHashCode()
-		{
-			unchecked
+			for (var i = 0; i < count; ++i)
 			{
-				var hash = 0;
+				// Load the signature from the buffer
+				var signature = new ShaderSignature { _inputs = new ShaderInput[buffer.ReadByte()] };
 
-				if (ByteCode != null)
+				for (var j = 0; j < signature.InputCount; ++j)
 				{
-					foreach (var b in ByteCode)
-						hash ^= b * 397;
+					signature._inputs[j].Format = (VertexDataFormat)(buffer.ReadByte());
+					signature._inputs[j].Semantics = (DataSemantics)(buffer.ReadByte());
 				}
 
-				if (Inputs != null)
+				// Check if we already know of such a signature; if so, ignore this one, otherwise, 
+				// add it to the list of known signatures.
+				// This might be slow, but this doesn't happen often anyway...
+				var found = false;
+				foreach (var knownSignature in Signatures.Where(knownSignature => knownSignature.InputCount == signature.InputCount))
 				{
-					foreach (var input in Inputs)
-						hash ^= input.GetHashCode() * 397;
+					found = true;
+					for (var j = 0; j < signature.InputCount && found; ++j)
+					{
+						found &= signature._inputs[j].Format == knownSignature._inputs[j].Format &&
+								 signature._inputs[j].Semantics == knownSignature._inputs[j].Semantics;
+					}
+
+					if (found)
+						break;
 				}
 
-				return hash;
+				if (!found)
+				{
+					signature._byteCode = buffer.ReadByteArray();
+					Signatures.Add(signature);
+				}
+				else
+					buffer.Skip(buffer.ReadInt32());
 			}
 		}
 	}

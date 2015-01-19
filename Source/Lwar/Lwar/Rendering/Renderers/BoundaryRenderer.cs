@@ -1,17 +1,16 @@
 ﻿namespace Lwar.Rendering.Renderers
 {
 	using System;
+	using Assets;
 	using Assets.Effects;
-	using Pegasus.Assets;
 	using Pegasus.Math;
-	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
 
 	/// <summary>
 	///     Renders the world boundary.
 	/// </summary>
-	public class BoundaryRenderer : DisposableObject, IRenderer
+	internal class BoundaryRenderer : DisposableObject, IRenderer
 	{
 		/// <summary>
 		///     The effect that is used to draw the level boundary.
@@ -24,25 +23,18 @@
 		private Model _model;
 
 		/// <summary>
-		///     Loads the required assets of the renderer.
-		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
-		public void Load(GraphicsDevice graphicsDevice, AssetsManager assets)
-		{
-			_effect = new SimpleVertexEffect(graphicsDevice, assets) { Color = new Vector4(0.3f, 0, 0, 0.3f), World = Matrix.Identity };
-		}
-
-		/// <summary>
 		///     Initializes the renderer.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		public void Initialize(GraphicsDevice graphicsDevice)
+		/// <param name="renderContext">The render context that should be used for drawing.</param>
+		/// <param name="assets">The asset bundle that provides access to Lwar assets.</param>
+		public void Initialize(RenderContext renderContext, GameBundle assets)
 		{
 			const int thickness = 64;
 			var outline = new CircleOutline();
 			outline.Add(Int16.MaxValue + thickness / 2, 256, thickness);
-			_model = outline.ToModel(graphicsDevice);
+			_model = outline.ToModel(renderContext.GraphicsDevice);
+
+			_effect = assets.SimpleVertexEffect;
 		}
 
 		/// <summary>
@@ -51,6 +43,8 @@
 		/// <param name="output">The output that the bullets should be rendered to.</param>
 		public void Draw(RenderOutput output)
 		{
+			_effect.Color = new Vector4(0.3f, 0, 0, 0.3f);
+			_effect.World = Matrix.Identity;
 			_model.Draw(output, _effect.Default);
 		}
 
@@ -67,7 +61,6 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_effect.SafeDispose();
 			_model.SafeDispose();
 		}
 	}

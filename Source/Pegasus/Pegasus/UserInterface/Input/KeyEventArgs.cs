@@ -34,7 +34,7 @@
 		///     Gets the key's scan code. The scan code is independent of the keyboard layout but may differ between
 		///     operating systems.
 		/// </summary>
-		public int ScanCode { get; private set; }
+		public ScanCode ScanCode { get; private set; }
 
 		/// <summary>
 		///     Gets a value indicating whether the key or button is currently being pressed down.
@@ -83,10 +83,10 @@
 		/// <param name="key">The key that was pressed or released.</param>
 		/// <param name="scanCode">The key's scan code.</param>
 		/// <param name="state">The state of the key.</param>
-		internal static KeyEventArgs Create(Keyboard keyboard, Key key, int scanCode, InputState state)
+		internal static KeyEventArgs Create(Keyboard keyboard, Key key, ScanCode scanCode, InputState state)
 		{
 			Assert.ArgumentNotNull(keyboard);
-			Assert.ArgumentInRange(key);
+			Assert.ArgumentInRange(scanCode);
 
 			CachedInstance.Reset();
 			CachedInstance.Key = key;

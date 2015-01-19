@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<AssetBundle Namespace="Pegasus.Assets" EffectsCodePath="../Pegasus/Assets/Effects" BundleCodePath="../Pegasus/Assets" Visibility="public">
+
+	<Cursor File="Textures/PointerCursor.png" HotSpot="0,0" />
+	<Cursor File="Textures/TextCursor.png" HotSpot="7,7" />
+
+	<Texture2D File="Textures/ParticleTest.png" Compress="false" GenerateMipmaps="false" />
+
+	<Effect File="Effects/BillboardParticleEffect.cs" />
+	<Effect File="Effects/BloomEffect.cs" />
+	<Effect File="Effects/SpriteEffect.cs" />
+
+	<Font File="Fonts/LiberationMono-Regular.ttf" Family="Liberation Mono" Size="11" Aliased="true" Italic="false" Bold="false"
+		  Characters="0-256" InvalidChar="□" RuntimeName="DefaultFont" />
+
+</AssetBundle>

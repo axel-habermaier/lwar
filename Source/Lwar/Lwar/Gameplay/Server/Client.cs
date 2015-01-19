@@ -10,7 +10,7 @@
 	/// <summary>
 	///     Represents a connection to a client.
 	/// </summary>
-	public partial class Client : UniquePooledObject, IMessageHandler
+	internal partial class Client : UniquePooledObject, IMessageHandler
 	{
 		/// <summary>
 		///     The allocator that is used to allocate game objects.

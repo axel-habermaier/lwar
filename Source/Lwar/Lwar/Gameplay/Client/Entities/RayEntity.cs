@@ -9,7 +9,7 @@
 	/// <summary>
 	///     Represents a ray.
 	/// </summary>
-	public class RayEntity : Entity<RayEntity>, IRayEntity
+	internal class RayEntity : Entity<RayEntity>, IRayEntity
 	{
 		/// <summary>
 		///     The shield effect that is shown when the ray hits a ship.

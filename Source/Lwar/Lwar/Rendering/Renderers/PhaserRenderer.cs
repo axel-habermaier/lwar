@@ -2,12 +2,12 @@
 {
 	using System;
 	using Gameplay.Client.Entities;
-	using Pegasus.Platform.Graphics;
+	using Pegasus.Rendering;
 
 	/// <summary>
 	///     Renders phasers into a 3D scene.
 	/// </summary>
-	public class PhaserRenderer : Renderer<PhaserEntity>
+	internal class PhaserRenderer : Renderer<PhaserEntity>
 	{
 		/// <summary>
 		///     Draws all phasers.

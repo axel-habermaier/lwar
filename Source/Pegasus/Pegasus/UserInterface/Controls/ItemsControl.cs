@@ -11,6 +11,11 @@
 	public class ItemsControl : Control
 	{
 		/// <summary>
+		///     The maximum number of pooled child UI elements.
+		/// </summary>
+		private const int MaxPooledItems = 32;
+
+		/// <summary>
 		///     The default template that defines the visual appearance of an items control.
 		/// </summary>
 		private static readonly ControlTemplate DefaultTemplate = control => new StackPanel { IsItemsHost = true };
@@ -38,16 +43,7 @@
 		/// <summary>
 		///     Pools items created from the data template for later reuse.
 		/// </summary>
-		private readonly Queue<UIElement> _pooledItems = new Queue<UIElement>();
-
-		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static ItemsControl()
-		{
-			ItemsSourceProperty.Changed += OnItemsSourceChanged;
-			ItemTemplateProperty.Changed += OnTemplateChanged;
-		}
+		private readonly Queue<UIElement> _pooledItems = new Queue<UIElement>(MaxPooledItems);
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -56,6 +52,15 @@
 		{
 			SetStyleValue(TemplateProperty, DefaultTemplate);
 			SetStyleValue(ItemTemplateProperty, DefaultItemTemplate);
+		}
+
+		/// <summary>
+		///     Initializes the type.
+		/// </summary>
+		static ItemsControl()
+		{
+			ItemsSourceProperty.Changed += OnItemsSourceChanged;
+			ItemTemplateProperty.Changed += OnTemplateChanged;
 		}
 
 		/// <summary>
@@ -204,7 +209,7 @@
 		/// <param name="index">The zero-based index of the item that should be removed.</param>
 		protected virtual void RemoveItem(int index)
 		{
-			_pooledItems.Enqueue(ItemsHost.Children[index]);
+			PoolItem(ItemsHost.Children[index]);
 			ItemsHost.Children.RemoveAt(index);
 		}
 
@@ -215,7 +220,7 @@
 		/// <param name="index">The zero-based index of the item that should be replaced.</param>
 		protected virtual void ReplaceItem(object item, int index)
 		{
-			_pooledItems.Enqueue(ItemsHost.Children[index]);
+			PoolItem(ItemsHost.Children[index]);
 			ItemsHost.Children[index] = CreateChildElement(item);
 		}
 
@@ -225,7 +230,7 @@
 		protected virtual void ClearItems()
 		{
 			foreach (var item in ItemsHost.Children)
-				_pooledItems.Enqueue(item);
+				PoolItem(item);
 
 			ItemsHost.Clear();
 		}
@@ -246,6 +251,20 @@
 
 			foreach (var item in items)
 				AddItem(item, ItemsHost.Children.Count);
+		}
+
+		/// <summary>
+		///     Pools the given item.
+		/// </summary>
+		/// <param name="item">The item that should be pooled.</param>
+		private void PoolItem(UIElement item)
+		{
+			Assert.ArgumentNotNull(item);
+
+			if (_pooledItems.Count >= MaxPooledItems)
+				return;
+
+			_pooledItems.Enqueue(item);
 		}
 
 		/// <summary>

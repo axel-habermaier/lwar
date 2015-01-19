@@ -9,7 +9,7 @@
 	/// <summary>
 	///     Represents a transformation in a transformation hierarchy.
 	/// </summary>
-	public class Transformation
+	internal class Transformation
 	{
 		/// <summary>
 		///     The children of the transformation.

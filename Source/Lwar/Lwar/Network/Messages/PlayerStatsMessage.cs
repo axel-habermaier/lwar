@@ -8,7 +8,7 @@ namespace Lwar.Network.Messages
 	///     Informs a client about the player stats of itself and other clients.
 	/// </summary>
 	[UnreliableTransmission(MessageType.PlayerStats, EnableBatching = true)]
-	public sealed class PlayerStatsMessage : Message
+	internal sealed class PlayerStatsMessage : Message
 	{
 		/// <summary>
 		///     Initializes the type.
@@ -49,9 +49,9 @@ namespace Lwar.Network.Messages
 		///     Serializes the message using the given writer.
 		/// </summary>
 		/// <param name="writer">The writer that should be used to serialize the message.</param>
-		public override void Serialize(BufferWriter writer)
+		public override void Serialize(ref BufferWriter writer)
 		{
-			writer.WriteIdentifier(Player);
+			WriteIdentifier(ref writer, Player);
 			writer.WriteUInt16(Kills);
 			writer.WriteUInt16(Deaths);
 			writer.WriteUInt16(Ping);
@@ -61,9 +61,9 @@ namespace Lwar.Network.Messages
 		///     Deserializes the message using the given reader.
 		/// </summary>
 		/// <param name="reader">The reader that should be used to deserialize the message.</param>
-		public override void Deserialize(BufferReader reader)
+		public override void Deserialize(ref BufferReader reader)
 		{
-			Player = reader.ReadIdentifier();
+			Player = ReadIdentifier(ref reader);
 			Kills = reader.ReadUInt16();
 			Deaths = reader.ReadUInt16();
 			Ping = reader.ReadUInt16();

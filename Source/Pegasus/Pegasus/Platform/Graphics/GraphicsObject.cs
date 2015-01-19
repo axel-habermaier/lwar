@@ -18,8 +18,6 @@
 		{
 			Assert.ArgumentNotNull(graphicsDevice);
 			GraphicsDevice = graphicsDevice;
-
-			SetName("Unnamed");
 		}
 
 		/// <summary>
@@ -34,31 +32,42 @@
 		public void SetName(string name, params object[] arguments)
 		{
 #if DEBUG
-			name = String.Format(name, arguments);
+			Name = String.Format(name, arguments);
+			SetDescription(Name);
 
-			Assert.ArgumentNotNullOrWhitespace(name);
-			Name = name;
-			OnRenamed();
-			SetDescription(name);
+			if (!String.IsNullOrWhiteSpace(Name))
+				OnRenamed(Name);
 #endif
 		}
 
+		/// <summary>
+		///     Ensures the current name is set on the native object after the native object has been recreated.
+		/// </summary>
+		[Conditional("DEBUG")]
+		protected void SetName()
+		{
 #if DEBUG
+			if (!String.IsNullOrWhiteSpace(Name))
+				OnRenamed(Name);
+#endif
+		}
 
 		/// <summary>
-		///		Gets the name of the graphics object. This property is only available in debug builds.
+		///     Invoked after the name of the graphics object has changed. This method is only invoked in debug builds.
+		/// </summary>
+		/// <param name="name">The new name of the graphics object.</param>
+		protected virtual void OnRenamed(string name)
+		{
+		}
+
+#if DEBUG
+		/// <summary>
+		///     Gets the name of the graphics object. This property is only available in debug builds.
 		/// </summary>
 		protected string Name { get; private set; }
 
 		/// <summary>
-		///		Invoked after the name of the graphics object has changed. This method is only available in debug builds.
-		/// </summary>
-		protected virtual void OnRenamed()
-		{
-		}
-
-		/// <summary>
-		///		Returns a string that represents the current object.
+		///     Returns a string that represents the current object.
 		/// </summary>
 		public override string ToString()
 		{

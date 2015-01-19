@@ -7,7 +7,7 @@
 	/// <summary>
 	///     Represents a bullet.
 	/// </summary>
-	public class BulletEntity : Entity<BulletEntity>
+	internal class BulletEntity : Entity<BulletEntity>
 	{
 		/// <summary>
 		///     Creates a new instance.

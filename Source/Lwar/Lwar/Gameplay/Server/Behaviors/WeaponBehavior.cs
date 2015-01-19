@@ -9,7 +9,7 @@ namespace Lwar.Gameplay.Server.Behaviors
 	/// <summary>
 	///     A base class for weapon behaviors, managing weapon cooldown and energy.
 	/// </summary>
-	public abstract class WeaponBehavior : Behavior<Weapon>
+	internal abstract class WeaponBehavior : Behavior<Weapon>
 	{
 		/// <summary>
 		///     Indicates whether the weapon is currently firing.
@@ -55,7 +55,7 @@ namespace Lwar.Gameplay.Server.Behaviors
 		/// </summary>
 		protected virtual void Fire()
 		{
-			Assert.NotReached("Non-continuous weapons must override the StartFiring method.");
+			Assert.NotReached("Non-continuous weapons must override the Fire method.");
 		}
 
 		/// <summary>

@@ -9,7 +9,7 @@
 	/// <summary>
 	///     Represents an explosion
 	/// </summary>
-	public class ExplosionActor : Actor<ExplosionActor>
+	internal class ExplosionActor : Actor<ExplosionActor>
 	{
 		/// <summary>
 		///     The position of the explosion;

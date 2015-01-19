@@ -74,7 +74,7 @@
 			}
 			catch (FileSystemException e)
 			{
-				Log.Error("Failed to load console history from '{0}/{1}': {2}", FileSystem.UserDirectory, file.FileName, e.Message);
+				Log.Error("Failed to load console history: {0}", e.Message);
 				return;
 			}
 

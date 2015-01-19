@@ -10,11 +10,11 @@
 		/// <summary>
 		///     Indicates that only the wireframe should be drawn.
 		/// </summary>
-		Wireframe = 1501,
+		Wireframe,
 
 		/// <summary>
 		///     Indicates that a solid polygon should be drawn.
 		/// </summary>
-		Solid = 1502
+		Solid
 	}
 }

@@ -2,7 +2,7 @@
 {
 	using System;
 	using ICSharpCode.NRefactory;
-	using Platform.Logging;
+	using Utilities;
 
 	/// <summary>
 	///     Provides methods to report errors and warnings.

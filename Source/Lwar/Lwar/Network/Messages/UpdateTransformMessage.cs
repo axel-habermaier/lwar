@@ -9,7 +9,7 @@ namespace Lwar.Network.Messages
 	///     Informs a client about an updated entity position and orientation.
 	/// </summary>
 	[UnreliableTransmission(MessageType.UpdateTransform, EnableBatching = true)]
-	public sealed class UpdateTransformMessage : Message
+	internal sealed class UpdateTransformMessage : Message
 	{
 		/// <summary>
 		///     Initializes the type.
@@ -45,22 +45,22 @@ namespace Lwar.Network.Messages
 		///     Serializes the message using the given writer.
 		/// </summary>
 		/// <param name="writer">The writer that should be used to serialize the message.</param>
-		public override void Serialize(BufferWriter writer)
+		public override void Serialize(ref BufferWriter writer)
 		{
-			writer.WriteIdentifier(Entity);
-			writer.WriteVector2(Position);
-			writer.WriteOrientation(Orientation);
+			WriteIdentifier(ref writer, Entity);
+			WriteVector2(ref writer, Position);
+			WriteOrientation(ref writer, Orientation);
 		}
 
 		/// <summary>
 		///     Deserializes the message using the given reader.
 		/// </summary>
 		/// <param name="reader">The reader that should be used to deserialize the message.</param>
-		public override void Deserialize(BufferReader reader)
+		public override void Deserialize(ref BufferReader reader)
 		{
-			Entity = reader.ReadIdentifier();
-			Position = reader.ReadVector2();
-			Orientation = reader.ReadOrientation();
+			Entity = ReadIdentifier(ref reader);
+			Position = ReadVector2(ref reader);
+			Orientation = ReadOrientation(ref reader);
 		}
 
 		/// <summary>

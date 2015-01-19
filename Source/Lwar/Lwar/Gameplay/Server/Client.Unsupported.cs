@@ -5,7 +5,7 @@
 	using Network.Messages;
 	using Pegasus.Utilities;
 
-	public partial class Client
+	internal partial class Client
 	{
 		/// <summary>
 		///     Handles the given message.

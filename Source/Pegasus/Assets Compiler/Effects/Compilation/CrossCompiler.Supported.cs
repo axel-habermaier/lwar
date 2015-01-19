@@ -143,14 +143,6 @@
 			Writer.Append(primitiveExpression.Value.ToString().ToLower());
 		}
 
-		protected virtual void VisitIntrinsicExpression(InvocationExpression invocationExpression)
-		{
-			var intrinsic = invocationExpression.ResolveIntrinsic(Resolver);
-			Writer.Append("{0}(", GetToken(intrinsic));
-			invocationExpression.Arguments.AcceptVisitor(this, () => Writer.Append(", "));
-			Writer.Append(")");
-		}
-
 		public virtual void VisitInvocationExpression(InvocationExpression invocationExpression)
 		{
 			var intrinsic = invocationExpression.ResolveIntrinsic(Resolver);
@@ -270,6 +262,14 @@
 			whileStatement.Condition.AcceptVisitor(this);
 			Writer.AppendLine(")");
 			VisitStatementBlock(whileStatement.EmbeddedStatement);
+		}
+
+		protected virtual void VisitIntrinsicExpression(InvocationExpression invocationExpression)
+		{
+			var intrinsic = invocationExpression.ResolveIntrinsic(Resolver);
+			Writer.Append("{0}(", GetToken(intrinsic));
+			invocationExpression.Arguments.AcceptVisitor(this, () => Writer.Append(", "));
+			Writer.Append(")");
 		}
 	}
 }

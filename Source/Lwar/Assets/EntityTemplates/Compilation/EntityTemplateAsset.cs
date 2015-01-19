@@ -1,24 +1,37 @@
-using Pegasus.AssetsCompiler.Assets.Attributes;
-
-[assembly: Ignore("EntityTemplates/Compilation/EntityTemplateAsset.cs")]
-
-namespace Lwar.Assets.EntityTemplates.Compilation
+﻿namespace Lwar.Assets.EntityTemplates.Compilation
 {
 	using System;
+	using System.Xml.Linq;
 	using Pegasus.AssetsCompiler.Assets;
 
 	/// <summary>
-	///     Represents a C# file that contains an entity template definition.
+	///     Represents an entity template.
 	/// </summary>
 	internal class EntityTemplateAsset : Asset
 	{
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="relativePath">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
-		public EntityTemplateAsset(string relativePath)
-			: base(relativePath, doNotCreateTargetPath: true)
+		/// <param name="metadata">The metadata of the asset.</param>
+		public EntityTemplateAsset(XElement metadata)
+			: base(metadata, "File")
 		{
+		}
+
+		/// <summary>
+		///     Gets the type of the asset.
+		/// </summary>
+		public override byte AssetType
+		{
+			get { throw new NotSupportedException(); }
+		}
+
+		/// <summary>
+		///     Gets the runtime type of the asset.
+		/// </summary>
+		public override string RuntimeType
+		{
+			get { throw new NotSupportedException(); }
 		}
 	}
 }

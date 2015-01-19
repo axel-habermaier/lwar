@@ -1,11 +1,11 @@
 ﻿namespace Pegasus.AssetsCompiler.Compilers
 {
 	using System;
-	using System.Collections.Generic;
 	using System.IO;
-	using System.Linq;
+	using System.Xml.Linq;
 	using Assets;
-	using Platform.Logging;
+	using Commands;
+	using Utilities;
 	using Xaml;
 
 	/// <summary>
@@ -14,71 +14,50 @@
 	internal class XamlCompiler : AssetCompiler<XamlAsset>
 	{
 		/// <summary>
-		///     Compiles all assets of the compiler's asset source type.
+		///     Provides type information for the Xaml compiler.
 		/// </summary>
-		/// <param name="assets">The assets that should be compiled.</param>
-		public override void Compile(IEnumerable<Asset> assets)
+		private XamlTypeInfoProvider _typeInfo;
+
+		/// <summary>
+		///     Loads the type information provided by the Xaml project.
+		/// </summary>
+		/// <param name="fileName">The file that contains the type information.</param>
+		public void LoadTypeInfo(string fileName)
 		{
-			var xamlAssets = assets.OfType<XamlAsset>().ToArray();
-
-			if (DetermineAction(xamlAssets) == CompilationAction.Skip)
-				Log.Info("Skipping compilation of Xaml files (no changes detected).");
-			else
-			{
-				var typeInfo = new XamlTypeInfoProvider(Path.Combine(Configuration.SourceDirectory, "TypeInfo.xml"));
-				var serializer = new XamlToCSharpSerializer(typeInfo);
-
-				foreach (var asset in xamlAssets)
-				{
-					Log.Info("Compiling '{0}'...", asset.RelativePath);
-
-					var xamlFile = new XamlFile(asset.SourcePath, typeInfo);
-					if (xamlFile.Root != null)
-					{
-						var className = Path.GetFileNameWithoutExtension(asset.RelativePath);
-						var namespaceName = Path.GetDirectoryName(asset.RelativePath).Replace("/", ".").Replace("\\", ".");
-						serializer.SerializeToCSharp(xamlFile, namespaceName, className);
-					}
-
-					Hash.Compute(asset.SourcePath).WriteTo(asset.HashPath);
-				}
-
-				File.WriteAllText(Configuration.CSharpXamlFile, serializer.GetGeneratedCode());
-			}
+			Assert.ArgumentNotNullOrWhitespace(fileName);
+			_typeInfo = new XamlTypeInfoProvider(fileName);
 		}
 
 		/// <summary>
-		///     Removes the compiled assets and all temporary files written by the compiler.
+		///     Creates an asset instance for the given XML element or returns null if the type of the asset is not
+		///     supported by the compiler.
 		/// </summary>
-		/// <param name="assets">The assets that should be cleaned.</param>
-		public override void Clean(IEnumerable<Asset> assets)
+		/// <param name="assetMetadata">The metadata of the asset that should be compiled.</param>
+		protected override XamlAsset CreateAsset(XElement assetMetadata)
 		{
-			foreach (var asset in assets.OfType<XamlAsset>())
-			{
-				File.Delete(asset.TempPath);
-				File.Delete(asset.HashPath);
-			}
+			if (assetMetadata.Name == "Xaml")
+				return new XamlAsset(assetMetadata);
+
+			return null;
 		}
 
 		/// <summary>
-		///     Checks whether any of the Xaml assets have changed.
+		///     Compiles the asset.
 		/// </summary>
-		/// <param name="xamlAssets">The Xaml assets that should be checked to determine the compilation action.</param>
-		private static CompilationAction DetermineAction(IEnumerable<XamlAsset> xamlAssets)
+		/// <param name="asset">The asset that should be compiled.</param>
+		/// <param name="writer">The writer the compilation output should be appended to.</param>
+		protected override void Compile(XamlAsset asset, AssetWriter writer)
 		{
-			foreach (var asset in xamlAssets)
+			var serializer = new XamlToCSharpSerializer(_typeInfo);
+
+			var xamlFile = new XamlFile(asset.AbsoluteSourcePath, _typeInfo);
+			if (xamlFile.Root != null)
 			{
-				if (!File.Exists(asset.HashPath))
-					return CompilationAction.Process;
-
-				var oldHash = Hash.FromFile(asset.HashPath);
-				var newHash = Hash.Compute(asset.SourcePath);
-
-				if (oldHash != newHash)
-					return CompilationAction.Process;
+				var className = Path.GetFileNameWithoutExtension(asset.SourcePath);
+				var namespaceName = Path.GetDirectoryName(asset.SourcePath).Replace("/", ".").Replace("\\", ".");
+				serializer.SerializeToCSharp(xamlFile, namespaceName, className);
+				File.WriteAllText(Path.Combine(Configuration.XamlCodePath, asset.FileNameWithoutExtension + ".ui.cs"), serializer.GetGeneratedCode());
 			}
-
-			return CompilationAction.Skip;
 		}
 	}
 }

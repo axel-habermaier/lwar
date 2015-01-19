@@ -7,7 +7,7 @@
 	/// <summary>
 	///     Manages the delivery guarantees of all incoming and outgoing messages.
 	/// </summary>
-	public class DeliveryManager
+	internal class DeliveryManager
 	{
 		/// <summary>
 		///     The sequence number of the last reliable message that has been assigned and acknowledged.

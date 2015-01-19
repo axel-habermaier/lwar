@@ -9,7 +9,7 @@ namespace Lwar.Network.Messages
 	///     Informs a client about an updated entity position.
 	/// </summary>
 	[UnreliableTransmission(MessageType.UpdatePosition, EnableBatching = true)]
-	public sealed class UpdatePositionMessage : Message
+	internal sealed class UpdatePositionMessage : Message
 	{
 		/// <summary>
 		///     Initializes the type.
@@ -40,20 +40,20 @@ namespace Lwar.Network.Messages
 		///     Serializes the message using the given writer.
 		/// </summary>
 		/// <param name="writer">The writer that should be used to serialize the message.</param>
-		public override void Serialize(BufferWriter writer)
+		public override void Serialize(ref BufferWriter writer)
 		{
-			writer.WriteIdentifier(Entity);
-			writer.WriteVector2(Position);
+			WriteIdentifier(ref writer, Entity);
+			WriteVector2(ref writer, Position);
 		}
 
 		/// <summary>
 		///     Deserializes the message using the given reader.
 		/// </summary>
 		/// <param name="reader">The reader that should be used to deserialize the message.</param>
-		public override void Deserialize(BufferReader reader)
+		public override void Deserialize(ref BufferReader reader)
 		{
-			Entity = reader.ReadIdentifier();
-			Position = reader.ReadVector2();
+			Entity = ReadIdentifier(ref reader);
+			Position = ReadVector2(ref reader);
 		}
 
 		/// <summary>

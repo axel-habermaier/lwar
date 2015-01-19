@@ -3,6 +3,7 @@
 	using System;
 	using System.Globalization;
 	using Network;
+	using Network.Server;
 	using Pegasus.Platform.Network;
 	using Pegasus.UserInterface.ViewModels;
 	using Scripting;
@@ -11,7 +12,7 @@
 	/// <summary>
 	///     Lets the user start a local game server.
 	/// </summary>
-	public class StartGameViewModel : StackedViewModel
+	internal class StartGameViewModel : StackedViewModel
 	{
 		/// <summary>
 		///     The IP address of the server to connect to.
@@ -107,7 +108,7 @@
 				return;
 
 			var port = UInt16.Parse(_port);
-			if (Server.TryStart(_serverName, port))
+			if (LwarServer.TryStart(_serverName, port))
 				Commands.Connect(IPAddress.LocalHost, port);
 		}
 

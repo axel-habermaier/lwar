@@ -6,7 +6,7 @@
 	/// <summary>
 	///     Simulates the game physics.
 	/// </summary>
-	public class PhysicsSimulation
+	internal class PhysicsSimulation
 	{
 		/// <summary>
 		///     The game session the physics simulation belongs to.

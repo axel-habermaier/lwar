@@ -125,10 +125,10 @@ internal interface ICommands
 	void ReloadAssets();
 
 	/// <summary>
-	///     Restarts the graphics subsystem after a resolution or video mode change.
+	///     Exits and restarts the application.
 	/// </summary>
 	[Command]
-	void RestartGraphics();
+	void Restart();
 
 	/// <summary>
 	///     Toggles the value of a Boolean console variable.

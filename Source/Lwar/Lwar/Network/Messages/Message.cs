@@ -5,13 +5,14 @@
 	using System.Linq;
 	using System.Reflection;
 	using System.Runtime.CompilerServices;
+	using Pegasus.Math;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Utilities;
 
 	/// <summary>
 	///     Represents a message that is used for the communication between the server and the client.
 	/// </summary>
-	public abstract class Message : SharedPooledObject
+	internal abstract class Message : SharedPooledObject
 	{
 		/// <summary>
 		///     Maps a message type to its transmission information.
@@ -29,15 +30,17 @@
 		/// </summary>
 		static Message()
 		{
-			var allocateMethod = typeof(Message).GetMethod("CreateAllocator", BindingFlags.NonPublic | BindingFlags.Static);
+			var allocateMethod = typeof(Message).GetTypeInfo().GetDeclaredMethod("CreateAllocator");
 
-			var messageTypes = Assembly
-				.GetExecutingAssembly()
-				.GetTypes().Where(type => type.IsClass && !type.IsAbstract && typeof(Message).IsAssignableFrom(type));
+			var messageTypes = typeof(Message)
+				.GetTypeInfo()
+				.Assembly
+				.DefinedTypes
+				.Where(type => type.IsClass && !type.IsAbstract && typeof(Message).GetTypeInfo().IsAssignableFrom(type));
 
 			foreach (var messageType in messageTypes)
 			{
-				var allocator = (Func<PoolAllocator, Message>)allocateMethod.MakeGenericMethod(messageType).Invoke(null, null);
+				var allocator = (Func<PoolAllocator, Message>)allocateMethod.MakeGenericMethod(messageType.AsType()).Invoke(null, null);
 				var reliable = (ReliableTransmissionAttribute)messageType
 					.GetCustomAttributes(typeof(ReliableTransmissionAttribute), false).FirstOrDefault();
 				var unreliable = (UnreliableTransmissionAttribute)messageType
@@ -53,7 +56,7 @@
 					Assert.That((int)reliable.MessageType < 100, "Invalid reliable transmission message type.");
 
 					MessageConstructors.Add(reliable.MessageType, allocator);
-					TransmissionInfos.Add(messageType, new TransmissionInfo
+					TransmissionInfos.Add(messageType.AsType(), new TransmissionInfo
 					{
 						BatchedTransmission = false,
 						MessageType = reliable.MessageType,
@@ -66,7 +69,7 @@
 					Assert.That((int)unreliable.MessageType > 100, "Invalid unreliable transmission message type.");
 
 					MessageConstructors.Add(unreliable.MessageType, allocator);
-					TransmissionInfos.Add(messageType, new TransmissionInfo
+					TransmissionInfos.Add(messageType.AsType(), new TransmissionInfo
 					{
 						BatchedTransmission = unreliable.EnableBatching,
 						MessageType = unreliable.MessageType,
@@ -74,7 +77,7 @@
 					});
 				}
 
-				RuntimeHelpers.RunClassConstructor(messageType.TypeHandle);
+				RuntimeHelpers.RunClassConstructor(messageType.AsType().TypeHandle);
 			}
 		}
 
@@ -129,13 +132,13 @@
 		///     Serializes the message using the given writer.
 		/// </summary>
 		/// <param name="writer">The writer that should be used to serialize the message.</param>
-		public abstract void Serialize(BufferWriter writer);
+		public abstract void Serialize(ref BufferWriter writer);
 
 		/// <summary>
 		///     Deserializes the message using the given reader.
 		/// </summary>
 		/// <param name="reader">The reader that should be used to deserialize the message.</param>
-		public abstract void Deserialize(BufferReader reader);
+		public abstract void Deserialize(ref BufferReader reader);
 
 		/// <summary>
 		///     Dispatches the message to the given dispatcher.
@@ -159,6 +162,75 @@
 				throw new InvalidOperationException("Unsupported message type.");
 
 			return constructor(allocator);
+		}
+
+		/// <summary>
+		///     Reads an identity from the buffer.
+		/// </summary>
+		/// <param name="buffer">The buffer the identity should be read from.</param>
+		protected static NetworkIdentity ReadIdentifier(ref BufferReader buffer)
+		{
+			var generation = buffer.ReadUInt16();
+			var id = buffer.ReadUInt16();
+
+			Assert.That(id != NetworkProtocol.ReservedEntityIdentity.Identifier || generation == 0,
+				"Generation of reserved entity identity must be 0.");
+			Assert.That(id != NetworkProtocol.ServerPlayerIdentity.Identifier || generation == 0,
+				"Generation of reserved server player identity must be 0.");
+
+			return new NetworkIdentity(id, generation);
+		}
+
+		/// <summary>
+		///     Reads a vector from the buffer.
+		/// </summary>
+		/// <param name="buffer">The buffer the vector should be read from.</param>
+		protected static Vector2 ReadVector2(ref BufferReader buffer)
+		{
+			return new Vector2(buffer.ReadInt16(), buffer.ReadInt16());
+		}
+
+		/// <summary>
+		///     Reads an orientation from the buffer.
+		/// </summary>
+		/// <param name="buffer">The buffer the orientation should be read from.</param>
+		protected static float ReadOrientation(ref BufferReader buffer)
+		{
+			return buffer.ReadUInt16() / NetworkProtocol.AngleFactor;
+		}
+
+		/// <summary>
+		///     Writes the given identity into the buffer.
+		/// </summary>
+		/// <param name="buffer">The buffer the identity should be written into.</param>
+		/// <param name="identity">The identity that should be written into the buffer.</param>
+		protected static void WriteIdentifier(ref BufferWriter buffer, NetworkIdentity identity)
+		{
+			buffer.WriteUInt16(identity.Generation);
+			buffer.WriteUInt16(identity.Identifier);
+		}
+
+		/// <summary>
+		///     Writes the given vector into the buffer.
+		/// </summary>
+		/// <param name="buffer">The buffer the vector should be written into.</param>
+		/// <param name="vector">The vector that should be written into the buffer.</param>
+		protected static void WriteVector2(ref BufferWriter buffer, Vector2 vector)
+		{
+			vector = Vector2.Clamp(vector, new Vector2(Int16.MinValue), new Vector2(Int16.MaxValue));
+			buffer.WriteInt16((short)vector.X);
+			buffer.WriteInt16((short)vector.Y);
+		}
+
+		/// <summary>
+		///     Writes the given orientation into the buffer.
+		/// </summary>
+		/// <param name="buffer">The buffer the orientation should be written into.</param>
+		/// <param name="orientation">The orientation that should be written into the buffer.</param>
+		protected static void WriteOrientation(ref BufferWriter buffer, float orientation)
+		{
+			Assert.InRange(orientation, 0, 360);
+			buffer.WriteUInt16((ushort)(orientation * NetworkProtocol.AngleFactor));
 		}
 
 		/// <summary>

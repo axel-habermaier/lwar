@@ -6,7 +6,6 @@
 	using CSharp;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
-	using Platform.Graphics;
 	using Utilities;
 
 	/// <summary>
@@ -368,7 +367,7 @@
 		protected static string Escape(string name)
 		{
 			Assert.ArgumentNotNullOrWhitespace(name);
-			return String.Format("{0}{1}", Configuration.ReservedIdentifierPrefix, name);
+			return String.Format("{0}{1}", CompilationContext.ReservedIdentifierPrefix, name);
 		}
 	}
 }

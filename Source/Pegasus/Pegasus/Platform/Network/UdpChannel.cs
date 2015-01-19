@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Net.Sockets;
 	using Logging;
 	using Memory;
 	using Utilities;
@@ -12,20 +13,14 @@
 	public sealed class UdpChannel : UniquePooledObject
 	{
 		/// <summary>
-		///     The application-wide object pool that is used to allocate UDP channels.
+		///     The allocator that is used to allocate packets.
 		/// </summary>
-		private static readonly ObjectPool<UdpChannel> Pool =
-			new ObjectPool<UdpChannel>(() => new UdpChannel(), hasGlobalLifetime: true);
+		private PoolAllocator _allocator;
 
 		/// <summary>
 		///     Indicates whether the underlying socket is bound and can be used to receive messages.
 		/// </summary>
 		private bool _isBound;
-
-		/// <summary>
-		/// Indicates whether packets should be received from the socket or retrieved from the packets queue.
-		/// </summary>
-		private bool _receiveFromSocket;
 
 		/// <summary>
 		///     The UDP listener that created the channel.
@@ -40,12 +35,25 @@
 		/// <summary>
 		///     Stores the packets received by a UDP listener.
 		/// </summary>
-		private Queue<UdpPacket> _packets;
+		private Queue<IncomingUdpPacket> _packets;
+
+		/// <summary>
+		///     Indicates whether packets should be received from the socket or retrieved from the packets queue.
+		/// </summary>
+		private bool _receiveFromSocket;
 
 		/// <summary>
 		///     The UDP socket that is used for communication over the network.
 		/// </summary>
 		private UdpSocket _socket;
+
+		/// <summary>
+		///     Initializes the type.
+		/// </summary>
+		static UdpChannel()
+		{
+			ConstructorCache.Register(() => new UdpChannel());
+		}
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -67,36 +75,43 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
+		/// <param name="allocator">The allocator that should be used to allocate objects.</param>
 		/// <param name="remoteEndPoint">The remote endpoint of the channel.</param>
 		/// <param name="maxPacketSize">The maximum supported packet size.</param>
-		public static UdpChannel Create(IPEndPoint remoteEndPoint, int maxPacketSize)
+		public static UdpChannel Create(PoolAllocator allocator, IPEndPoint remoteEndPoint, int maxPacketSize)
 		{
-			var channel = Pool.Allocate();
+			Assert.ArgumentNotNull(allocator);
+
+			var channel = allocator.Allocate<UdpChannel>();
 			channel.RemoteEndPoint = remoteEndPoint;
 			channel._socket = new UdpSocket();
 			channel._maxPacketSize = maxPacketSize;
 			channel._receiveFromSocket = true;
+			channel._allocator = allocator;
 			return channel;
 		}
 
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
+		/// <param name="allocator">The allocator that should be used to allocate objects.</param>
 		/// <param name="remoteEndPoint">The remote endpoint of the channel.</param>
 		/// <param name="socket">The shared socket that is used for communcation over the network.</param>
 		/// <param name="listener">The UDP listener that created the channel.</param>
-		internal static UdpChannel Create(IPEndPoint remoteEndPoint, UdpSocket socket, UdpListener listener)
+		internal static UdpChannel Create(PoolAllocator allocator, IPEndPoint remoteEndPoint, UdpSocket socket, UdpListener listener)
 		{
+			Assert.ArgumentNotNull(allocator);
 			Assert.ArgumentNotNull(socket);
 			Assert.ArgumentNotNull(listener);
 
-			var channel = Pool.Allocate();
+			var channel = allocator.Allocate<UdpChannel>();
 			channel.RemoteEndPoint = remoteEndPoint;
 			channel._socket = socket;
 			channel._listener = listener;
 			channel._isBound = true;
 			channel._receiveFromSocket = false;
-			channel._packets = channel._packets ?? new Queue<UdpPacket>();
+			channel._packets = channel._packets ?? new Queue<IncomingUdpPacket>();
+			channel._allocator = allocator;
 			return channel;
 		}
 
@@ -104,7 +119,8 @@
 		///     Sends the given packet over the connection.
 		/// </summary>
 		/// <param name="packet">The packet containing the data that should be sent.</param>
-		public void Send(UdpPacket packet)
+		/// <param name="size">The size of the packet in bytes.</param>
+		public void Send(OutgoingUdpPacket packet, int size)
 		{
 			Assert.ArgumentNotNull(packet);
 			Assert.NotPooled(this);
@@ -112,10 +128,10 @@
 
 			try
 			{
-				_socket.Send(packet.Buffer, packet.Size, RemoteEndPoint);
+				_socket.Send(packet.Buffer, size, RemoteEndPoint);
 				_isBound = true;
 			}
-			catch (NetworkException)
+			catch (SocketException)
 			{
 				IsFaulted = true;
 				throw;
@@ -126,7 +142,7 @@
 		///     Tries to receive a packet sent over the connection. Returns true if a packet has been received, false otherwise.
 		/// </summary>
 		/// <param name="packet">The packet that contains the received data.</param>
-		public bool TryReceive(out UdpPacket packet)
+		public bool TryReceive(out IncomingUdpPacket packet)
 		{
 			Assert.NotPooled(this);
 			Assert.That(!IsFaulted, "The channel is faulted and can no longer be used.");
@@ -142,10 +158,10 @@
 				return true;
 			}
 
-			UdpPacket allocatedPacket = null;
+			IncomingUdpPacket allocatedPacket = null;
 			try
 			{
-				allocatedPacket = UdpPacket.Allocate(_maxPacketSize);
+				allocatedPacket = IncomingUdpPacket.Allocate(_allocator, _maxPacketSize);
 				while (true)
 				{
 					IPEndPoint sender;
@@ -165,7 +181,7 @@
 					}
 				}
 			}
-			catch (NetworkException)
+			catch (SocketException)
 			{
 				IsFaulted = true;
 				throw;
@@ -180,7 +196,7 @@
 		///     Handles a packet received by a UDP listener.
 		/// </summary>
 		/// <param name="packet">The packet that contains the received data.</param>
-		internal void HandlePacket(UdpPacket packet)
+		internal void HandlePacket(IncomingUdpPacket packet)
 		{
 			Assert.That(!_receiveFromSocket, "The channel is configured to receive messages directly from the underlying socket.");
 			_packets.Enqueue(packet);

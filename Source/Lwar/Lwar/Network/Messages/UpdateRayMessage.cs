@@ -9,7 +9,7 @@ namespace Lwar.Network.Messages
 	///     Informs a client about an update to a ray.
 	/// </summary>
 	[UnreliableTransmission(MessageType.UpdateRay, EnableBatching = true)]
-	public sealed class UpdateRayMessage : Message
+	internal sealed class UpdateRayMessage : Message
 	{
 		/// <summary>
 		///     Initializes the type.
@@ -55,26 +55,26 @@ namespace Lwar.Network.Messages
 		///     Serializes the message using the given writer.
 		/// </summary>
 		/// <param name="writer">The writer that should be used to serialize the message.</param>
-		public override void Serialize(BufferWriter writer)
+		public override void Serialize(ref BufferWriter writer)
 		{
-			writer.WriteIdentifier(Entity);
-			writer.WriteVector2(Origin);
-			writer.WriteOrientation(Orientation);
+			WriteIdentifier(ref writer, Entity);
+			WriteVector2(ref writer, Origin);
+			WriteOrientation(ref writer, Orientation);
 			writer.WriteUInt16((ushort)Length);
-			writer.WriteIdentifier(Target);
+			WriteIdentifier(ref writer, Target);
 		}
 
 		/// <summary>
 		///     Deserializes the message using the given reader.
 		/// </summary>
 		/// <param name="reader">The reader that should be used to deserialize the message.</param>
-		public override void Deserialize(BufferReader reader)
+		public override void Deserialize(ref BufferReader reader)
 		{
-			Entity = reader.ReadIdentifier();
-			Origin = reader.ReadVector2();
-			Orientation = reader.ReadOrientation();
+			Entity = ReadIdentifier(ref reader);
+			Origin = ReadVector2(ref reader);
+			Orientation = ReadOrientation(ref reader);
 			Length = reader.ReadUInt16();
-			Target = reader.ReadIdentifier();
+			Target = ReadIdentifier(ref reader);
 		}
 
 		/// <summary>

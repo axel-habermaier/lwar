@@ -8,7 +8,6 @@
 	using ICSharpCode.NRefactory.Semantics;
 	using ICSharpCode.NRefactory.TypeSystem;
 	using Microsoft.CSharp;
-	using Platform.Graphics;
 	using Utilities;
 
 	/// <summary>
@@ -40,18 +39,6 @@
 		}
 
 		/// <summary>
-		///     Gets the full name of the effect class.
-		/// </summary>
-		public string FullName
-		{
-			get
-			{
-				var resolved = (TypeResolveResult)Resolver.Resolve(_type);
-				return resolved.Type.FullName;
-			}
-		}
-
-		/// <summary>
 		///     Gets the namespace in which the effect source class is declared.
 		/// </summary>
 		public string Namespace
@@ -63,16 +50,16 @@
 			}
 		}
 
+
 		/// <summary>
-		///     Gets the namespace in which the runtime effect class is declared.
+		///     Gets the full name of the effect class.
 		/// </summary>
-		public string PublicNamespace
+		public string FullName
 		{
 			get
 			{
 				var resolved = (TypeResolveResult)Resolver.Resolve(_type);
-				var ns = resolved.Type.Namespace;
-				return ns.Substring(0, ns.Length - ".Internal".Length);
+				return resolved.Type.FullName;
 			}
 		}
 
@@ -183,14 +170,12 @@
 			var view = new ShaderConstant("View", DataType.Matrix);
 			var projection = new ShaderConstant("Projection", DataType.Matrix);
 			var viewProjection = new ShaderConstant("ViewProjection", DataType.Matrix);
-			var viewportSize = new ShaderConstant("ViewportSize", DataType.Vector2);
 			var cameraPosition = new ShaderConstant("CameraPosition", DataType.Vector3);
 
 			// Create the default constant buffers
 			var constantBuffers = new[]
 			{
-				new ConstantBuffer("CameraBuffer", 0, new[] { view, projection, viewProjection, cameraPosition }, true),
-				new ConstantBuffer("ViewportBuffer", 1, new[] { viewportSize }, true)
+				new ConstantBuffer("CameraBuffer", 0, new[] { view, projection, viewProjection, cameraPosition }, true)
 			};
 
 			// Create the user defined constant buffers
@@ -205,7 +190,6 @@
 			AddElement(view);
 			AddElement(projection);
 			AddElement(viewProjection);
-			AddElement(viewportSize);
 
 			// Add all techniques
 			AddElements(from field in _type.Descendants.OfType<FieldDeclaration>()
@@ -220,14 +204,6 @@
 		/// </summary>
 		protected override void Validate()
 		{
-			// Check whether the effect is declared within the assets project root namespace
-			if (!FullName.StartsWith(Configuration.AssetsProject.RootNamespace))
-				Error(_type.NameToken, "Effect must be defined within root namespace '{0}'.", Configuration.AssetsProject.RootNamespace);
-
-			// Check whether the effect is declared within at least one sub-namespace of the root namespace
-			if (FullName.IndexOf('.', Configuration.AssetsProject.RootNamespace.Length + 1) == -1)
-				Error(_type.NameToken, "Effect must be defined in a namespace within root namespace '{0}'.", Configuration.AssetsProject.RootNamespace);
-
 			// Check whether the Effect attribute has been applied to the class and whether the class is derived from Effect
 			var hasBaseType = _type.IsDerivedFrom<Effect>(Resolver);
 			var hasAttribute = _type.Attributes.Contain<EffectAttribute>(Resolver);
@@ -402,7 +378,7 @@
 					continue;
 
 				var value = (int)resolved.ConstantValue;
-				var matrix =  type.Kind != TypeKind.Array && dataType  == DataType.Matrix && value > 3;
+				var matrix = type.Kind != TypeKind.Array && dataType == DataType.Matrix && value > 3;
 				var vector4 = type.Kind != TypeKind.Array && dataType == DataType.Vector4 && value > 3;
 				var vector3 = type.Kind != TypeKind.Array && dataType == DataType.Vector3 && value > 2;
 				var vector2 = type.Kind != TypeKind.Array && dataType == DataType.Vector2 && value > 1;
@@ -516,8 +492,8 @@
 						   let name = (string)resolved.ConstantValue
 						   select new { Argument = argument, Name = name }).ToArray();
 
-			foreach (var buffer in buffers.Where(buffer => buffer.Name.StartsWith(Configuration.ReservedIdentifierPrefix)))
-				Error(buffer.Argument, "Identifiers starting with '{0}' are reserved.", Configuration.ReservedIdentifierPrefix);
+			foreach (var buffer in buffers.Where(buffer => buffer.Name.StartsWith(CompilationContext.ReservedIdentifierPrefix)))
+				Error(buffer.Argument, "Identifiers starting with '{0}' are reserved.", CompilationContext.ReservedIdentifierPrefix);
 
 			foreach (
 				var buffer in

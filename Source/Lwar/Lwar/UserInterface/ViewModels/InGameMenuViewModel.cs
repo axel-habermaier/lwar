@@ -2,6 +2,7 @@
 {
 	using System;
 	using Pegasus;
+	using Pegasus.UserInterface.Input;
 	using Pegasus.UserInterface.ViewModels;
 	using Scripting;
 	using Views;
@@ -9,7 +10,7 @@
 	/// <summary>
 	///     Displays the in-game menu.
 	/// </summary>
-	public class InGameMenuViewModel : StackedViewModel
+	internal class InGameMenuViewModel : StackedViewModel
 	{
 		/// <summary>
 		///     Indicates whether the menu is top-level.
@@ -17,9 +18,9 @@
 		private bool _isTopLevel = true;
 
 		/// <summary>
-		///     Indicates whether the mouse was captured when the in-game menu was opened.
+		///     Indicates whether relative mouse mode was enabled when the in-game menu was opened.
 		/// </summary>
-		private bool _mouseWasCaptured = Application.Current.Window.MouseCaptured;
+		private bool _relativeMouseMode = Mouse.RelativeMouseMode;
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -27,7 +28,7 @@
 		public InGameMenuViewModel()
 		{
 			View = new InGameMenuView();
-			Application.Current.Window.MouseCaptured = false;
+			Mouse.RelativeMouseMode = false;
 		}
 
 		/// <summary>
@@ -45,7 +46,7 @@
 		public void Continue()
 		{
 			Parent.ReplaceChild(null);
-			Application.Current.Window.MouseCaptured = _mouseWasCaptured;
+			Mouse.RelativeMouseMode = _relativeMouseMode;
 		}
 
 		/// <summary>

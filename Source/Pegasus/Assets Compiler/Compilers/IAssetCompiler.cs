@@ -1,29 +1,31 @@
-namespace Pegasus.AssetsCompiler.Compilers
+﻿namespace Pegasus.AssetsCompiler.Compilers
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Threading.Tasks;
+	using System.Xml.Linq;
 	using Assets;
 
 	/// <summary>
 	///     Represents a compiler that compiles source assets into a binary format that the runtime can load more efficiently.
 	/// </summary>
-	internal interface IAssetCompiler : IDisposable
+	public interface IAssetCompiler
 	{
 		/// <summary>
-		///     Gets the additional assets created by the compiler.
+		///     Gets the assets compiled by the asset compiler.
 		/// </summary>
-		IEnumerable<Asset> AdditionalAssets { get; }
+		IEnumerable<Asset> Assets { get; }
 
 		/// <summary>
-		///     Compiles all assets of the compiler's asset source type.
+		///     Compiles the assets.
 		/// </summary>
-		/// <param name="assets">The assets that should be compiled.</param>
-		void Compile(IEnumerable<Asset> assets);
+		/// <param name="assets">The metadata of the assets that should be compiled.</param>
+		Task<bool> Compile(IEnumerable<XElement> assets);
 
 		/// <summary>
-		///     Removes the compiled assets and all temporary files written by the compiler.
+		///     Cleans the asset if the compiler supports the given asset type.
 		/// </summary>
-		/// <param name="assets">The assets that should be cleaned.</param>
-		void Clean(IEnumerable<Asset> assets);
+		/// <param name="assetMetadata">The metadata of the asset that should be cleaned.</param>
+		void Clean(XElement assetMetadata);
 	}
 }

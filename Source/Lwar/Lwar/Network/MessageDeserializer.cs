@@ -12,7 +12,7 @@
 	///     This class is not implemented as an iterator in order to avoid the memory allocations required by the use of
 	///     iterators.
 	/// </remarks>
-	public sealed class MessageDeserializer : UniquePooledObject
+	internal sealed class MessageDeserializer : UniquePooledObject
 	{
 		/// <summary>
 		///     The object pool that is used to allocate message objects.
@@ -37,7 +37,7 @@
 		/// <summary>
 		///     A cached delegate to the deserialization function in order to avoid unnecessary memory allocations.
 		/// </summary>
-		private Func<BufferReader, SequencedMessage?> _cachedDeserializer;
+		private BufferReader.Deserializer<SequencedMessage?> _cachedDeserializer;
 
 		/// <summary>
 		///     The delivery manager that is used to decide whether the packet should be delivered.
@@ -91,10 +91,8 @@
 		/// </summary>
 		/// <param name="reader">The reader that should be used to deserialize a message.</param>
 		/// <param name="message">Stores the deserialized message.</param>
-		public bool TryDeserialize(BufferReader reader, out SequencedMessage message)
+		public bool TryDeserialize(ref BufferReader reader, out SequencedMessage message)
 		{
-			Assert.ArgumentNotNull(reader);
-
 			// Each iteration of the loop reads a single message (batched or non-batched). If, however, we encounter
 			// a message that we don't want to deliver, the message is skipped (for batched messages, all messages
 			// contained therein are skipped as well). Therefore, the loop reads from the buffer until it finds the
@@ -149,7 +147,7 @@
 		///     Deserializes a message using the given reader.
 		/// </summary>
 		/// <param name="reader">The reader that should be used to deserialize the message.</param>
-		private SequencedMessage? DeserializeMessage(BufferReader reader)
+		private SequencedMessage? DeserializeMessage(ref BufferReader reader)
 		{
 			var messageType = _batchedMessageType ?? (MessageType)reader.ReadByte();
 			var sequenceNumber = _batchedMessageType == null ? reader.ReadUInt32() : _batchedSequenceNumber;
@@ -174,7 +172,7 @@
 				return null;
 			}
 
-			message.Deserialize(reader);
+			message.Deserialize(ref reader);
 			return new SequencedMessage(message, sequenceNumber);
 		}
 	}

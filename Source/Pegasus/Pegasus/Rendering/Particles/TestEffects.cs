@@ -6,32 +6,21 @@
 	using Math;
 	using Modifiers;
 	using Platform.Graphics;
+	using Utilities;
 
 	/// <summary>
 	///     A particle effect with a huge number of particles for testing.
 	/// </summary>
+	[UsedImplicitly]
 	internal class HugeTestEffect : ParticleEffectTemplate
 	{
 		/// <summary>
-		///     The texture that is used to draw the particles.
-		/// </summary>
-		private Texture2D _texture;
-
-		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		public HugeTestEffect()
-			: base("Huge Test Effect")
+		/// <param name="renderContext">The render context the particle effect belongs to.</param>
+		public HugeTestEffect(RenderContext renderContext)
+			: base(renderContext, "Huge Test Effect")
 		{
-		}
-
-		/// <summary>
-		///     Loads the required assets of the particle effect template.
-		/// </summary>
-		protected override void Load()
-		{
-			BillboardRenderer.PreloadAssets(Assets);
-			_texture = Assets.Load(Textures.ParticleTest);
 		}
 
 		/// <summary>
@@ -49,11 +38,11 @@
 				InitialLifetime = new Range<float>(50),
 				EmissionRate = 200000,
 				Duration = 5,
-				Renderer = new BillboardRenderer(GraphicsDevice, Assets)
+				Renderer = new BillboardRenderer(RenderContext)
 				{
-					BlendState = BlendState.Additive,
-					Texture = _texture,
-					SamplerState = SamplerState.BilinearClampNoMipmaps
+					BlendState = RenderContext.BlendStates.Additive,
+					Texture = RenderContext.GetAssetBundle<MainBundle>().ParticleTest,
+					SamplerState = RenderContext.SamplerStates.BilinearClampNoMipmaps
 				},
 				Modifiers = new ModifierCollection
 				{
@@ -66,28 +55,16 @@
 	/// <summary>
 	///     A particle effect with a small number of particles for testing.
 	/// </summary>
+	[UsedImplicitly]
 	internal class SmallTestEffect : ParticleEffectTemplate
 	{
 		/// <summary>
-		///     The texture that is used to draw the particles.
-		/// </summary>
-		private Texture2D _texture;
-
-		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		public SmallTestEffect()
-			: base("Small Test Effect")
+		/// <param name="renderContext">The render context the particle effect belongs to.</param>
+		public SmallTestEffect(RenderContext renderContext)
+			: base(renderContext, "Small Test Effect")
 		{
-		}
-
-		/// <summary>
-		///     Loads the required assets of the particle effect template.
-		/// </summary>
-		protected override void Load()
-		{
-			BillboardRenderer.PreloadAssets(Assets);
-			_texture = Assets.Load(Textures.ParticleTest);
 		}
 
 		/// <summary>
@@ -105,11 +82,11 @@
 				InitialLifetime = new Range<float>(1, 5),
 				EmissionRate = 2000,
 				Duration = 5,
-				Renderer = new BillboardRenderer(GraphicsDevice, Assets)
+				Renderer = new BillboardRenderer(RenderContext)
 				{
-					BlendState = BlendState.Additive,
-					Texture = _texture,
-					SamplerState = SamplerState.BilinearClampNoMipmaps
+					BlendState = RenderContext.BlendStates.Additive,
+					Texture = RenderContext.GetAssetBundle<MainBundle>().ParticleTest,
+					SamplerState = RenderContext.SamplerStates.BilinearClampNoMipmaps
 				},
 				Modifiers = new ModifierCollection
 				{

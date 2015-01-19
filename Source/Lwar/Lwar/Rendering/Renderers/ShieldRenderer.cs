@@ -4,7 +4,6 @@
 	using Assets;
 	using Assets.Effects;
 	using Gameplay.Client.Actors;
-	using Pegasus.Assets;
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
@@ -13,7 +12,7 @@
 	/// <summary>
 	///     Renders shield effects into a 3D scene.
 	/// </summary>
-	public class ShieldRenderer : Renderer<ShieldActor>
+	internal class ShieldRenderer : Renderer<ShieldActor>
 	{
 		/// <summary>
 		///     The effect that is used to draw the shields.
@@ -28,24 +27,17 @@
 		private CubeMap _texture;
 
 		/// <summary>
-		///     Loads the required assets of the renderer.
-		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
-		public override void Load(GraphicsDevice graphicsDevice, AssetsManager assets)
-		{
-			_effect = new SphereEffect(graphicsDevice, assets);
-			_texture = assets.Load(Textures.ShieldsCubemap);
-		}
-
-		/// <summary>
 		///     Initializes the renderer.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		public override void Initialize(GraphicsDevice graphicsDevice)
+		/// <param name="renderContext">The render context that should be used for drawing.</param>
+		/// <param name="assets">The asset bundle that provides access to Lwar assets.</param>
+		public override void Initialize(RenderContext renderContext, GameBundle assets)
 		{
-			_model = Model.CreateSphere(graphicsDevice, 1.0f, 16);
-			_effect.SphereTexture = new CubeMapView(_texture, SamplerState.TrilinearClamp);
+			_texture = assets.Shields;
+			_effect = assets.SphereEffect;
+
+			_model = Model.CreateSphere(renderContext.GraphicsDevice, 1.0f, 16);
+			_effect.SphereTexture = new CubeMapView(_texture, renderContext.SamplerStates.TrilinearClamp);
 		}
 
 		/// <summary>
@@ -68,7 +60,6 @@
 		/// </summary>
 		protected override void OnDisposingCore()
 		{
-			_effect.SafeDispose();
 			_model.SafeDispose();
 		}
 	}

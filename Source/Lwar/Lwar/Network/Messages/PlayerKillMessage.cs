@@ -8,7 +8,7 @@ namespace Lwar.Network.Messages
 	///     Informs a client about a player kill.
 	/// </summary>
 	[ReliableTransmission(MessageType.PlayerKill)]
-	public sealed class PlayerKillMessage : Message
+	internal sealed class PlayerKillMessage : Message
 	{
 		/// <summary>
 		///     Initializes the type.
@@ -39,20 +39,20 @@ namespace Lwar.Network.Messages
 		///     Serializes the message using the given writer.
 		/// </summary>
 		/// <param name="writer">The writer that should be used to serialize the message.</param>
-		public override void Serialize(BufferWriter writer)
+		public override void Serialize(ref BufferWriter writer)
 		{
-			writer.WriteIdentifier(Killer);
-			writer.WriteIdentifier(Victim);
+			WriteIdentifier(ref writer, Killer);
+			WriteIdentifier(ref writer, Victim);
 		}
 
 		/// <summary>
 		///     Deserializes the message using the given reader.
 		/// </summary>
 		/// <param name="reader">The reader that should be used to deserialize the message.</param>
-		public override void Deserialize(BufferReader reader)
+		public override void Deserialize(ref BufferReader reader)
 		{
-			Killer = reader.ReadIdentifier();
-			Victim = reader.ReadIdentifier();
+			Killer = ReadIdentifier(ref reader);
+			Victim = ReadIdentifier(ref reader);
 		}
 
 		/// <summary>

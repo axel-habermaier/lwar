@@ -4,9 +4,10 @@
 	using Behaviors;
 	using Network;
 	using Pegasus.Math;
+	using Pegasus.Utilities;
 	using Templates;
 
-	public partial class Ship
+	internal partial class Ship
 	{
 		/// <summary>
 		///     The current acceleration of the ship's propulsion system.
@@ -194,6 +195,37 @@
 
 			_remainingWarpCooldown -= elapsedSeconds;
 			WarpDriveEnergy = MathUtils.Clamp(WarpDriveEnergy, 0, Template.WarpDrive.MaxEnergy);
+		}
+
+		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		/// <param name="gameSession">The game session the entity belongs to.</param>
+		/// <param name="template">The template providing the configurable parameters of the ship.</param>
+		/// <param name="player">The player the ship belongs to.</param>
+		/// <param name="position">The initial position of the ship.</param>
+		/// <param name="orientation">The initial orientation of the ship.</param>
+		public static Ship Create(GameSession gameSession, ShipTemplate template, Player player,
+								  Vector2 position = default(Vector2), float orientation = 0)
+		{
+			Assert.ArgumentNotNull(gameSession);
+
+			var ship = gameSession.Allocate<Ship>();
+			ship.GameSession = gameSession;
+			ship.Player = player;
+			ship.Position2D = position;
+			ship.Template = template;
+			ship.Orientation = orientation;
+			ship.Velocity = Vector2.Zero;
+			ship.WarpDriveEnergy = template.WarpDrive.MaxEnergy;
+			ship._acceleration = Vector2.Zero;
+			ship._remainingRechargeDelay = 0;
+			ship._rotationVelocity = 0;
+			ship._remainingWarpCooldown = 0;
+			ship._propulsionVelocity = Vector2.Zero;
+			ship._warpDriveState = WarpDriveState.FullyCharged;
+			ship.AddBehavior(BoundaryBehavior.Create(gameSession.Allocator));
+			return ship;
 		}
 
 		/// <summary>

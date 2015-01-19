@@ -10,7 +10,7 @@
 	/// <summary>
 	///     Dispatches messages received from the server to the game session.
 	/// </summary>
-	public partial class MessageHandler : IMessageHandler
+	internal partial class MessageHandler : IMessageHandler
 	{
 		/// <summary>
 		///     The game session the messages are dispatched to.

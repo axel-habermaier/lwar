@@ -5,7 +5,7 @@
 	/// <summary>
 	///     Defines how the camera handles the current zoom value.
 	/// </summary>
-	public enum ZoomMode
+	internal enum ZoomMode
 	{
 		/// <summary>
 		///     Indicates that the camera uses the default zoom mode.

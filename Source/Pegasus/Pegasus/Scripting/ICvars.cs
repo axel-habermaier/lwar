@@ -1,5 +1,6 @@
 ﻿using Pegasus.Math;
 using Pegasus.Platform;
+using Pegasus.Platform.Graphics;
 using Pegasus.Scripting;
 using Pegasus.Scripting.Validators;
 using Pegasus.UserInterface.Controls;
@@ -32,7 +33,7 @@ internal interface ICvars
 	/// <summary>
 	///     The screen position of the application window's top left corner in non-fullscreen mode.
 	/// </summary>
-	[Cvar("Vector2.Zero"), Persistent, WindowPosition, SystemOnly]
+	[Cvar("new Vector2(100, 100)"), Persistent, WindowPosition, SystemOnly]
 	Vector2 WindowPosition { get; set; }
 
 	/// <summary>
@@ -46,4 +47,18 @@ internal interface ICvars
 	/// </summary>
 	[Cvar(PlatformInfo.IsDebug), Persistent]
 	bool ShowDebugOverlay { get; set; }
+
+	/// <summary>
+	///     Determines the graphics API that should be used for rendering. If the chosen graphics API is not available, the
+	///     application automatically tries to fall back to a supported one.
+	/// </summary>
+	[Cvar("PlatformInfo.Platform == PlatformType.Windows ? GraphicsApi.Direct3D11 : GraphicsApi.OpenGL3", UpdateMode.OnAppRestart), Persistent]
+	GraphicsApi GraphicsApi { get; set; }
+
+	/// <summary>
+	///     Indicates whether the hardware cursor is enabled. Hardware cursors are frame rate independent and are generally
+	///     preferable where supported.
+	/// </summary>
+	[Cvar(true), Persistent]
+	bool HardwareCursor { get; set; }
 }

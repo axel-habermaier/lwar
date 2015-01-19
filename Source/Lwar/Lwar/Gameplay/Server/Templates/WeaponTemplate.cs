@@ -6,7 +6,7 @@
 	/// <summary>
 	///     The configurable parameters of a weapon.
 	/// </summary>
-	public struct WeaponTemplate
+	internal struct WeaponTemplate
 	{
 		/// <summary>
 		///     The template of the gun that fires bullets.

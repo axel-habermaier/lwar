@@ -2,8 +2,6 @@ namespace Pegasus.UserInterface.Input
 {
 	using System;
 	using Assets;
-	using Math;
-	using Platform.Graphics;
 	using Utilities;
 
 	/// <summary>
@@ -22,15 +20,15 @@ namespace Pegasus.UserInterface.Input
 		public static Cursor Text { get; private set; }
 
 		/// <summary>
-		///     Loads the default cursors.
+		///     Initializes the default cursors.
 		/// </summary>
-		/// <param name="assets">The assets manager that should be used to load the cursors.</param>
-		internal static void Load(AssetsManager assets)
+		/// <param name="bundle">The bundle that should be used to initialize the cursors.</param>
+		internal static void Initialize(MainBundle bundle)
 		{
-			Assert.ArgumentNotNull(assets);
+			Assert.ArgumentNotNull(bundle);
 
-			Arrow = new Cursor(assets.Load(Textures.PointerCursor), Vector2.Zero, Colors.White);
-			Text = new Cursor(assets.Load(Textures.TextCursor), new Vector2(7, 7), Colors.White);
+			Arrow = bundle.PointerCursor;
+			Text = bundle.TextCursor;
 		}
 	}
 }

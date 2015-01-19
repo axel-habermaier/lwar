@@ -5,11 +5,13 @@ namespace Pegasus.Utilities
 	using System;
 	using System.Collections;
 	using System.Diagnostics;
+	using Platform.Memory;
+	using UserInterface;
 
 	/// <summary>
 	///     Defines assertion helpers that can be used to check for errors. The checks are only performed in debug builds.
 	/// </summary>
-	public static partial class Assert
+	public static class Assert
 	{
 		/// <summary>
 		///     Throws an ArgumentNullException if the argument is null.
@@ -200,6 +202,19 @@ namespace Pegasus.Utilities
 		}
 
 		/// <summary>
+		///     Throws a PegasusException if the object is null.
+		/// </summary>
+		/// <typeparam name="T">The type of the argument to check for null.</typeparam>
+		/// <param name="obj">The object to check for null.</param>
+		[Conditional("DEBUG"), DebuggerHidden, ContractAnnotation("null => halt")]
+		public static void NotNull<T>(T? obj)
+			where T : struct
+		{
+			if (obj == null)
+				throw new PegasusException("Expected a valid reference.");
+		}
+
+		/// <summary>
 		///     Throws a PegasusException if the pointer is null.
 		/// </summary>
 		/// <param name="ptr">The pointer to check for null.</param>
@@ -320,6 +335,57 @@ namespace Pegasus.Utilities
 
 			if (!(obj is T))
 				throw new PegasusException(formatMessage, parameters);
+		}
+
+		/// <summary>
+		///     Throws a PegasusException if the given object has already been sealed.
+		/// </summary>
+		/// <param name="obj">The object that should be checked.</param>
+		[Conditional("DEBUG"), DebuggerHidden]
+		public static void NotSealed(ISealable obj)
+		{
+			ArgumentNotNull(obj);
+
+			if (obj.IsSealed)
+				throw new PegasusException("The '{0}' instance has already been sealed.", obj.GetType().FullName);
+		}
+
+		/// <summary>
+		///     Throws a PegasusException if the given object is not null or has not been disposed.
+		/// </summary>
+		/// <param name="obj">The object that should be checked.</param>
+		[Conditional("DEBUG"), DebuggerHidden]
+		public static void NullOrDisposed<T>(T obj)
+			where T : DisposableObject
+		{
+			if (obj != null && !obj.IsDisposed)
+				throw new PegasusException("The '{0}' instance has not been disposed.", typeof(T).FullName);
+		}
+
+		/// <summary>
+		///     Throws a PegasusException if the given object has already been disposed.
+		/// </summary>
+		/// <param name="obj">The object that should be checked.</param>
+		[Conditional("DEBUG"), DebuggerHidden]
+		public static void NotDisposed(DisposableObject obj)
+		{
+			ArgumentNotNull(obj);
+
+			if (obj.IsDisposed)
+				throw new PegasusException("The object of type '{0}' has already been disposed.", obj.GetType().FullName);
+		}
+
+		/// <summary>
+		///     Throws a PegasusException if the given object has currently pooled and not in use.
+		/// </summary>
+		/// <param name="obj">The object that should be checked.</param>
+		[Conditional("DEBUG"), DebuggerHidden]
+		public static void NotPooled(IPooledObject obj)
+		{
+			ArgumentNotNull(obj);
+
+			if (!obj.InUse)
+				throw new PegasusException("The object of type '{0}' is currently pooled.", obj.GetType().FullName);
 		}
 	}
 }

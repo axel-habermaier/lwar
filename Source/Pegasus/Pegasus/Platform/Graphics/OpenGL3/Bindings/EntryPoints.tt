@@ -1,0 +1,496 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".asm" encoding="us-ascii" #>
+<# var methods = GetMethods(); #>
+
+#include "Debug.asm"
+
+.class private auto ansi sealed beforefieldinit Pegasus.Platform.Graphics.OpenGL3.Bindings.EntryPoints
+	extends System.Object
+{
+	.field private class [mscorlib]System.Action _checkErrors
+	.field private class [mscorlib]System.Func`2<string, native int> _loader
+
+	.method public hidebysig specialname rtspecialname instance void .ctor (
+			class [mscorlib]System.Action checkErrors,
+			class [mscorlib]System.Func`2<string, native int> loader
+		) cil managed 
+	{
+		.maxstack 3
+
+		ldarg.0
+		call instance void [mscorlib]System.Object::.ctor()
+
+		ldarg.0
+		ldarg.1
+		stfld class [mscorlib]System.Action Pegasus.Platform.Graphics.OpenGL3.Bindings.EntryPoints::_checkErrors
+
+		ldarg.0
+		ldarg.2
+		stfld class [mscorlib]System.Func`2<string, native int> Pegasus.Platform.Graphics.OpenGL3.Bindings.EntryPoints::_loader
+		
+		ldarg.0
+		ldarg.2
+		ldstr "glGetError"
+		callvirt instance !1 class [mscorlib]System.Func`2<string, native int>::Invoke(!0)
+		stfld native int Pegasus.Platform.Graphics.OpenGL3.Bindings.EntryPoints::_getError
+
+		ldarg.0
+		ldarg.2
+		ldstr "glGetIntegerv"
+		callvirt instance !1 class [mscorlib]System.Func`2<string, native int>::Invoke(!0)
+		stfld native int Pegasus.Platform.Graphics.OpenGL3.Bindings.EntryPoints::_getIntegerv
+
+		ret
+	}
+
+	.method public hidebysig void Load() cil managed 
+	{
+<# foreach (var method in methods) { #>
+		ldarg.0
+		ldarg.0
+		ldfld class [mscorlib]System.Func`2<string, native int> Pegasus.Platform.Graphics.OpenGL3.Bindings.EntryPoints::_loader
+		ldstr "gl<#= method.MethodName #>"
+		callvirt instance !1 class [mscorlib]System.Func`2<string, native int>::Invoke(!0)
+		stfld native int Pegasus.Platform.Graphics.OpenGL3.Bindings.EntryPoints::<#= method.FieldName #>
+
+<# } #>
+		ret
+	}
+
+<# foreach (var method in methods) { #>
+	.method public hidebysig <#= method.ReturnType #> <#= method.MethodName #>(<#= String.Join(", ", method.Parameters.Select(p => p.Item2 + " " + p.Item1)) #>) cil managed aggressiveinlining
+	{
+		.custom instance void [mscorlib]System.Diagnostics.DebuggerHiddenAttribute::.ctor() = (
+			01 00 00 00
+		)
+		.maxstack <#= method.Parameters.Length + 2 #>
+
+<# for (var i = 0; i < method.Parameters.Length; ++i) { #>
+		ldarg.s <#= i + 1 #>
+<# } #>
+		ldarg.0
+		ldfld native int Pegasus.Platform.Graphics.OpenGL3.Bindings.EntryPoints::<#= method.FieldName #>
+		calli unmanaged stdcall <#= method.ReturnType #>(<#= String.Join(", ", method.Parameters.Select(p => p.Item2)) #>)
+<# if (!method.NoErrorChecks) { #>
+		#ifdef DEBUG
+			ldarg.0
+			ldfld class [mscorlib]System.Action Pegasus.Platform.Graphics.OpenGL3.Bindings.EntryPoints::_checkErrors
+			callvirt instance void class [mscorlib]System.Action::Invoke()
+		#endif
+<# } #>
+		ret
+	}
+
+<# } #>
+<# foreach (var method in methods) { #>
+	.field private native int <#= method.FieldName #>
+<# } #>
+}
+<#+
+
+struct Method
+{
+	public string MethodName;
+	public string FieldName;
+	public string ReturnType;
+	public string ReturnValue;
+	public string IndirectCallMethod;
+	public bool NoErrorChecks;
+	public Tuple<string, string, string>[] Parameters;
+
+	public Method(string name, string returnType, params string[] argTypes)
+	{
+		NoErrorChecks = false;
+		MethodName = name;
+		FieldName = "_" + name[0].ToString().ToLower() + name.Substring(1);
+		ReturnType = returnType;
+		Parameters = argTypes.Select((type, index) => 
+		{
+			var argName = "arg" + (index + 1);
+			var arg = argName;
+
+			if (type.StartsWith("u") && !type.EndsWith("*"))
+				arg = String.Format("unchecked(({0}){1})", type.Substring(1), argName);
+	
+			return Tuple.Create(argName, type, arg);
+		}).ToArray();
+
+		ReturnValue = "result";
+		if (returnType.EndsWith("*"))
+		{
+			IndirectCallMethod = "CallPtr";
+			if (returnType != "void*")
+				ReturnValue = String.Format("({0})result", returnType);
+		}
+		else
+		{
+			string typeName;
+			if (returnType.StartsWith("u"))
+			{
+				typeName = returnType[1].ToString().ToUpper() + returnType.Substring(2);
+				ReturnValue = String.Format("unchecked(({0})result)", returnType);
+			}
+			else
+				typeName = returnType[0].ToString().ToUpper() + returnType.Substring(1);
+
+			IndirectCallMethod = "Call" + typeName;
+		}
+	}
+}
+
+Method[] GetMethods()
+{
+	return new [] 
+	{
+		new Method("GenSamplers", "void", "int32", "uint32*"),
+		new Method("DeleteSamplers", "void", "int32", "uint32*"),
+		//new Method("IsSampler", "bool", "uint32"),
+		new Method("BindSampler", "void", "uint32", "uint32"),
+		new Method("SamplerParameteri", "void", "uint32", "uint32", "int32"),
+		//new Method("SamplerParameteriv", "void", "uint32", "uint32", "int32*"),
+		new Method("SamplerParameterf", "void", "uint32", "uint32", "float32"),
+		new Method("SamplerParameterfv", "void", "uint32", "uint32", "float32*"),
+		//new Method("SamplerParameterIiv", "void", "uint32", "uint32", "int32*"),
+		//new Method("SamplerParameterIuiv", "void", "uint32", "uint32", "uint32*"),
+		//new Method("GetSamplerParameteriv", "void", "uint32", "uint32", "int32*"),
+		//new Method("GetSamplerParameterIiv", "void", "uint32", "uint32", "int32*"),
+		//new Method("GetSamplerParameterfv", "void", "uint32", "uint32", "float32*"),
+		//new Method("GetSamplerParameterIuiv", "void", "uint32", "uint32", "uint32*"),
+		new Method("DrawArraysInstancedBaseInstance", "void", "uint32", "int32", "int32", "int32", "uint32"),
+		//new Method("DrawElementsInstancedBaseInstance", "void", "uint32", "int32", "uint32", "void*", "int32", "uint32"),
+		new Method("DrawElementsInstancedBaseVertexBaseInstance", "void", "uint32", "int32", "uint32", "void*", "int32", "int32", "uint32"),
+		new Method("CullFace", "void", "uint32"),
+		new Method("FrontFace", "void", "uint32"),
+		//new Method("Hint32", "void", "uint32", "uint32"),
+		//new Method("LineWidth", "void", "float32"),
+		//new Method("Point32Size", "void", "float32"),
+		new Method("PolygonMode", "void", "uint32", "uint32"),
+		new Method("Scissor", "void", "int32", "int32", "int32", "int32"),
+		//new Method("TexParameterf", "void", "uint32", "uint32", "float32"),
+		//new Method("TexParameterfv", "void", "uint32", "uint32", "float32*"),
+		//new Method("TexParameteri", "void", "uint32", "uint32", "int32"),
+		//new Method("TexParameteriv", "void", "uint32", "uint32", "int32*"),
+		//new Method("TexImage1D", "void", "uint32", "int32", "int32", "int32", "int32", "uint32", "uint32", "void*"),
+		new Method("TexImage2D", "void", "uint32", "int32", "int32", "int32", "int32", "int32", "uint32", "uint32", "void*"),
+		//new Method("DrawBuffer", "void", "uint32"),
+		new Method("Clear", "void", "uint32"),
+		new Method("ClearColor", "void", "float32", "float32", "float32", "float32"),
+		new Method("ClearStencil", "void", "int32"),
+		new Method("ClearDepth", "void", "float64"),
+		//new Method("StencilMask", "void", "uint32"),
+		new Method("ColorMask", "void", "bool", "bool", "bool", "bool"),
+		new Method("DepthMask", "void", "bool"),
+		new Method("Disable", "void", "uint32"),
+		new Method("Enable", "void", "uint32"),
+		//new Method("Finish", "void"),
+		//new Method("Flush", "void"),
+		//new Method("BlendFunc", "void", "uint32", "uint32"),
+		//new Method("LogicOp", "void", "uint32"),
+		//new Method("StencilFunc", "void", "uint32", "int32", "uint32"),
+		//new Method("StencilOp", "void", "uint32", "uint32", "uint32"),
+		new Method("DepthFunc", "void", "uint32"),
+		//new Method("PixelStoref", "void", "uint32", "float32"),
+		//new Method("PixelStorei", "void", "uint32", "int32"),
+		//new Method("ReadBuffer", "void", "uint32"),
+		//new Method("ReadPixels", "void", "int32", "int32", "int32", "int32", "uint32", "uint32", "void*"),
+		//new Method("GetBooleanv", "void", "uint32", "bool*"),
+		//new Method("Getfloat64v", "void", "uint32", "float64*"),
+		new Method("GetError", "uint32") { NoErrorChecks = true },
+		//new Method("Getfloat32v", "void", "uint32", "float32*"),
+		new Method("GetIntegerv", "void", "uint32", "int32*"),
+		new Method("GetString", "uint8*", "uint32"),
+		//new Method("GetTexImage", "void", "uint32", "int32", "uint32", "uint32", "void*"),
+		//new Method("GetTexParameterfv", "void", "uint32", "uint32", "float32*"),
+		//new Method("GetTexParameteriv", "void", "uint32", "uint32", "int32*"),
+		//new Method("GetTexLevelParameterfv", "void", "uint32", "int32", "uint32", "float32*"),
+		//new Method("GetTexLevelParameteriv", "void", "uint32", "int32", "uint32", "int32*"),
+		//new Method("IsEnabled", "bool", "uint32"),
+		//new Method("DepthRange", "void", "float64", "float64"),
+		new Method("Viewport", "void", "int32", "int32", "int32", "int32"),
+		new Method("DrawArrays", "void", "uint32", "int32", "int32"),
+		//new Method("DrawElements", "void", "uint32", "int32", "uint32", "void*"),
+		//new Method("GetPointv", "void", "uint32", "void**"),
+		new Method("PolygonOffset", "void", "float32", "float32"),
+		//new Method("CopyTexImage1D", "void", "uint32", "int32", "uint32", "int32", "int32", "int32", "int32"),
+		//new Method("CopyTexImage2D", "void", "uint32", "int32", "uint32", "int32", "int32", "int32", "int32", "int32"),
+		//new Method("CopyTexSubImage1D", "void", "uint32", "int32", "int32", "int32", "int32", "int32"),
+		//new Method("CopyTexSubImage2D", "void", "uint32", "int32", "int32", "int32", "int32", "int32", "int32", "int32"),
+		//new Method("TexSubImage1D", "void", "uint32", "int32", "int32", "int32", "uint32", "uint32", "void*"),
+		//new Method("TexSubImage2D", "void", "uint32", "int32", "int32", "int32", "int32", "int32", "uint32", "uint32", "void*"),
+		new Method("BindTexture", "void", "uint32", "uint32"),
+		new Method("DeleteTextures", "void", "int32", "uint32*"),
+		new Method("GenTextures", "void", "int32", "uint32*"),
+		//new Method("IsTexture", "bool", "uint32"),
+		//new Method("Indexub", "void", "uint8"),
+		//new Method("Indexubv", "void", "uint8*"),
+		//new Method("BlendColor", "void", "float32", "float32", "float32", "float32"),
+		//new Method("BlendEquation", "void", "uint32"),
+		//new Method("DrawRangeElements", "void", "uint32", "uint32", "uint32", "int32", "uint32", "void*"),
+		//new Method("TexImage3D", "void", "uint32", "int32", "int32", "int32", "int32", "int32", "int32", "uint32", "uint32", "void*"),
+		//new Method("TexSubImage3D", "void", "uint32", "int32", "int32", "int32", "int32", "int32", "int32", "int32", "uint32", "uint32", "void*"),
+		//new Method("CopyTexSubImage3D", "void", "uint32", "int32", "int32", "int32", "int32", "int32", "int32", "int32", "int32"),
+		new Method("ActiveTexture", "void", "uint32"),
+		//new Method("SampleCoverage", "void", "float32", "bool"),
+		//new Method("CompressedTexImage3D", "void", "uint32", "int32", "uint32", "int32", "int32", "int32", "int32", "int32", "void*"),
+		new Method("CompressedTexImage2D", "void", "uint32", "int32", "uint32", "int32", "int32", "int32", "int32", "void*"),
+		//new Method("CompressedTexImage1D", "void", "uint32", "int32", "uint32", "int32", "int32", "int32", "void*"),
+		//new Method("CompressedTexSubImage3D", "void", "uint32", "int32", "int32", "int32", "int32", "int32", "int32", "int32", "uint32", "int32", "void*"),
+		//new Method("CompressedTexSubImage2D", "void", "uint32", "int32", "int32", "int32", "int32", "int32", "uint32", "int32", "void*"),
+		//new Method("CompressedTexSubImage1D", "void", "uint32", "int32", "int32", "int32", "uint32", "int32", "void*"),
+		//new Method("GetCompressedTexImage", "void", "uint32", "int32", "void*"),
+		new Method("BlendFuncSeparate", "void", "uint32", "uint32", "uint32", "uint32"),
+		//new Method("MultiDrawArrays", "void", "uint32", "int32*", "int32*", "int32"),
+		//new Method("MultiDrawElements", "void", "uint32", "int32*", "uint32", "void**", "int32"),
+		//new Method("Point32Parameterf", "void", "uint32", "float32"),
+		//new Method("Point32Parameterfv", "void", "uint32", "float32*"),
+		//new Method("Point32Parameteri", "void", "uint32", "int32"),
+		//new Method("Point32Parameteriv", "void", "uint32", "int32*"),
+		new Method("GenQueries", "void", "int32", "uint32*"),
+		new Method("DeleteQueries", "void", "int32", "uint32*"),
+		//new Method("IsQuery", "bool", "uint32"),
+		//new Method("BeginQuery", "void", "uint32", "uint32"),
+		//new Method("EndQuery", "void", "uint32"),
+		//new Method("GetQueryiv", "void", "uint32", "uint32", "int32*"),
+		new Method("GetQueryObjectiv", "void", "uint32", "uint32", "int32*"),
+		//new Method("GetQueryObjectuiv", "void", "uint32", "uint32", "uint32*"),
+		new Method("BindBuffer", "void", "uint32", "uint32"),
+		new Method("DeleteBuffers", "void", "int32", "uint32*"),
+		new Method("GenBuffers", "void", "int32", "uint32*"),
+		//new Method("IsBuffer", "bool", "uint32"),
+		new Method("BufferData", "void", "uint32", "void*", "void*", "uint32"),
+		new Method("BufferSubData", "void", "uint32", "void*", "void*", "void*"),
+		//new Method("GetBufferSubData", "void", "uint32", "void*", "void*", "void*"),
+		new Method("MapBuffer", "void*", "uint32", "uint32"),
+		new Method("UnmapBuffer", "bool", "uint32"),
+		//new Method("GetBufferParameteriv", "void", "uint32", "uint32", "int32*"),
+		//new Method("GetBufferPointv", "void", "uint32", "uint32", "void**"),
+		new Method("BlendEquationSeparate", "void", "uint32", "uint32"),
+		new Method("DrawBuffers", "void", "int32", "uint32*"),
+		new Method("StencilOpSeparate", "void", "uint32", "uint32", "uint32", "uint32"),
+		new Method("StencilFuncSeparate", "void", "uint32", "uint32", "int32", "uint32"),
+		//new Method("StencilMaskSeparate", "void", "uint32", "uint32"),
+		new Method("AttachShader", "void", "uint32", "uint32"),
+		//new Method("BindAttribLocation", "void", "uint32", "uint32", "uint8*"),
+		new Method("CompileShader", "void", "uint32"),
+		new Method("CreateProgram", "uint32"),
+		new Method("CreateShader", "uint32", "uint32"),
+		new Method("DeleteProgram", "void", "uint32"),
+		new Method("DeleteShader", "void", "uint32"),
+		new Method("DetachShader", "void", "uint32", "uint32"),
+		//new Method("DisableVertexAttribArray", "void", "uint32"),
+		new Method("EnableVertexAttribArray", "void", "uint32"),
+		//new Method("GetActiveAttrib", "void", "uint32", "uint32", "int32", "int32*", "int32*", "uint32*", "uint8*"),
+		//new Method("GetActiveUniform", "void", "uint32", "uint32", "int32", "int32*", "int32*", "uint32*", "uint8*"),
+		//new Method("GetAttachedShaders", "void", "uint32", "int32", "int32*", "uint32*"),
+		//new Method("GetAttribLocation", "int32", "uint32", "uint8*"),
+		new Method("GetProgramiv", "void", "uint32", "uint32", "int32*"),
+		new Method("GetProgramInfoLog", "void", "uint32", "int32", "int32*", "uint8*"),
+		new Method("GetShaderiv", "void", "uint32", "uint32", "int32*"),
+		new Method("GetShaderInfoLog", "void", "uint32", "int32", "int32*", "uint8*"),
+		//new Method("GetShaderSource", "void", "uint32", "int32", "int32*", "uint8*"),
+		//new Method("GetUniformLocation", "int32", "uint32", "uint8*"),
+		//new Method("GetUniformfv", "void", "uint32", "int32", "float32*"),
+		//new Method("GetUniformiv", "void", "uint32", "int32", "int32*"),
+		//new Method("GetVertexAttribdv", "void", "uint32", "uint32", "float64*"),
+		//new Method("GetVertexAttribfv", "void", "uint32", "uint32", "float32*"),
+		//new Method("GetVertexAttribiv", "void", "uint32", "uint32", "int32*"),
+		//new Method("GetVertexAttribPointerv", "void", "uint32", "uint32", "void**"),
+		//new Method("IsProgram", "bool", "uint32"),
+		//new Method("IsShader", "bool", "uint32"),
+		new Method("LinkProgram", "void", "uint32"),
+		new Method("ShaderSource", "void", "uint32", "int32", "uint8**", "int32*"),
+		new Method("UseProgram", "void", "uint32"),
+		//new Method("Uniform1f", "void", "int32", "float32"),
+		//new Method("Uniform2f", "void", "int32", "float32", "float32"),
+		//new Method("Uniform3f", "void", "int32", "float32", "float32", "float32"),
+		//new Method("Uniform4f", "void", "int32", "float32", "float32", "float32", "float32"),
+		//new Method("Uniform1i", "void", "int32", "int32"),
+		//new Method("Uniform2i", "void", "int32", "int32", "int32"),
+		//new Method("Uniform3i", "void", "int32", "int32", "int32", "int32"),
+		//new Method("Uniform4i", "void", "int32", "int32", "int32", "int32", "int32"),
+		//new Method("Uniform1fv", "void", "int32", "int32", "float32*"),
+		//new Method("Uniform2fv", "void", "int32", "int32", "float32*"),
+		//new Method("Uniform3fv", "void", "int32", "int32", "float32*"),
+		//new Method("Uniform4fv", "void", "int32", "int32", "float32*"),
+		//new Method("Uniform1iv", "void", "int32", "int32", "int32*"),
+		//new Method("Uniform2iv", "void", "int32", "int32", "int32*"),
+		//new Method("Uniform3iv", "void", "int32", "int32", "int32*"),
+		//new Method("Uniform4iv", "void", "int32", "int32", "int32*"),
+		//new Method("UniformMatrix2fv", "void", "int32", "int32", "bool", "float32*"),
+		//new Method("UniformMatrix3fv", "void", "int32", "int32", "bool", "float32*"),
+		//new Method("UniformMatrix4fv", "void", "int32", "int32", "bool", "float32*"),
+		//new Method("ValidateProgram", "void", "uint32"),
+		new Method("VertexAttribPointer", "void", "uint32", "int32", "uint32", "bool", "int32", "void*"),
+		//new Method("UniformMatrix2x3fv", "void", "int32", "int32", "bool", "float32*"),
+		//new Method("UniformMatrix3x2fv", "void", "int32", "int32", "bool", "float32*"),
+		//new Method("UniformMatrix2x4fv", "void", "int32", "int32", "bool", "float32*"),
+		//new Method("UniformMatrix4x2fv", "void", "int32", "int32", "bool", "float32*"),
+		//new Method("UniformMatrix3x4fv", "void", "int32", "int32", "bool", "float32*"),
+		//new Method("UniformMatrix4x3fv", "void", "int32", "int32", "bool", "float32*"),
+		new Method("BindVertexArray", "void", "uint32"),
+		new Method("DeleteVertexArrays", "void", "int32", "uint32*"),
+		new Method("GenVertexArrays", "void", "int32", "uint32*"),
+		//new Method("IsVertexArray", "bool", "uint32"),
+		new Method("MapBufferRange", "void*", "uint32", "void*", "void*", "uint32"),
+		//new Method("FlushMappedBufferRange", "void", "uint32", "void*", "void*"),
+		//new Method("IsRenderbuffer", "bool", "uint32"),
+		//new Method("BindRenderbuffer", "void", "uint32", "uint32"),
+		//new Method("DeleteRenderbuffers", "void", "int32", "uint32*"),
+		//new Method("GenRenderbuffers", "void", "int32", "uint32*"),
+		//new Method("RenderbufferStorage", "void", "uint32", "uint32", "int32", "int32"),
+		//new Method("GetRenderbufferParameteriv", "void", "uint32", "uint32", "int32*"),
+		//new Method("IsFramebuffer", "bool", "uint32"),
+		new Method("BindFramebuffer", "void", "uint32", "uint32"),
+		new Method("DeleteFramebuffers", "void", "int32", "uint32*"),
+		new Method("GenFramebuffers", "void", "int32", "uint32*"),
+		new Method("CheckFramebufferStatus", "uint32", "uint32"),
+		//new Method("FramebufferTexture1D", "void", "uint32", "uint32", "uint32", "uint32", "int32"),
+		new Method("FramebufferTexture2D", "void", "uint32", "uint32", "uint32", "uint32", "int32"),
+		//new Method("FramebufferTexture3D", "void", "uint32", "uint32", "uint32", "uint32", "int32", "int32"),
+		//new Method("FramebufferRenderbuffer", "void", "uint32", "uint32", "uint32", "uint32"),
+		//new Method("GetFramebufferAttachmentParameteriv", "void", "uint32", "uint32", "uint32", "int32*"),
+		new Method("GenerateMipmap", "void", "uint32"),
+		//new Method("BlitFramebuffer", "void", "int32", "int32", "int32", "int32", "int32", "int32", "int32", "int32", "uint32", "uint32"),
+		//new Method("RenderbufferStorageMultisample", "void", "uint32", "int32", "uint32", "int32", "int32"),
+		//new Method("FramebufferTextureLayer", "void", "uint32", "uint32", "uint32", "int32", "int32"),
+		//new Method("ColorMaski", "void", "uint32", "bool", "bool", "bool", "bool"),
+		//new Method("GetBooleani_v", "void", "uint32", "uint32", "bool*"),
+		//new Method("GetIntegeri_v", "void", "uint32", "uint32", "int32*"),
+		//new Method("Enablei", "void", "uint32", "uint32"),
+		//new Method("Disablei", "void", "uint32", "uint32"),
+		//new Method("IsEnabledi", "bool", "uint32", "uint32"),
+		//new Method("Begint32ransformFeedback", "void", "uint32"),
+		//new Method("EndTransformFeedback", "void"),
+		//new Method("BindBufferRange", "void", "uint32", "uint32", "uint32", "void*", "void*"),
+		new Method("BindBufferBase", "void", "uint32", "uint32", "uint32"),
+		//new Method("TransformFeedbackVaryings", "void", "uint32", "int32", "uint8**", "uint32"),
+		//new Method("GetTransformFeedbackVarying", "void", "uint32", "uint32", "int32", "int32*", "int32*", "uint32*", "uint8*"),
+		//new Method("ClampColor", "void", "uint32", "uint32"),
+		//new Method("BeginConditionalRender", "void", "uint32", "uint32"),
+		//new Method("EndConditionalRender", "void"),
+		//new Method("VertexAttribIPoint", "void", "uint32", "int32", "uint32", "int32", "void*"),
+		//new Method("GetVertexAttribIiv", "void", "uint32", "uint32", "int32*"),
+		//new Method("GetVertexAttribIuiv", "void", "uint32", "uint32", "uint32*"),
+		//new Method("VertexAttribI1i", "void", "uint32", "int32"),
+		//new Method("VertexAttribI2i", "void", "uint32", "int32", "int32"),
+		//new Method("VertexAttribI3i", "void", "uint32", "int32", "int32", "int32"),
+		//new Method("VertexAttribI4i", "void", "uint32", "int32", "int32", "int32", "int32"),
+		//new Method("VertexAttribI1ui", "void", "uint32", "uint32"),
+		//new Method("VertexAttribI2ui", "void", "uint32", "uint32", "uint32"),
+		//new Method("VertexAttribI3ui", "void", "uint32", "uint32", "uint32", "uint32"),
+		//new Method("VertexAttribI4ui", "void", "uint32", "uint32", "uint32", "uint32", "uint32"),
+		//new Method("VertexAttribI1iv", "void", "uint32", "int32*"),
+		//new Method("VertexAttribI2iv", "void", "uint32", "int32*"),
+		//new Method("VertexAttribI3iv", "void", "uint32", "int32*"),
+		//new Method("VertexAttribI4iv", "void", "uint32", "int32*"),
+		//new Method("VertexAttribI1uiv", "void", "uint32", "uint32*"),
+		//new Method("VertexAttribI2uiv", "void", "uint32", "uint32*"),
+		//new Method("VertexAttribI3uiv", "void", "uint32", "uint32*"),
+		//new Method("VertexAttribI4uiv", "void", "uint32", "uint32*"),
+		//new Method("VertexAttribI4bv", "void", "uint32", "uint8*"),
+		//new Method("VertexAttribI4sv", "void", "uint32", "short*"),
+		//new Method("VertexAttribI4ubv", "void", "uint32", "uint8*"),
+		//new Method("VertexAttribI4usv", "void", "uint32", "ushort*"),
+		//new Method("GetUniformuiv", "void", "uint32", "int32", "uint32*"),
+		//new Method("BindFragDataLocation", "void", "uint32", "uint32", "uint8*"),
+		//new Method("GetFragDataLocation", "int32", "uint32", "uint8*"),
+		//new Method("Uniform1ui", "void", "int32", "uint32"),
+		//new Method("Uniform2ui", "void", "int32", "uint32", "uint32"),
+		//new Method("Uniform3ui", "void", "int32", "uint32", "uint32", "uint32"),
+		//new Method("Uniform4ui", "void", "int32", "uint32", "uint32", "uint32", "uint32"),
+		//new Method("Uniform1uiv", "void", "int32", "int32", "uint32*"),
+		//new Method("Uniform2uiv", "void", "int32", "int32", "uint32*"),
+		//new Method("Uniform3uiv", "void", "int32", "int32", "uint32*"),
+		//new Method("Uniform4uiv", "void", "int32", "int32", "uint32*"),
+		//new Method("TexParameterIiv", "void", "uint32", "uint32", "int32*"),
+		//new Method("TexParameterIuiv", "void", "uint32", "uint32", "uint32*"),
+		//new Method("GetTexParameterIiv", "void", "uint32", "uint32", "int32*"),
+		//new Method("GetTexParameterIuiv", "void", "uint32", "uint32", "uint32*"),
+		//new Method("ClearBufferiv", "void", "uint32", "int32", "int32*"),
+		//new Method("ClearBufferuiv", "void", "uint32", "int32", "uint32*"),
+		//new Method("ClearBufferfv", "void", "uint32", "int32", "float32*"),
+		//new Method("ClearBufferfi", "void", "uint32", "int32", "float32", "int32"),
+		//new Method("GetStringi", "uint8*", "uint32", "uint32"),
+		//new Method("GetUniformIndices", "void", "uint32", "int32", "uint8**", "uint32*"),
+		//new Method("GetActiveUniformsiv", "void", "uint32", "int32", "uint32*", "uint32", "int32*"),
+		//new Method("GetActiveUniformName", "void", "uint32", "uint32", "int32", "int32*", "uint8*"),
+		//new Method("GetUniformBlockIndex", "uint32", "uint32", "uint8*"),
+		//new Method("GetActiveUniformBlockiv", "void", "uint32", "uint32", "uint32", "int32*"),
+		//new Method("GetActiveUniformBlockName", "void", "uint32", "uint32", "int32", "int32*", "uint8*"),
+		//new Method("UniformBlockBinding", "void", "uint32", "uint32", "uint32"),
+		//new Method("CopyBufferSubData", "void", "uint32", "uint32", "void*", "void*", "void*"),
+		//new Method("DrawArraysInstanced", "void", "uint32", "int32", "int32", "int32"),
+		//new Method("DrawElementsInstanced", "void", "uint32", "int32", "uint32", "void*", "int32"),
+		//new Method("TexBuffer", "void", "uint32", "uint32", "uint32"),
+		//new Method("PrimitiveRestartIndex", "void", "uint32"),
+		new Method("DrawElementsBaseVertex", "void", "uint32", "int32", "uint32", "void*", "int32"),
+		//new Method("DrawRangeElementsBaseVertex", "void", "uint32", "uint32", "uint32", "int32", "uint32", "void*", "int32"),
+		//new Method("DrawElementsInstancedBaseVertex", "void", "uint32", "int32", "uint32", "void*", "int32", "int32"),
+		//new Method("MultiDrawElementsBaseVertex", "void", "uint32", "int32*", "uint32", "void**", "int32", "int32*"),
+		//new Method("ProvokingVertex", "void", "uint32"),
+		new Method("FenceSync", "void*", "uint32", "uint32"),
+		//new Method("IsSync", "bool", "void*"),
+		new Method("DeleteSync", "void", "void*"),
+		new Method("ClientWaitSync", "uint32", "void*", "uint32", "uint64"),
+		//new Method("WaitSync", "void", "void*", "uint32", "uint64"),
+		//new Method("GetInteger64v", "void", "uint32", "int64*"),
+		//new Method("GetSynciv", "void", "void*", "uint32", "int32", "int32*", "int32*"),
+		//new Method("TexImage2DMultisample", "void", "uint32", "int32", "int32", "int32", "int32", "bool"),
+		//new Method("TexImage3DMultisample", "void", "uint32", "int32", "int32", "int32", "int32", "int32", "bool"),
+		//new Method("GetMultisamplefv", "void", "uint32", "uint32", "float32*"),
+		//new Method("SampleMaski", "void", "uint32", "uint32"),
+		//new Method("GetInteger64i_v", "void", "uint32", "uint32", "int64*"),
+		//new Method("GetBufferParameteri64v", "void", "uint32", "uint32", "int64*"),
+		//new Method("FramebufferTexture", "void", "uint32", "uint32", "uint32", "int32"),
+		new Method("QueryCounter", "void", "uint32", "uint32"),
+		//new Method("GetQueryObjecti64v", "void", "uint32", "uint32", "int64*"),
+		new Method("GetQueryObjectui64v", "void", "uint32", "uint32", "uint64*"),
+		//new Method("VertexP2ui", "void", "uint32", "uint32"),
+		//new Method("VertexP2uiv", "void", "uint32", "uint32*"),
+		//new Method("VertexP3ui", "void", "uint32", "uint32"),
+		//new Method("VertexP3uiv", "void", "uint32", "uint32*"),
+		//new Method("VertexP4ui", "void", "uint32", "uint32"),
+		//new Method("VertexP4uiv", "void", "uint32", "uint32*"),
+		//new Method("TexCoordP1ui", "void", "uint32", "uint32"),
+		//new Method("TexCoordP1uiv", "void", "uint32", "uint32*"),
+		//new Method("TexCoordP2ui", "void", "uint32", "uint32"),
+		//new Method("TexCoordP2uiv", "void", "uint32", "uint32*"),
+		//new Method("TexCoordP3ui", "void", "uint32", "uint32"),
+		//new Method("TexCoordP3uiv", "void", "uint32", "uint32*"),
+		//new Method("TexCoordP4ui", "void", "uint32", "uint32"),
+		//new Method("TexCoordP4uiv", "void", "uint32", "uint32*"),
+		//new Method("MultiTexCoordP1ui", "void", "uint32", "uint32", "uint32"),
+		//new Method("MultiTexCoordP1uiv", "void", "uint32", "uint32", "uint32*"),
+		//new Method("MultiTexCoordP2ui", "void", "uint32", "uint32", "uint32"),
+		//new Method("MultiTexCoordP2uiv", "void", "uint32", "uint32", "uint32*"),
+		//new Method("MultiTexCoordP3ui", "void", "uint32", "uint32", "uint32"),
+		//new Method("MultiTexCoordP3uiv", "void", "uint32", "uint32", "uint32*"),
+		//new Method("MultiTexCoordP4ui", "void", "uint32", "uint32", "uint32"),
+		//new Method("MultiTexCoordP4uiv", "void", "uint32", "uint32", "uint32*"),
+		//new Method("NormalP3ui", "void", "uint32", "uint32"),
+		//new Method("NormalP3uiv", "void", "uint32", "uint32*"),
+		//new Method("ColorP3ui", "void", "uint32", "uint32"),
+		//new Method("ColorP3uiv", "void", "uint32", "uint32*"),
+		//new Method("ColorP4ui", "void", "uint32", "uint32"),
+		//new Method("ColorP4uiv", "void", "uint32", "uint32*"),
+		//new Method("SecondaryColorP3ui", "void", "uint32", "uint32"),
+		//new Method("SecondaryColorP3uiv", "void", "uint32", "uint32*"),
+		//new Method("VertexAttribP1ui", "void", "uint32", "uint32", "bool", "uint32"),
+		//new Method("VertexAttribP1uiv", "void", "uint32", "uint32", "bool", "uint32*"),
+		//new Method("VertexAttribP2ui", "void", "uint32", "uint32", "bool", "uint32"),
+		//new Method("VertexAttribP2uiv", "void", "uint32", "uint32", "bool", "uint32*"),
+		//new Method("VertexAttribP3ui", "void", "uint32", "uint32", "bool", "uint32"),
+		//new Method("VertexAttribP3uiv", "void", "uint32", "uint32", "bool", "uint32*"),
+		//new Method("VertexAttribP4ui", "void", "uint32", "uint32", "bool", "uint32"),
+		//new Method("VertexAttribP4uiv", "void", "uint32", "uint32", "bool", "uint32*"),
+		//new Method("BindFragDataLocationIndexed", "void", "uint32", "uint32", "uint32", "uint8*"),
+		//new Method("GetFragDataIndex", "int32", "uint32", "uint8*"),
+		new Method("VertexAttribDivisor", "void", "uint32", "uint32"),
+	};
+}
+	
+#>

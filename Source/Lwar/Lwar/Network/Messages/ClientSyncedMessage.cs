@@ -8,7 +8,7 @@ namespace Lwar.Network.Messages
 	///     Informs a client that the game state is now fully synced.
 	/// </summary>
 	[ReliableTransmission(MessageType.ClientSynced)]
-	public sealed class ClientSyncedMessage : Message
+	internal sealed class ClientSyncedMessage : Message
 	{
 		/// <summary>
 		///     Initializes the type.
@@ -34,18 +34,18 @@ namespace Lwar.Network.Messages
 		///     Serializes the message using the given writer.
 		/// </summary>
 		/// <param name="writer">The writer that should be used to serialize the message.</param>
-		public override void Serialize(BufferWriter writer)
+		public override void Serialize(ref BufferWriter writer)
 		{
-			writer.WriteIdentifier(LocalPlayer);
+			WriteIdentifier(ref writer, LocalPlayer);
 		}
 
 		/// <summary>
 		///     Deserializes the message using the given reader.
 		/// </summary>
 		/// <param name="reader">The reader that should be used to deserialize the message.</param>
-		public override void Deserialize(BufferReader reader)
+		public override void Deserialize(ref BufferReader reader)
 		{
-			LocalPlayer = reader.ReadIdentifier();
+			LocalPlayer = ReadIdentifier(ref reader);
 		}
 
 		/// <summary>

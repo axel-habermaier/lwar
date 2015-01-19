@@ -10,7 +10,7 @@ namespace Lwar.Gameplay.Server.Entities
 	/// <summary>
 	///     Represents a planet that orbits a sun or another planet.
 	/// </summary>
-	public class Planet : Entity
+	internal class Planet : Entity
 	{
 		/// <summary>
 		///     Initializes the type.

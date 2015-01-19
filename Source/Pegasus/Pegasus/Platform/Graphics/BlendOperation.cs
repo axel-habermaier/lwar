@@ -10,17 +10,26 @@
 		/// <summary>
 		///     Indicates that the blend operation adds the values.
 		/// </summary>
-		Add = 1001,
+		Add,
 
 		/// <summary>
 		///     Indicates that the blend operation subtracts the values.
 		/// </summary>
-		Subtract = 1002,
+		Subtract,
 
-		ReverseSubtract = 1003,
+		/// <summary>
+		///     Indicates that the blend operation subtracts the first value from the second.
+		/// </summary>
+		ReverseSubtract,
 
-		Minimum = 1004,
+		/// <summary>
+		///     Indicates that the blend operation finds the minimum of both values.
+		/// </summary>
+		Minimum,
 
-		Maximum = 1005
+		/// <summary>
+		///     Indicates that the blend operation finds the maximum of both values.
+		/// </summary>
+		Maximum
 	}
 }

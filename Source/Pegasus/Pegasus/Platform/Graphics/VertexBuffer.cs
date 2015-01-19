@@ -30,8 +30,7 @@
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="data">The data that should be copied into the buffer.</param>
 		/// <param name="usage">A value describing the usage pattern of the buffer.</param>
-		public static VertexBuffer Create<T>(GraphicsDevice graphicsDevice, T[] data,
-											 ResourceUsage usage = ResourceUsage.Static)
+		public static VertexBuffer Create<T>(GraphicsDevice graphicsDevice, T[] data, ResourceUsage usage = ResourceUsage.Static)
 			where T : struct
 		{
 			Assert.ArgumentNotNull(graphicsDevice);
@@ -49,8 +48,7 @@
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="elementCount">The number of elements of type T that the buffer should be able to store.</param>
 		/// <param name="usage">A value describing the usage pattern of the buffer.</param>
-		public static VertexBuffer Create<T>(GraphicsDevice graphicsDevice, int elementCount,
-											 ResourceUsage usage = ResourceUsage.Static)
+		public static VertexBuffer Create<T>(GraphicsDevice graphicsDevice, int elementCount, ResourceUsage usage = ResourceUsage.Static)
 			where T : struct
 		{
 			Assert.ArgumentNotNull(graphicsDevice);

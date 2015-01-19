@@ -103,7 +103,8 @@
 		}
 
 		/// <summary>
-		///     Returns the pooled object to the pool the object if it is not null and has not yet been returned.
+		///     Returns the pooled object to the pool the object if it is not null and has not yet been returned. For pooled objects
+		///     with shared ownership, the object is only returned to the pool if all other owners have already disposed of the object.
 		/// </summary>
 		/// <param name="obj">The object that should be returned.</param>
 		[DebuggerHidden]

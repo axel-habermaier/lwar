@@ -4,7 +4,6 @@
 	using System.Collections.Generic;
 	using System.Drawing;
 	using System.Linq;
-	using Platform.Logging;
 	using Utilities;
 
 	/// <summary>
@@ -12,36 +11,6 @@
 	/// </summary>
 	internal static class XamlTypeConverter
 	{
-		/// <summary>
-		///     Maps types to their type converters.
-		/// </summary>
-		private static readonly Dictionary<string, Func<string, string>> Converters = new Dictionary<string, Func<string, string>>
-		{
-			{ "bool", s => s.ToLower() },
-			{ "string", s => String.Format("\"{0}\"", s.Replace("\"", "\\\"")) },
-			{ "object", s => String.Format("\"{0}\"", s.Replace("\"", "\\\"")) },
-			{ "double", s => s.ToLower() == "auto" ? "Double.NaN" : s },
-			{ "float", s => s.ToLower() == "auto" ? "Single.NaN" : s },
-			{ "byte", s => s },
-			{ "char", s => s },
-			{ "short", s => s },
-			{ "ushort", s => s },
-			{ "int", s => s },
-			{ "uint", s => s },
-			{ "long", s => s },
-			{ "ulong", s => s },
-			{ "Pegasus.UserInterface.Thickness", s => String.Format("new Pegasus.UserInterface.Thickness({0})", s) },
-			{ "Pegasus.Platform.Graphics.Color", ConvertColor },
-			{ "Pegasus.Platform.Graphics.Color?", ConvertNullableColor },
-			{ "System.Type", s => String.Format("typeof({0})", s) },
-			{ "Pegasus.AssetCompiler.Xaml.XamlLiteral", s => s },
-			{ "Pegasus.UserInterface.Input.KeyModifiers", ConvertKeyModifiers },
-			{ "Pegasus.Scripting.Cvar", s => s },
-			{ "Pegasus.Platform.Graphics.Texture2D", s => String.Format("Pegasus.Application.Current.Assets.Load({0})", s) },
-			{ "Pegasus.Math.Vector2", s => String.Format("new Pegasus.Math.Vector2({0})", s) },
-			{ "Pegasus.UserInterface.Input.Cursor", s => String.Format("Pegasus.UserInterface.Input.Cursors.{0}", s) }
-		};
-
 		/// <summary>
 		///     Converts the given Xaml value string to the given type's string representation.
 		/// </summary>
@@ -74,6 +43,18 @@
 				Log.Die("Failed to convert '{0}' to type '{1}': {2}", value, targetType.FullName, e.Message);
 				return null;
 			}
+		}
+
+		/// <summary>
+		///     Converts an asset value.
+		/// </summary>
+		/// <param name="value">The asset value that should be converted.</param>
+		private static string ConvertAsset(string value)
+		{
+			var index = value.LastIndexOf(".", StringComparison.Ordinal);
+			var bundleType = value.Substring(0, index);
+			var assetName = value.Substring(index + 1);
+			return String.Format("Pegasus.Application.Current.RenderContext.GetAssetBundle<{0}>().{1}", bundleType, assetName);
 		}
 
 		/// <summary>
@@ -123,7 +104,37 @@
 					Log.Die("Failed to convert color value '{0}'.", value);
 			}
 
-			return String.Format("new Color({0}, {1}, {2}, {3})", color.R, color.G, color.B, color.A);
+			return String.Format("new Pegasus.Rendering.Color({0}, {1}, {2}, {3})", color.R, color.G, color.B, color.A);
 		}
+
+		/// <summary>
+		///     Maps types to their type converters.
+		/// </summary>
+		private static readonly Dictionary<string, Func<string, string>> Converters = new Dictionary<string, Func<string, string>>
+		{
+			{ "bool", s => s.ToLower() },
+			{ "string", s => String.Format("\"{0}\"", s.Replace("\"", "\\\"")) },
+			{ "object", s => String.Format("\"{0}\"", s.Replace("\"", "\\\"")) },
+			{ "double", s => s.ToLower() == "auto" ? "Double.NaN" : s },
+			{ "float", s => s.ToLower() == "auto" ? "Single.NaN" : s },
+			{ "byte", s => s },
+			{ "char", s => s },
+			{ "short", s => s },
+			{ "ushort", s => s },
+			{ "int", s => s },
+			{ "uint", s => s },
+			{ "long", s => s },
+			{ "ulong", s => s },
+			{ "Pegasus.UserInterface.Thickness", s => String.Format("new Pegasus.UserInterface.Thickness({0})", s) },
+			{ "Pegasus.Rendering.Color", ConvertColor },
+			{ "Pegasus.Rendering.Color?", ConvertNullableColor },
+			{ "System.Type", s => String.Format("typeof({0})", s) },
+			{ "Pegasus.AssetCompiler.Xaml.XamlLiteral", s => s },
+			{ "Pegasus.UserInterface.Input.KeyModifiers", ConvertKeyModifiers },
+			{ "Pegasus.Scripting.Cvar", s => s },
+			{ "Pegasus.Platform.Graphics.Texture2D", ConvertAsset },
+			{ "Pegasus.Math.Vector2", s => String.Format("new Pegasus.Math.Vector2({0})", s) },
+			{ "Pegasus.UserInterface.Input.Cursor", ConvertAsset }
+		};
 	}
 }

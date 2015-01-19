@@ -10,7 +10,7 @@
 	/// <summary>
 	///     Presents the respawn screen.
 	/// </summary>
-	public class RespawnViewModel : DisposableNotifyPropertyChanged
+	internal class RespawnViewModel : DisposableNotifyPropertyChanged
 	{
 		/// <summary>
 		///     The game session that is played.

@@ -3,7 +3,6 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Runtime.InteropServices;
-	using Platform.Logging;
 	using Utilities;
 
 	/// <summary>
@@ -30,22 +29,27 @@
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="font">The native freetype font instance.</param>
-		/// <param name="metadata">The font metadata.</param>
-		public Font(IntPtr font, FontMetadata metadata)
+		/// <param name="size">The size (in pixels) of the characters.</param>
+		/// <param name="bold">Indicates whether the font weight should be bold.</param>
+		/// <param name="italic">Indicates whether the font should be italic.</param>
+		/// <param name="renderMode">Indicates whether anti-aliasing should be used when rendering the glyphs.</param>
+		/// <param name="characters">The range of characters supported by the font.</param>
+		/// <param name="invalidChar">The character that is shown for invalid or unsupported characters.</param>
+		public Font(IntPtr font, int size, bool bold, bool italic, RenderMode renderMode, IEnumerable<char> characters, char invalidChar)
 		{
 			Assert.ArgumentNotNull(font);
+			Assert.ArgumentInRange(renderMode);
 
 			_fontPtr = font;
 			_font = (FreeType.Face)Marshal.PtrToStructure(font, typeof(FreeType.Face));
 
-			FreeType.Invoke(() => FreeType.SetPixelSize(_fontPtr, 0, (uint)metadata.Size));
+			FreeType.Invoke(() => FreeType.SetPixelSize(_fontPtr, 0, (uint)size));
 
-			// Add the glyph that is used to show non-printable or non-supported characters; must be the first glyph
-			var renderMode = !metadata.Aliased ? RenderMode.Antialiased : RenderMode.Aliased;
-			AddGlyph(renderMode, metadata.InvalidChar);
+			// Add the 'box' glyph that is used to show non-printable or non-supported characters
+			AddGlyph(renderMode, invalidChar);
 
 			// Add the printable ASCII-glyphs
-			foreach (var character in metadata.Characters)
+			foreach (var character in characters)
 				AddGlyph(renderMode, character);
 		}
 
@@ -133,7 +137,7 @@
 
 			var kerning = new FreeType.Vector();
 			FreeType.Invoke(() => FreeType.GetKerning(_fontPtr, left.Index, right.Index, 0, out kerning));
-			return (int)kerning.x / 64; // Note: Cast required in Linux 64 bit builds
+			return (int)(kerning.x / 64);
 		}
 	}
 }

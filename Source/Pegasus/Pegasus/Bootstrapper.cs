@@ -3,12 +3,14 @@
 	using System;
 	using System.Diagnostics;
 	using System.Globalization;
-	using System.Threading;
+	using System.Reflection;
 	using System.Threading.Tasks;
 	using Platform;
 	using Platform.Logging;
 	using Platform.Memory;
+	using Platform.SDL2;
 	using Scripting;
+	using UserInterface;
 	using UserInterface.ViewModels;
 	using Utilities;
 
@@ -18,70 +20,122 @@
 	public static class Bootstrapper
 	{
 		/// <summary>
+		///     Gets a value indicating whether the bootstrapping process is completed.
+		/// </summary>
+		internal static bool Completed { get; private set; }
+
+		/// <summary>
 		///     Runs the application. This method does not return until the application is shut down.
 		/// </summary>
-		/// <param name="application">The application that should be run.</param>
+		/// <typeparam name="TApp">The type of the application that should be run.</typeparam>
 		/// <param name="arguments">The command line arguments that have been passed to the application.</param>
 		/// <param name="appName">The name of the application.</param>
-		public static void Run(Application application, string[] arguments, string appName)
+		public static void Run<TApp>(string[] arguments, string appName)
+			where TApp : Application, new()
 		{
-			Assert.ArgumentNotNull(application);
 			Assert.ArgumentNotNullOrWhitespace(appName);
 
-			TaskScheduler.UnobservedTaskException += (o, e) => { throw e.Exception.InnerException; };
-			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-			Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
-
-			application.Name = appName;
-			FileSystem.ApplicationDirectory = appName;
-
-			// Start printing to the console and initialize the console view model here, as we don't want to miss
-			// any log entries while the application initializes itself...
-			PrintToConsole();
-			var consoleViewModel = new ConsoleViewModel();
-
-			using (new NativeLibrary())
-			using (var logFile = new LogFile(appName))
+			try
 			{
-				try
+				TaskScheduler.UnobservedTaskException += (o, e) => { throw e.Exception.InnerException; };
+				CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+				CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
+
+				AssemblyCache.Register(typeof(TApp).GetTypeInfo().Assembly);
+				AssemblyCache.Register(typeof(Bootstrapper).GetTypeInfo().Assembly);
+
+				// Start printing to the console and initialize the file system
+				FileSystem.SetAppDirectory(appName);
+				PrintToConsole();
+
+				// Initialize the console view model here, as we don't want to miss
+				// any log entries while the application initializes itself...
+				using (var consoleViewModel = new ConsoleViewModel())
+				using (new NativeLibrary())
+				using (var logFile = new LogFile(appName))
 				{
-					Log.Info("Starting {0}...", appName);
-
-					Commands.Initialize();
-					Cvars.Initialize();
-
-					using (new Help())
-					using (new Interpreter())
+					try
 					{
-						// Process the autoexec.cfg first, then the command line, so that cvar values set via the command line overwrite
-						// the autoexec.cfg. Afterwards, perform all deferred updates so that all cvars are set to their updated values
-						Commands.Process(ConfigurationFile.AutoExec);
-						CommandLineParser.Parse(arguments);
-						CvarRegistry.ExecuteDeferredUpdates();
+						Commands.Initialize();
+						Cvars.Initialize();
 
-						application.Run(consoleViewModel);
+						// Setup restart handling: when the app should restart itself, set the restart flag and
+						// invoke the exit command to trigger a restart
+						var restart = true;
+						Commands.OnRestart += () =>
+						{
+							restart = true;
+							Commands.Exit();
+						};
 
-						Commands.Persist(ConfigurationFile.AutoExec);
+						using (new Help())
+						using (new Interpreter())
+						{
+							// Process the autoexec.cfg first, then the command line, so that cvar values set via the command line overwrite
+							// the autoexec.cfg. Afterwards, perform all deferred updates so that all cvars are set to their updated values
+							Commands.Process(ConfigurationFile.AutoExec);
+							CommandLineParser.Parse(arguments);
+
+							// We're done with the bootstrapping process, now let's finally run the app!
+							Completed = true;
+
+							while (restart)
+							{
+								// Make sure we don't restart again, unless explicitly requested; also, apply all
+								// deferred cvar updates, as that might very well be the point of restarting the app...
+								restart = false;
+								CvarRegistry.ExecuteDeferredUpdates();
+
+								Log.Info("Starting {0}...", appName);
+								var application = new TApp { Name = appName };
+								application.Run(consoleViewModel);
+							}
+
+							Commands.Persist(ConfigurationFile.AutoExec);
+						}
+
+						Log.Info("{0} has shut down.", appName);
 					}
-
-					Log.Info("{0} has shut down.", appName);
-				}
-				catch (Exception e)
-				{
-					var message = "The application has been terminated after a fatal error. " +
-								  "See the log file for further details.\n\nThe error was: {0}\n\nLog file: {1}";
-					message = String.Format(message, e.Message, logFile.FilePath);
-					Log.Error("{0}", message);
-					Log.Error("Stack trace:\n{0}", e.StackTrace);
-
-					logFile.WriteToFile(force: true);
-					NativeLibrary.ShowMessageBox(appName + " Fatal Error", message);
-				}
-				finally
-				{
-					ObjectPool.DisposeGlobalPools();
+					catch (TargetInvocationException e)
+					{
+						ReportException(e.InnerException, logFile, appName);
+					}
+					catch (Exception e)
+					{
+						ReportException(e, logFile, appName);
+					}
 				}
 			}
+			catch (Exception e)
+			{
+				MessageBox.ShowNativeError(appName + " Fatal Error", String.Format("Application startup failed. {0}", e.Message));
+				Console.WriteLine("Application startup failed: {0}", e.Message);
+			}
+			finally
+			{
+				ObjectPool.DisposeGlobalPools();
+			}
+		}
+
+		/// <summary>
+		///     Reports the given exception.
+		/// </summary>
+		/// <param name="exception">The exception that should be reported.</param>
+		/// <param name="logFile">The log file the exception should be reported to.</param>
+		/// <param name="appName">The name of the application.</param>
+		private static void ReportException(Exception exception, LogFile logFile, string appName)
+		{
+			var message = "The application has been terminated after a fatal error. " +
+						  "See the log file for further details.\n\nThe error was: {0}\n\nLog file: {1}";
+
+			logFile.Enqueue(new LogEntry(LogType.Error, String.Format("Exception type: {0}", exception.GetType().FullName)));
+			logFile.Enqueue(new LogEntry(LogType.Error, String.Format("Stack trace:\n{0}", exception.StackTrace)));
+			logFile.WriteToFile(force: true);
+
+			message = String.Format(message, exception.Message, logFile.FilePath);
+			MessageBox.ShowNativeError(appName + " Fatal Error", message);
+
+			Log.Error("The application has been terminated after a fatal error. See the log file ({0}) for further details.", logFile.FilePath);
 		}
 
 		/// <summary>
@@ -104,10 +158,10 @@
 		{
 #if DEBUG
 			using (var text = new TextString(entry.Message))
-				Debug.WriteLine("[{0}] {1}", entry.LogType.ToDisplayString(), text);
+				Debug.WriteLine("[{0}] {1}", entry.LogTypeString, text);
 #else
 			Console.Out.Write("[");
-			Console.Out.Write(entry.LogType.ToDisplayString());
+			Console.Out.Write(entry.LogTypeString);
 			Console.Out.Write("] ");
 
 			TextString.Write(Console.Out, entry.Message);

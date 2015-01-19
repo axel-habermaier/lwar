@@ -7,7 +7,7 @@
 	/// <summary>
 	///     Represents a sun.
 	/// </summary>
-	public class SunEntity : Entity<SunEntity>
+	internal class SunEntity : Entity<SunEntity>
 	{
 		/// <summary>
 		///     Creates a new instance.

@@ -9,7 +9,7 @@
 	///     The base class of all actors.
 	/// </summary>
 	/// <typeparam name="TActor">The specialized actor type.</typeparam>
-	public abstract class Actor<TActor> : UniquePooledObject, IActor
+	internal abstract class Actor<TActor> : UniquePooledObject, IActor
 		where TActor : Actor<TActor>, new()
 	{
 		/// <summary>
@@ -31,9 +31,9 @@
 		protected ClientGameSession GameSession { get; private set; }
 
 		/// <summary>
-		///     Gets the render context that draws the actor.
+		///     Gets the renderer that draws the actor.
 		/// </summary>
-		protected RenderContext RenderContext { get; private set; }
+		protected GameSessionRenderer Renderer { get; private set; }
 
 		/// <summary>
 		///     Gets the transformation of the actor.
@@ -69,19 +69,19 @@
 		///     Adds the actor to the game session and the render context.
 		/// </summary>
 		/// <param name="gameSession">The game session the actor should be added to.</param>
-		/// <param name="renderContext">The render context the actor should be added to.</param>
-		public void Added(ClientGameSession gameSession, RenderContext renderContext)
+		/// <param name="renderer">The render context the actor should be added to.</param>
+		public void Added(ClientGameSession gameSession, GameSessionRenderer renderer)
 		{
 			Assert.ArgumentNotNull(gameSession);
-			Assert.ArgumentNotNull(renderContext);
+			Assert.ArgumentNotNull(renderer);
 
 			GameSession = gameSession;
-			RenderContext = renderContext;
+			Renderer = renderer;
 
 			Transform.Reset();
 			Transform.AttachTo(gameSession.RootTransform);
 
-			RenderContext.Add(this as TActor);
+			Renderer.Add(this as TActor);
 			OnAdded();
 		}
 
@@ -93,7 +93,7 @@
 		{
 			Parent = null;
 			Transform.Detach();
-			RenderContext.Remove(this as TActor);
+			Renderer.Remove(this as TActor);
 
 			IsRemoved = true;
 			OnRemoved();

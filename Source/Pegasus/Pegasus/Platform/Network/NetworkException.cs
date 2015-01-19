@@ -1,8 +1,6 @@
 ﻿namespace Pegasus.Platform.Network
 {
 	using System;
-	using System.Runtime.InteropServices;
-	using System.Security;
 	using Utilities;
 
 	/// <summary>
@@ -13,42 +11,12 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		public NetworkException()
-			: base(GetLastError())
-		{
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
 		/// <param name="message">A message explaining the exception.</param>
 		/// <param name="args">The format arguments for the exception message.</param>
 		[StringFormatMethod("message")]
 		public NetworkException(string message, params object[] args)
 			: base(String.Format(message, args))
 		{
-		}
-
-		/// <summary>
-		///     Gets a string describing the last network error that occurred.
-		/// </summary>
-		private static string GetLastError()
-		{
-			var error = NativeMethods.GetLastNetworkError();
-			if (error == IntPtr.Zero)
-				return "An unknown network error occurred.";
-
-			return Marshal.PtrToStringAnsi(error);
-		}
-
-		/// <summary>
-		///     Provides access to the native network functions.
-		/// </summary>
-		[SuppressUnmanagedCodeSecurity]
-		private static class NativeMethods
-		{
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetLastNetworkError")]
-			public static extern IntPtr GetLastNetworkError();
 		}
 	}
 }

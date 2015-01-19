@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.UserInterface.Controls
 {
 	using System;
+	using System.Reflection;
 	using Math;
 	using Platform.Graphics;
 	using Platform.Logging;
@@ -173,12 +174,12 @@
 			if (dataContext == null || String.IsNullOrWhiteSpace(drawMethod))
 				return;
 
-			var method = dataContext.GetType().GetMethod(drawMethod);
+			var method = dataContext.GetType().GetTypeInfo().GetDeclaredMethod(drawMethod);
 			var validSignature = method != null && method.ReturnType == typeof(void) && method.GetParameters().Length == 1 &&
 								 method.GetParameters()[0].ParameterType == typeof(RenderOutput);
 
 			if (validSignature)
-				renderOutputPanel._drawMethod = (DrawCallback)Delegate.CreateDelegate(typeof(DrawCallback), dataContext, method);
+				renderOutputPanel._drawMethod = (DrawCallback)method.CreateDelegate(typeof(DrawCallback), dataContext);
 			else
 				Log.Debug("Unable to find method 'void {0}.{1}({2})'.", dataContext.GetType().FullName, drawMethod, typeof(RenderOutput).FullName);
 		}
@@ -232,7 +233,7 @@
 		/// <param name="previousResolution">The previous app resolution.</param>
 		private void OnResolutionChanged(Size previousResolution)
 		{
-			if (ResolutionSource==ResolutionSource.Application)
+			if (ResolutionSource == ResolutionSource.Application)
 				DisposeGraphicsResources();
 		}
 
@@ -288,7 +289,7 @@
 
 			// Initialize the render output panel's graphics properties
 			var viewport = new Rectangle(0, 0, size);
-			_renderOutput = new RenderOutput(Application.Current.GraphicsDevice)
+			_renderOutput = new RenderOutput(Application.Current.RenderContext)
 			{
 				RenderTarget = new RenderTarget(Application.Current.GraphicsDevice, _depthStencil, _outputTexture),
 				Viewport = viewport,
@@ -309,8 +310,6 @@
 
 			if (_renderOutput != null)
 				_renderOutput.RenderTarget.SafeDispose();
-
-			_renderOutput.SafeDispose();
 
 			_renderOutput = null;
 			_outputTexture = null;
@@ -334,11 +333,18 @@
 
 			// Take the different coordinate origins for OpenGL and Direct3D into account when rendering 
 			// the render target's color buffer... annoying
-#if Direct3D11
-			var textureArea = new Rectangle(0, 1, 1, -1);
-#elif OpenGL3
-			var textureArea = new Rectangle(0, 0, 1, 1);
-#endif
+			Rectangle textureArea;
+			switch (_renderOutput.GraphicsDevice.GraphicsApi)
+			{
+				case GraphicsApi.Direct3D11:
+					textureArea = new Rectangle(0, 0, 1, 1);
+					break;
+				case GraphicsApi.OpenGL3:
+					textureArea = new Rectangle(0, 1, 1, -1);
+					break;
+				default:
+					throw new InvalidOperationException("Unsupported graphics API.");
+			}
 
 			// Update the contents of the texture
 			_drawMethod(_renderOutput);

@@ -1,0 +1,1 @@
+mono Source/packages/FAKE/tools/FAKE.exe Source/Build.fsx $1

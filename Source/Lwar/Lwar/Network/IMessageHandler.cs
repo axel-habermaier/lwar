@@ -7,7 +7,7 @@
 	///     Handles incoming messages from a remote peer, updating the game state of the client or server while possibly also
 	///     sending messages back to the remote peer.
 	/// </summary>
-	public interface IMessageHandler
+	internal interface IMessageHandler
 	{
 		/// <summary>
 		///     Handles the given message.

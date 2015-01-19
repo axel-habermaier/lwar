@@ -19,33 +19,42 @@
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="size">The size of the constant buffer's contents in bytes.</param>
 		/// <param name="slot">The slot the constant buffer should be bound to.</param>
-		internal ConstantBuffer(GraphicsDevice graphicsDevice, int size, int slot)
+		public ConstantBuffer(GraphicsDevice graphicsDevice, int size, int slot)
 			: base(graphicsDevice, BufferType.ConstantBuffer, ResourceUsage.Dynamic, IntPtr.Zero, size)
 		{
 			_slot = slot;
 		}
 
 		/// <summary>
-		///     Binds the constant buffer to the given slot without uploading any possible changes of the buffer to the GPU.
+		///     Copies the given data to the buffer, overwriting all previous data.
 		/// </summary>
-		internal void Bind()
+		/// <param name="data">The data that should be copied.</param>
+		public unsafe void CopyData(void* data)
 		{
+			Assert.ArgumentNotNull(new IntPtr(data));
 			Assert.NotDisposed(this);
 
-			BindBuffer(_slot);
+			BufferObject.CopyConstantBufferData(data);
 		}
 
 		/// <summary>
-		///     Copies the given data to the buffer. The size of the data is determined by the parameter that has been passed to the
-		///     constructor of this instance.
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
-		/// <param name="data">The data that should be copied into the buffer.</param>
-		internal unsafe void CopyData(void* data)
+		protected override void OnDisposing()
 		{
-			Assert.That(data != null, "A valid data pointer must be specified.");
+			DeviceState.Unset(GraphicsDevice.State.ConstantBuffers, this);
+			base.OnDisposing();
+		}
+
+		/// <summary>
+		///     Binds the constant buffer to the given slot without uploading any possible changes of the buffer to the GPU.
+		/// </summary>
+		public void Bind()
+		{
 			Assert.NotDisposed(this);
 
-			UpdateConstantBuffer(new IntPtr(data));
+			if (DeviceState.Change(GraphicsDevice.State.ConstantBuffers, _slot, this))
+				BufferObject.BindConstantBuffer(_slot);
 		}
 	}
 }

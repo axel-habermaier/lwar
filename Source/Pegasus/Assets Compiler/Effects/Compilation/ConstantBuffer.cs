@@ -3,7 +3,6 @@
 	using System;
 	using System.Collections.Generic;
 	using System.Linq;
-	using Platform.Logging;
 	using Utilities;
 
 	/// <summary>
@@ -184,7 +183,7 @@
 			public int Padding;
 
 			/// <summary>
-			/// The total size of the constant in bytes.
+			///     The total size of the constant in bytes.
 			/// </summary>
 			public int Size;
 		}

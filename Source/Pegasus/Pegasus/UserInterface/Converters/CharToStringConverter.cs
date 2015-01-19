@@ -1,7 +1,6 @@
 namespace Pegasus.UserInterface.Converters
 {
 	using System;
-	using System.Globalization;
 
 	/// <summary>
 	///     Converts a character value to a string.
@@ -14,7 +13,7 @@ namespace Pegasus.UserInterface.Converters
 		/// <param name="value">The value that should be converted.</param>
 		public override string ConvertToTarget(char value)
 		{
-			return value.ToString(CultureInfo.InvariantCulture);
+			return value.ToString();
 		}
 
 		/// <summary>

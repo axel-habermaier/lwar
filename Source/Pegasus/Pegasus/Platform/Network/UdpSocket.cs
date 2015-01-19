@@ -1,29 +1,52 @@
 ﻿namespace Pegasus.Platform.Network
 {
 	using System;
+	using System.Diagnostics;
+	using System.Net.Sockets;
 	using System.Runtime.InteropServices;
-	using System.Security;
 	using Memory;
 	using Utilities;
 
 	/// <summary>
 	///     Represents a Udp-based socket that can be used to unreliably send and receive packets over the network.
 	/// </summary>
+	/// <remarks>
+	///     We're wrapping System.Net.Sockets.Socket in order to reduce the pressure on the garbage collector as each
+	///     invocation of System.Net.Sockets.Socket.ReceiveFrom and System.Net.Sockets.Socket.SendTo allocates memory.
+	///     Additionally, we always throw NetworkExceptions instead of SocketExceptions to simplify exception handling
+	///     logic at higher layers.
+	/// </remarks>
 	public sealed class UdpSocket : DisposableObject
 	{
 		/// <summary>
 		///     The underlying socket that is used to send and receive packets.
 		/// </summary>
-		private readonly IntPtr _socket;
+		private readonly Socket _socket;
 
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		public UdpSocket()
+		public unsafe UdpSocket()
 		{
-			_socket = NativeMethods.CreateSocket();
-			if (_socket == IntPtr.Zero)
-				throw new NetworkException();
+			try
+			{
+				_socket = new Socket(AddressFamily.InterNetworkV6, SocketType.Dgram, ProtocolType.Udp) { Blocking = false };
+
+				// We only enable dual mode on Windows and don't care about other platforms; on Linux, it seems to be the default anyway
+				if (PlatformInfo.Platform != PlatformType.Windows)
+					return;
+
+				// We can't use the DualMode property, as it is not available on Mono
+				const SocketOptionName ipv6Only = (SocketOptionName)27;
+				var falseValue = 0;
+
+				if (NativeMethodsWindows.setsockopt(_socket.Handle.ToInt32(), SocketOptionLevel.IPv6, ipv6Only, &falseValue, sizeof(int)) != 0)
+					ThrowSocketError("Unable to switch UDP socket to dual-stack mode.");
+			}
+			catch (SocketException e)
+			{
+				ThrowAsNetworkException(e);
+			}
 		}
 
 		/// <summary>
@@ -42,20 +65,27 @@
 			if (size == 0)
 				return;
 
-			var address = remoteEndPoint.Address;
+			var address = new SocketAddress
+			{
+				AddressFamily = AddressFamily.InterNetworkV6,
+				Port = remoteEndPoint.Port
+			};
+
+			remoteEndPoint.Address.CopyTo(address.IPv6);
+
 			fixed (byte* data = buffer)
 			{
-				var packet = new NativeMethods.Packet
-				{
-					Capacity = (uint)buffer.Length,
-					Data = data,
-					Address = &address,
-					Port = remoteEndPoint.Port,
-					Size = (uint)size
-				};
+				int sent;
+				if (PlatformInfo.Platform == PlatformType.Windows)
+					sent = NativeMethodsWindows.sendto(_socket.Handle, data, size, SocketFlags.None, &address, sizeof(SocketAddress));
+				else
+					sent = NativeMethodsLinux.sendto(_socket.Handle.ToInt32(), data, size, SocketFlags.None, &address, sizeof(SocketAddress));
 
-				if (!NativeMethods.Send(_socket, &packet))
-					throw new NetworkException();
+				if (sent < 0)
+					ThrowSocketError();
+
+				if (sent != size)
+					throw new NetworkException("UDP packet was sent only partially.");
 			}
 		}
 
@@ -70,32 +100,28 @@
 			Assert.ArgumentNotNull(buffer);
 			Assert.NotDisposed(this);
 
-			size = 0;
-			remoteEndPoint = new IPEndPoint();
-			var address = new IPAddress();
+			if (_socket.Available <= 0)
+			{
+				remoteEndPoint = new IPEndPoint();
+				size = 0;
+				return false;
+			}
 
 			fixed (byte* data = buffer)
 			{
-				var packet = new NativeMethods.Packet
-				{
-					Capacity = (uint)buffer.Length,
-					Data = data,
-					Address = &address
-				};
+				var address = new SocketAddress();
+				var length = sizeof(SocketAddress);
 
-				switch (NativeMethods.TryReceive(_socket, &packet))
-				{
-					case NativeMethods.ReceiveStatus.Error:
-						throw new NetworkException();
-					case NativeMethods.ReceiveStatus.NoPacketAvailable:
-						return false;
-					case NativeMethods.ReceiveStatus.PacketReceived:
-						size = (int)packet.Size;
-						remoteEndPoint = new IPEndPoint(address, packet.Port);
-						return true;
-					default:
-						throw new InvalidOperationException("Unknown receive status.");
-				}
+				if (PlatformInfo.Platform == PlatformType.Windows)
+					size = NativeMethodsWindows.recvfrom(_socket.Handle, data, buffer.Length, SocketFlags.None, &address, &length);
+				else
+					size = NativeMethodsLinux.recvfrom(_socket.Handle.ToInt32(), data, buffer.Length, SocketFlags.None, &address, &length);
+
+				if (size < 0)
+					ThrowSocketError();
+
+				remoteEndPoint = new IPEndPoint(new IPAddress(ref address), address.Port);
+				return true;
 			}
 		}
 
@@ -106,8 +132,15 @@
 		public void Bind(ushort port)
 		{
 			Assert.NotDisposed(this);
-			if (!NativeMethods.BindSocket(_socket, port))
-				throw new NetworkException();
+
+			try
+			{
+				_socket.Bind(new System.Net.IPEndPoint(System.Net.IPAddress.IPv6Any, port));
+			}
+			catch (SocketException e)
+			{
+				ThrowAsNetworkException(e);
+			}
 		}
 
 		/// <summary>
@@ -115,14 +148,24 @@
 		/// </summary>
 		/// <param name="multicastGroup">The multicast group that the socket should listen to or send to.</param>
 		/// <param name="timeToLive">The time to live for the multicast messages.</param>
-		public unsafe void BindMulticast(IPEndPoint multicastGroup, int timeToLive = 1)
+		public void BindMulticast(IPEndPoint multicastGroup, int timeToLive = 1)
 		{
 			Assert.NotDisposed(this);
 			Assert.ArgumentInRange(timeToLive, 1, Int32.MaxValue);
 
-			var address = multicastGroup.Address;
-			if (!NativeMethods.BindMulticast(_socket, timeToLive, &address, multicastGroup.Port))
-				throw new NetworkException();
+			var address = multicastGroup.Address.ToSystemAddress();
+
+			try
+			{
+				_socket.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.MulticastTimeToLive, timeToLive);
+				_socket.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.MulticastLoopback, true);
+				_socket.SetSocketOption(SocketOptionLevel.IPv6, SocketOptionName.AddMembership, new IPv6MulticastOption(address));
+				_socket.Bind(new System.Net.IPEndPoint(System.Net.IPAddress.IPv6Any, multicastGroup.Port));
+			}
+			catch (SocketException e)
+			{
+				ThrowAsNetworkException(e);
+			}
 		}
 
 		/// <summary>
@@ -130,50 +173,67 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			NativeMethods.DestroySocket(_socket);
+			_socket.SafeDispose();
 		}
 
 		/// <summary>
-		///     Provides access to the native socket functions.
+		///     Throws a network exception after a socket error.
 		/// </summary>
-		[SuppressUnmanagedCodeSecurity]
-		private static class NativeMethods
+		/// <param name="message">An optional additional message to display.</param>
+		[DebuggerHidden]
+		private static void ThrowSocketError(string message = null)
 		{
-			public enum ReceiveStatus
-			{
-				Error = 0,
-				PacketReceived = 1,
-				NoPacketAvailable = 2
-			}
+			ThrowAsNetworkException(new SocketException(Marshal.GetLastWin32Error()), message);
+		}
 
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateUdpSocket")]
-			public static extern IntPtr CreateSocket();
+		/// <summary>
+		///     Wraps a socket exception in a network exception.
+		/// </summary>
+		/// <param name="e">The socket exception that should be wrapped.</param>
+		/// <param name="message">An optional additional message to display.</param>
+		[DebuggerHidden]
+		private static void ThrowAsNetworkException(SocketException e, string message = null)
+		{
+			if (message != null)
+				message = String.Format("{0} {1}", message, e.Message.Trim());
+			else
+				message = e.Message.Trim();
 
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDestroyUdpSocket")]
-			public static extern bool DestroySocket(IntPtr socket);
+			if (!message.EndsWith("."))
+				message += ".";
 
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgTryReceiveUdpPacket")]
-			public static extern unsafe ReceiveStatus TryReceive(IntPtr socket, Packet* packet);
+			throw new NetworkException(message);
+		}
 
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSendUdpPacket")]
-			public static extern unsafe bool Send(IntPtr socket, Packet* packet);
+		/// <summary>
+		///     Provides access to the native SendTo and ReceiveFrom functions.
+		/// </summary>
+		private static class NativeMethodsWindows
+		{
+			private const string DllName = "Ws2_32.dll";
 
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgBindUdpSocket")]
-			public static extern bool BindSocket(IntPtr socket, ushort port);
+			[DllImport(DllName, SetLastError = true)]
+			public static extern unsafe int setsockopt(int socket, SocketOptionLevel level, SocketOptionName optname, void* optval, int optlen);
 
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgBindUdpSocketMulticast")]
-			public static extern unsafe bool BindMulticast(IntPtr socket, int timeToLive, IPAddress* address, ushort port);
+			[DllImport(DllName, SetLastError = true)]
+			public static extern unsafe int recvfrom(IntPtr socket, byte* buffer, int len, SocketFlags flags, void* addr, int* addrLen);
 
-			[UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
-			[StructLayout(LayoutKind.Sequential)]
-			public unsafe struct Packet
-			{
-				public byte* Data;
-				public uint Size;
-				public uint Capacity;
-				public IPAddress* Address;
-				public ushort Port;
-			}
+			[DllImport(DllName, SetLastError = true)]
+			public static extern unsafe int sendto(IntPtr socket, byte* buffer, int len, SocketFlags flags, void* addr, int addrLen);
+		}
+
+		/// <summary>
+		///     Provides access to the native SendTo and ReceiveFrom functions.
+		/// </summary>
+		private static class NativeMethodsLinux
+		{
+			private const string DllName = "libc";
+
+			[DllImport(DllName, SetLastError = true)]
+			public static extern unsafe int recvfrom(int socket, byte* buffer, int len, SocketFlags flags, void* addr, int* addrLen);
+
+			[DllImport(DllName, SetLastError = true)]
+			public static extern unsafe int sendto(int socket, byte* buffer, int len, SocketFlags flags, void* addr, int addrLen);
 		}
 	}
 }

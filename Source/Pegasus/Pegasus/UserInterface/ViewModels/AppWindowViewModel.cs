@@ -87,7 +87,11 @@
 		public WindowMode WindowMode
 		{
 			get { return Cvars.WindowMode; }
-			set { Cvars.WindowMode = value; }
+			set
+			{
+				if (Cvars.WindowMode != value)
+					Cvars.WindowMode = value;
+			}
 		}
 
 		/// <summary>
@@ -147,6 +151,7 @@
 		/// </summary>
 		public void Update()
 		{
+			Console.Update();
 			DebugOverlay.Update();
 		}
 
@@ -155,7 +160,6 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			Console.SafeDispose();
 			DebugOverlay.SafeDispose();
 			_particleEffectViewer.SafeDispose();
 			Window.SafeDispose();

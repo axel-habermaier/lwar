@@ -10,28 +10,28 @@
 		/// <summary>
 		///     Resource is mapped for reading. The resource must have been created with read access.
 		/// </summary>
-		Read = 1701,
+		Read,
 
 		/// <summary>
 		///     Resource is mapped for writing. The resource must have been created with write access.
 		/// </summary>
-		Write = 1702,
+		Write,
 
 		/// <summary>
 		///     Resource is mapped for reading and writing. The resource must have been created with read and write access.
 		/// </summary>
-		ReadWrite = 1703,
+		ReadWrite,
 
 		/// <summary>
 		///     Resource is mapped for writing; the previous contents of the resource will be undefined. The resource must
 		///     have been created with write access and dynamic usage.
 		/// </summary>
-		WriteDiscard = 1704,
+		WriteDiscard,
 
 		/// <summary>
 		///     Resource is mapped for writing; the existing contents of the resource cannot be overwritten. This flag is
 		///     only valid on vertex and index buffers. The resource must have been created with write access.
 		/// </summary>
-		WriteNoOverwrite = 1705,
+		WriteNoOverwrite
 	}
 }

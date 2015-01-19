@@ -10,7 +10,7 @@ namespace Lwar.Network.Messages
 	///     Informs a server about the input state of a client.
 	/// </summary>
 	[UnreliableTransmission(MessageType.PlayerInput)]
-	public sealed class PlayerInputMessage : Message
+	internal sealed class PlayerInputMessage : Message
 	{
 		/// <summary>
 		///     Initializes the type.
@@ -87,9 +87,9 @@ namespace Lwar.Network.Messages
 		///     Serializes the message using the given writer.
 		/// </summary>
 		/// <param name="writer">The writer that should be used to serialize the message.</param>
-		public override void Serialize(BufferWriter writer)
+		public override void Serialize(ref BufferWriter writer)
 		{
-			writer.WriteIdentifier(Player);
+			WriteIdentifier(ref writer, Player);
 			writer.WriteUInt32(FrameNumber);
 			writer.WriteByte(Forward);
 			writer.WriteByte(Backward);
@@ -102,16 +102,16 @@ namespace Lwar.Network.Messages
 			for (var i = 0; i < NetworkProtocol.WeaponSlotCount; ++i)
 				writer.WriteByte(FireWeapons[i]);
 
-			writer.WriteVector2(Target);
+			WriteVector2(ref writer, Target);
 		}
 
 		/// <summary>
 		///     Deserializes the message using the given reader.
 		/// </summary>
 		/// <param name="reader">The reader that should be used to deserialize the message.</param>
-		public override void Deserialize(BufferReader reader)
+		public override void Deserialize(ref BufferReader reader)
 		{
-			Player = reader.ReadIdentifier();
+			Player = ReadIdentifier(ref reader);
 			FrameNumber = reader.ReadUInt32();
 			Forward = reader.ReadByte();
 			Backward = reader.ReadByte();
@@ -124,7 +124,7 @@ namespace Lwar.Network.Messages
 			for (var i = 0; i < NetworkProtocol.WeaponSlotCount; ++i)
 				FireWeapons[i] = reader.ReadByte();
 
-			Target = reader.ReadVector2();
+			Target = ReadVector2(ref reader);
 		}
 
 		/// <summary>

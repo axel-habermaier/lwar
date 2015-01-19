@@ -7,7 +7,7 @@ namespace Lwar.Network
 	/// <summary>
 	///     Allocates generational identities.
 	/// </summary>
-	public struct NetworkIdentityAllocator
+	internal struct NetworkIdentityAllocator
 	{
 		/// <summary>
 		///     The available identifiers that can be reassigned.

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<AssetBundle Namespace="Lwar.Assets" EffectsCodePath="../Lwar/Assets/Effects" BundleCodePath="../Lwar/Assets" Visibility="internal">
+
+	<Font File="Fonts/LiberationSans-Regular.ttf" Family="Liberation Sans" Size="12" Aliased="false" Italic="false" Bold="false"
+		  Characters="0-256" InvalidChar="□" RuntimeName="LiberationSans12" />
+	<Font File="Fonts/LiberationSans-Regular.ttf" Family="Liberation Sans" Size="16" Aliased="false" Italic="false" Bold="false"
+		  Characters="0-256" InvalidChar="□" RuntimeName="LiberationSans16" />
+	<Font File="Fonts/moonhouse.ttf" Family="Moonhouse" Size="24" Aliased="false" Italic="false" Bold="false"
+		  Characters="0-128" InvalidChar="?" RuntimeName="Moonhouse24" />
+	<Font File="Fonts/moonhouse.ttf" Family="Moonhouse" Size="80" Aliased="false" Italic="false" Bold="false"
+		  Characters="0-128" InvalidChar="?" RuntimeName="Moonhouse80" />
+
+</AssetBundle>

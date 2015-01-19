@@ -10,21 +10,21 @@
 		/// <summary>
 		///     Indicates that a list of triangles should be drawn.
 		/// </summary>
-		Triangles = 1801,
+		TriangleList,
 
 		/// <summary>
 		///     Indicates that a triangle strip should be drawn.
 		/// </summary>
-		TriangleStrip = 1802,
+		TriangleStrip,
 
 		/// <summary>
 		///     Indicates that a list of lines should be drawn.
 		/// </summary>
-		Lines = 1803,
+		LineList,
 
 		/// <summary>
 		///     Indicates that a line strip should be drawn.
 		/// </summary>
-		LineStrip = 1804
+		LineStrip
 	}
 }

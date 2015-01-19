@@ -23,8 +23,9 @@ Client
 	- Show server network statistics
 	- Collect and show client network statistics (avg number of times a reliable message was sent/received, # of incoming packets per second, etc.)
 - Fix respawn screen being displayed for a couple of frames after the player joined a new game session
+- Socket initialization failure during client connect brings down entire process
 
-Pegasus.Framework
+Pegasus
 ========
 - Add texture quality switch cvar -> asset reloading required
 - Add particle System
@@ -34,18 +35,11 @@ Pegasus.Framework
 	* Add to TextBox: Text selection (both via mouse and keyboard), copy & paste
 	* Add to SrollViewer: Horizontal scrolling, scrollbars
 	* Add to Button: hover/click feedback
-
-Pegasus.Platform
-========
+- cvars for fixed frame rate
+- support vsync
 
 Assets Compiler
 ========
-- Asset compression
-	- Store all assets in one or more .zip-files (decreases asset file size by about 50%)
-	- Give higher priorities to files on the filesystem (similar to Quake 3)
-- Organize assets into different packages
-	- All assets of a package are loaded at the same time
-	- Assign offsets per asset per package and use that instead of name at runtime
 - Compile 3D models (using ASSIMP: http://assimp.sourceforge.net/, https://code.google.com/p/assimp-net/)
 - Make Xaml compiler more robust with better error reporting
 

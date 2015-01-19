@@ -36,15 +36,7 @@
 		public void Write(string content)
 		{
 			Assert.ArgumentNotNull(content);
-
-			try
-			{
-				FileSystem.WriteAllText(FileName, content);
-			}
-			catch (Exception e)
-			{
-				throw new FileSystemException(e.Message);
-			}
+			FileSystem.WriteAllText(FileName, content);
 		}
 
 		/// <summary>
@@ -54,15 +46,7 @@
 		public void Append(string content)
 		{
 			Assert.ArgumentNotNull(content);
-
-			try
-			{
-				FileSystem.AppendText(FileName, content);
-			}
-			catch (Exception e)
-			{
-				throw new FileSystemException(e.Message);
-			}
+			FileSystem.AppendText(FileName, content);
 		}
 
 		/// <summary>
@@ -70,14 +54,7 @@
 		/// </summary>
 		public string Read()
 		{
-			try
-			{
-				return Normalize(FileSystem.ReadAllText(FileName));
-			}
-			catch (Exception e)
-			{
-				throw new FileSystemException(e.Message);
-			}
+			return Normalize(FileSystem.ReadAllText(FileName));
 		}
 
 		/// <summary>
@@ -89,21 +66,6 @@
 			return input.Replace("\r\n", "\n")
 						.Replace("\r", "\n")
 						.Replace("\t", String.Join(" ", Enumerable.Range(0, SpacesPerTab).Select(_ => String.Empty)));
-		}
-
-		/// <summary>
-		///     Deletes the file.
-		/// </summary>
-		public void Delete()
-		{
-			try
-			{
-				FileSystem.Delete(FileName);
-			}
-			catch (Exception e)
-			{
-				throw new FileSystemException(e.Message);
-			}
 		}
 	}
 }

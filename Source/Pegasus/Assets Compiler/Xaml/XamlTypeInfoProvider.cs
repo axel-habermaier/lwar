@@ -4,7 +4,7 @@
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;
-	using Platform.Logging;
+	using Commands;
 	using Utilities;
 
 	/// <summary>
@@ -73,7 +73,7 @@
 			_files.Add(file);
 
 			foreach (var includedFile in file.IncludedFiles)
-				LoadRecursive(Path.Combine(Configuration.SourceDirectory, includedFile));
+				LoadRecursive(Path.Combine(Configuration.BasePath, includedFile));
 		}
 
 		/// <summary>

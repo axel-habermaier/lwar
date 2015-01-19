@@ -9,7 +9,7 @@
 	/// <summary>
 	///     Manages the active players that participate in a game session.
 	/// </summary>
-	public sealed class PlayerCollection : DisposableObject
+	internal sealed class PlayerCollection : DisposableObject
 	{
 		/// <summary>
 		///     The list of active players.

@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Collections.Generic;
+	using Assets;
 	using Assets.Effects;
 	using Pegasus.Assets;
 	using Pegasus.Math;
@@ -13,7 +14,7 @@
 	/// <summary>
 	///     Represents a GPU-based gaussian blur filter than can be applied to a texture.
 	/// </summary>
-	public class GaussianBlur : DisposableObject
+	internal class GaussianBlur : DisposableObject
 	{
 		/// <summary>
 		///     The minimum size of the temporary textures.
@@ -47,18 +48,16 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used to apply the blur effect.</param>
-		/// <param name="assets">The assets manager that should be used to load required assets.</param>
+		/// <param name="renderContext">The graphics device that should be used to apply the blur effect.</param>
 		/// <param name="texture">The texture that should be blurred.</param>
-		public GaussianBlur(GraphicsDevice graphicsDevice, AssetsManager assets, Texture2D texture)
+		public GaussianBlur(RenderContext renderContext, Texture2D texture)
 		{
-			Assert.ArgumentNotNull(graphicsDevice);
-			Assert.ArgumentNotNull(assets);
+			Assert.ArgumentNotNull(renderContext);
 			Assert.ArgumentNotNull(texture);
 			Assert.InRange(texture.Width, MinimumSize, 2048);
 
 			_texture = texture;
-			_fullscreenQuad = new FullscreenQuad(graphicsDevice);
+			_fullscreenQuad = new FullscreenQuad(renderContext.GraphicsDevice);
 
 			var width = texture.Width;
 			var height = texture.Height;
@@ -81,18 +80,20 @@
 			height = texture.Height;
 			for (var i = 0; i < count; ++i)
 			{
-				_textures[i] = new Texture2D(graphicsDevice, width, height, texture.Format, TextureFlags.RenderTarget);
+				_textures[i] = new Texture2D(renderContext.GraphicsDevice, width, height, texture.Format, TextureFlags.RenderTarget);
 
 				width /= 2;
 				height /= 2;
 			}
 
 			for (var i = 0; i < _renderTargets.Length; ++i)
-				_renderTargets[i] = new RenderTarget(graphicsDevice, null, _textures[i]);
+				_renderTargets[i] = new RenderTarget(renderContext.GraphicsDevice, null, _textures[i]);
 
-			_output = new RenderOutput(graphicsDevice);
-			_blurEffect = new BlurEffect(graphicsDevice, assets);
-			_quadEffect = new TexturedQuadEffect(graphicsDevice, assets);
+			var assetBundle = renderContext.GetAssetBundle<GameBundle>();
+
+			_output = new RenderOutput(renderContext);
+			_blurEffect = assetBundle.BlurEffect;
+			_quadEffect = assetBundle.TexturedQuadEffect;
 		}
 
 		/// <summary>
@@ -100,9 +101,9 @@
 		/// </summary>
 		public Texture2D Blur(RenderOutput output)
 		{
-			DepthStencilState.DepthDisabled.Bind();
-			BlendState.Opaque.Bind();
-			_blurEffect.Texture = new Texture2DView(_texture, SamplerState.BilinearClampNoMipmaps);
+			output.RenderContext.DepthStencilStates.DepthDisabled.Bind();
+			output.RenderContext.BlendStates.Opaque.Bind();
+			_blurEffect.Texture = new Texture2DView(_texture, output.RenderContext.SamplerStates.BilinearClampNoMipmaps);
 			_output.Camera = output.Camera;
 
 			var i = 0;
@@ -110,10 +111,11 @@
 			{
 				_output.RenderTarget = _renderTargets[i];
 				_output.Viewport = new Rectangle(Vector2.Zero, size);
+				_blurEffect.ViewportSize = size;
 
 				_fullscreenQuad.Draw(_output, _blurEffect.Gaussian);
 
-				_blurEffect.Texture = new Texture2DView(_textures[i], SamplerState.BilinearClampNoMipmaps);
+				_blurEffect.Texture = new Texture2DView(_textures[i], output.RenderContext.SamplerStates.BilinearClampNoMipmaps);
 				++i;
 			}
 
@@ -123,10 +125,10 @@
 			_output.Viewport = new Rectangle(Vector2.Zero, _sizes[0]);
 			_output.RenderTarget = _renderTargets[0];
 			_output.ClearColor(new Color(0, 0, 0, 0));
-			BlendState.Premultiplied.Bind();
+			output.RenderContext.BlendStates.Premultiplied.Bind();
 			while (i >= 0)
 			{
-				_quadEffect.Texture = new Texture2DView(_textures[i + 1], SamplerState.BilinearClampNoMipmaps);
+				_quadEffect.Texture = new Texture2DView(_textures[i + 1], output.RenderContext.SamplerStates.BilinearClampNoMipmaps);
 				_fullscreenQuad.Draw(_output, _quadEffect.FullScreen);
 
 				--i;
@@ -143,9 +145,6 @@
 			_fullscreenQuad.SafeDispose();
 			_renderTargets.SafeDisposeAll();
 			_textures.SafeDisposeAll();
-			_blurEffect.SafeDispose();
-			_quadEffect.SafeDispose();
-			_output.SafeDispose();
 		}
 	}
 }

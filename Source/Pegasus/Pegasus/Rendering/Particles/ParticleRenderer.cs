@@ -29,7 +29,7 @@
 		/// <summary>
 		///     The input layout used to draw the particles.
 		/// </summary>
-		private VertexInputLayout _inputLayout;
+		private VertexLayout _inputLayout;
 
 		/// <summary>
 		///     The vertex buffer storing the particle positions.
@@ -44,13 +44,13 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used to draw the particles.</param>
-		protected ParticleRenderer(GraphicsDevice graphicsDevice)
+		/// <param name="renderContext">The render context that should be used to draw the particles.</param>
+		protected ParticleRenderer(RenderContext renderContext)
 		{
-			Assert.ArgumentNotNull(graphicsDevice);
+			Assert.ArgumentNotNull(renderContext);
 
-			_graphicsDevice = graphicsDevice;
-			BlendState = BlendState.Additive;
+			_graphicsDevice = renderContext.GraphicsDevice;
+			BlendState = renderContext.BlendStates.Additive;
 		}
 
 		/// <summary>
@@ -130,7 +130,7 @@
 		/// <summary>
 		///     Gets the input bindings required to draw a single particle instance.
 		/// </summary>
-		protected abstract VertexInputBinding[] GetParticleInputBindings();
+		protected abstract VertexBinding[] GetParticleInputBindings();
 
 		/// <summary>
 		///     Initializes the vertex buffers.
@@ -164,20 +164,20 @@
 			Assert.NotNull(particleBindings);
 			Assert.That(particleBindings.Length > 0, "Expected an input binding.");
 
-			var bindings = new VertexInputBinding[particleBindings.Length + 3];
+			var bindings = new VertexBinding[particleBindings.Length + 3];
 			for (var i = 0; i < particleBindings.Length; ++i)
 				bindings[i] = particleBindings[i];
 
 			bindings[particleBindings.Length] =
-				new VertexInputBinding(_positionsBuffer.Buffer, VertexDataFormat.Vector3, DataSemantics.TexCoords0, sizeof(Vector3), 0, 1);
+				new VertexBinding(_positionsBuffer.Buffer, VertexDataFormat.Vector3, DataSemantics.TexCoords0, sizeof(Vector3), 0, 1);
 
 			bindings[particleBindings.Length + 1] =
-				new VertexInputBinding(_colorsBuffer.Buffer, VertexDataFormat.Color, DataSemantics.Color0, sizeof(int), 0, 1);
+				new VertexBinding(_colorsBuffer.Buffer, VertexDataFormat.Color, DataSemantics.Color0, sizeof(int), 0, 1);
 
 			bindings[particleBindings.Length + 2] =
-				new VertexInputBinding(_scalesBuffer.Buffer, VertexDataFormat.Float, DataSemantics.TexCoords1, sizeof(float), 0, 1);
+				new VertexBinding(_scalesBuffer.Buffer, VertexDataFormat.Single, DataSemantics.TexCoords1, sizeof(float), 0, 1);
 
-			_inputLayout = new VertexInputLayout(_graphicsDevice, bindings);
+			_inputLayout = new VertexLayout(_graphicsDevice, bindings);
 		}
 
 		/// <summary>

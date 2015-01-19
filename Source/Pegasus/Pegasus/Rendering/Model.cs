@@ -5,6 +5,7 @@
 	using Math;
 	using Platform.Graphics;
 	using Platform.Memory;
+	using Scripting;
 	using Utilities;
 
 	/// <summary>
@@ -25,7 +26,7 @@
 		/// <summary>
 		///     The layout of the vertex buffer.
 		/// </summary>
-		private readonly VertexInputLayout _layout;
+		private readonly VertexLayout _layout;
 
 		/// <summary>
 		///     The vertex buffer containing the vertex data of the model.
@@ -39,7 +40,7 @@
 		/// <param name="layout">The layout of the vertex buffer.</param>
 		/// <param name="indexBuffer">The index buffer containing the model's indices.</param>
 		/// <param name="indexCount">The number of indices in the index buffer.</param>
-		public Model(VertexBuffer vertexBuffer, VertexInputLayout layout, IndexBuffer indexBuffer,
+		public Model(VertexBuffer vertexBuffer, VertexLayout layout, IndexBuffer indexBuffer,
 					 int indexCount)
 		{
 			Assert.ArgumentNotNull(vertexBuffer);
@@ -59,7 +60,7 @@
 		/// <param name="vertexBuffer">The vertex buffer containing the vertex data of the model.</param>
 		/// <param name="layout">The layout of the vertex buffer.</param>
 		/// <param name="primitiveCount">The number of primivites of the model.</param>
-		public Model(VertexBuffer vertexBuffer, VertexInputLayout layout, int primitiveCount)
+		public Model(VertexBuffer vertexBuffer, VertexLayout layout, int primitiveCount)
 		{
 			Assert.ArgumentNotNull(vertexBuffer);
 			Assert.ArgumentNotNull(layout);
@@ -168,15 +169,24 @@
 		{
 			Assert.ArgumentNotNull(graphicsDevice);
 
+			ushort[] indices;
+			int flip;
+
 			// For OpenGL, we have to flip the quad upside-down and change its winding, because OpenGL's window
 			// coordinate origins are at the bottom left corner... annoying
-#if Direct3D11
-			var indices = new ushort[] { 0, 1, 2, 0, 2, 3 };
-			const int flip = 1;
-#else
-			var indices = new ushort[] { 0, 2, 1, 0, 3, 2 };
-			const int flip = -1;
-#endif
+			switch (graphicsDevice.GraphicsApi)
+			{
+				case GraphicsApi.Direct3D11:
+					indices = new ushort[] { 0, 1, 2, 0, 2, 3 };
+					flip = 1;
+					break;
+				case GraphicsApi.OpenGL3:
+					indices = new ushort[] { 0, 2, 1, 0, 3, 2 };
+					flip = -1;
+					break;
+				default:
+					throw new InvalidOperationException("Unsupported graphics API.");
+			}
 
 			var texture = new Rectangle(0, 0, 1, 1);
 			var vertices = new[]
@@ -248,10 +258,10 @@
 
 			var inputElements = new[]
 			{
-				new VertexInputBinding(vertexBuffer, VertexDataFormat.Vector4, DataSemantics.Position, sizeof(Vector4), 0)
+				new VertexBinding(vertexBuffer, VertexDataFormat.Vector4, DataSemantics.Position, sizeof(Vector4), 0)
 			};
 
-			var layout = new VertexInputLayout(graphicsDevice, indexBuffer, inputElements);
+			var layout = new VertexLayout(graphicsDevice, indexBuffer, inputElements);
 
 			return new Model(vertexBuffer, layout, indexBuffer, indices.Length);
 		}

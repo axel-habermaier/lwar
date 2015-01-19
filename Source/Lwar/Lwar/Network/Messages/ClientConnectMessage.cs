@@ -9,7 +9,7 @@ namespace Lwar.Network.Messages
 	///     Informs a server about a connection attempt from a potential client.
 	/// </summary>
 	[ReliableTransmission(MessageType.ClientConnect)]
-	public sealed class ClientConnectMessage : Message
+	internal sealed class ClientConnectMessage : Message
 	{
 		/// <summary>
 		///     Initializes the type.
@@ -40,7 +40,7 @@ namespace Lwar.Network.Messages
 		///     Serializes the message using the given writer.
 		/// </summary>
 		/// <param name="writer">The writer that should be used to serialize the message.</param>
-		public override void Serialize(BufferWriter writer)
+		public override void Serialize(ref BufferWriter writer)
 		{
 			writer.WriteByte(NetworkRevision);
 			writer.WriteString(PlayerName, NetworkProtocol.PlayerNameLength);
@@ -50,7 +50,7 @@ namespace Lwar.Network.Messages
 		///     Deserializes the message using the given reader.
 		/// </summary>
 		/// <param name="reader">The reader that should be used to deserialize the message.</param>
-		public override void Deserialize(BufferReader reader)
+		public override void Deserialize(ref BufferReader reader)
 		{
 			NetworkRevision = reader.ReadByte();
 			PlayerName = reader.ReadString(NetworkProtocol.PlayerNameLength);

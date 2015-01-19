@@ -2,14 +2,19 @@
 {
 	using System;
 	using System.Runtime.InteropServices;
-	using System.Security;
 	using Scripting;
+	using SDL2;
 
 	/// <summary>
 	///     Represents a clock that can be used to query the time that has elapsed since the creation of the clock.
 	/// </summary>
 	public struct Clock
 	{
+		/// <summary>
+		///     The startup time of the application.
+		/// </summary>
+		private static double _startTime;
+
 		/// <summary>
 		///     Scales the passing of time. If null, time advances in constant steps.
 		/// </summary>
@@ -43,14 +48,6 @@
 		}
 
 		/// <summary>
-		///     Gets the unmodified system time in seconds.
-		/// </summary>
-		public static double SystemTime
-		{
-			get { return NativeMethods.GetTime(); }
-		}
-
-		/// <summary>
 		///     Gets the current time in seconds.
 		/// </summary>
 		public double Seconds
@@ -74,12 +71,36 @@
 		}
 
 		/// <summary>
+		///     Initializes the clock.
+		/// </summary>
+		internal static void Initialize()
+		{
+			_startTime = GetSystemTime();
+		}
+
+		/// <summary>
+		///     Gets the unmodified system time in seconds.
+		/// </summary>
+		private static double GetSystemTime()
+		{
+			return SDL_GetPerformanceCounter() / (double)SDL_GetPerformanceFrequency();
+		}
+
+		/// <summary>
+		///     Gets the time since the start of the application in seconds.
+		/// </summary>
+		public static double GetTime()
+		{
+			return GetSystemTime() - _startTime;
+		}
+
+		/// <summary>
 		///     Resets the clock to zero.
 		/// </summary>
 		public void Reset()
 		{
 			_isInitialized = true;
-			_offset = SystemTime;
+			_offset = GetTime();
 			_time = 0;
 		}
 
@@ -89,7 +110,7 @@
 		private void Update()
 		{
 			// Get the elapsed system time since the last update
-			var systemTime = SystemTime;
+			var systemTime = GetTime();
 			var elapsedTime = systemTime - _offset;
 			_offset = systemTime;
 
@@ -98,14 +119,10 @@
 			_time += elapsedTime * scale;
 		}
 
-		/// <summary>
-		///     Provides access to the native function.
-		/// </summary>
-		[SuppressUnmanagedCodeSecurity]
-		private static class NativeMethods
-		{
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetTime")]
-			public static extern double GetTime();
-		}
+		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
+		private static extern ulong SDL_GetPerformanceCounter();
+
+		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
+		private static extern ulong SDL_GetPerformanceFrequency();
 	}
 }

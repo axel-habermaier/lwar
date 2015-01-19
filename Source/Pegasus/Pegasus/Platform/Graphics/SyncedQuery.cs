@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a query that checks whether the GPU has reached a CPU/GPU synchronization marker.
@@ -21,7 +22,8 @@
 		/// </summary>
 		public void MarkSyncPoint()
 		{
-			EndQuery();
+			Assert.NotDisposed(this);
+			QueryObject.End();
 		}
 	}
 }

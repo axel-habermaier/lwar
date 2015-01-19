@@ -6,7 +6,7 @@
 	///     Identifies the color channels for which writes are enabled.
 	/// </summary>
 	[Flags]
-	public enum ColorWriteChannels
+	public enum ColorWriteChannels : byte
 	{
 		/// <summary>
 		///     Indicates that all writes are disabled.

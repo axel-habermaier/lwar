@@ -7,7 +7,7 @@
 	/// <summary>
 	///     Represents a phaser.
 	/// </summary>
-	public class PhaserEntity : Entity<PhaserEntity>
+	internal class PhaserEntity : Entity<PhaserEntity>
 	{
 		/// <summary>
 		///     Creates a new instance.

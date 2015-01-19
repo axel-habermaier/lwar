@@ -10,7 +10,7 @@
 	/// <summary>
 	///     Represents a player.
 	/// </summary>
-	public class Player : PooledNotifyPropertyChanged
+	internal class Player : PooledNotifyPropertyChanged
 	{
 		/// <summary>
 		///     The number of deaths.

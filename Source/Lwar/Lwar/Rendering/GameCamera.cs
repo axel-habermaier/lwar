@@ -12,7 +12,7 @@
 	/// <summary>
 	///     Represents the camera that is used to draw the game session.
 	/// </summary>
-	public class GameCamera : Camera3D
+	internal class GameCamera : Camera3D
 	{
 		/// <summary>
 		///     The maximum allowed distance to the XZ plane.

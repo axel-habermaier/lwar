@@ -9,7 +9,7 @@ namespace Lwar.Network.Messages
 	///     Informs a client about an update to a circle.
 	/// </summary>
 	[UnreliableTransmission(MessageType.UpdateCircle, EnableBatching = true)]
-	public sealed class UpdateCircleMessage : Message
+	internal sealed class UpdateCircleMessage : Message
 	{
 		/// <summary>
 		///     Initializes the type.
@@ -45,10 +45,10 @@ namespace Lwar.Network.Messages
 		///     Serializes the message using the given writer.
 		/// </summary>
 		/// <param name="writer">The writer that should be used to serialize the message.</param>
-		public override void Serialize(BufferWriter writer)
+		public override void Serialize(ref BufferWriter writer)
 		{
-			writer.WriteIdentifier(Entity);
-			writer.WriteVector2(Center);
+			WriteIdentifier(ref writer, Entity);
+			WriteVector2(ref writer, Center);
 			writer.WriteUInt16((ushort)Radius);
 		}
 
@@ -56,10 +56,10 @@ namespace Lwar.Network.Messages
 		///     Deserializes the message using the given reader.
 		/// </summary>
 		/// <param name="reader">The reader that should be used to deserialize the message.</param>
-		public override void Deserialize(BufferReader reader)
+		public override void Deserialize(ref BufferReader reader)
 		{
-			Entity = reader.ReadIdentifier();
-			Center = reader.ReadVector2();
+			Entity = ReadIdentifier(ref reader);
+			Center = ReadVector2(ref reader);
 			Radius = reader.ReadUInt16();
 		}
 

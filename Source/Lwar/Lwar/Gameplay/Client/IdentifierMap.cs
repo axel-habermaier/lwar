@@ -8,7 +8,7 @@
 	///     Maps generational identities to objects.
 	/// </summary>
 	/// <typeparam name="T">The type of the mapped objects.</typeparam>
-	public sealed class IdentifierMap<T>
+	internal sealed class IdentifierMap<T>
 		where T : class
 	{
 		/// <summary>

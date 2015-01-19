@@ -1,8 +1,8 @@
 ﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
-	using System.Runtime.InteropServices;
-	using System.Security;
+	using Interface;
+	using Memory;
 	using Utilities;
 
 	/// <summary>
@@ -11,9 +11,9 @@
 	public sealed class ShaderProgram : GraphicsObject
 	{
 		/// <summary>
-		///     The native shader program instance.
+		///     The underlying shader program object.
 		/// </summary>
-		private IntPtr _shaderProgram;
+		private readonly IShaderProgram _shaderProgram;
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -27,37 +27,15 @@
 			Assert.ArgumentNotNull(vertexShader);
 			Assert.ArgumentNotNull(fragmentShader);
 
-			VertexShader = vertexShader;
-			FragmentShader = fragmentShader;
-
-			Reinitialize();
+			_shaderProgram = graphicsDevice.CreateShaderProgram(vertexShader, fragmentShader);
 		}
-
-		/// <summary>
-		///     Gets the fragment shader used by the shader program.
-		/// </summary>
-		public FragmentShader FragmentShader { get; private set; }
-
-		/// <summary>
-		///     Gets the vertex shader used by the shader program.
-		/// </summary>
-		public VertexShader VertexShader { get; private set; }
 
 		/// <summary>
 		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			Destroy();
-		}
-
-		/// <summary>
-		///     Destroys the shader program.
-		/// </summary>
-		private void Destroy()
-		{
-			NativeMethods.DestroyProgram(_shaderProgram);
-			_shaderProgram = IntPtr.Zero;
+			_shaderProgram.SafeDispose();
 		}
 
 		/// <summary>
@@ -66,39 +44,9 @@
 		public void Bind()
 		{
 			Assert.NotDisposed(this);
-			Assert.NotNull(_shaderProgram, "The shader program has not yet been initialized.");
 
-			NativeMethods.BindProgram(_shaderProgram);
-		}
-
-		/// <summary>
-		///     Reinitializes the shader program.
-		/// </summary>
-		internal void Reinitialize()
-		{
-			Assert.NotDisposed(this);
-
-			Destroy();
-
-			if (VertexShader.NativePtr != IntPtr.Zero && FragmentShader.NativePtr != IntPtr.Zero)
-				_shaderProgram = NativeMethods.CreateProgram(Application.Current.GraphicsDevice.NativePtr, VertexShader.NativePtr,
-					FragmentShader.NativePtr);
-		}
-
-		/// <summary>
-		///     Provides access to the native shader program functions.
-		/// </summary>
-		[SuppressUnmanagedCodeSecurity]
-		private static class NativeMethods
-		{
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateProgram")]
-			public static extern IntPtr CreateProgram(IntPtr device, IntPtr vertexShader, IntPtr fragmentShader);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDestroyProgram")]
-			public static extern IntPtr DestroyProgram(IntPtr program);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgBindProgram")]
-			public static extern IntPtr BindProgram(IntPtr program);
+			if (DeviceState.Change(ref GraphicsDevice.State.ShaderProgram, this))
+				_shaderProgram.Bind();
 		}
 	}
 }

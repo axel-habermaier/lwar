@@ -9,7 +9,7 @@ namespace Lwar.Gameplay.Server.Entities
 	/// <summary>
 	///     A base class for entity scene nodes.
 	/// </summary>
-	public abstract class Entity : SceneNode
+	internal abstract class Entity : SceneNode
 	{
 		/// <summary>
 		///     Gets the network type of the entity.

@@ -11,7 +11,7 @@
 	/// <summary>
 	///     Manages the active entities of a game session.
 	/// </summary>
-	public sealed class EntityList : DisposableObject
+	internal sealed class EntityList : DisposableObject
 	{
 		/// <summary>
 		///     The list of active entities.
@@ -31,20 +31,20 @@
 		/// <summary>
 		///     The render context that is used to draw the entities.
 		/// </summary>
-		private readonly RenderContext _renderContext;
+		private readonly GameSessionRenderer _renderer;
 
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="gameSession">The game session the entity list belongs to.</param>
-		/// <param name="renderContext">The render context that should be used to draw the entities.</param>
-		public EntityList(ClientGameSession gameSession, RenderContext renderContext)
+		/// <param name="renderer">The render context that should be used to draw the entities.</param>
+		public EntityList(ClientGameSession gameSession, GameSessionRenderer renderer)
 		{
 			Assert.ArgumentNotNull(gameSession);
-			Assert.ArgumentNotNull(renderContext);
+			Assert.ArgumentNotNull(renderer);
 
 			_gameSession = gameSession;
-			_renderContext = renderContext;
+			_renderer = renderer;
 		}
 
 		/// <summary>
@@ -132,7 +132,7 @@
 			_entities.Add(entity);
 			_entityMap.Add(entity.Identifier, entity);
 
-			entity.Added(_gameSession, _renderContext);
+			entity.Added(_gameSession, _renderer);
 		}
 
 		/// <summary>

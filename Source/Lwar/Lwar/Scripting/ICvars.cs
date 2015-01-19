@@ -101,8 +101,8 @@ internal interface ICvars
 	ConfigurableInput InputChat { get; set; }
 
 	/// <summary>
-	///     When true, the debug server is used instead of the actual game server.
+	///     When true, the native server is used instead of the C# server.
 	/// </summary>
 	[Cvar(false), Persistent]
-	bool UseDebugServer { get; set; }
+	bool UseNativeServer { get; set; }
 }

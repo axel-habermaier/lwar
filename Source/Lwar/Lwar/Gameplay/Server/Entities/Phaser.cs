@@ -9,7 +9,7 @@ namespace Lwar.Gameplay.Server.Entities
 	/// <summary>
 	///     Represents a phaser.
 	/// </summary>
-	public class Phaser : Entity
+	internal class Phaser : Entity
 	{
 		/// <summary>
 		///     Initializes the type.

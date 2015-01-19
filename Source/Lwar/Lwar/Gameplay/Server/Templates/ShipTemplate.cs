@@ -5,7 +5,7 @@
 	/// <summary>
 	///     The configurable parameters of a ship.
 	/// </summary>
-	public struct ShipTemplate
+	internal struct ShipTemplate
 	{
 		/// <summary>
 		///     The template of the default ship.
@@ -16,7 +16,7 @@
 			MaxSpeed = 1000,
 			MaxRotationSpeed = 7,
 			Drag = 0.1f,
-			WarpDrive = new WarpDriveTemplate
+			WarpDrive =
 			{
 				MaxSpeed = 7000,
 				MaxEnergy = 1000,

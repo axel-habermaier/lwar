@@ -9,7 +9,7 @@ namespace Lwar.Network.Messages
 	///     Notifies a client about a collision between two entities.
 	/// </summary>
 	[UnreliableTransmission(MessageType.EntityCollision)]
-	public sealed class EntityCollisionMessage : Message
+	internal sealed class EntityCollisionMessage : Message
 	{
 		/// <summary>
 		///     Initializes the type.
@@ -45,22 +45,22 @@ namespace Lwar.Network.Messages
 		///     Serializes the message using the given writer.
 		/// </summary>
 		/// <param name="writer">The writer that should be used to serialize the message.</param>
-		public override void Serialize(BufferWriter writer)
+		public override void Serialize(ref BufferWriter writer)
 		{
-			writer.WriteIdentifier(Entity1);
-			writer.WriteIdentifier(Entity2);
-			writer.WriteVector2(ImpactPosition);
+			WriteIdentifier(ref writer, Entity1);
+			WriteIdentifier(ref writer, Entity2);
+			WriteVector2(ref writer, ImpactPosition);
 		}
 
 		/// <summary>
 		///     Deserializes the message using the given reader.
 		/// </summary>
 		/// <param name="reader">The reader that should be used to deserialize the message.</param>
-		public override void Deserialize(BufferReader reader)
+		public override void Deserialize(ref BufferReader reader)
 		{
-			Entity1 = reader.ReadIdentifier();
-			Entity2 = reader.ReadIdentifier();
-			ImpactPosition = reader.ReadVector2();
+			Entity1 = ReadIdentifier(ref reader);
+			Entity2 = ReadIdentifier(ref reader);
+			ImpactPosition = ReadVector2(ref reader);
 		}
 
 		/// <summary>

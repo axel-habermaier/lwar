@@ -10,51 +10,51 @@
 		/// <summary>
 		///     Indicates that the data describes positions.
 		/// </summary>
-		Position = 0,
+		Position,
 
 		/// <summary>
 		///     Indicates that the data describes colors at semantic index 0.
 		/// </summary>
-		Color0 = 1,
+		Color0,
 
 		/// <summary>
 		///     Indicates that the data describes colors at semantic index 1.
 		/// </summary>
-		Color1 = 2,
+		Color1,
 
 		/// <summary>
 		///     Indicates that the data describes colors at semantic index 2.
 		/// </summary>
-		Color2 = 3,
+		Color2,
 
 		/// <summary>
 		///     Indicates that the data describes colors at semantic index 3.
 		/// </summary>
-		Color3 = 4,
+		Color3,
 
 		/// <summary>
 		///     Indicates that the data describes texture coordinates at semantic index 0.
 		/// </summary>
-		TexCoords0 = 5,
+		TexCoords0,
 
 		/// <summary>
 		///     Indicates that the data describes texture coordinates at semantic index 1.
 		/// </summary>
-		TexCoords1 = 6,
+		TexCoords1,
 
 		/// <summary>
 		///     Indicates that the data describes texture coordinates at semantic index 2.
 		/// </summary>
-		TexCoords2 = 7,
+		TexCoords2,
 
 		/// <summary>
 		///     Indicates that the data describes texture coordinates at semantic index 3.
 		/// </summary>
-		TexCoords3 = 8,
+		TexCoords3,
 
 		/// <summary>
 		///     Indicates that the data describes normals.
 		/// </summary>
-		Normal = 9
+		Normal
 	}
 }

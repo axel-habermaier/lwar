@@ -10,21 +10,21 @@
 		/// <summary>
 		///     Indicates that a texture is one-dimensional.
 		/// </summary>
-		Texture1D = 2901,
+		Texture1D,
 
 		/// <summary>
 		///     Indicates that a texture is two-dimensional.
 		/// </summary>
-		Texture2D = 2902,
+		Texture2D,
 
 		/// <summary>
 		///     Indicates that a texture is a cube map.
 		/// </summary>
-		CubeMap = 2903,
+		CubeMap,
 
 		/// <summary>
 		///     Indicates that a texture is three-dimensional.
 		/// </summary>
-		Texture3D = 2904
+		Texture3D
 	}
 }

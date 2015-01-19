@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Runtime.InteropServices;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a query that records the frequency of the GPU timer that can be used to interpret the result of timestamp
@@ -19,16 +20,17 @@
 		}
 
 		/// <summary>
-		///     Gets the queried GPU timestamp.
+		///     Tries to gets the queried GPU frequency if the queried value is valid.
 		/// </summary>
-		public unsafe QueryData Result
+		public unsafe bool TryGetFrequency(out double frequency)
 		{
-			get
-			{
-				QueryData data;
-				GetQueryData(&data, sizeof(QueryData));
-				return data;
-			}
+			Assert.NotDisposed(this);
+
+			Result data;
+			QueryObject.GetResult(&data);
+
+			frequency = data.Frequency;
+			return !data.Disjoint;
 		}
 
 		/// <summary>
@@ -36,7 +38,8 @@
 		/// </summary>
 		public void Begin()
 		{
-			BeginQuery();
+			Assert.NotDisposed(this);
+			QueryObject.Begin();
 		}
 
 		/// <summary>
@@ -44,25 +47,26 @@
 		/// </summary>
 		public void End()
 		{
-			EndQuery();
+			Assert.NotDisposed(this);
+			QueryObject.End();
 		}
 
 		/// <summary>
 		///     Represents the data returned by a timestamp disjoint query.
 		/// </summary>
-		[StructLayout(LayoutKind.Sequential)]
-		public struct QueryData
+		[StructLayout(LayoutKind.Sequential, Size=16)]
+		internal struct Result
 		{
 			/// <summary>
 			///     The frequency of the GPU's internal timer.
 			/// </summary>
-			public readonly ulong Frequency;
+			public ulong Frequency;
 
 			/// <summary>
 			///     Indicates whether the timestamp queries that have been executed while the timestamp disjoint query was active
 			///     returned valid data or should be discarded.
 			/// </summary>
-			public readonly bool Valid;
+			public bool Disjoint;
 		}
 	}
 }

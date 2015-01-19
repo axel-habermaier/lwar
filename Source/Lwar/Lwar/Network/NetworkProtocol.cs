@@ -4,9 +4,9 @@
 	using Pegasus.Platform.Network;
 
 	/// <summary>
-	///     Provides access to lwar network specification constants.
+	///     Provides access to Lwar network specification constants.
 	/// </summary>
-	public static class NetworkProtocol
+	internal static class NetworkProtocol
 	{
 		/// <summary>
 		///     The application identifier that is used to determine whether a packet has been sent by another instance of the same
@@ -29,17 +29,17 @@
 		/// <summary>
 		///     The maximum allowed byte length of an UTF8-encoded player name.
 		/// </summary>
-		public const int PlayerNameLength = 32;
+		public const byte PlayerNameLength = 32;
 
 		/// <summary>
 		///     The maximum allowed byte length of an UTF8-encoded server name.
 		/// </summary>
-		public const int ServerNameLength = 32;
+		public const byte ServerNameLength = 32;
 
 		/// <summary>
 		///     The maximum allowed byte length of an UTF8-encoded chat message.
 		/// </summary>
-		public const int ChatMessageLength = 255;
+		public const byte ChatMessageLength = 255;
 
 		/// <summary>
 		///     The maximum allowed packet size in bytes.

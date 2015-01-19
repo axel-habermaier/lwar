@@ -3,7 +3,6 @@
 	using System;
 	using Assets;
 	using Gameplay.Client.Entities;
-	using Pegasus.Assets;
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Rendering;
@@ -11,19 +10,19 @@
 	/// <summary>
 	///     Renders bullets into a 3D scene.
 	/// </summary>
-	public class BulletRenderer : Renderer<BulletEntity>
+	internal class BulletRenderer : Renderer<BulletEntity>
 	{
 		private Texture2D _texture, _texture2;
 
 		/// <summary>
-		///     Loads the required assets of the renderer.
+		///     Initializes the renderer.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
-		public override void Load(GraphicsDevice graphicsDevice, AssetsManager assets)
+		/// <param name="renderContext">The render context that should be used for drawing.</param>
+		/// <param name="assets">The asset bundle that provides access to Lwar assets.</param>
+		public override void Initialize(RenderContext renderContext, GameBundle assets)
 		{
-			_texture = assets.Load(Textures.Bullet);
-			_texture2 = assets.Load(Textures.BulletGlow);
+			_texture = assets.Bullet;
+			_texture2 = assets.BulletGlow;
 		}
 
 		/// <summary>
@@ -32,8 +31,8 @@
 		/// <param name="spriteBatch">The sprite batch that should be used to draw the 2D elements.</param>
 		public override void Draw(SpriteBatch spriteBatch)
 		{
-			spriteBatch.BlendState = BlendState.Additive;
-			spriteBatch.DepthStencilState = DepthStencilState.DepthRead;
+			spriteBatch.BlendState = spriteBatch.RenderContext.BlendStates.Additive;
+			spriteBatch.DepthStencilState = spriteBatch.RenderContext.DepthStencilStates.DepthRead;
 
 			foreach (var bullet in Elements)
 			{

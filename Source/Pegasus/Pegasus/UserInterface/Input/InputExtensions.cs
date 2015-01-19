@@ -1,6 +1,8 @@
 ﻿namespace Pegasus.UserInterface.Input
 {
 	using System;
+	using System.Runtime.InteropServices;
+	using Platform.SDL2;
 	using Utilities;
 
 	/// <summary>
@@ -117,5 +119,18 @@
 					return "<unknown>";
 			}
 		}
+
+		/// <summary>
+		///     Converts the given key to its scan code.
+		/// </summary>
+		/// <param name="key">The key that should be converted.</param>
+		internal static ScanCode ToScanCode(this Key key)
+		{
+			Assert.ArgumentInRange(key);
+			return (ScanCode)SDL_GetScancodeFromKey((int)key);
+		}
+
+		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
+		private static extern int SDL_GetScancodeFromKey(int key);
 	}
 }

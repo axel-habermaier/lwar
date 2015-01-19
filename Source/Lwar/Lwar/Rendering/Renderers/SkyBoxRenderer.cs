@@ -3,7 +3,6 @@
 	using System;
 	using Assets;
 	using Assets.Effects;
-	using Pegasus.Assets;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Rendering;
@@ -11,7 +10,7 @@
 	/// <summary>
 	///     Renders a skybox.
 	/// </summary>
-	public class SkyboxRenderer : DisposableObject, IRenderer
+	internal class SkyboxRenderer : DisposableObject, IRenderer
 	{
 		/// <summary>
 		///     The skybox cube map.
@@ -29,24 +28,17 @@
 		private Model _model;
 
 		/// <summary>
-		///     Loads the required assets of the renderer.
-		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
-		public void Load(GraphicsDevice graphicsDevice, AssetsManager assets)
-		{
-			_cubeMap = assets.Load(Textures.SpaceCubemap);
-			_effect = new SkyboxEffect(graphicsDevice, assets);
-		}
-
-		/// <summary>
 		///     Initializes the renderer.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		public void Initialize(GraphicsDevice graphicsDevice)
+		/// <param name="renderContext">The render context that should be used for drawing.</param>
+		/// <param name="assets">The asset bundle that provides access to Lwar assets.</param>
+		public void Initialize(RenderContext renderContext, GameBundle assets)
 		{
-			_model = Model.CreateSkybox(graphicsDevice);
-			_effect.Skybox = new CubeMapView(_cubeMap, SamplerState.BilinearClampNoMipmaps);
+			_cubeMap = assets.Space;
+			_effect = assets.SkyboxEffect;
+
+			_model = Model.CreateSkybox(renderContext.GraphicsDevice);
+			_effect.Skybox = new CubeMapView(_cubeMap, renderContext.SamplerStates.BilinearClampNoMipmaps);
 		}
 
 		/// <summary>
@@ -55,8 +47,10 @@
 		/// <param name="output">The output that the bullets should be rendered to.</param>
 		public void Draw(RenderOutput output)
 		{
-			BlendState.Premultiplied.Bind();
-			RasterizerState.CullCounterClockwise.Bind();
+			output.RenderContext.BlendStates.Premultiplied.Bind();
+			output.RenderContext.RasterizerStates.CullCounterClockwise.Bind();
+
+			_effect.ViewportSize = output.Viewport.Size;
 			_model.Draw(output, _effect.Default);
 		}
 
@@ -73,7 +67,6 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_effect.SafeDispose();
 			_model.SafeDispose();
 		}
 	}

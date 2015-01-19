@@ -6,6 +6,7 @@
 	using Pegasus;
 	using Pegasus.Math;
 	using Pegasus.Platform;
+	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Logging;
 	using Pegasus.Scripting;
 	using Pegasus.Scripting.Validators;
@@ -42,6 +43,18 @@
 		///     Shows or hides the debug overlay.
 		/// </summary>
 		public static Cvar<bool> ShowDebugOverlayCvar { get; private set; }
+
+		/// <summary>
+		///     Determines the graphics API that should be used for rendering. If the chosen graphics API is not available, the
+		///     application automatically tries to fall back to a supported one.
+		/// </summary>
+		public static Cvar<GraphicsApi> GraphicsApiCvar { get; private set; }
+
+		/// <summary>
+		///     Indicates whether the hardware cursor is enabled. Hardware cursors are frame rate independent and are generally
+		///     preferable where supported.
+		/// </summary>
+		public static Cvar<bool> HardwareCursorCvar { get; private set; }
 
 		/// <summary>
 		///     The scaling factor that is applied to all time-scaling sensitive timing values.
@@ -124,6 +137,36 @@
 			{
 				Assert.ArgumentNotNull((object)value);
 				ShowDebugOverlayCvar.Value = value;
+			}
+		}
+
+		/// <summary>
+		///     Determines the graphics API that should be used for rendering. If the chosen graphics API is not available, the
+		///     application automatically tries to fall back to a supported one.
+		/// </summary>
+		public static GraphicsApi GraphicsApi
+		{
+			get { return GraphicsApiCvar.Value; }
+			[DebuggerHidden]
+			set
+			{
+				Assert.ArgumentNotNull((object)value);
+				GraphicsApiCvar.Value = value;
+			}
+		}
+
+		/// <summary>
+		///     Indicates whether the hardware cursor is enabled. Hardware cursors are frame rate independent and are generally
+		///     preferable where supported.
+		/// </summary>
+		public static bool HardwareCursor
+		{
+			get { return HardwareCursorCvar.Value; }
+			[DebuggerHidden]
+			set
+			{
+				Assert.ArgumentNotNull((object)value);
+				HardwareCursorCvar.Value = value;
 			}
 		}
 
@@ -236,6 +279,42 @@
 		}
 
 		/// <summary>
+		///     Raised when the 'GraphicsApi' cvar is changing. The new value is passed to the event handler.
+		/// </summary>
+		public static event Action<GraphicsApi> GraphicsApiChanging
+		{
+			add { GraphicsApiCvar.Changing += value; }
+			remove { GraphicsApiCvar.Changing -= value; }
+		}
+
+		/// <summary>
+		///     Raised when the 'GraphicsApi' cvar is changed. The previous value is passed to the event handler.
+		/// </summary>
+		public static event Action<GraphicsApi> GraphicsApiChanged
+		{
+			add { GraphicsApiCvar.Changed += value; }
+			remove { GraphicsApiCvar.Changed -= value; }
+		}
+
+		/// <summary>
+		///     Raised when the 'HardwareCursor' cvar is changing. The new value is passed to the event handler.
+		/// </summary>
+		public static event Action<bool> HardwareCursorChanging
+		{
+			add { HardwareCursorCvar.Changing += value; }
+			remove { HardwareCursorCvar.Changing -= value; }
+		}
+
+		/// <summary>
+		///     Raised when the 'HardwareCursor' cvar is changed. The previous value is passed to the event handler.
+		/// </summary>
+		public static event Action<bool> HardwareCursorChanged
+		{
+			add { HardwareCursorCvar.Changed += value; }
+			remove { HardwareCursorCvar.Changed -= value; }
+		}
+
+		/// <summary>
 		///     Initializes the instances declared by the registry.
 		/// </summary>
 		public static void Initialize()
@@ -243,9 +322,11 @@
 			TimeScaleCvar = new Cvar<double>("time_scale", 1.0, "The scaling factor that is applied to all time-scaling sensitive timing values.", UpdateMode.Immediate, false, false, new RangeAttribute(0.1, 10.0));
 			ResolutionCvar = new Cvar<Size>("resolution", new Size(1024, 768), "The screen resolution used by the application in fullscreen mode.", UpdateMode.Immediate, true, false, new WindowSizeAttribute());
 			WindowSizeCvar = new Cvar<Size>("window_size", new Size(1024, 768), "The size in pixels of the application window in non-fullscreen mode.", UpdateMode.Immediate, true, true, new WindowSizeAttribute());
-			WindowPositionCvar = new Cvar<Vector2>("window_position", Vector2.Zero, "The screen position of the application window's top left corner in non-fullscreen mode.", UpdateMode.Immediate, true, true, new WindowPositionAttribute());
+			WindowPositionCvar = new Cvar<Vector2>("window_position", new Vector2(100, 100), "The screen position of the application window's top left corner in non-fullscreen mode.", UpdateMode.Immediate, true, true, new WindowPositionAttribute());
 			WindowModeCvar = new Cvar<WindowMode>("window_mode", WindowMode.Fullscreen, "The width of the application's window in non-fullscreen mode.", UpdateMode.Immediate, true, true);
 			ShowDebugOverlayCvar = new Cvar<bool>("show_debug_overlay", PlatformInfo.IsDebug, "Shows or hides the debug overlay.", UpdateMode.Immediate, true, false);
+			GraphicsApiCvar = new Cvar<GraphicsApi>("graphics_api", PlatformInfo.Platform == PlatformType.Windows ? GraphicsApi.Direct3D11 : GraphicsApi.OpenGL3, "Determines the graphics API that should be used for rendering. If the chosen graphics API is not available, the application automatically tries to fall back to a supported one.", UpdateMode.OnAppRestart, true, false);
+			HardwareCursorCvar = new Cvar<bool>("hardware_cursor", true, "Indicates whether the hardware cursor is enabled. Hardware cursors are frame rate independent and are generally preferable where supported.", UpdateMode.Immediate, true, false);
 
 			CvarRegistry.Register(TimeScaleCvar);
 			CvarRegistry.Register(ResolutionCvar);
@@ -253,6 +334,8 @@
 			CvarRegistry.Register(WindowPositionCvar);
 			CvarRegistry.Register(WindowModeCvar);
 			CvarRegistry.Register(ShowDebugOverlayCvar);
+			CvarRegistry.Register(GraphicsApiCvar);
+			CvarRegistry.Register(HardwareCursorCvar);
 		}
 
 		/// <summary>

@@ -7,7 +7,7 @@
 	/// <summary>
 	///     Represents a rocket.
 	/// </summary>
-	public class RocketEntity : Entity<RocketEntity>
+	internal class RocketEntity : Entity<RocketEntity>
 	{
 		/// <summary>
 		///     Creates a new instance.

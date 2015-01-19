@@ -11,7 +11,7 @@
 	/// <summary>
 	///     Represents a collection of clients.
 	/// </summary>
-	public class ClientCollection : DisposableObject
+	internal class ClientCollection : DisposableObject
 	{
 		/// <summary>
 		///     The allocator that is used to allocate pooled objects.

@@ -8,7 +8,7 @@
 	/// <summary>
 	///     Represents the main menu that is shown when no game is active.
 	/// </summary>
-	public class MainMenuViewModel : StackedViewModel
+	internal class MainMenuViewModel : StackedViewModel
 	{
 		/// <summary>
 		///     Indicates whether the menu is top-level.

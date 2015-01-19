@@ -8,23 +8,25 @@
 	/// <summary>
 	///     Wraps a byte buffer, providing methods for writing fundamental data types to the buffer.
 	/// </summary>
-	public sealed class BufferWriter : UniquePooledObject
+	public struct BufferWriter : IDisposable
 	{
 		/// <summary>
-		///     The default pool for buffer writer instances.
+		///     Represents a serialization function.
 		/// </summary>
-		private static readonly ObjectPool<BufferWriter> DefaultPool =
-			new ObjectPool<BufferWriter>(() => new BufferWriter(), hasGlobalLifetime: true);
+		/// <typeparam name="T">The type of the object that should be serialized.</typeparam>
+		/// <param name="writer">The writer that is used to write the object that should be serialized.</param>
+		/// <param name="obj">The object that should be serialized.</param>
+		public delegate void Serializer<in T>(ref BufferWriter writer, T obj);
+
+		/// <summary>
+		///     Indicates the which endian encoding the buffer uses.
+		/// </summary>
+		private readonly Endianess _endianess;
 
 		/// <summary>
 		///     The buffer to which the data is written.
 		/// </summary>
 		private ArraySegment<byte> _buffer;
-
-		/// <summary>
-		///     Indicates the which endian encoding the buffer uses.
-		/// </summary>
-		private Endianess _endianess;
 
 		/// <summary>
 		///     The maximum position that was written by the writer.
@@ -37,10 +39,41 @@
 		private int _writePosition;
 
 		/// <summary>
-		///     Initializes a new instance.
+		///     Writes to the given buffer. Data is written to the buffer within the range [0, buffer.Length).
 		/// </summary>
-		private BufferWriter()
+		/// <param name="buffer">The buffer to which the data should be written.</param>
+		/// <param name="endianess">Specifies the endianess of the buffer.</param>
+		public BufferWriter(byte[] buffer, Endianess endianess)
+			: this(buffer, 0, buffer.Length, endianess)
 		{
+		}
+
+		/// <summary>
+		///     Writes to the given buffer. Data is written to the buffer within the range [offset, offset + length).
+		/// </summary>
+		/// <param name="buffer">The buffer to which the data should be written.</param>
+		/// <param name="offset"> The offset to the first byte of the buffer that should be written.</param>
+		/// <param name="length">The length of the buffer in bytes.</param>
+		/// <param name="endianess">Specifies the endianess of the buffer.</param>
+		public BufferWriter(byte[] buffer, int offset, int length, Endianess endianess)
+			: this(new ArraySegment<byte>(buffer, offset, length), endianess)
+		{
+		}
+
+		/// <summary>
+		///     Writes to the given buffer. Data is written to the buffer within the range [offset, offset + length).
+		/// </summary>
+		/// <param name="buffer">The buffer to which the data should be written.</param>
+		/// <param name="endianess">Specifies the endianess of the buffer.</param>
+		public BufferWriter(ArraySegment<byte> buffer, Endianess endianess)
+			: this()
+		{
+			Assert.ArgumentNotNull(buffer.Array);
+
+			_endianess = endianess;
+			_buffer = buffer;
+
+			Reset();
 		}
 
 		/// <summary>
@@ -73,42 +106,11 @@
 		}
 
 		/// <summary>
-		///     Writes to the given buffer. Data is written to the buffer within the range [0, buffer.Length).
+		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
-		/// <param name="buffer">The buffer to which the data should be written.</param>
-		/// <param name="endianess">Specifies the endianess of the buffer.</param>
-		public static BufferWriter Create(byte[] buffer, Endianess endianess = Endianess.Little)
+		public void Dispose()
 		{
-			return Create(buffer, 0, buffer.Length, endianess);
-		}
-
-		/// <summary>
-		///     Writes to the given buffer. Data is written to the buffer within the range [offset, offset + length).
-		/// </summary>
-		/// <param name="buffer">The buffer to which the data should be written.</param>
-		/// <param name="offset"> The offset to the first byte of the buffer that should be written.</param>
-		/// <param name="length">The length of the buffer in bytes.</param>
-		/// <param name="endianess">Specifies the endianess of the buffer.</param>
-		public static BufferWriter Create(byte[] buffer, int offset, int length, Endianess endianess = Endianess.Little)
-		{
-			return Create(new ArraySegment<byte>(buffer, offset, length), endianess);
-		}
-
-		/// <summary>
-		///     Writes to the given buffer. Data is written to the buffer within the range [offset, offset + length).
-		/// </summary>
-		/// <param name="buffer">The buffer to which the data should be written.</param>
-		/// <param name="endianess">Specifies the endianess of the buffer.</param>
-		public static BufferWriter Create(ArraySegment<byte> buffer, Endianess endianess = Endianess.Little)
-		{
-			Assert.ArgumentNotNull(buffer.Array);
-
-			var bufferWriter = DefaultPool.Allocate();
-			bufferWriter._endianess = endianess;
-			bufferWriter._buffer = buffer;
-			bufferWriter.Reset();
-
-			return bufferWriter;
+			_buffer = new ArraySegment<byte>();
 		}
 
 		/// <summary>
@@ -314,13 +316,61 @@
 		}
 
 		/// <summary>
-		///     Writes an UTF8 string.
+		///     Writes an UTF8-encoded string to the buffer.
 		/// </summary>
 		/// <param name="value">The value that should be written.</param>
 		public void WriteString(string value)
 		{
 			Assert.ArgumentNotNull(value);
 			WriteByteArray(Encoding.UTF8.GetBytes(value));
+		}
+
+		/// <summary>
+		///     Writes an UTF8-encoded string of the given maximum length to the buffer.
+		/// </summary>
+		/// <param name="s">The string that should be written into the buffer.</param>
+		/// <param name="maxLength">The maximum length of the string.</param>
+		public void WriteString(string s, byte maxLength)
+		{
+			Assert.ArgumentNotNull(s);
+			Assert.ArgumentSatisfies(maxLength > 0, "Invalid max length.");
+			Assert.ArgumentSatisfies(Encoding.UTF8.GetByteCount(s) <= maxLength, "String is too long.");
+
+			var bytes = Encoding.UTF8.GetBytes(s);
+			WriteByte((byte)bytes.Length);
+			Copy(bytes);
+		}
+
+		/// <summary>
+		///     Writes an UTF8-encoded string of the given maximum length to the buffer.
+		/// </summary>
+		/// <param name="s">The string that should be written into the buffer.</param>
+		/// <param name="maxLength">The maximum length of the string.</param>
+		public void WriteString(string s, ushort maxLength)
+		{
+			Assert.ArgumentNotNull(s);
+			Assert.ArgumentSatisfies(maxLength > 0, "Invalid max length.");
+			Assert.ArgumentSatisfies(Encoding.UTF8.GetByteCount(s) <= maxLength, "String is too long.");
+
+			var bytes = Encoding.UTF8.GetBytes(s);
+			WriteUInt16((ushort)bytes.Length);
+			Copy(bytes);
+		}
+
+		/// <summary>
+		///     Writes an UTF8-encoded string of the given maximum length to the buffer.
+		/// </summary>
+		/// <param name="s">The string that should be written into the buffer.</param>
+		/// <param name="maxLength">The maximum length of the string.</param>
+		public void WriteString(string s, int maxLength)
+		{
+			Assert.ArgumentNotNull(s);
+			Assert.ArgumentSatisfies(maxLength > 0, "Invalid max length.");
+			Assert.ArgumentSatisfies(Encoding.UTF8.GetByteCount(s) <= maxLength, "String is too long.");
+
+			var bytes = Encoding.UTF8.GetBytes(s);
+			WriteInt32(bytes.Length);
+			Copy(bytes);
 		}
 
 		/// <summary>
@@ -355,7 +405,7 @@
 		/// <typeparam name="T">The type of the object that should be serialized.</typeparam>
 		/// <param name="obj">The object that should be serialized into the buffer.</param>
 		/// <param name="serializer">The serializer that should be used to atomically modify the buffer.</param>
-		public bool TryWrite<T>(T obj, Action<BufferWriter, T> serializer)
+		public bool TryWrite<T>(T obj, Serializer<T> serializer)
 		{
 			Assert.ArgumentNotNull(serializer);
 
@@ -364,7 +414,7 @@
 
 			try
 			{
-				serializer(this, obj);
+				serializer(ref this, obj);
 				return true;
 			}
 			catch (IndexOutOfRangeException)
@@ -373,14 +423,6 @@
 				_maxWritePosition = previousMaxWritePosition;
 				return false;
 			}
-		}
-
-		/// <summary>
-		///     Invoked when the pooled instance is returned to the pool.
-		/// </summary>
-		protected override void OnReturning()
-		{
-			_buffer = new ArraySegment<byte>();
 		}
 	}
 }

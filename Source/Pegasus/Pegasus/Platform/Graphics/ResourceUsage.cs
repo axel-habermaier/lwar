@@ -10,20 +10,21 @@
 		/// <summary>
 		///     Indicates that the default usage pattern should be used.
 		/// </summary>
-		Default = 1900,
+		Default,
 
 		/// <summary>
-		///     Indicates that the buffer is static, i.e., its contents do not or only
-		///     rarely change after its initial creation.
+		///     Indicates that the buffer is static, i.e., its contents do not or only rarely change after its initial creation.
 		/// </summary>
-		Static = 1901,
+		Static,
 
 		/// <summary>
-		///     Indicates that the buffer is dynamic, i.e., there are frequent changes made
-		///     to its contents.
+		///     Indicates that the buffer is dynamic, i.e., there are frequent changes made to its contents.
 		/// </summary>
-		Dynamic = 1902,
+		Dynamic,
 
-		Staging = 1903
+		/// <summary>
+		///     Indicates that the resource supports data transfer from the GPU to the CPU.
+		/// </summary>
+		Staging
 	}
 }

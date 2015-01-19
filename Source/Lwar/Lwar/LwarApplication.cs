@@ -2,6 +2,7 @@
 {
 	using System;
 	using Assets;
+	using Network.Server;
 	using Pegasus;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Platform.Network;
@@ -14,7 +15,7 @@
 	/// <summary>
 	///     Represents the Lwar application.
 	/// </summary>
-	public sealed partial class LwarApplication
+	internal sealed partial class LwarApplication
 	{
 		/// <summary>
 		///     The root view model of the view model stacked used by the application.
@@ -22,11 +23,15 @@
 		private readonly StackedViewModel _viewModelRoot = StackedViewModel.CreateRoot();
 
 		/// <summary>
+		///     The assets used by the Lwar menu.
+		/// </summary>
+		private MenuBundle _menuBundle;
+
+		/// <summary>
 		///     Invoked when the application is initializing.
 		/// </summary>
 		protected override void Initialize()
 		{
-			RegisterFontLoader(new FontLoader(Assets));
 			Commands.Resolve();
 			Cvars.Resolve();
 
@@ -35,14 +40,14 @@
 			Commands.OnDisconnect += Disconnect;
 			Commands.OnStartServer += StartServer;
 			Commands.OnStopServer += StopServer;
-			Cvars.UseDebugServerChanged += v => StopServer();
+			Cvars.UseNativeServerChanged += OnUseNativeServerChanged;
 
 			Commands.Bind(Key.F1.WentDown(), "start_server TestServer");
 			Commands.Bind(Key.F2.WentDown(), "stop_server");
-			Commands.Bind(Key.F3.WentDown(), "connect 127.0.0.1");
+			Commands.Bind(Key.F3.WentDown(), "connect ::1");
 			Commands.Bind(Key.F4.WentDown(), "disconnect");
 			Commands.Bind(Key.F5.WentDown(), "reload_assets");
-			Commands.Bind(Key.F6.WentDown(), "toggle use_debug_server");
+			Commands.Bind(Key.F6.WentDown(), "toggle use_native_server");
 
 			Commands.Bind(Key.Escape.WentDown() & Key.LeftShift.IsPressed(), "exit");
 			Commands.Bind(Key.F9.WentDown(), "show_particle_effect_viewer");
@@ -50,6 +55,18 @@
 
 			_viewModelRoot.Child = new MainMenuViewModel();
 			_viewModelRoot.Activate();
+
+			_menuBundle = new MenuBundle(RenderContext);
+			_menuBundle.Load();
+		}
+
+		/// <summary>
+		///     Handles changes to the use native server cvar.
+		/// </summary>
+		/// <param name="useNative">The new value of the cvar.</param>
+		private static void OnUseNativeServerChanged(bool useNative)
+		{
+			StopServer();
 		}
 
 		/// <summary>
@@ -83,7 +100,7 @@
 		/// <param name="port">The port the server should use to communicate with the clients.</param>
 		private static void StartServer(string serverName, ushort port)
 		{
-			Server.TryStart(serverName, port);
+			LwarServer.TryStart(serverName, port);
 		}
 
 		/// <summary>
@@ -91,7 +108,7 @@
 		/// </summary>
 		private static void StopServer()
 		{
-			Server.Stop();
+			LwarServer.Stop();
 		}
 
 		/// <summary>
@@ -99,7 +116,7 @@
 		/// </summary>
 		protected override void Update()
 		{
-			Server.Update();
+			LwarServer.CheckForErrors();
 			_viewModelRoot.Update();
 		}
 
@@ -108,8 +125,15 @@
 		/// </summary>
 		protected override void Dispose()
 		{
+			_menuBundle.SafeDispose();
 			_viewModelRoot.SafeDispose();
-			Server.Stop();
+			LwarServer.Stop();
+
+			Commands.OnConnect -= Connect;
+			Commands.OnDisconnect -= Disconnect;
+			Commands.OnStartServer -= StartServer;
+			Commands.OnStopServer -= StopServer;
+			Cvars.UseNativeServerChanged -= OnUseNativeServerChanged;
 
 			base.Dispose();
 		}
@@ -123,7 +147,7 @@
 			Commands.Initialize();
 			Cvars.Initialize();
 
-			Bootstrapper.Run(new LwarApplication(), args, "Lwar");
+			Bootstrapper.Run<LwarApplication>(args, "Lwar");
 		}
 	}
 }

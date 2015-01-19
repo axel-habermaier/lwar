@@ -3,8 +3,8 @@
 	using System;
 	using System.Linq;
 	using System.Xml.Linq;
+	using Commands;
 	using CSharp;
-	using Platform.Logging;
 	using Utilities;
 
 	/// <summary>
@@ -53,9 +53,9 @@
 			_xamlRoot = xamlFile.Root;
 
 			if (String.IsNullOrWhiteSpace(namespaceName))
-				_writer.AppendLine("namespace {0}", Configuration.AssetsProject.RootNamespace);
+				_writer.AppendLine("namespace {0}", Configuration.RootNamespace);
 			else
-				_writer.AppendLine("namespace {0}.{1}", Configuration.AssetsProject.RootNamespace, namespaceName);
+				_writer.AppendLine("namespace {0}.{1}", Configuration.RootNamespace, namespaceName);
 
 			_writer.AppendBlockStatement(() =>
 			{

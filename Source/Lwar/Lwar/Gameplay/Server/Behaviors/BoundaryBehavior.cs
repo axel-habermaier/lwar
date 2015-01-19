@@ -8,7 +8,7 @@
 	/// <summary>
 	///     Removes scene nodes that reach the boundaries of the galaxy.
 	/// </summary>
-	public class BoundaryBehavior : Behavior
+	internal class BoundaryBehavior : Behavior<SceneNode>
 	{
 		/// <summary>
 		///     Initializes the type.

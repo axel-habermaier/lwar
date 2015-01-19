@@ -7,7 +7,7 @@
 	/// <summary>
 	///     Removes scene nodes after a specific amount of time.
 	/// </summary>
-	public class TimeToLiveBehavior : Behavior
+	public class TimeToLiveBehavior : Behavior<SceneNode>
 	{
 		/// <summary>
 		///     The remaining number of seconds before the scene node is removed.

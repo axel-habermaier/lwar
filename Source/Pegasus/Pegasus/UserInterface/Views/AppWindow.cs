@@ -4,7 +4,6 @@
 	using Controls;
 	using Input;
 	using Math;
-	using Platform;
 	using Platform.Memory;
 	using Scripting;
 
@@ -37,7 +36,7 @@
 			_inputDevice = new LogicalInputDevice(this, usePreviewEvents: true);
 			_bindings = new BindingCollection(_inputDevice);
 
-			InputBindings.Add(new ScanCodeBinding(PlatformInfo.ConsoleKey, "ToggleConsole", triggerOnRepeat: false) { Preview = true });
+			InputBindings.Add(new ScanCodeBinding(ScanCode.Grave, "ToggleConsole", triggerOnRepeat: false) { Preview = true });
 			DataContext = dataContext;
 
 			LoadContent();
@@ -46,6 +45,7 @@
 		/// <summary>
 		///     Gets the layout root of the application window.
 		/// </summary>
+		// ReSharper disable once ConvertToAutoPropertyWithPrivateSetter
 		public AreaPanel LayoutRoot
 		{
 			get { return _layoutRoot; }

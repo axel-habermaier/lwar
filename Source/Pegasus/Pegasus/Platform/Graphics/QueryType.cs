@@ -8,23 +8,23 @@
 	public enum QueryType
 	{
 		/// <summary>
-		///     Indicates that a query is a timestamp query.
+		///     Indicates that a query represents a GPU/CPU synchronization marker.
 		/// </summary>
-		Timestamp = 2801,
-
-		/// <summary>
-		///     Indicates that a query is a timestamp disjoint query.
-		/// </summary>
-		TimestampDisjoint = 2802,
+		Synced,
 
 		/// <summary>
 		///     Indicates that a query is an occlusion query.
 		/// </summary>
-		Occlusion = 2803,
+		Occlusion,
 
 		/// <summary>
-		///     Indicates that a query represents a GPU/CPU synchronization marker.
+		///     Indicates that a query is a timestamp query.
 		/// </summary>
-		Synced = 2804
+		Timestamp,
+
+		/// <summary>
+		///     Indicates that a query is a timestamp disjoint query.
+		/// </summary>
+		TimestampDisjoint
 	}
 }

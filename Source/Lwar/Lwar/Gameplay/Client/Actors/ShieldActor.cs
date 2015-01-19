@@ -9,7 +9,7 @@
 	///     Represents a shield that protects a ship. The shield is only visible if it has just been hit. Invisible shields are
 	///     removed from the game session.
 	/// </summary>
-	public class ShieldActor : Actor<ShieldActor>
+	internal class ShieldActor : Actor<ShieldActor>
 	{
 		/// <summary>
 		///     The time (in seconds) it takes for the shield to fully fade out.

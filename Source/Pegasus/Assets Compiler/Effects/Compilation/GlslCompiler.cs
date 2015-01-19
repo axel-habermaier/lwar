@@ -6,7 +6,6 @@
 	using CSharp;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.Semantics;
-	using Platform.Graphics;
 	using Utilities;
 
 	/// <summary>
@@ -46,7 +45,7 @@
 		protected override void GenerateConstantBuffer(ConstantBuffer constantBuffer)
 		{
 			Writer.AppendLine("layout(std140, binding = {0}) uniform {2}{1}", constantBuffer.Slot, constantBuffer.Name,
-				Configuration.ReservedInternalIdentifierPrefix);
+				CompilationContext.ReservedInternalIdentifierPrefix);
 			Writer.AppendBlockStatement(() =>
 			{
 				foreach (var constant in constantBuffer.Constants)
@@ -125,7 +124,7 @@
 			{
 				foreach (var input in Shader.Inputs)
 					Writer.AppendLine("{0} {1}{2} = {3};", ToShaderType(input.Type),
-						Configuration.ReservedInternalIdentifierPrefix, input.Name, Escape(input.Name));
+						CompilationContext.ReservedInternalIdentifierPrefix, input.Name, Escape(input.Name));
 
 				Writer.NewLine();
 				Shader.MethodBody.AcceptVisitor(this);
@@ -163,8 +162,6 @@
 			}
 		}
 
-
-
 		/// <summary>
 		///     Gets the token for the given intrinsic function.
 		/// </summary>
@@ -196,7 +193,7 @@
 
 				if (!parameter.IsOutput)
 				{
-					Writer.Append("{0}{1}", Configuration.ReservedInternalIdentifierPrefix, identifierExpression.Identifier);
+					Writer.Append("{0}{1}", CompilationContext.ReservedInternalIdentifierPrefix, identifierExpression.Identifier);
 					return;
 				}
 			}

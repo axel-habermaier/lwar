@@ -1,12 +1,10 @@
 ﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
-	using System.Diagnostics;
-	using System.Linq;
-	using System.Runtime.InteropServices;
-	using System.Security;
+	using Interface;
 	using Math;
 	using Memory;
+	using Rendering;
 	using Utilities;
 
 	/// <summary>
@@ -15,15 +13,9 @@
 	public sealed class RenderTarget : GraphicsObject
 	{
 		/// <summary>
-		///     A value indicating whether this render target instance owns the native object and is responsible for
-		///     destroying it when it is no longer used.
+		///     The color buffers that are bound to the render target.
 		/// </summary>
-		private readonly bool _ownsNativeObject;
-
-		/// <summary>
-		///     The native render target instance.
-		/// </summary>
-		private readonly IntPtr _renderTarget;
+		private readonly Texture2D[] _colorBuffers;
 
 		/// <summary>
 		///     The depth stencil buffer that is bound to the render target.
@@ -31,47 +23,52 @@
 		private readonly Texture2D _depthStencil;
 
 		/// <summary>
-		///     The color buffers that are bound to the render target.
+		///     The underlying render target object.
 		/// </summary>
-		private readonly Texture[] _colorBuffers;
+		private readonly IRenderTarget _renderTarget;
 
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
-		/// <param name="renderTarget">The native render target instance.</param>
-		internal RenderTarget(GraphicsDevice graphicsDevice, IntPtr renderTarget)
+		/// <param name="renderTarget">The underlying render target object.</param>
+		internal RenderTarget(GraphicsDevice graphicsDevice, IRenderTarget renderTarget)
 			: base(graphicsDevice)
 		{
+			Assert.ArgumentNotNull(renderTarget);
 			_renderTarget = renderTarget;
-			_ownsNativeObject = false;
 		}
 
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
-		/// <param name="depthStencil">The depth stencil buffer that should be bound to the render target.</param>
+		/// <param name="depthStencil">The depth stencil buffer, if any, that should be bound to the render target.</param>
 		/// <param name="colorBuffers">The color buffers that should be bound to the render target.</param>
-		public RenderTarget(GraphicsDevice graphicsDevice, Texture2D depthStencil, params Texture[] colorBuffers)
+		public RenderTarget(GraphicsDevice graphicsDevice, Texture2D depthStencil, params Texture2D[] colorBuffers)
 			: base(graphicsDevice)
 		{
-			IntPtr[] colorBuffersPtrs = null;
-			var count = 0;
-			if (colorBuffers != null)
-			{
-				colorBuffersPtrs = colorBuffers.Select(b => b.NativePtr).ToArray();
-				count = colorBuffers.Length;
-			}
-
-			var depthStencilPtr = IntPtr.Zero;
-			if (depthStencil != null)
-				depthStencilPtr = depthStencil.NativePtr;
-
-			_renderTarget = NativeMethods.CreateRenderTarget(graphicsDevice.NativePtr, colorBuffersPtrs, count, depthStencilPtr);
-			_ownsNativeObject = true;
-			_depthStencil = depthStencil;
 			_colorBuffers = colorBuffers;
+			_depthStencil = depthStencil;
+
+			Assert.That(colorBuffers == null || colorBuffers.Length < GraphicsDevice.MaxColorBuffers, "Too many color buffers.");
+			Assert.That((colorBuffers != null && colorBuffers.Length != 0) || depthStencil != null,
+				"Color buffers or a depth stencil buffer is required.");
+
+			_renderTarget = graphicsDevice.CreateRenderTarget(depthStencil, colorBuffers);
+
+			if (depthStencil != null)
+				Size = depthStencil.Size;
+			else
+				Size = colorBuffers[0].Size;
+		}
+
+		/// <summary>
+		///     Gets a value indicating whether the render target is the back buffer of a swap chain.
+		/// </summary>
+		public bool IsBackBuffer
+		{
+			get { return _renderTarget.IsBackBuffer; }
 		}
 
 		/// <summary>
@@ -79,38 +76,35 @@
 		/// </summary>
 		public Size Size
 		{
-			get
-			{
-				int width, height;
-				NativeMethods.GetRenderTargetSize(_renderTarget, out width, out height);
-				return new Size(width, height);
-			}
+			get { return _renderTarget.Size; }
+			private set { _renderTarget.Size = value; }
 		}
 
 		/// <summary>
 		///     Gets the width of the render target.
 		/// </summary>
-		public int Width
+		public float Width
 		{
-			get
-			{
-				int width, height;
-				NativeMethods.GetRenderTargetSize(_renderTarget, out width, out height);
-				return width;
-			}
+			get { return Size.Width; }
 		}
 
 		/// <summary>
 		///     Gets the height of the render target.
 		/// </summary>
-		public int Height
+		public float Height
 		{
-			get
-			{
-				int width, height;
-				NativeMethods.GetRenderTargetSize(_renderTarget, out width, out height);
-				return height;
-			}
+			get { return Size.Height; }
+		}
+
+		/// <summary>
+		///     Binds the render target to the output merger state.
+		/// </summary>
+		internal void Bind()
+		{
+			Assert.NotDisposed(this);
+
+			if (DeviceState.Change(ref GraphicsDevice.State.RenderTarget, this))
+				_renderTarget.Bind();
 		}
 
 		/// <summary>
@@ -120,29 +114,56 @@
 		internal void ClearColor(Color color)
 		{
 			Assert.NotDisposed(this);
-			NativeMethods.ClearColor(_renderTarget, color);
+			Assert.That(IsBackBuffer || _colorBuffers != null && _colorBuffers.Length > 0,
+				"Cannot clear color of a render target without any color buffers.");
+
+			_renderTarget.ClearColor(color);
 		}
 
 		/// <summary>
-		///     Clears the depth stencil buffer of the render target.
+		///     Clears the depth buffer of the render target to the given value.
 		/// </summary>
-		/// <param name="clearDepth">Indicates whether the depth buffer should be cleared.</param>
-		/// <param name="clearStencil">Indicates whether the stencil buffer should be cleared.</param>
+		/// <param name="depth">The value the depth buffer should be set to.</param>
+		internal void ClearDepth(float depth)
+		{
+			Assert.NotDisposed(this);
+			Assert.NotNull(_depthStencil, "Cannot clear depth of a render target without a depth stencil buffer.");
+
+			_renderTarget.ClearDepthStencil(true, false, depth, 0);
+		}
+
+		/// <summary>
+		///     Clears the stencil buffer of the render target to the given value.
+		/// </summary>
+		/// <param name="stencil">The value the stencil buffer should be set to.</param>
+		internal void ClearStencil(byte stencil)
+		{
+			Assert.NotDisposed(this);
+			Assert.NotNull(_depthStencil, "Cannot clear stencil of a render target without a depth stencil buffer.");
+
+			_renderTarget.ClearDepthStencil(false, true, 0.0f, stencil);
+		}
+
+		/// <summary>
+		///     Invoked after the name of the graphics object has changed. This method is only invoked in debug builds.
+		/// </summary>
+		/// <param name="name">The new name of the graphics object.</param>
+		protected override void OnRenamed(string name)
+		{
+			_renderTarget.SetName(name);
+		}
+
+		/// <summary>
+		///     Clears the depth and stencil buffers of the render target to the given values.
+		/// </summary>
 		/// <param name="depth">The value the depth buffer should be set to.</param>
 		/// <param name="stencil">The value the stencil buffer should be set to.</param>
-		internal void ClearDepthStencil(bool clearDepth, bool clearStencil, float depth = 1.0f, byte stencil = 0)
+		internal void ClearDepthStencil(float depth, byte stencil)
 		{
 			Assert.NotDisposed(this);
-			NativeMethods.ClearDepthStencil(_renderTarget, clearDepth, clearStencil, depth, stencil);
-		}
+			Assert.NotNull(_depthStencil, "Cannot clear depth and stencil of a render target without a depth stencil buffer.");
 
-		/// <summary>
-		///     Binds the render target to the output merger state.
-		/// </summary>
-		internal void Bind()
-		{
-			Assert.NotDisposed(this);
-			NativeMethods.BindRenderTarget(_renderTarget);
+			_renderTarget.ClearDepthStencil(true, true, depth, stencil);
 		}
 
 		/// <summary>
@@ -150,53 +171,9 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			if (!_ownsNativeObject)
-				return;
-
-			NativeMethods.DestroyRenderTarget(_renderTarget);
+			_renderTarget.SafeDispose();
 			_depthStencil.SafeDispose();
 			_colorBuffers.SafeDisposeAll();
-		}
-
-#if DEBUG
-		/// <summary>
-		///     Invoked after the name of the graphics object has changed. This method is only available in debug builds.
-		/// </summary>
-		protected override void OnRenamed()
-		{
-			if (_renderTarget != IntPtr.Zero)
-				NativeMethods.SetName(_renderTarget, Name);
-		}
-#endif
-
-		/// <summary>
-		///     Provides access to the native render target functions.
-		/// </summary>
-		[SuppressUnmanagedCodeSecurity]
-		private static class NativeMethods
-		{
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgCreateRenderTarget")]
-			public static extern IntPtr CreateRenderTarget(IntPtr device, IntPtr[] colorBuffers, int count, IntPtr depthStencil);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgDestroyRenderTarget")]
-			public static extern void DestroyRenderTarget(IntPtr renderTarget);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgGetRenderTargetSize")]
-			public static extern void GetRenderTargetSize(IntPtr renderTarget, out int width, out int height);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgClearColor")]
-			public static extern void ClearColor(IntPtr renderTarget, Color color);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgClearDepthStencil")]
-			public static extern void ClearDepthStencil(IntPtr renderTarget, bool clearDepth, bool clearStencil, float depth,
-														byte stencil);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgBindRenderTarget")]
-			public static extern void BindRenderTarget(IntPtr renderTarget);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgSetRenderTargetName")]
-			[Conditional("DEBUG")]
-			public static extern void SetName(IntPtr renderTarget, string name);
 		}
 	}
 }

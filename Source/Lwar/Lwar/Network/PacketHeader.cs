@@ -3,22 +3,19 @@
 	using System;
 	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Memory;
-	using Pegasus.Utilities;
 
 	/// <summary>
 	///     Represents the header of a packet.
 	/// </summary>
-	public static class PacketHeader
+	internal static class PacketHeader
 	{
 		/// <summary>
 		///     Initializes a new instance from a buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the header data should be read from.</param>
 		/// <param name="acknowledgement">Returns the acknowledged sequence number of the packet.</param>
-		public static bool TryRead(BufferReader buffer, out uint acknowledgement)
+		public static bool TryRead(ref BufferReader buffer, out uint acknowledgement)
 		{
-			Assert.ArgumentNotNull(buffer);
-
 			acknowledgement = 0;
 
 			if (!buffer.CanRead(NetworkProtocol.HeaderSize))
@@ -42,10 +39,8 @@
 		/// </summary>
 		/// <param name="buffer">The buffer the header should be written into.</param>
 		/// <param name="acknowledgement">The acknowledged sequence number of the packet.</param>
-		public static void Write(BufferWriter buffer, uint acknowledgement)
+		public static void Write(ref BufferWriter buffer, uint acknowledgement)
 		{
-			Assert.ArgumentNotNull(buffer);
-
 			buffer.WriteUInt32(NetworkProtocol.AppIdentifier);
 			buffer.WriteUInt32(acknowledgement);
 		}

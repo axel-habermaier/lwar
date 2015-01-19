@@ -12,7 +12,7 @@
 	///     Assembles messages into packets and sends the packets over a UDP channel. If the given messages don't fit into a single
 	///     packet, multiple packets are sent.
 	/// </summary>
-	public struct PacketAssembler : IDisposable
+	internal struct PacketAssembler
 	{
 		/// <summary>
 		///     If tracing is enabled, the contents of all sent packets are shown in the debug output.
@@ -20,29 +20,24 @@
 		private const bool EnableTracing = false;
 
 		/// <summary>
-		///     A cached delegate of the sequenced message serialization function.
-		/// </summary>
-		private static readonly Action<BufferWriter, SequencedMessage> SequencedMessageSerializer = SerializeSequencedMessage;
-
-		/// <summary>
-		///     A cached delegate of the batched message serialization function.
-		/// </summary>
-		private static readonly Action<BufferWriter, Message> BatchedMessageSerializer = SerializeBatchedMessage;
-
-		/// <summary>
 		///     The acknowledgement that is set in the headers of the assembled packets
 		/// </summary>
-		private uint _acknowledgement;
+		private readonly uint _acknowledgement;
+
+		/// <summary>
+		///     The allocator that is used to allocate packets.
+		/// </summary>
+		private readonly PoolAllocator _allocator;
 
 		/// <summary>
 		///     The UDP channel that should be used to send the messages.
 		/// </summary>
-		private UdpChannel _channel;
+		private readonly UdpChannel _channel;
 
 		/// <summary>
 		///     The packet that is currently being assembled.
 		/// </summary>
-		private UdpPacket _packet;
+		private OutgoingUdpPacket _packet;
 
 		/// <summary>
 		///     The writer that is currently being used to assemble the packet.
@@ -50,31 +45,28 @@
 		private BufferWriter _writer;
 
 		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		/// <param name="allocator">The allocator that should be used to allocate packets.</param>
+		/// <param name="channel">The UDP channel that should be used to send the assembled packets.</param>
+		/// <param name="acknowledgement">The acknowledgement that should be set in the headers of the assembled packets.</param>
+		public PacketAssembler(PoolAllocator allocator, UdpChannel channel, uint acknowledgement)
+			: this()
+		{
+			Assert.ArgumentNotNull(allocator);
+			Assert.ArgumentNotNull(channel);
+
+			_allocator = allocator;
+			_channel = channel;
+			_acknowledgement = acknowledgement;
+
+			AllocatePacket();
+		}
+
+		/// <summary>
 		///     The number of packets sent to the remote peer.
 		/// </summary>
 		public int PacketCount { get; private set; }
-
-		/// <summary>
-		///     Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		public void Dispose()
-		{
-			SendPacket();
-		}
-
-		/// <summary>
-		///     Creates a new packet assembler.
-		/// </summary>
-		/// <param name="channel">The UDP channel that should be used to send the assembled packets.</param>
-		/// <param name="acknowledgement">The acknowledgement that should be set in the headers of the assembled packets.</param>
-		public static PacketAssembler Create(UdpChannel channel, uint acknowledgement)
-		{
-			Assert.ArgumentNotNull(channel);
-
-			var packetAssembler = new PacketAssembler { _channel = channel, _acknowledgement = acknowledgement };
-			packetAssembler.AllocatePacket();
-			return packetAssembler;
-		}
 
 		/// <summary>
 		///     Sends the given reliable messages in the order they are contained in the queue.
@@ -223,12 +215,12 @@
 		/// </summary>
 		/// <param name="writer">The writer that should be used to serialize the message.</param>
 		/// <param name="sequencedMessage">The message that should be serialized.</param>
-		private static void SerializeSequencedMessage(BufferWriter writer, SequencedMessage sequencedMessage)
+		private static void SerializeSequencedMessage(ref BufferWriter writer, SequencedMessage sequencedMessage)
 		{
 			writer.WriteByte((byte)sequencedMessage.Message.MessageType);
 			writer.WriteUInt32(sequencedMessage.SequenceNumber);
 
-			sequencedMessage.Message.Serialize(writer);
+			sequencedMessage.Message.Serialize(ref writer);
 			Log.DebugIf(EnableTracing, "   ({2}) {0}: {1}", sequencedMessage.SequenceNumber, sequencedMessage.Message,
 				sequencedMessage.Message.IsReliable ? "r" : "u");
 		}
@@ -238,9 +230,9 @@
 		/// </summary>
 		/// <param name="writer">The writer that should be used to serialize the message.</param>
 		/// <param name="message">The message that should be serialized.</param>
-		private static void SerializeBatchedMessage(BufferWriter writer, Message message)
+		private static void SerializeBatchedMessage(ref BufferWriter writer, Message message)
 		{
-			message.Serialize(writer);
+			message.Serialize(ref writer);
 		}
 
 		/// <summary>
@@ -250,30 +242,38 @@
 		{
 			Assert.IsNull(_packet, "A packet is already allocated.");
 
-			_packet = UdpPacket.Allocate(NetworkProtocol.MaxPacketSize);
-			_writer = _packet.CreateWriter();
+			_packet = OutgoingUdpPacket.Allocate(_allocator, NetworkProtocol.MaxPacketSize);
+			_writer = _packet.Writer;
 
 			Log.DebugIf(EnableTracing, "Packet #{2} to {0}, ack: {1}", _channel.RemoteEndPoint, _acknowledgement, PacketCount + 1);
-			PacketHeader.Write(_writer, _acknowledgement);
+			PacketHeader.Write(ref _writer, _acknowledgement);
 		}
 
 		/// <summary>
 		///     Sends the assembled packet over the UDP channel.
 		/// </summary>
-		private void SendPacket()
+		public void SendPacket()
 		{
 			Assert.NotNull(_packet, "No packet has been allocated.");
 
 			Log.DebugIf(EnableTracing, "Packet length: {0} bytes", _writer.Count);
 
-			_writer.SafeDispose();
-			_writer = null;
-
-			_channel.Send(_packet);
+			_channel.Send(_packet, _writer.Count);
 			++PacketCount;
 
+			_writer.Dispose();
 			_packet.SafeDispose();
 			_packet = null;
 		}
+
+		/// <summary>
+		///     A cached delegate of the sequenced message serialization function.
+		/// </summary>
+		private static readonly BufferWriter.Serializer<SequencedMessage> SequencedMessageSerializer = SerializeSequencedMessage;
+
+		/// <summary>
+		///     A cached delegate of the batched message serialization function.
+		/// </summary>
+		private static readonly BufferWriter.Serializer<Message> BatchedMessageSerializer = SerializeBatchedMessage;
 	}
 }

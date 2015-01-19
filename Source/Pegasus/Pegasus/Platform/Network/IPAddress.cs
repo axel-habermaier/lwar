@@ -1,51 +1,100 @@
 ﻿namespace Pegasus.Platform.Network
 {
 	using System;
+	using System.Net.Sockets;
 	using System.Runtime.InteropServices;
-	using System.Security;
 	using Logging;
 	using Utilities;
 
 	/// <summary>
 	///     Represents an IPv4 or IPv6 internet protocol address.
 	/// </summary>
+	/// <remarks>
+	///     We're not using the System.Net.IPAddress in order to reduce the pressure on the garbage collector as each invocation of
+	///     System.Net.Sockets.Socket.ReceiveFrom and System.Net.Sockets.Socket.SendTo allocates memory.
+	/// </remarks>
 	public unsafe struct IPAddress : IEquatable<IPAddress>
 	{
 		/// <summary>
 		///     Represents the IP address of the local host.
 		/// </summary>
-		public static readonly IPAddress LocalHost = Parse("::1");
-
-		/// <summary>
-		///     Represents the '::' IPv6 address.
-		/// </summary>
-		public static readonly IPAddress Any = new IPAddress();
+		public static readonly IPAddress LocalHost;
 
 		/// <summary>
 		///     The underlying native IP address.
 		/// </summary>
-		[UsedImplicitly]
 		private fixed byte _bytes [16];
 
 		/// <summary>
-		///     Gets a value indicating whether the IP address is an IPv6-mapped IPv4 address.
+		///     Initializes a new instance.
 		/// </summary>
-		public bool IsMappedIPv4
+		static IPAddress()
 		{
-			get
-			{
-				fixed (IPAddress* ip = &this)
-				{
-					for (var i = 0; i < 8; ++i)
-					{
-						if (ip->_bytes[i] != 0)
-							return false;
-					}
+			LocalHost = new IPAddress(System.Net.IPAddress.IPv6Loopback);
+		}
 
-					return ip->_bytes[10] == 255 && ip->_bytes[11] == 255;
+		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		/// <param name="address">The .NET IP address that should be used to initialize this instance.</param>
+		private IPAddress(System.Net.IPAddress address)
+			: this()
+		{
+			var bytes = address.GetAddressBytes();
+			fixed (IPAddress* ip = &this)
+			{
+				switch (address.AddressFamily)
+				{
+					case AddressFamily.InterNetwork:
+						Assert.That(bytes.Length == 4, "Unexpected size.");
+						ip->IsIPv4 = true;
+						ip->_bytes[10] = 255;
+						ip->_bytes[11] = 255;
+						Marshal.Copy(bytes, 0, new IntPtr(ip->_bytes) + 12, 4);
+						break;
+					case AddressFamily.InterNetworkV6:
+						Assert.That(bytes.Length == 16, "Unexpected size.");
+						Marshal.Copy(bytes, 0, new IntPtr(ip->_bytes), 16);
+						break;
+					default:
+						throw new InvalidOperationException("Unsupported address family.");
 				}
 			}
 		}
+
+		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		/// <param name="address">The socket address the IP address should be initialized from.</param>
+		internal IPAddress(ref SocketAddress address)
+			: this()
+		{
+			fixed (IPAddress* ip = &this)
+			fixed (SocketAddress* addr = &address)
+			{
+				switch (address.AddressFamily)
+				{
+					case AddressFamily.InterNetwork:
+						ip->IsIPv4 = true;
+						ip->_bytes[10] = 255;
+						ip->_bytes[11] = 255;
+						for (var i = 0; i < 4; ++i)
+							ip->_bytes[i + 12] = addr->IPv4[i];
+						break;
+					case AddressFamily.InterNetworkV6:
+						for (var i = 0; i < 16; ++i)
+							ip->_bytes[i] = addr->IPv6[i];
+						break;
+					default:
+						throw new InvalidOperationException(String.Format("Unsupported address family '{0}'.", address.AddressFamily));
+				}
+			}
+		}
+
+		/// <summary>
+		///     Gets a value indicating whether the IP address is an IPv4 address.
+		/// </summary>
+		public bool IsIPv4 { get; private set; }
 
 		/// <summary>
 		///     Indicates whether the the given IP address is equal to the current one.
@@ -62,6 +111,19 @@
 			}
 
 			return true;
+		}
+
+		/// <summary>
+		///     Writes the IP address into the given socket address.
+		/// </summary>
+		/// <param name="address">The location the IP address should be written to.</param>
+		internal void CopyTo(byte* address)
+		{
+			fixed (IPAddress* ip = &this)
+			{
+				for (var i = 0; i < 16; ++i)
+					address[i] = ip->_bytes[i];
+			}
 		}
 
 		/// <summary>
@@ -86,9 +148,15 @@
 		{
 			Assert.ArgumentNotNull(ipAddress);
 
+			System.Net.IPAddress addr;
+			if (System.Net.IPAddress.TryParse(ipAddress, out addr))
+			{
+				address = new IPAddress(addr);
+				return true;
+			}
+
 			address = new IPAddress();
-			fixed (IPAddress* addr = &address)
-				return NativeMethods.TryParseIPAddress(ipAddress, addr);
+			return false;
 		}
 
 		/// <summary>
@@ -96,19 +164,22 @@
 		/// </summary>
 		public override string ToString()
 		{
-			var that = this;
-			var address = NativeMethods.ToString(&that);
+			return ToSystemAddress().ToString();
+		}
 
-			if (address == IntPtr.Zero)
-				return "<unknown>";
+		/// <summary>
+		///     Converts the IP address to a System.Net.IPAddress instance.
+		/// </summary>
+		internal System.Net.IPAddress ToSystemAddress()
+		{
+			var byteCount = IsIPv4 ? 4 : 16;
+			var offset = IsIPv4 ? 12 : 0;
 
-			const string ipv6Prefix = "::ffff:";
+			var bytes = new byte[byteCount];
+			fixed (IPAddress* ip = &this)
+				Marshal.Copy(new IntPtr(ip->_bytes) + offset, bytes, 0, byteCount);
 
-			var str = Marshal.PtrToStringAnsi(address);
-			if (IsMappedIPv4 && str.StartsWith(ipv6Prefix))
-				return str.Substring(ipv6Prefix.Length);
-
-			return str;
+			return new System.Net.IPAddress(bytes);
 		}
 
 		/// <summary>
@@ -145,19 +216,6 @@
 		public static bool operator !=(IPAddress left, IPAddress right)
 		{
 			return !left.Equals(right);
-		}
-
-		/// <summary>
-		///     Provides access to the native IP address functions.
-		/// </summary>
-		[SuppressUnmanagedCodeSecurity]
-		private static class NativeMethods
-		{
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgTryParseIPAddress")]
-			public static extern bool TryParseIPAddress(string address, IPAddress* ipAddress);
-
-			[DllImport(NativeLibrary.LibraryName, EntryPoint = "pgIPAddressToString")]
-			public static extern IntPtr ToString(IPAddress* ipAddress);
 		}
 	}
 }

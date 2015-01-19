@@ -2,12 +2,14 @@
 {
 	using System;
 	using System.Drawing;
-	using Platform.Graphics;
+	using System.Xml.Linq;
+	using Textures;
+	using Utilities;
 
 	/// <summary>
 	///     Represents a 2D texture that requires compilation.
 	/// </summary>
-	public class Texture2DAsset : TextureAsset
+	internal class Texture2DAsset : TextureAsset
 	{
 		/// <summary>
 		///     The image data.
@@ -17,19 +19,10 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="relativePath">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
-		public Texture2DAsset(string relativePath)
-			: base(relativePath)
-		{
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		/// <param name="relativePath">The path to the asset relative to the asset source directory, i.e., Textures/Tex.png.</param>
-		/// <param name="sourceDirectory">The source directory of the asset.</param>
-		protected Texture2DAsset(string relativePath, string sourceDirectory)
-			: base(relativePath, sourceDirectory)
+		/// <param name="metadata">The metadata of the asset.</param>
+		/// <param name="basePath">Overrides the default base path of the asset.</param>
+		public Texture2DAsset(XElement metadata, string basePath = null)
+			: base(metadata, basePath)
 		{
 		}
 
@@ -38,25 +31,15 @@
 		/// </summary>
 		public override byte AssetType
 		{
-			get { return (byte)Pegasus.Assets.AssetType.Texture2D; }
+			get { return 2; }
 		}
 
 		/// <summary>
-		///     The identifier type that should be used for the asset when generating the asset identifier list. If null is
-		///     returned, no asset identifier is generated for this asset instance.
+		///     Gets the runtime type of the asset.
 		/// </summary>
-		public override string IdentifierType
+		public override string RuntimeType
 		{
 			get { return "Pegasus.Platform.Graphics.Texture2D"; }
-		}
-
-		/// <summary>
-		///     The name that should be used for the asset identifier. If null is returned, no asset identifier is generated for
-		///     this asset instance.
-		/// </summary>
-		public override string IdentifierName
-		{
-			get { return FileNameWithoutExtension; }
 		}
 
 		/// <summary>
@@ -64,7 +47,7 @@
 		/// </summary>
 		public void Load()
 		{
-			Bitmap = (Bitmap)Image.FromFile(SourcePath);
+			Bitmap = (Bitmap)Image.FromFile(AbsoluteSourcePath);
 
 			uint componentCount;
 			Description = new TextureDescription
@@ -92,6 +75,19 @@
 					Data = _data
 				}
 			};
+		}
+
+		/// <summary>
+		///     Saves the texture to a file.
+		/// </summary>
+		/// <param name="fileName">The file name to the texture file.</param>
+		public void Save(string fileName)
+		{
+			Assert.NotNull(Bitmap);
+			Assert.NotNull(_data);
+
+			ToPremultipliedAlpha(Bitmap);
+			Bitmap.Save(fileName);
 		}
 	}
 }

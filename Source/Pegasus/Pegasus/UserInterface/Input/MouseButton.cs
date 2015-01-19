@@ -5,27 +5,22 @@ namespace Pegasus.UserInterface.Input
 	/// <summary>
 	///     Identifies a mouse button.
 	/// </summary>
-	public enum MouseButton
+	public enum MouseButton : byte
 	{
-		/// <summary>
-		///     Represents an unknown mouse button.
-		/// </summary>
-		Unknown = 0,
-
 		/// <summary>
 		///     Identifies the left mouse button.
 		/// </summary>
 		Left = 1,
 
 		/// <summary>
-		///     Identifies the right mouse button.
-		/// </summary>
-		Right = 2,
-
-		/// <summary>
 		///     Identifies the middle mouse button.
 		/// </summary>
-		Middle = 3,
+		Middle = 2,
+
+		/// <summary>
+		///     Identifies the right mouse button.
+		/// </summary>
+		Right = 3,
 
 		/// <summary>
 		///     Identifies the first extra mouse button.

@@ -8,7 +8,6 @@
 	using ICSharpCode.NRefactory.CSharp.Resolver;
 	using ICSharpCode.NRefactory.Semantics;
 	using ICSharpCode.NRefactory.TypeSystem;
-	using Platform.Graphics;
 	using Utilities;
 
 	/// <summary>

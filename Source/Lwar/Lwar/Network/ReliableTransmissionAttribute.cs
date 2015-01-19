@@ -8,7 +8,7 @@
 	///     When applied to a network message class, indicates that the message should be transmitted reliably.
 	/// </summary>
 	[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-	public class ReliableTransmissionAttribute : Attribute
+	internal class ReliableTransmissionAttribute : Attribute
 	{
 		/// <summary>
 		///     Initializes a new instance.

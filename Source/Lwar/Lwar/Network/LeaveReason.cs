@@ -5,7 +5,7 @@
 	/// <summary>
 	///     Indicates why a player has left a game session.
 	/// </summary>
-	public enum LeaveReason
+	internal enum LeaveReason
 	{
 		/// <summary>
 		///     Indicates that the reason is unknown.

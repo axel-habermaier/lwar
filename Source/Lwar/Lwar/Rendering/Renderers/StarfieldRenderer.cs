@@ -3,7 +3,6 @@
 	using System;
 	using Assets;
 	using Assets.Effects;
-	using Pegasus.Assets;
 	using Pegasus.Math;
 	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Memory;
@@ -12,7 +11,7 @@
 	/// <summary>
 	///     Renders a starfield as a parallax scrolling effect.
 	/// </summary>
-	public class StarfieldRenderer : DisposableObject, IRenderer
+	internal class StarfieldRenderer : DisposableObject, IRenderer
 	{
 		/// <summary>
 		///     The number of stars that are rendered.
@@ -55,31 +54,22 @@
 		private Texture2D _texture;
 
 		/// <summary>
-		///     Loads the required assets of the renderer.
-		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		/// <param name="assets">The assets manager that should be used to load all required assets.</param>
-		public void Load(GraphicsDevice graphicsDevice, AssetsManager assets)
-		{
-			_effect = new ParallaxEffect(graphicsDevice, assets);
-			_texture = assets.Load(Textures.Parallax);
-		}
-
-		/// <summary>
 		///     Initializes the renderer.
 		/// </summary>
-		/// <param name="graphicsDevice">The graphics device that should be used for drawing.</param>
-		public void Initialize(GraphicsDevice graphicsDevice)
+		/// <param name="renderContext">The render context that should be used for drawing.</param>
+		/// <param name="assets">The asset bundle that provides access to Lwar assets.</param>
+		public void Initialize(RenderContext renderContext, GameBundle assets)
 		{
-			_effect.TextureAtlas = new Texture2DView(_texture, SamplerState.BilinearWrapNoMipmaps);
+			_effect = assets.ParallaxEffect;
+			_texture = assets.Parallax;
 
 			var random = new Random();
 			var vertices = new VertexPositionNormal[StarCount * 4];
 			var indices = new ushort[StarCount * 6];
 
-			var width = _effect.TextureAtlas.Texture.Width / StarTypeCount;
-			var scaledWidth = width / (float)_effect.TextureAtlas.Texture.Width;
-			var height = _effect.TextureAtlas.Texture.Height;
+			var width = _texture.Width / StarTypeCount;
+			var scaledWidth = width / (float)_texture.Width;
+			var height = _texture.Height;
 
 			// Generate the texture coordinates
 			var texCoords = new Rectangle[StarTypeCount];
@@ -124,9 +114,9 @@
 			}
 
 			// Generate the model
-			var vertexBuffer = VertexBuffer.Create(graphicsDevice, vertices);
-			var indexBuffer = IndexBuffer.Create(graphicsDevice, indices);
-			var inputLayout = VertexPositionNormal.GetInputLayout(graphicsDevice, vertexBuffer, indexBuffer);
+			var vertexBuffer = VertexBuffer.Create(renderContext.GraphicsDevice, vertices);
+			var indexBuffer = IndexBuffer.Create(renderContext.GraphicsDevice, indices);
+			var inputLayout = VertexPositionNormal.GetInputLayout(renderContext.GraphicsDevice, vertexBuffer, indexBuffer);
 
 			_model = new Model(vertexBuffer, inputLayout, indexBuffer, indices.Length);
 		}
@@ -141,10 +131,11 @@
 			if (camera == null)
 				return;
 
-			RasterizerState.CullCounterClockwise.Bind();
-			BlendState.Additive.Bind();
+			output.RenderContext.RasterizerStates.CullCounterClockwise.Bind();
+			output.RenderContext.BlendStates.Additive.Bind();
 
 			camera.ZoomMode = ZoomMode.Starfield;
+			_effect.TextureAtlas = new Texture2DView(_texture, output.RenderContext.SamplerStates.BilinearWrapNoMipmaps);
 			_model.Draw(output, _effect.Default);
 			camera.ZoomMode = ZoomMode.Default;
 		}
@@ -162,7 +153,6 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_effect.SafeDispose();
 			_model.SafeDispose();
 		}
 	}

@@ -109,6 +109,35 @@
 		/// <param name="terminateWithSemicolon">Indicates whether the closing brace should be followed by a semicolon.</param>
 		public void AppendBlockStatement(Action content, bool terminateWithSemicolon = false)
 		{
+			if (terminateWithSemicolon)
+				AppendBlockStatement(content, ";");
+			else
+				AppendBlockStatement(content, "");
+		}
+
+		/// <summary>
+		///     Generates a visibility modifier for the class.
+		/// </summary>
+		/// <param name="modifier">The modifier that should be generated.</param>
+		public void GenerateVisibilityModifier(string modifier)
+		{
+			DecreaseIndent();
+			AppendLine("{0}:", modifier);
+			IncreaseIndent();
+		}
+
+		/// <summary>
+		///     Appends a block statement to the buffer.
+		/// </summary>
+		/// <param name="content">
+		///     Generates the content that should be placed within the block statement by calling Append methods
+		///     of this code writer instance.
+		/// </param>
+		/// <param name="terminator">Terminates the the block statement.</param>
+		/// <param name="args">The arguments that should be used to format the terminator.</param>
+		[StringFormatMethod("terminator")]
+		public void AppendBlockStatement(Action content, string terminator, params object[] args)
+		{
 			Assert.ArgumentNotNull(content);
 
 			EnsureNewLine();
@@ -121,9 +150,7 @@
 			DecreaseIndent();
 			Append("}}");
 
-			if (terminateWithSemicolon)
-				Append(";");
-
+			Append(terminator, args);
 			NewLine();
 		}
 

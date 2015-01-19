@@ -8,7 +8,7 @@ namespace Lwar.Network.Messages
 	///     Notifies a client about a newly added entity.
 	/// </summary>
 	[ReliableTransmission(MessageType.EntityAdd)]
-	public sealed class EntityAddMessage : Message
+	internal sealed class EntityAddMessage : Message
 	{
 		/// <summary>
 		///     Initializes the type.
@@ -50,11 +50,11 @@ namespace Lwar.Network.Messages
 		///     Serializes the message using the given writer.
 		/// </summary>
 		/// <param name="writer">The writer that should be used to serialize the message.</param>
-		public override void Serialize(BufferWriter writer)
+		public override void Serialize(ref BufferWriter writer)
 		{
-			writer.WriteIdentifier(Entity);
-			writer.WriteIdentifier(Player);
-			writer.WriteIdentifier(ParentEntity);
+			WriteIdentifier(ref writer, Entity);
+			WriteIdentifier(ref writer, Player);
+			WriteIdentifier(ref writer, ParentEntity);
 			writer.WriteByte((byte)EntityType);
 		}
 
@@ -62,11 +62,11 @@ namespace Lwar.Network.Messages
 		///     Deserializes the message using the given reader.
 		/// </summary>
 		/// <param name="reader">The reader that should be used to deserialize the message.</param>
-		public override void Deserialize(BufferReader reader)
+		public override void Deserialize(ref BufferReader reader)
 		{
-			Entity = reader.ReadIdentifier();
-			Player = reader.ReadIdentifier();
-			ParentEntity = reader.ReadIdentifier();
+			Entity = ReadIdentifier(ref reader);
+			Player = ReadIdentifier(ref reader);
+			ParentEntity = ReadIdentifier(ref reader);
 			EntityType = (EntityType)reader.ReadByte();
 		}
 

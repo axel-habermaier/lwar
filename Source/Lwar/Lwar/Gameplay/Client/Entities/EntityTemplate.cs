@@ -8,7 +8,7 @@
 	/// <summary>
 	///     Manages common properties of entities.
 	/// </summary>
-	public class EntityTemplate : DisposableObject
+	internal class EntityTemplate : DisposableObject
 	{
 		/// <summary>
 		///     Initializes a new instance.

@@ -15,6 +15,6 @@
 		/// <summary>
 		///     Indicates that the application is running as a Linux application.
 		/// </summary>
-		Linux = 2
+		Linux = 2,
 	}
 }

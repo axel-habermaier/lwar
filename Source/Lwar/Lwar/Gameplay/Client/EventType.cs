@@ -5,7 +5,7 @@
 	/// <summary>
 	///     Indicates the type of an event message.
 	/// </summary>
-	public enum EventType
+	internal enum EventType
 	{
 		/// <summary>
 		///     Indicates that the event message describes a player killing another player.

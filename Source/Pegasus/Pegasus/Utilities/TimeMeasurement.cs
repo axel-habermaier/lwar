@@ -24,7 +24,7 @@
 		public void Dispose()
 		{
 			Assert.NotNull(new IntPtr(_measuredTime));
-			*_measuredTime = (Clock.SystemTime - _startTime) * 1000;
+			*_measuredTime = (Clock.GetTime() - _startTime) * 1000;
 		}
 
 		/// <summary>
@@ -34,7 +34,7 @@
 		internal static TimeMeasurement Measure(double* measuredTime)
 		{
 			Assert.ArgumentNotNull(new IntPtr(measuredTime));
-			return new TimeMeasurement { _startTime = Clock.SystemTime, _measuredTime = measuredTime };
+			return new TimeMeasurement { _startTime = Clock.GetTime(), _measuredTime = measuredTime };
 		}
 	}
 }

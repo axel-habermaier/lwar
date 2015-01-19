@@ -1,8 +1,8 @@
-﻿#if Linux && x64
-// FT_Long is 64 bits wide on x64 Linux
+﻿#if Linux
+// FT_Long is 64 bits wide on Linux
 using Long = System.Int64;
 #else
-// FT_Long is 32 bits wide on x64 Windows and x86 Windows and Linux
+// FT_Long is 32 bits wide on Windows
 using Long = System.Int32;
 
 #endif
@@ -11,7 +11,6 @@ namespace Pegasus.AssetsCompiler.Fonts
 {
 	using System;
 	using System.Runtime.InteropServices;
-	using Platform.Logging;
 	using Utilities;
 
 	/// <summary>
@@ -25,10 +24,8 @@ namespace Pegasus.AssetsCompiler.Fonts
 		private const string LibraryName =
 #if Linux
 			"libfreetype.so.6";
-#elif !Linux && x86
-			"../../Tools/freetype250.x86.dll";
-#elif !Linux && x64
-			"../../Tools/freetype250.x64.dll";
+#else
+			"freetype250.dll";
 #endif
 
 		/// <summary>
@@ -78,7 +75,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 		// Disable annoying "private field is never used" warnings on Mono
 #pragma warning disable 0169
 
-		[StructLayout(LayoutKind.Sequential), UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
+		[StructLayout(LayoutKind.Sequential)]
 		public class Face
 		{
 			internal Long num_faces;
@@ -134,7 +131,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 			private IntPtr @internal;
 		}
 
-		[StructLayout(LayoutKind.Sequential), UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
+		[StructLayout(LayoutKind.Sequential)]
 		internal class GlyphSlot
 		{
 			internal IntPtr library;
@@ -172,7 +169,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 			private IntPtr @internal;
 		}
 
-		[StructLayout(LayoutKind.Sequential), UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
+		[StructLayout(LayoutKind.Sequential)]
 		internal struct GlyphMetrics
 		{
 			internal Long width;
@@ -187,7 +184,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 			internal Long vertAdvance;
 		}
 
-		[StructLayout(LayoutKind.Sequential), UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
+		[StructLayout(LayoutKind.Sequential)]
 		internal struct Outline
 		{
 			internal short n_contours;
@@ -200,7 +197,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 			internal int flags;
 		}
 
-		[StructLayout(LayoutKind.Sequential), UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
+		[StructLayout(LayoutKind.Sequential)]
 		internal struct Bitmap
 		{
 			internal int rows;
@@ -213,7 +210,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 			internal IntPtr palette;
 		}
 
-		[StructLayout(LayoutKind.Sequential), UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
+		[StructLayout(LayoutKind.Sequential)]
 		internal class Size
 		{
 			internal IntPtr face;
@@ -231,7 +228,7 @@ namespace Pegasus.AssetsCompiler.Fonts
 			private IntPtr @internal;
 		}
 
-		[StructLayout(LayoutKind.Sequential), UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
+		[StructLayout(LayoutKind.Sequential)]
 		internal struct Vector
 		{
 			internal Long x;

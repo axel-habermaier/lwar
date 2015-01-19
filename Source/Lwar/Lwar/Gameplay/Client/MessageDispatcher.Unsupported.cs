@@ -7,7 +7,7 @@
 	/// <summary>
 	///     Dispatches messages received from the server to the game session.
 	/// </summary>
-	public partial class MessageHandler
+	internal partial class MessageHandler
 	{
 		/// <summary>
 		///     Handles the given message.

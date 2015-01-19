@@ -1,93 +1,91 @@
-﻿using Pegasus.AssetsCompiler.Assets.Attributes;
-
-[assembly: Ignore("EntityTemplates/Compilation/EntityTemplateCompiler.cs")]
-
-namespace Lwar.Assets.EntityTemplates.Compilation
+﻿namespace Lwar.Assets.EntityTemplates.Compilation
 {
 	using System;
 	using System.Collections.Generic;
 	using System.IO;
 	using System.Linq;
 	using System.Reflection;
+	using System.Threading.Tasks;
+	using System.Xml.Linq;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
 	using ICSharpCode.NRefactory.TypeSystem;
-	using Pegasus.AssetsCompiler;
 	using Pegasus.AssetsCompiler.Assets;
 	using Pegasus.AssetsCompiler.Compilers;
 	using Pegasus.AssetsCompiler.CSharp;
-	using Pegasus.Platform.Logging;
+	using Pegasus.AssetsCompiler.Utilities;
 
 	/// <summary>
 	///     Compiles entity template declarations.
 	/// </summary>
-	internal class EntityTemplateCompiler : AssetCompiler<EntityTemplateAsset>
+	[UsedImplicitly]
+	internal class EntityTemplateCompiler : IAssetCompiler
 	{
 		/// <summary>
 		///     The path of the client file containing the template declarations.
 		/// </summary>
-		private const string ClientTemplates = "../../Source/Lwar/Lwar/Gameplay/Client/Entities/EntityTemplates.cs";
+		private const string ClientTemplates = "../../../Source/Lwar/Lwar/Gameplay/Client/Entities/EntityTemplates.cs";
 
 		/// <summary>
 		///     The path of the client file containing the entity type enumeration.
 		/// </summary>
-		private const string ClientTypeEnumeration = "../../Source/Lwar/Lwar/Network/EntityType.cs";
+		private const string ClientTypeEnumeration = "../../../Source/Lwar/Lwar/Network/EntityType.cs";
 
 		/// <summary>
 		///     The path of the server file containing the template declarations.
 		/// </summary>
-		private const string ServerTemplates = "../../Source/Lwar/Server/templates.c";
+		private const string ServerTemplates = "../../../Source/Lwar/Server/templates.c";
 
 		/// <summary>
 		///     The path of the server header file.
 		/// </summary>
-		private const string ServerHeader = "../../Source/Lwar/Server/templates.h";
+		private const string ServerHeader = "../../../Source/Lwar/Server/templates.h";
 
 		/// <summary>
-		///     Compiles all assets of the compiler's asset source type.
+		///     Gets the assets compiled by the asset compiler.
 		/// </summary>
-		/// <param name="assets">The assets that should be compiled.</param>
-		public override void Compile(IEnumerable<Asset> assets)
+		public IEnumerable<Asset> Assets
 		{
-			if (DetermineAction(assets.OfType<EntityTemplateAsset>()) == CompilationAction.Skip)
-				Log.Info("Skipping entity templates compilation (no changes detected).");
-			else
-			{
-				Log.Info("Compiling entity templates...");
-
-				foreach (var asset in assets.OfType<EntityTemplateAsset>())
-					Hash.Compute(asset.SourcePath).WriteTo(asset.HashPath);
-
-				var templates = GetTemplates(GetClassNames(assets.OfType<EntityTemplateAsset>()))
-					.OrderBy(template => template.Name).ToArray();
-
-				GenerateServerTemplates(templates);
-				GenerateServerHeader(templates);
-
-				GenerateClientTemplates(templates);
-				GenerateClientTypeEnumeration(templates);
-			}
+			get { yield break; }
 		}
 
 		/// <summary>
-		///     Checks whether any of the templates have changed.
+		///     Compiles the assets.
 		/// </summary>
-		/// <param name="assets">The assets that should be checked to determine the compilation action.</param>
-		private static CompilationAction DetermineAction(IEnumerable<Asset> assets)
+		/// <param name="assets">The metadata of the assets that should be compiled.</param>
+		public Task<bool> Compile(IEnumerable<XElement> assets)
 		{
-			foreach (var asset in assets)
+			var templateAssets = assets.Where(asset => asset.Name == "EntityTemplate").Select(asset => new EntityTemplateAsset(asset)).ToArray();
+			if (templateAssets.All(asset => !asset.RequiresCompilation))
+				return Task.FromResult(false);
+
+			var templates = GetTemplates(GetClassNames(templateAssets))
+				.OrderBy(template => template.Name).ToArray();
+
+			GenerateServerTemplates(templates);
+			GenerateServerHeader(templates);
+
+			GenerateClientTemplates(templates);
+			GenerateClientTypeEnumeration(templates);
+
+			foreach (var asset in templateAssets)
 			{
-				if (!File.Exists(asset.HashPath))
-					return CompilationAction.Process;
-
-				var oldHash = Hash.FromFile(asset.HashPath);
-				var newHash = Hash.Compute(asset.SourcePath);
-
-				if (oldHash != newHash)
-					return CompilationAction.Process;
+				// Write metadata and empty output file (which is ignored but necessary to support incremental compilation)
+				asset.WriteMetadata();
+				File.WriteAllText(asset.TempPath, "");
 			}
 
-			return CompilationAction.Skip;
+			return Task.FromResult(false);
+		}
+
+		/// <summary>
+		///     Cleans the asset if the compiler supports the given asset type.
+		/// </summary>
+		/// <param name="assetMetadata">The metadata of the asset that should be cleaned.</param>
+		public void Clean(XElement assetMetadata)
+		{
+			if (assetMetadata.Name == "EntityTemplate")
+				new EntityTemplateAsset(assetMetadata).DeleteMetadata();
 		}
 
 		/// <summary>
@@ -163,7 +161,7 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 			{
 				foreach (var template in templates)
 					writer.AppendLine("entity_type_register(\"{0}\", &type_{0}, {1});", template.Name.ToLower(),
-									  template.Format == null ? "0" : ("&" + template.Format));
+						template.Format == null ? "0" : ("&" + template.Format));
 			});
 
 			WriteToFile(ServerTemplates, writer);
@@ -214,7 +212,7 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 				writer.AppendLine("using Pegasus.Rendering;");
 				writer.NewLine();
 
-				writer.AppendLine("public static class EntityTemplates");
+				writer.AppendLine("internal static class EntityTemplates");
 				writer.AppendBlockStatement(() =>
 				{
 					foreach (var template in templates)
@@ -222,11 +220,10 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 
 					writer.NewLine();
 
-					writer.AppendLine("public static void Initialize(GraphicsDevice graphicsDevice, AssetsManager assets)");
+					writer.AppendLine("public static void Initialize(RenderContext renderContext)");
 					writer.AppendBlockStatement(() =>
 					{
-						writer.AppendLine("Assert.ArgumentNotNull(graphicsDevice);");
-						writer.AppendLine("Assert.ArgumentNotNull(assets);");
+						writer.AppendLine("Assert.ArgumentNotNull(renderContext);");
 						writer.NewLine();
 
 						for (var i = 0; i < templates.Length; ++i)
@@ -240,12 +237,12 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 							writer.AppendLine("maxHealth: {0:0.0######}f,", template.Health);
 							writer.AppendLine("radius: {0:0.0######}f,", template.Radius);
 							if (template.Texture != null)
-								writer.AppendLine("texture: assets.Load({0}),", template.Texture);
+								writer.AppendLine("texture: renderContext.GetAssetBundle<GameBundle>().{0},", template.Texture);
 							else
 								writer.AppendLine("texture: null,");
 
 							if (template.CubeMap != null)
-								writer.AppendLine("cubeMap: assets.Load({0}),", template.CubeMap);
+								writer.AppendLine("cubeMap: renderContext.GetAssetBundle<GameBundle>().{0},", template.CubeMap);
 							else
 								writer.AppendLine("cubeMap: null,");
 
@@ -288,7 +285,7 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 			writer.AppendLine("namespace Lwar.Network");
 			writer.AppendBlockStatement(() =>
 			{
-				writer.AppendLine("public enum EntityType");
+				writer.AppendLine("internal enum EntityType");
 				writer.AppendBlockStatement(() =>
 				{
 					var i = 0;
@@ -349,19 +346,6 @@ namespace Lwar.Assets.EntityTemplates.Compilation
 						Log.Warn("{0}: warning: Unexpected type declaration '{1}'.", file, type.Name);
 					}
 				}
-			}
-		}
-
-		/// <summary>
-		///     Removes the compiled assets and all temporary files written by the compiler.
-		/// </summary>
-		/// <param name="assets">The assets that should be cleaned.</param>
-		public override void Clean(IEnumerable<Asset> assets)
-		{
-			foreach (var asset in assets.OfType<EntityTemplateAsset>())
-			{
-				File.Delete(asset.TempPath);
-				File.Delete(asset.HashPath);
 			}
 		}
 	}

@@ -61,15 +61,12 @@
 			CheckIPv4Invalid("");
 			CheckIPv4Invalid(".111");
 			CheckIPv4Invalid("832.129.321.2");
-			CheckIPv4Invalid("3");
-			CheckIPv4Invalid("2.2");
 		}
 
 		[Test]
 		public void Invalid_IPv6()
 		{
 			CheckIPv6Invalid("");
-			CheckIPv6Invalid("111");
 			CheckIPv6Invalid("2001:0db885a3:0000:0000:8a2e:0370:7334");
 			CheckIPv6Invalid("99999:db8:85a3:0:0:8a2e:370:7334");
 			CheckIPv6Invalid("2001:db8:85a3:::8a2e:370:7334");
@@ -84,6 +81,8 @@
 		[Test]
 		public void Valid_IPv4()
 		{
+			CheckIPv4Valid("3");
+			CheckIPv4Valid("2.2");
 			CheckIPv4Valid("172.14.2.3");
 			CheckIPv4Valid("127.0.0.1");
 			CheckIPv4Valid("127.0.0.1 ", IP.Parse("127.0.0.1"), false);
@@ -103,6 +102,7 @@
 			CheckIPv6Valid("0:0:0:0:0:0:0:0");
 			CheckIPv6Valid("::1");
 			CheckIPv6Valid("::");
+			CheckIPv6Valid("111");
 			CheckMappedIPv4Valid("::ffff:192.0.2.128");
 			CheckMappedIPv4Valid("::ffff:192.0.2.128]", IP.Parse("::ffff:192.0.2.128"), false);
 			CheckMappedIPv4Valid("::ffff:192.0.2.128]:22", IP.Parse("::ffff:192.0.2.128"), false);

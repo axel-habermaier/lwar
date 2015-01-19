@@ -1,12 +1,13 @@
 ﻿namespace Lwar.Gameplay.Client
 {
 	using System;
+	using System.Collections.Generic;
 	using Actors;
+	using Assets;
 	using Entities;
 	using Network;
 	using Network.Messages;
 	using Pegasus;
-	using Pegasus.Assets;
 	using Pegasus.Platform;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Platform.Network;
@@ -18,12 +19,12 @@
 	/// <summary>
 	///     Represents a client-side game session, managing the states of entities, players, etc.
 	/// </summary>
-	public class ClientGameSession : DisposableObject
+	internal class ClientGameSession : DisposableObject
 	{
 		/// <summary>
-		///     The assets manager that is used to load the assets required by the game session.
+		///     The assets used by the game session.
 		/// </summary>
-		private readonly AssetsManager _assets;
+		private readonly GameBundle _assets;
 
 		/// <summary>
 		///     The dispatcher that is used to dispatch incoming messages from the server.
@@ -36,29 +37,33 @@
 		private Clock _clock = new Clock();
 
 		/// <summary>
+		///     Used to initialize the game session.
+		/// </summary>
+		private IEnumerator<bool> _initializationRoutine;
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="serverEndPoint">The remote end point of the server.</param>
 		public ClientGameSession(IPEndPoint serverEndPoint)
 		{
 			_messageHandler = new MessageHandler(this);
-			_assets = new AssetsManager(Application.Current.GraphicsDevice, asyncLoading: true);
+			_assets = new GameBundle(Application.Current.RenderContext);
 
-			EntityTemplates.Initialize(Application.Current.GraphicsDevice, _assets);
-
-			var channel = UdpChannel.Create(serverEndPoint, NetworkProtocol.MaxPacketSize);
 			Allocator = new PoolAllocator();
-			Connection = Connection.Create(Allocator, channel);
-			RenderContext = new RenderContext(_assets);
+			Renderer = new GameSessionRenderer();
 
-			Actors = new ActorList(this, RenderContext);
-			Entities = new EntityList(this, RenderContext);
+			Actors = new ActorList(this, Renderer);
+			Entities = new EntityList(this, Renderer);
 			Players = new PlayerList(this);
 			RootTransform = new Transformation();
 			EventMessages = new EventMessageList(this);
 
+			var channel = UdpChannel.Create(Allocator, serverEndPoint, NetworkProtocol.MaxPacketSize);
+			Connection = Connection.Create(Allocator, channel);
 			Connection.Send(ClientConnectMessage.Create(Allocator, Cvars.PlayerName));
-			Connection.SendQueuedMessages();
+
+			_initializationRoutine = Initialize().GetEnumerator();
 		}
 
 		/// <summary>
@@ -80,9 +85,9 @@
 		public PoolAllocator Allocator { get; private set; }
 
 		/// <summary>
-		///     Gets the render context that is used to draw the game session.
+		///     Gets the renderer that is used to draw the game session.
 		/// </summary>
-		public RenderContext RenderContext { get; private set; }
+		public GameSessionRenderer Renderer { get; private set; }
 
 		/// <summary>
 		///     The entities that are currently active.
@@ -183,11 +188,31 @@
 		/// </summary>
 		public bool Load()
 		{
-			Connection.DispatchReceivedMessages(_messageHandler);
-			Connection.SendQueuedMessages();
-
-			if (!_assets.LoadPending(timeoutInMilliseconds: 10) || !IsSynced)
+			_initializationRoutine.MoveNext();
+			if (!_initializationRoutine.Current)
 				return false;
+
+			_initializationRoutine = null;
+			return true;
+		}
+
+		/// <summary>
+		///     A state machine that initializes a game session.
+		/// </summary>
+		private IEnumerable<bool> Initialize()
+		{
+			while (!_assets.LoadAsync(timeoutInMilliseconds: 10))
+				yield return false;
+
+			// Initialize the entity templates
+			EntityTemplates.Initialize(Application.Current.RenderContext);
+
+			while (!IsSynced)
+			{
+				Connection.SendQueuedMessages();
+				Connection.DispatchReceivedMessages(_messageHandler);
+				yield return false;
+			}
 
 			Assert.NotNull(LocalPlayer, "Game state synced but local player is unknown.");
 			Assert.That(_assets.LoadingCompleted, "Not all assets have been loaded.");
@@ -204,9 +229,8 @@
 			InputManager = new InputManager(this);
 			CameraManager = new CameraManager(LocalPlayer, InputDevice);
 
-			// Initialize the render context
-			RenderContext.Initialize();
-			Assert.That(_assets.LoadingCompleted, "The render context loaded further assets.");
+			// Initialize the renderer
+			Renderer.Initialize();
 
 			// Clear the event messages that might contain incorrect events (such as join messages for players that
 			// have already been playing while we're still connecting) and perform an update to fully initialize the game state
@@ -214,7 +238,7 @@
 			_clock.Reset();
 			Update(false);
 
-			return true;
+			yield return true;
 		}
 
 		/// <summary>
@@ -278,7 +302,7 @@
 			Players.SafeDispose();
 			CameraManager.SafeDispose();
 			InputManager.SafeDispose();
-			RenderContext.SafeDispose();
+			Renderer.SafeDispose();
 			InputDevice.SafeDispose();
 			Connection.SafeDispose();
 			Allocator.SafeDispose();

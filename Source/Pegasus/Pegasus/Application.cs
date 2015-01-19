@@ -5,6 +5,7 @@
 	using Assets;
 	using Platform.Graphics;
 	using Platform.Logging;
+	using Rendering;
 	using Rendering.Particles;
 	using Scripting;
 	using UserInterface;
@@ -91,17 +92,17 @@
 		public string Name { get; internal set; }
 
 		/// <summary>
-		///     Gets the application-wide assets manager.
-		/// </summary>
-		public AssetsManager Assets { get; private set; }
-
-		/// <summary>
 		///     Gets the window the application is rendered to.
 		/// </summary>
 		public AppWindow Window
 		{
 			get { return _appWindowViewModel.Window; }
 		}
+
+		/// <summary>
+		///     Gets the render context used by the application.
+		/// </summary>
+		public RenderContext RenderContext { get; private set; }
 
 		/// <summary>
 		///     Gets the graphics device of the application.
@@ -150,11 +151,14 @@
 		{
 			Assert.ArgumentNotNull(consoleViewModel);
 
-			using (GraphicsDevice = new GraphicsDevice())
-			using (Assets = new AssetsManager(GraphicsDevice, asyncLoading: false))
+			using (GraphicsDevice = CreateGraphicsDevice())
+			using (RenderContext = new RenderContext(GraphicsDevice))
+			using (var mainBundle = new MainBundle(RenderContext))
 			{
-				RegisterFontLoader(new FontLoader(Assets));
-				Cursors.Load(Assets);
+				_root.Resources.Add(typeof(RenderContext), RenderContext);
+
+				mainBundle.Load();
+				Cursors.Initialize(mainBundle);
 
 				using (_appWindowViewModel = new AppWindowViewModel(consoleViewModel))
 				{
@@ -200,7 +204,34 @@
 				}
 			}
 
+			Commands.OnExit -= Exit;
 			Current = null;
+		}
+
+		/// <summary>
+		///     Creates a Direct3D11 or OpenGL3 graphics device, depending on the value of the graphics API cvar.
+		/// </summary>
+		private static GraphicsDevice CreateGraphicsDevice()
+		{
+			switch (Cvars.GraphicsApi)
+			{
+				case GraphicsApi.Direct3D11:
+					try
+					{
+						return new GraphicsDevice(GraphicsApi.Direct3D11);
+					}
+					catch (Exception e)
+					{
+						// Direct3D11 does not seem to be available; print an error message and fall back to OpenGL3
+						Log.Error("Failed to initialize Direct3D11 graphics device. Falling back to OpenGL3. The error was: {0}.", e.Message);
+						Cvars.GraphicsApiCvar.SetImmediate(GraphicsApi.OpenGL3);
+						goto case GraphicsApi.OpenGL3;
+					}
+				case GraphicsApi.OpenGL3:
+					return new GraphicsDevice(GraphicsApi.OpenGL3);
+				default:
+					throw new InvalidOperationException("Unsupported graphics API.");
+			}
 		}
 
 		/// <summary>
@@ -221,21 +252,6 @@
 		{
 			Assert.ArgumentNotNull(window);
 			_root.Children.Remove(window);
-		}
-
-		/// <summary>
-		///     Registers the given font loader on the application.
-		/// </summary>
-		/// <param name="fontLoader">The font loader that should be registered.</param>
-		protected void RegisterFontLoader(IFontLoader fontLoader)
-		{
-			Assert.ArgumentNotNull(fontLoader);
-
-			object currentFontLoader;
-			if (_root.Resources.TryGetValue(typeof(IFontLoader), out currentFontLoader))
-				fontLoader.Next = (IFontLoader)currentFontLoader;
-
-			_root.Resources.AddOrReplace(typeof(IFontLoader), fontLoader);
 		}
 	}
 }

@@ -27,7 +27,7 @@
 		/// <summary>
 		///     The size of the surface data in bytes.
 		/// </summary>
-		public uint Size;
+		public uint SizeInBytes;
 
 		/// <summary>
 		///     The stride between two rows of the surface in bytes.

@@ -6,7 +6,6 @@
 	using CSharp;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.Semantics;
-	using Platform.Graphics;
 	using Utilities;
 
 	/// <summary>
@@ -17,22 +16,22 @@
 		/// <summary>
 		///     The name of the shader output structure.
 		/// </summary>
-		public const string OutputStructName = Configuration.ReservedInternalIdentifierPrefix + "OUTPUT";
+		public const string OutputStructName = CompilationContext.ReservedInternalIdentifierPrefix + "OUTPUT";
 
 		/// <summary>
 		///     The name of the shader input structure.
 		/// </summary>
-		public const string InputStructName = Configuration.ReservedInternalIdentifierPrefix + "INPUT";
+		public const string InputStructName = CompilationContext.ReservedInternalIdentifierPrefix + "INPUT";
 
 		/// <summary>
 		///     The name of the shader input variable.
 		/// </summary>
-		public const string InputVariableName = Configuration.ReservedInternalIdentifierPrefix + "input";
+		public const string InputVariableName = CompilationContext.ReservedInternalIdentifierPrefix + "input";
 
 		/// <summary>
 		///     The name of the shader input variable.
 		/// </summary>
-		public const string OutputVariableName = Configuration.ReservedInternalIdentifierPrefix + "output";
+		public const string OutputVariableName = CompilationContext.ReservedInternalIdentifierPrefix + "output";
 
 		/// <summary>
 		///     Generates the shader code for shader literals.
@@ -65,8 +64,7 @@
 		/// <param name="constantBuffer">The constant buffer that should be generated.</param>
 		protected override void GenerateConstantBuffer(ConstantBuffer constantBuffer)
 		{
-			Writer.Append("cbuffer {2}{0} : register(b{1})", constantBuffer.Name, constantBuffer.Slot,
-				Configuration.ReservedInternalIdentifierPrefix);
+			Writer.Append("cbuffer {2}{0} : register(b{1})", constantBuffer.Name, constantBuffer.Slot, CompilationContext.ReservedInternalIdentifierPrefix);
 			Writer.AppendBlockStatement(() =>
 			{
 				foreach (var constant in constantBuffer.Constants)
@@ -265,7 +263,7 @@
 		/// <param name="textureName">The texture name that should be converted.</param>
 		private static string GetSamplerName(string textureName)
 		{
-			return String.Format("{0}{1}Sampler", Configuration.ReservedInternalIdentifierPrefix, textureName);
+			return String.Format("{0}{1}Sampler", CompilationContext.ReservedInternalIdentifierPrefix, textureName);
 		}
 
 		public override void VisitIdentifierExpression(IdentifierExpression identifierExpression)

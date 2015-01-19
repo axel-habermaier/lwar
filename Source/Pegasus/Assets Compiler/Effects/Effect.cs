@@ -30,11 +30,6 @@
 		protected readonly Matrix ViewProjection;
 
 		/// <summary>
-		///     The size of the viewport.
-		/// </summary>
-		protected readonly Vector2 ViewportSize;
-
-		/// <summary>
 		///     Computes the sine of the given value.
 		/// </summary>
 		/// <param name="value">The value (in radians) whose sine should be computed.</param>

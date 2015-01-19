@@ -6,7 +6,7 @@
 	///     Represents a unique network identifier for entities. There are UInt16.MaxValue different identifiers with a generation
 	///     that is updated every time an identifier is re-used.
 	/// </summary>
-	public struct NetworkIdentity : IEquatable<NetworkIdentity>
+	internal struct NetworkIdentity : IEquatable<NetworkIdentity>
 	{
 		/// <summary>
 		///     Initializes a new instance.

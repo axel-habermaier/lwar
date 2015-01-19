@@ -14,7 +14,7 @@
 	/// <summary>
 	///     Loads a game session.
 	/// </summary>
-	public class LoadingViewModel : StackedViewModel
+	internal class LoadingViewModel : StackedViewModel
 	{
 		/// <summary>
 		///     The clock that is used for time measurements.

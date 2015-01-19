@@ -16,7 +16,7 @@
 	/// <summary>
 	///     Lets the user select a server to connect to.
 	/// </summary>
-	public class JoinGameViewModel : StackedViewModel
+	internal class JoinGameViewModel : StackedViewModel
 	{
 		/// <summary>
 		///     The buffer that is used to receive the multi cast data.
@@ -192,7 +192,7 @@
 				IPEndPoint endPoint;
 				while (_multicastSocket.TryReceive(_buffer, out endPoint, out size))
 				{
-					using (var reader = BufferReader.Create(_buffer, 0, size, Endianess.Big))
+					using (var reader = new BufferReader(_buffer, 0, size, Endianess.Big))
 						HandleDiscoveryMessage(reader, endPoint);
 				}
 			}
@@ -234,11 +234,11 @@
 			var server = DiscoveredServers.SingleOrDefault(s => s.EndPoint == endPoint && s.Name == name);
 			if (server == null)
 			{
-				server = new ServerInfo { EndPoint = endPoint, Name = name, DiscoveryTime = Clock.SystemTime };
+				server = new ServerInfo { EndPoint = endPoint, Name = name, DiscoveryTime = Clock.GetTime() };
 				DiscoveredServers.Add(server);
 			}
 			else
-				server.DiscoveryTime = Clock.SystemTime;
+				server.DiscoveryTime = Clock.GetTime();
 		}
 
 		/// <summary>
@@ -252,7 +252,7 @@
 		/// <summary>
 		///     Stores information about a discovered server.
 		/// </summary>
-		public class ServerInfo
+		internal class ServerInfo
 		{
 			/// <summary>
 			///     Gets or sets the last time a discovery message has been received from the server.
@@ -274,7 +274,7 @@
 			/// </summary>
 			public bool HasTimedOut
 			{
-				get { return (Clock.SystemTime - DiscoveryTime) > NetworkProtocol.DiscoveryTimeout; }
+				get { return (Clock.GetTime() - DiscoveryTime) > NetworkProtocol.DiscoveryTimeout; }
 			}
 		}
 	}

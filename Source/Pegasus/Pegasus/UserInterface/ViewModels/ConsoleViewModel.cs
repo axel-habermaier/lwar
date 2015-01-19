@@ -1,6 +1,7 @@
 ﻿namespace Pegasus.UserInterface.ViewModels
 {
 	using System;
+	using System.Collections.Concurrent;
 	using Platform.Logging;
 	using Platform.Memory;
 	using Scripting;
@@ -21,6 +22,11 @@
 		private const int MaxEntries = 2048;
 
 		/// <summary>
+		///     Indicates whether the view model has already been initialized.
+		/// </summary>
+		private bool _isInitialized;
+
+		/// <summary>
 		///     Indicates whether the console is visible.
 		/// </summary>
 		private bool _isVisible;
@@ -29,6 +35,11 @@
 		///     The log entries shown by the console.
 		/// </summary>
 		private ObservableCollection<LogEntry> _logEntries = new ObservableCollection<LogEntry>();
+
+		/// <summary>
+		///     The queued log entries that have not yet been added to the console.
+		/// </summary>
+		private ConcurrentQueue<LogEntry> _queuedLogEntries = new ConcurrentQueue<LogEntry>();
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -89,6 +100,10 @@
 		/// </summary>
 		public void Initialize()
 		{
+			if (_isInitialized)
+				return;
+
+			_isInitialized = true;
 			Commands.OnShowConsole += ShowConsole;
 			Prompt = new ConsolePromptViewModel();
 		}
@@ -169,19 +184,31 @@
 		}
 
 		/// <summary>
+		///     Updates the console, adding all queued log entries.
+		/// </summary>
+		public void Update()
+		{
+			LogEntry entry;
+			while (_queuedLogEntries.TryDequeue(out entry))
+			{
+				if (entry.Message.Length > MaxLength)
+					entry = new LogEntry(entry.LogType, entry.Message.Substring(0, MaxLength - 3) + "...");
+
+				// If we exceed the maximum number of allowed log entries, remove the oldest one
+				if (_logEntries.Count >= MaxEntries)
+					_logEntries.RemoveAt(0);
+
+				_logEntries.Add(entry);
+			}
+		}
+
+		/// <summary>
 		///     Adds the given entry on the console.
 		/// </summary>
 		/// <param name="entry">The entry that should be added.</param>
 		private void AddLogEntry(LogEntry entry)
 		{
-			if (entry.Message.Length > MaxLength)
-				entry = new LogEntry(entry.LogType, entry.Message.Substring(0, MaxLength - 3) + "...");
-
-			// If we exceed the maximum number of allowed log entries, remove the oldest one
-			if (_logEntries.Count >= MaxEntries)
-				_logEntries.RemoveAt(0);
-
-			_logEntries.Add(entry);
+			_queuedLogEntries.Enqueue(entry);
 		}
 	}
 }

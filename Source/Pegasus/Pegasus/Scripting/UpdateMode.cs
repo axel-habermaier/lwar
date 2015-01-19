@@ -11,12 +11,17 @@
 		/// <summary>
 		///     Indicates that the value of the cvar should be updated immediately.
 		/// </summary>
-		Immediate = 0,
+		Immediate,
 
 		/// <summary>
 		///     Indicates that the value of the cvar should be updated the next time the graphics subsystem is restarted.
 		/// </summary>
-		OnGraphicsRestart
+		OnGraphicsRestart,
+
+		/// <summary>
+		///     Indicates that the value of the cvar should be updated the next time the application is restarted.
+		/// </summary>
+		OnAppRestart
 	}
 
 	/// <summary>
@@ -36,6 +41,8 @@
 					return "Immediate";
 				case UpdateMode.OnGraphicsRestart:
 					return "A restart of the graphics subsystem is required.";
+				case UpdateMode.OnAppRestart:
+					return "A restart of the application is required.";
 				default:
 					Assert.NotReached("Unsupported update mode.");
 					return "";
