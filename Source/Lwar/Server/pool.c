@@ -89,7 +89,7 @@ void *pool_alloc(Pool *pool) {
     check_i(pool, l);
     list_move_tail(l, &pool->allocated);
 
-#ifdef 0 // NOO! do not overwrite generations!
+#ifdef false // NOO! do not overwrite generations!
     memset(l+1, 0x00, pool->size - sizeof(List));
 #endif
 
@@ -118,7 +118,7 @@ void pool_free(Pool *pool, void *p) {
         pool->dtor(get_i(pool,l), l);
     pool->i --;
 
-#ifdef 0 // NOO! do not overwrite generations!
+#ifdef false // NOO! do not overwrite generations!
     memset(l+1, 0xFF, pool->size - sizeof(List));
 #endif
 }

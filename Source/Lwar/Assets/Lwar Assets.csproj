@@ -130,7 +130,6 @@
   <ItemGroup>
     <None Include="Fonts\LiberationSans-Regular.ttf" />
     <None Include="Fonts\moonhouse.ttf" />
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="../../Pegasus/AssetBundle.targets" />
