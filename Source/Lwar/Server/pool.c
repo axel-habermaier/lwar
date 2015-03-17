@@ -32,7 +32,7 @@ void pool_init(Pool *pool, void *p, size_t n, size_t size,
     assert(size != 0);
 
     if(p) pool->mem = (char*)p;
-    else  pool->mem = (char*)malloc(n * size);
+    else  pool->mem = (char*)calloc(n, size);
     pool->dynamic = !!p;
 
     pool->n    = n;
@@ -89,7 +89,7 @@ void *pool_alloc(Pool *pool) {
     check_i(pool, l);
     list_move_tail(l, &pool->allocated);
 
-#ifdef DEBUG
+#ifdef 0 // NOO! do not overwrite generations!
     memset(l+1, 0x00, pool->size - sizeof(List));
 #endif
 
@@ -118,7 +118,7 @@ void pool_free(Pool *pool, void *p) {
         pool->dtor(get_i(pool,l), l);
     pool->i --;
 
-#ifdef DEBUG
+#ifdef 0 // NOO! do not overwrite generations!
     memset(l+1, 0xFF, pool->size - sizeof(List));
 #endif
 }

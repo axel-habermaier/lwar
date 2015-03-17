@@ -82,7 +82,7 @@ void pq_init(PrioQueue *pq, void *p, size_t n, size_t size,
     assert(size != 0);
 
     if(p) pq->mem = (char*)p;
-    else  pq->mem = (char*)malloc(n * size);
+    else  pq->mem = (char*)calloc(n, size);
     pq->dynamic = !!p;
 
     pq->n    = n;

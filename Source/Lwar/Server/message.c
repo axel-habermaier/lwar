@@ -70,7 +70,7 @@ void message_stats(Message *m) {
 	clients_foreach(c) {
 		if (c->player.id.n == 0)
 			continue;
-	
+
 		m->stats.info[m->stats.n].player_id = c->player.id;
 		m->stats.info[m->stats.n].kills = c->player.kills;
 		m->stats.info[m->stats.n].deaths = c->player.deaths;

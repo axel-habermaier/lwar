@@ -28,7 +28,7 @@ static void level_init() {
 	sun->active=true;
 
 	EntityType* types[] = { &type_jupiter, &type_earth, &type_moon, &type_mars };
-	
+
     for(i=0; i<MAX_PLANETS; i++) {
         Real dist = 4000 + (i + 1) * MIN_PLANET_DIST; // + rand()%(MAX_PLANET_DIST - MIN_PLANET_DIST);
 

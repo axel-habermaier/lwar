@@ -8,7 +8,7 @@
 static void client_ctor(size_t i, void *p) {
     Client *c = (Client*)p;
     c->next_out_reliable_seqno    = 1; /* important to start with one */
-	c->next_out_unreliable_seqno  = 1; 
+	c->next_out_unreliable_seqno  = 1;
     c->last_in_ack                = 0;
     c->last_in_reliable_seqno     = 0;
 	c->last_in_unreliable_seqno   = 0;

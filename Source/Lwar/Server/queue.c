@@ -63,7 +63,6 @@ static void qm_clear_dest(Client *c, QueuedMessage *qm) {
 #define qm_last_tx_time(c,qm) qm->perclient[c->player.id.n].last_tx_time
 
 static bool qm_check_relevant(Client *c, QueuedMessage *qm) {
-    
     /* message not for c */
     if(!qm_check_dest(c, qm)) {
         return false;
