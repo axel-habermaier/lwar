@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lwar", "Lwar\Lwar\Lwar.csproj", "{288C9D6B-72B8-4EFF-B636-E8886657AF1A}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -105,16 +105,20 @@ Global
 		{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}.Release OpenGL3|x64.Build.0 = Release|Any CPU
 		{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}.Release OpenGL3|x86.ActiveCfg = Release|Any CPU
 		{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}.Release OpenGL3|x86.Build.0 = Release|Any CPU
-		{8243791D-FE6E-40BF-A303-D981AE9968C2}.Debug Direct3D11|x64.ActiveCfg = Debug|Win32
+		{8243791D-FE6E-40BF-A303-D981AE9968C2}.Debug Direct3D11|x64.ActiveCfg = Debug|x64
+		{8243791D-FE6E-40BF-A303-D981AE9968C2}.Debug Direct3D11|x64.Build.0 = Debug|x64
 		{8243791D-FE6E-40BF-A303-D981AE9968C2}.Debug Direct3D11|x86.ActiveCfg = Debug|Win32
 		{8243791D-FE6E-40BF-A303-D981AE9968C2}.Debug Direct3D11|x86.Build.0 = Debug|Win32
-		{8243791D-FE6E-40BF-A303-D981AE9968C2}.Debug OpenGL3|x64.ActiveCfg = Debug|Win32
+		{8243791D-FE6E-40BF-A303-D981AE9968C2}.Debug OpenGL3|x64.ActiveCfg = Debug|x64
+		{8243791D-FE6E-40BF-A303-D981AE9968C2}.Debug OpenGL3|x64.Build.0 = Debug|x64
 		{8243791D-FE6E-40BF-A303-D981AE9968C2}.Debug OpenGL3|x86.ActiveCfg = Debug|Win32
 		{8243791D-FE6E-40BF-A303-D981AE9968C2}.Debug OpenGL3|x86.Build.0 = Debug|Win32
-		{8243791D-FE6E-40BF-A303-D981AE9968C2}.Release Direct3D11|x64.ActiveCfg = Release|Win32
+		{8243791D-FE6E-40BF-A303-D981AE9968C2}.Release Direct3D11|x64.ActiveCfg = Release|x64
+		{8243791D-FE6E-40BF-A303-D981AE9968C2}.Release Direct3D11|x64.Build.0 = Release|x64
 		{8243791D-FE6E-40BF-A303-D981AE9968C2}.Release Direct3D11|x86.ActiveCfg = Release|Win32
 		{8243791D-FE6E-40BF-A303-D981AE9968C2}.Release Direct3D11|x86.Build.0 = Release|Win32
-		{8243791D-FE6E-40BF-A303-D981AE9968C2}.Release OpenGL3|x64.ActiveCfg = Release|Win32
+		{8243791D-FE6E-40BF-A303-D981AE9968C2}.Release OpenGL3|x64.ActiveCfg = Release|x64
+		{8243791D-FE6E-40BF-A303-D981AE9968C2}.Release OpenGL3|x64.Build.0 = Release|x64
 		{8243791D-FE6E-40BF-A303-D981AE9968C2}.Release OpenGL3|x86.ActiveCfg = Release|Win32
 		{8243791D-FE6E-40BF-A303-D981AE9968C2}.Release OpenGL3|x86.Build.0 = Release|Win32
 		{1F608B12-403C-4639-947A-B559E8EF121C}.Debug Direct3D11|x64.ActiveCfg = Debug|x64
