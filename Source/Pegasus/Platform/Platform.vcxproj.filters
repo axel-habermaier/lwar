@@ -1,168 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="win32.c" />
-    <ClCompile Include="prelude.c" />
-    <ClCompile Include="pg.c" />
-    <ClCompile Include="window.win32.c" />
-    <ClCompile Include="window.c" />
-    <ClCompile Include="graphicsDevice.gl3.c">
-      <Filter>Graphics\OpenGL 3</Filter>
-    </ClCompile>
-    <ClCompile Include="swapChain.gl3.c">
-      <Filter>Graphics\OpenGL 3</Filter>
-    </ClCompile>
-    <ClCompile Include="graphicsDevice.c">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="swapChain.c">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="wglExt.c">
-      <Filter>Graphics\OpenGL 3\Bindings</Filter>
-    </ClCompile>
-    <ClCompile Include="gl3.c">
-      <Filter>Graphics\OpenGL 3</Filter>
-    </ClCompile>
-    <ClCompile Include="context.wgl.c">
-      <Filter>Graphics\OpenGL 3</Filter>
-    </ClCompile>
-    <ClCompile Include="renderTarget.c">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="renderTarget.gl3.c">
-      <Filter>Graphics\OpenGL 3</Filter>
-    </ClCompile>
-    <ClCompile Include="shader.c">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="shader.gl3.c">
-      <Filter>Graphics\OpenGL 3</Filter>
-    </ClCompile>
-    <ClCompile Include="shader.d3d11.c">
-      <Filter>Graphics\Direct3D 11</Filter>
-    </ClCompile>
-    <ClCompile Include="buffer.c">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="pipelineStates.gl3.c">
-      <Filter>Graphics\OpenGL 3</Filter>
-    </ClCompile>
-    <ClCompile Include="pipelineStates.c">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="window.x11.c" />
-    <ClCompile Include="inputLayout.gl3.c">
-      <Filter>Graphics\OpenGL 3</Filter>
-    </ClCompile>
-    <ClCompile Include="inputLayout.c">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="d3d11.c">
-      <Filter>Graphics\Direct3D 11</Filter>
-    </ClCompile>
-    <ClCompile Include="buffer.d3d11.c">
-      <Filter>Graphics\Direct3D 11</Filter>
-    </ClCompile>
-    <ClCompile Include="graphicsDevice.d3d11.c">
-      <Filter>Graphics\Direct3D 11</Filter>
-    </ClCompile>
-    <ClCompile Include="pipelineStates.d3d11.c">
-      <Filter>Graphics\Direct3D 11</Filter>
-    </ClCompile>
-    <ClCompile Include="renderTarget.d3d11.c">
-      <Filter>Graphics\Direct3D 11</Filter>
-    </ClCompile>
-    <ClCompile Include="swapChain.d3d11.c">
-      <Filter>Graphics\Direct3D 11</Filter>
-    </ClCompile>
-    <ClCompile Include="inputLayout.d3d11.c">
-      <Filter>Graphics\Direct3D 11</Filter>
-    </ClCompile>
-    <ClCompile Include="glxExt.c">
-      <Filter>Graphics\OpenGL 3\Bindings</Filter>
-    </ClCompile>
-    <ClCompile Include="context.glx.c">
-      <Filter>Graphics\OpenGL 3</Filter>
-    </ClCompile>
-    <ClCompile Include="glExt.c">
-      <Filter>Graphics\OpenGL 3\Bindings</Filter>
-    </ClCompile>
-    <ClCompile Include="linux.c" />
-    <ClCompile Include="query.c">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="query.gl3.c">
-      <Filter>Graphics\OpenGL 3</Filter>
-    </ClCompile>
-    <ClCompile Include="query.d3d11.c">
-      <Filter>Graphics\Direct3D 11</Filter>
-    </ClCompile>
-    <ClCompile Include="buffer.gl3.c">
-      <Filter>Graphics\OpenGL 3</Filter>
-    </ClCompile>
-    <ClCompile Include="texture.c">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="texture.d3d11.c">
-      <Filter>Graphics\Direct3D 11</Filter>
-    </ClCompile>
-    <ClCompile Include="texture.gl3.c">
-      <Filter>Graphics\OpenGL 3</Filter>
-    </ClCompile>
-    <ClCompile Include="network.c" />
-    <ClCompile Include="fileSystem.c" />
+    <ClCompile Include="BufferD3D11.cpp" />
+    <ClCompile Include="Direct3D11.cpp" />
+    <ClCompile Include="GraphicsDeviceD3D11.cpp" />
+    <ClCompile Include="PipelineStateD3D11.cpp" />
+    <ClCompile Include="QueryD3D11.cpp" />
+    <ClCompile Include="RenderTargetD3D11.cpp" />
+    <ClCompile Include="ShaderD3D11.cpp" />
+    <ClCompile Include="SwapChainD3D11.cpp" />
+    <ClCompile Include="TextureD3D11.cpp" />
+    <ClCompile Include="VertexLayoutD3D11.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="prelude.h" />
-    <ClInclude Include="pgWindow.h">
-      <Filter>Public API</Filter>
-    </ClInclude>
-    <ClInclude Include="pg.h">
-      <Filter>Public API</Filter>
-    </ClInclude>
-    <ClInclude Include="win32.h" />
-    <ClInclude Include="pgGraphics.h">
-      <Filter>Public API</Filter>
-    </ClInclude>
-    <ClInclude Include="wglExt.h">
-      <Filter>Graphics\OpenGL 3\Bindings</Filter>
-    </ClInclude>
-    <ClInclude Include="gl3.h">
-      <Filter>Graphics\OpenGL 3</Filter>
-    </ClInclude>
-    <ClInclude Include="d3d11.h">
-      <Filter>Graphics\Direct3D 11</Filter>
-    </ClInclude>
-    <ClInclude Include="linux.h" />
-    <ClInclude Include="glxExt.h">
-      <Filter>Graphics\OpenGL 3\Bindings</Filter>
-    </ClInclude>
-    <ClInclude Include="glExt.h">
-      <Filter>Graphics\OpenGL 3\Bindings</Filter>
-    </ClInclude>
-    <ClInclude Include="pgNetwork.h">
-      <Filter>Public API</Filter>
-    </ClInclude>
-    <ClInclude Include="pgFileSystem.h">
-      <Filter>Public API</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="Public API">
-      <UniqueIdentifier>{201b9709-3708-4691-b1c1-e5a92db4ddc1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Graphics">
-      <UniqueIdentifier>{27628678-db57-4003-9b7b-2708ee643c0b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Graphics\OpenGL 3">
-      <UniqueIdentifier>{646680e9-7acc-494c-ae3b-ed0efc54ea39}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Graphics\OpenGL 3\Bindings">
-      <UniqueIdentifier>{99309eb5-171f-42c8-8deb-25f7725c34cd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Graphics\Direct3D 11">
-      <UniqueIdentifier>{2d718dd3-1c3a-4871-9c05-314ea8d23fed}</UniqueIdentifier>
-    </Filter>
+    <ClInclude Include="Direct3D11.hpp" />
   </ItemGroup>
 </Project>
