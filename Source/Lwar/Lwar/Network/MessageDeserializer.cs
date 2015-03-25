@@ -165,7 +165,7 @@
 				_batchedSequenceNumber = sequenceNumber;
 			}
 
-			// If the remote peer sent an batched message with a message count of 0, there's no message to return
+			// If the remote peer sent a batched message with a message count of 0, there's no message to return
 			if (_batchedMessageCount < 0)
 			{
 				message.SafeDispose();
