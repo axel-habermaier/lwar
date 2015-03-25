@@ -48,6 +48,10 @@
 				FileSystem.SetAppDirectory(appName);
 				PrintToConsole();
 
+				// Initialize the commands and cvars
+				Commands.Initialize();
+				Cvars.Initialize();
+
 				// Initialize the console view model here, as we don't want to miss
 				// any log entries while the application initializes itself...
 				using (var consoleViewModel = new ConsoleViewModel())
@@ -56,9 +60,6 @@
 				{
 					try
 					{
-						Commands.Initialize();
-						Cvars.Initialize();
-
 						// Setup restart handling: when the app should restart itself, set the restart flag and
 						// invoke the exit command to trigger a restart
 						var restart = true;

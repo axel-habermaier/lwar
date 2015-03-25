@@ -11,7 +11,7 @@ void *array_at_check(Array *a, size_t i) {
 
 void array_init(Array *a, void *p, size_t n, size_t size) {
     if(p) a->mem = (char*)p;
-    else  a->mem = (char*)malloc(n * size);
+    else  a->mem = (char*)calloc(n, size);
     a->dynamic = !!p;
     a->n    = n;
     a->size = size;

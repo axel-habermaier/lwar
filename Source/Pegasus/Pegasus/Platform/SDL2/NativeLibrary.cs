@@ -34,7 +34,7 @@ namespace Pegasus.Platform.SDL2
 			}
 			catch (DllNotFoundException)
 			{
-				Log.Die("Unable to load the SDL. 'SDL2.dll' (or the platform-specific equivalent) was not found.");
+				Log.Die("Unable to load SDL2. Make sure 'SDL2.dll' (or the platform-specific equivalent) is installed on your system.");
 			}
 
 			if (VersionInfo.Actual < VersionInfo.Required)

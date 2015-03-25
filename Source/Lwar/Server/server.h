@@ -24,14 +24,14 @@ struct Server {
 
     Pool       clients;
     BitSet     connected;
-			   
+
     Pool       entities;
     Pool       queue;
     Array      types;
     List       formats;
     PrioQueue  collisions;
     Pool       strings;
-			   
+
     Clock      cur_clock;
     Clock      prev_clock;
     Clock      update_periodic;

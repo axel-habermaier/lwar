@@ -117,7 +117,7 @@ bool stream_send(cr_t *state, Header *h, Message *m) {
 
         cr_yield(state, ok);
     }
-    
+
     ok = packet_flush(&p);
 
     cr_return(state, ok);
