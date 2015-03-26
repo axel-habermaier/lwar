@@ -327,6 +327,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="../../Pegasus/CodeGeneration.targets" />
   <Target Name="AfterBuild">
     <Copy Condition="'$(Platform)' == 'AnyCPU' And '$(OS)' == 'Windows_NT'" SourceFiles="$(SolutionDir)../Dependencies/SDL2/x86/SDL2.dll" DestinationFolder="$(OutDir)" />
     <Copy Condition="'$(Platform)' != 'AnyCPU' And '$(OS)' == 'Windows_NT'" SourceFiles="$(SolutionDir)../Dependencies/SDL2/x64/SDL2.dll" DestinationFolder="$(OutDir)" />

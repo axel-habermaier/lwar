@@ -18,21 +18,6 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="BufferD3D11.cpp" />
-    <ClCompile Include="Direct3D11.cpp" />
-    <ClCompile Include="GraphicsDeviceD3D11.cpp" />
-    <ClCompile Include="PipelineStateD3D11.cpp" />
-    <ClCompile Include="QueryD3D11.cpp" />
-    <ClCompile Include="RenderTargetD3D11.cpp" />
-    <ClCompile Include="ShaderD3D11.cpp" />
-    <ClCompile Include="SwapChainD3D11.cpp" />
-    <ClCompile Include="TextureD3D11.cpp" />
-    <ClCompile Include="VertexLayoutD3D11.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Direct3D11.hpp" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{E008FA73-A930-40B5-93A4-959A4D30492D}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>

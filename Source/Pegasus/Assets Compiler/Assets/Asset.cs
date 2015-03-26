@@ -15,6 +15,11 @@
 	public abstract class Asset
 	{
 		/// <summary>
+		/// Indicates whether a temporary file is generated for the asset.
+		/// </summary>
+		private readonly bool _hasTempFile;
+
+		/// <summary>
 		///     The base path of the asset.
 		/// </summary>
 		private readonly string _basePath;
@@ -25,8 +30,10 @@
 		/// <param name="metadata">The metadata of the asset.</param>
 		/// <param name="sourcePath">The metadata attribute the source path should be extracted from.</param>
 		/// <param name="basePath">Overrides the default base path of the asset.</param>
-		protected Asset(XElement metadata, string sourcePath, string basePath = null)
+		/// <param name="hasTempFile">Indicates whether a temporary file is generated for the asset.</param>
+		protected Asset(XElement metadata, string sourcePath, string basePath = null, bool hasTempFile = true)
 		{
+			_hasTempFile = hasTempFile;
 			Assert.ArgumentNotNullOrWhitespace(sourcePath);
 			Assert.ArgumentNotNull(metadata);
 
@@ -35,7 +42,7 @@
 			SourcePath = SourcePath.Replace("\\", "/");
 			_basePath = basePath ?? Configuration.BasePath.Replace("\\", "/");
 
-			Directory.CreateDirectory(Path.GetDirectoryName(TempPath));
+				Directory.CreateDirectory(Path.GetDirectoryName(TempPath));
 
 			if (!File.Exists(AbsoluteSourcePath))
 				Log.Die("Asset '{0}' could not be found.", SourcePath);
@@ -148,7 +155,7 @@
 		{
 			get
 			{
-				if (!File.Exists(MetadataPath) || !File.Exists(TempPath))
+				if (!File.Exists(MetadataPath) || (_hasTempFile && !File.Exists(TempPath)))
 					return true;
 
 				var oldMetadata = File.ReadAllLines(MetadataPath);

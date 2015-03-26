@@ -130,14 +130,8 @@
     </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
-    <AssetCompilerExecutable>"$(OutDir)/pgc.exe"</AssetCompilerExecutable>
-    <AssetCompilerArguments>--project "$(ProjectPath)" --target "../Pegasus/UserInterface/Views"</AssetCompilerArguments>
+ <PropertyGroup>
+    <GeneratedUITargetPath>../Pegasus/UserInterface/Views</GeneratedUITargetPath>
   </PropertyGroup>
-  <Target Name="AfterBuild">
-    <Exec Command="$(AssetCompilerExecutable) compile-xaml $(AssetCompilerArguments)" WorkingDirectory="$(ProjectDir)"/>
-  </Target>
-  <Target Name="BeforeClean">
-    <Exec Command="$(AssetCompilerExecutable) clean-xaml $(AssetCompilerArguments)" WorkingDirectory="$(ProjectDir)"/>
-  </Target>
+  <Import Project="../Xaml.targets" />
 </Project>

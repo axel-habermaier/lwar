@@ -614,4 +614,5 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="IL.targets" />
+  <Import Project="../CodeGeneration.targets" />
 </Project>

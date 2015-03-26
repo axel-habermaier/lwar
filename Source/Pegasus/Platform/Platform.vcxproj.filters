@@ -1,18 +1,2 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <ItemGroup>
-    <ClCompile Include="BufferD3D11.cpp" />
-    <ClCompile Include="Direct3D11.cpp" />
-    <ClCompile Include="GraphicsDeviceD3D11.cpp" />
-    <ClCompile Include="PipelineStateD3D11.cpp" />
-    <ClCompile Include="QueryD3D11.cpp" />
-    <ClCompile Include="RenderTargetD3D11.cpp" />
-    <ClCompile Include="ShaderD3D11.cpp" />
-    <ClCompile Include="SwapChainD3D11.cpp" />
-    <ClCompile Include="TextureD3D11.cpp" />
-    <ClCompile Include="VertexLayoutD3D11.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Direct3D11.hpp" />
-  </ItemGroup>
-</Project>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" />

@@ -1,0 +1,16 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<PropertyGroup>
+		<AssetCompilerExecutable>"$(OutDir)/pgc.exe"</AssetCompilerExecutable>
+		<AssetCompilerArguments>--project "$(ProjectPath)" --target "$(GeneratedUITargetPath)"</AssetCompilerArguments>
+	</PropertyGroup>
+	
+	<Target Name="AfterBuild">
+		<Exec Command="$(AssetCompilerExecutable) compile-xaml $(AssetCompilerArguments)" WorkingDirectory="$(ProjectDir)"/>
+	</Target>
+	
+	<Target Name="BeforeClean">
+		<Exec Command="$(AssetCompilerExecutable) clean-xaml $(AssetCompilerArguments)" WorkingDirectory="$(ProjectDir)"/>
+	</Target>
+	
+</Project>

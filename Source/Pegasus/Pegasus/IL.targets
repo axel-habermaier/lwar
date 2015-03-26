@@ -6,7 +6,7 @@
 	<PropertyGroup>
 		<ILAssembly>$(OutDir)/Pegasus.IL.dll</ILAssembly>
 	</PropertyGroup>
-	<Target Name="BeforeBuild" Inputs="$(MSBuildAllProjects);@(IL);" Outputs="$(ILAssembly);$(NonExistentFile);">
+	<Target Name="GenerateILAssembly" BeforeTargets="BeforeBuild" Inputs="$(MSBuildAllProjects);@(IL);" Outputs="$(ILAssembly);$(NonExistentFile);">
 		<GetFrameworkPath>
 			<Output TaskParameter="Path" PropertyName="FrameworkPath" />
 		</GetFrameworkPath>

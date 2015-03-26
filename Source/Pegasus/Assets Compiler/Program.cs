@@ -100,6 +100,7 @@
 				CompileXaml = new XamlCommand { Actions = CompilationActions.Compile };
 				RecompileXaml = new XamlCommand { Actions = CompilationActions.Compile | CompilationActions.Clean };
 				CleanXaml = new XamlCommand { Actions = CompilationActions.Clean };
+				GenerateCode = new CodeGenerationCommand();
 			}
 
 			/// <summary>
@@ -107,6 +108,12 @@
 			/// </summary>
 			[VerbOption("compile-assets", HelpText = "Compiles an asset bundle.")]
 			public AssetBundleCommand CompileBundle { get; set; }
+
+			/// <summary>
+			///     Gets the asset bundle compilation command.
+			/// </summary>
+			[VerbOption("code-gen", HelpText = "Generates boilerplate C# code for a given C# project.")]
+			public CodeGenerationCommand GenerateCode { get; set; }
 
 			/// <summary>
 			///     Gets the asset bundle re-compilation command.

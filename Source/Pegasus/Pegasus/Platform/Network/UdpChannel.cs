@@ -35,7 +35,7 @@
 		/// <summary>
 		///     Stores the packets received by a UDP listener.
 		/// </summary>
-		private Queue<IncomingUdpPacket> _packets;
+		private Queue<Shared<IncomingUdpPacket>> _packets;
 
 		/// <summary>
 		///     Indicates whether packets should be received from the socket or retrieved from the packets queue.
@@ -142,7 +142,7 @@
 		///     Tries to receive a packet sent over the connection. Returns true if a packet has been received, false otherwise.
 		/// </summary>
 		/// <param name="packet">The packet that contains the received data.</param>
-		public bool TryReceive(out IncomingUdpPacket packet)
+		public bool TryReceive(out Shared<IncomingUdpPacket> packet)
 		{
 			Assert.NotPooled(this);
 			Assert.That(!IsFaulted, "The channel is faulted and can no longer be used.");
@@ -158,16 +158,15 @@
 				return true;
 			}
 
-			IncomingUdpPacket allocatedPacket = null;
+			var allocatedPacket = _allocator.AllocateIncomingUdpPacket(_maxPacketSize);;
 			try
 			{
-				allocatedPacket = IncomingUdpPacket.Allocate(_allocator, _maxPacketSize);
 				while (true)
 				{
 					IPEndPoint sender;
 					int size;
 
-					if (!_socket.TryReceive(allocatedPacket.Buffer, out sender, out size))
+					if (!_socket.TryReceive(allocatedPacket.Object.Buffer, out sender, out size))
 						return false;
 
 					if (sender != RemoteEndPoint)
@@ -175,7 +174,7 @@
 					else
 					{
 						packet = allocatedPacket;
-						packet.Size = size;
+						packet.Object.Size = size;
 						allocatedPacket = null; // We cannot dispose the packet in the finally block, as it is still in use
 						return true;
 					}
