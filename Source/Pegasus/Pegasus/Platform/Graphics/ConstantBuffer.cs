@@ -6,7 +6,7 @@
 	/// <summary>
 	///     A constant buffer holds constant data for shader programs.
 	/// </summary>
-	public sealed class ConstantBuffer : Buffer
+	public sealed unsafe class ConstantBuffer : Buffer
 	{
 		/// <summary>
 		///     The slot the constant buffer is bound to.
@@ -29,12 +29,12 @@
 		///     Copies the given data to the buffer, overwriting all previous data.
 		/// </summary>
 		/// <param name="data">The data that should be copied.</param>
-		public unsafe void CopyData(void* data)
+		public void CopyData(void* data)
 		{
 			Assert.ArgumentNotNull(new IntPtr(data));
 			Assert.NotDisposed(this);
 
-			BufferObject.CopyConstantBufferData(data);
+			DeviceInterface->CopyBuffer(NativeObject, data);
 		}
 
 		/// <summary>
@@ -42,7 +42,7 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			DeviceState.Unset(GraphicsDevice.State.ConstantBuffers, this);
+			DeviceState.Unset(DeviceState.ConstantBuffers, this);
 			base.OnDisposing();
 		}
 
@@ -53,8 +53,8 @@
 		{
 			Assert.NotDisposed(this);
 
-			if (DeviceState.Change(GraphicsDevice.State.ConstantBuffers, _slot, this))
-				BufferObject.BindConstantBuffer(_slot);
+			if (DeviceState.Change(DeviceState.ConstantBuffers, _slot, this))
+				DeviceInterface->BindBuffer(NativeObject, _slot);
 		}
 	}
 }

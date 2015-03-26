@@ -1,26 +1,17 @@
 ﻿namespace Pegasus.AssetsCompiler.Registries
 {
 	using System;
-	using System.Collections.Generic;
-	using System.Globalization;
-	using System.Linq;
-	using System.Threading;
 	using CSharp;
 
 	/// <summary>
 	///     Generates a C# class from a registry specification interface.
 	/// </summary>
-	public class RegistryGenerator : IDisposable
+	public class RegistryGenerator
 	{
 		/// <summary>
 		///     The registry project.
 		/// </summary>
 		private RegistryProject _project;
-
-		/// <summary>
-		///     Gets the errors that have been raised during the compilation.
-		/// </summary>
-		public IEnumerable<string> Errors { get; private set; }
 
 		/// <summary>
 		///     Gets or sets the source file from which the code is generated.
@@ -33,31 +24,15 @@
 		public string Import { get; set; }
 
 		/// <summary>
-		///     Gets the generated code.
-		/// </summary>
-		public string GeneratedCode { get; private set; }
-
-		/// <summary>
 		///     Gets or sets the namespace in which the generated class should live.
 		/// </summary>
 		public string Namespace { get; set; }
 
 		/// <summary>
-		///     Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		public void Dispose()
-		{
-			_project.Dispose();
-		}
-
-		/// <summary>
 		///     Generates the registry C# class.
 		/// </summary>
-		public void GenerateRegistry()
+		public string GenerateRegistry()
 		{
-			Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-			Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
-
 			_project = new RegistryProject
 			{
 				CSharpFiles = new[] { new CSharpFile("", SourceFile) },
@@ -66,8 +41,7 @@
 			};
 			_project.Compile();
 
-			Errors = _project.Errors.Select(error => error.Message);
-			GeneratedCode = _project.GeneratedCode;
+			return _project.GeneratedCode;
 		}
 
 		/// <summary>
@@ -78,13 +52,10 @@
 			if (String.IsNullOrWhiteSpace(Import))
 				return new Registry();
 
-			using (var project = new RegistryProject { CSharpFiles = new[] { new CSharpFile("", Import) } })
-			{
-				RegistryFile[] file;
-				project.TryGetValidatedFiles(out file);
+			var project = new RegistryProject { CSharpFiles = new[] { new CSharpFile("", Import) } };
+			var files = project.GetValidatedFiles();
 
-				return file[0].Registry;
-			}
+			return files[0].Registry;
 		}
 	}
 }

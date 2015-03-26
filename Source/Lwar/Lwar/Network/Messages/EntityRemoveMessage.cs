@@ -11,21 +11,6 @@ namespace Lwar.Network.Messages
 	internal sealed class EntityRemoveMessage : Message
 	{
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static EntityRemoveMessage()
-		{
-			ConstructorCache.Register(() => new EntityRemoveMessage());
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		private EntityRemoveMessage()
-		{
-		}
-
-		/// <summary>
 		///     Gets the entity that is removed.
 		/// </summary>
 		public NetworkIdentity Entity { get; private set; }

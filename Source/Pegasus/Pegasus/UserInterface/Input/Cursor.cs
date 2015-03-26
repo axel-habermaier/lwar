@@ -2,12 +2,10 @@ namespace Pegasus.UserInterface.Input
 {
 	using System;
 	using System.Diagnostics;
-	using System.Runtime.InteropServices;
 	using Math;
+	using Platform;
 	using Platform.Graphics;
-	using Platform.Logging;
 	using Platform.Memory;
-	using Platform.SDL2;
 	using Rendering;
 	using Scripting;
 	using Utilities;
@@ -15,7 +13,7 @@ namespace Pegasus.UserInterface.Input
 	/// <summary>
 	///     Represents the mouse cursor.
 	/// </summary>
-	public class Cursor : DisposableObject
+	public unsafe class Cursor : DisposableObject
 	{
 		/// <summary>
 		///     The cursor that is displayed when the mouse hovers an UI element or any of its children.
@@ -31,7 +29,7 @@ namespace Pegasus.UserInterface.Input
 		/// <summary>
 		///     The underlying hardware cursor instance.
 		/// </summary>
-		private IntPtr _cursor;
+		private void* _cursor;
 
 		/// <summary>
 		///     The hot spot of the cursor, i.e., the relative offset to the texture's origin where the cursor's
@@ -71,33 +69,24 @@ namespace Pegasus.UserInterface.Input
 		///     Loads the cursor from the given buffer.
 		/// </summary>
 		/// <param name="buffer">The buffer the cursor should be loaded from.</param>
-		public unsafe void Load(ref BufferReader buffer)
+		public void Load(ref BufferReader buffer)
 		{
 			_texture.SafeDispose();
-			SDL_FreeCursor(_cursor);
+			NativeMethods.FreeHardwareCursor(_cursor);
 
 			TextureDescription description;
 			Surface[] surfaces;
 			Texture.ExtractMetadata(ref buffer, out description, out surfaces);
 
-			_texture = new Texture2D(_graphicsDevice, ref description, surfaces);
+			_texture = new Texture2D(_graphicsDevice, description, surfaces);
 			_hotSpot = new Vector2(buffer.ReadInt16(), buffer.ReadInt16());
 
 			Assert.That(surfaces.Length == 1, "Unsupported number of surfaces.");
 			Assert.That(description.Type == TextureType.Texture2D, "Unsupported texture type.");
 			Assert.That(description.Format == SurfaceFormat.Rgba8, "Unsupported texture format.");
 
-			var surface = SDL_CreateRGBSurfaceFrom(surfaces[0].Data, description.Width, description.Height, 32, surfaces[0].Stride,
-				0x000000FF, 0x0000FF00, 0x00FF0000, 0xFF000000);
-
-			if (surface == IntPtr.Zero)
-				Log.Die("Failed to create surface for hardware cursor: {0}.", NativeLibrary.GetError());
-
-			_cursor = SDL_CreateColorCursor(surface, _hotSpot.IntegralX, _hotSpot.IntegralY);
-			if (_cursor == IntPtr.Zero)
-				Log.Die("Failed to create hardware cursor: {0}.", NativeLibrary.GetError());
-
-			SDL_FreeSurface(surface);
+			var surface = surfaces[0];
+			_cursor = NativeMethods.CreateHardwareCursor(&surface, _hotSpot.IntegralX, _hotSpot.IntegralY);
 		}
 
 		/// <summary>
@@ -145,7 +134,7 @@ namespace Pegasus.UserInterface.Input
 			Assert.ArgumentInRange(_hotSpot.Y, 0, _texture.Height);
 
 			if (Cvars.HardwareCursor)
-				SDL_SetCursor(_cursor);
+				NativeMethods.SetHardwareCursor(_cursor);
 			else
 			{
 				position = position - _hotSpot;
@@ -154,29 +143,13 @@ namespace Pegasus.UserInterface.Input
 			}
 		}
 
-		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
-		private static extern IntPtr SDL_CreateColorCursor(IntPtr surface, int x, int y);
-
-		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
-		private static extern void SDL_FreeCursor(IntPtr cursor);
-
-		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
-		private static extern void SDL_FreeSurface(IntPtr surface);
-
-		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
-		private static extern void SDL_SetCursor(IntPtr cursor);
-
-		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
-		private static extern unsafe IntPtr SDL_CreateRGBSurfaceFrom(void* pixels, uint width, uint height, uint depth, uint pitch,
-																	 uint red, uint green, uint blue, uint alpha);
-
 		/// <summary>
 		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()
 		{
 			_texture.SafeDispose();
-			SDL_FreeCursor(_cursor);
+			NativeMethods.FreeHardwareCursor(_cursor);
 		}
 	}
 }

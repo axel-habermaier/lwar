@@ -177,9 +177,6 @@
 		public T Allocate<T>()
 			where T : class, new()
 		{
-			if (!ConstructorCache.IsCached<T>())
-				ConstructorCache.Register(() => new T());
-
 			return Allocator.Allocate<T>();
 		}
 

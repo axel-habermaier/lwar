@@ -11,21 +11,6 @@
 	internal class BoundaryBehavior : Behavior<SceneNode>
 	{
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static BoundaryBehavior()
-		{
-			ConstructorCache.Register(() => new BoundaryBehavior());
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		private BoundaryBehavior()
-		{
-		}
-
-		/// <summary>
 		///     Invoked when the behavior should execute a step.
 		/// </summary>
 		/// <param name="elapsedSeconds">The elapsed time in seconds since the last execution of the behavior.</param>

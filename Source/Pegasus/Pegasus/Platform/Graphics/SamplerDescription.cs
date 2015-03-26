@@ -1,11 +1,13 @@
 namespace Pegasus.Platform.Graphics
 {
 	using System;
+	using System.Runtime.InteropServices;
 	using Rendering;
 
 	/// <summary>
 	///     Describes the properties of a sampler state.
 	/// </summary>
+	[StructLayout(LayoutKind.Sequential)]
 	public struct SamplerDescription
 	{
 		/// <summary>

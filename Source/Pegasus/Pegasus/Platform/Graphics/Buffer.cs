@@ -1,14 +1,12 @@
 ﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
-	using Interface;
-	using Memory;
 	using Utilities;
 
 	/// <summary>
 	///     Base class for graphics buffers.
 	/// </summary>
-	public abstract class Buffer : GraphicsObject
+	public abstract unsafe class Buffer : GraphicsObject
 	{
 		/// <summary>
 		///     Indicates whether the buffer is currently mapped.
@@ -38,24 +36,21 @@
 				Usage = usage
 			};
 
-			BufferObject = graphicsDevice.CreateBuffer(ref description);
+			SizeInBytes = sizeInBytes;
+			NativeObject = DeviceInterface->InitializeBuffer(&description);
 		}
-
-		/// <summary>
-		///     Gets the underlying buffer object.
-		/// </summary>
-		internal IBuffer BufferObject { get; private set; }
 
 		/// <summary>
 		///     Gets the size of the buffer in bytes.
 		/// </summary>
-		public int SizeInBytes
+		public int SizeInBytes { get; private set; }
+
+		/// <summary>
+		///     Gets the function that should be used to set the debug name of the native object.
+		/// </summary>
+		protected override SetNameDelegate SetNameFunction
 		{
-			get
-			{
-				Assert.NotDisposed(this);
-				return BufferObject.SizeInBytes;
-			}
+			get { return DeviceInterface->SetBufferName; }
 		}
 
 		/// <summary>
@@ -63,16 +58,7 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			BufferObject.SafeDispose();
-		}
-
-		/// <summary>
-		///     Invoked after the name of the graphics object has changed. This method is only invoked in debug builds.
-		/// </summary>
-		/// <param name="name">The new name of the graphics object.</param>
-		protected override void OnRenamed(string name)
-		{
-			BufferObject.SetName(name);
+			DeviceInterface->FreeBuffer(NativeObject);
 		}
 
 		/// <summary>
@@ -80,14 +66,14 @@
 		///     returned pointer depend on the given map mode.
 		/// </summary>
 		/// <param name="mapMode">Indicates which CPU operations are allowed on the buffer memory.</param>
-		public unsafe BufferData Map(MapMode mapMode)
+		public BufferData Map(MapMode mapMode)
 		{
 			Assert.NotDisposed(this);
 			Assert.ArgumentInRange(mapMode);
 			Assert.That(!_isMapped, "Buffer is already mapped.");
 
 			_isMapped = true;
-			return new BufferData(this, BufferObject.Map(mapMode));
+			return new BufferData(this, DeviceInterface->MapBuffer(NativeObject, (int)mapMode));
 		}
 
 		/// <summary>
@@ -97,7 +83,7 @@
 		/// <param name="mapMode">Indicates which CPU operations are allowed on the buffer memory.</param>
 		/// <param name="offsetInBytes">A zero-based index denoting the first byte of the buffer that should be mapped.</param>
 		/// <param name="byteCount">The number of bytes that should be mapped.</param>
-		public unsafe BufferData MapRange(MapMode mapMode, int offsetInBytes, int byteCount)
+		public BufferData MapRange(MapMode mapMode, int offsetInBytes, int byteCount)
 		{
 			Assert.NotDisposed(this);
 			Assert.ArgumentInRange(mapMode);
@@ -107,7 +93,7 @@
 			Assert.That(!_isMapped, "Buffer is already mapped.");
 
 			_isMapped = true;
-			return new BufferData(this, BufferObject.MapRange(mapMode, offsetInBytes, byteCount));
+			return new BufferData(this, DeviceInterface->MapBufferRange(NativeObject, (int)mapMode, offsetInBytes, byteCount));
 		}
 
 		/// <summary>
@@ -119,7 +105,7 @@
 			Assert.That(_isMapped, "Buffer is not mapped.");
 
 			_isMapped = false;
-			BufferObject.Unmap();
+			DeviceInterface->UnmapBuffer(NativeObject);
 		}
 	}
 }

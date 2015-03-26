@@ -59,7 +59,7 @@
 		/// </summary>
 		/// <typeparam name="T">The type of the object that should be allocated.</typeparam>
 		public T Allocate<T>()
-			where T : class
+			where T : class, new()
 		{
 			return Allocator.Allocate<T>();
 		}

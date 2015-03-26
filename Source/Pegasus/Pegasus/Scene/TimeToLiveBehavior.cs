@@ -15,21 +15,6 @@
 		private float _remainingTime;
 
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static TimeToLiveBehavior()
-		{
-			ConstructorCache.Register(() => new TimeToLiveBehavior());
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		private TimeToLiveBehavior()
-		{
-		}
-
-		/// <summary>
 		///     Invoked when the behavior should execute a step.
 		/// </summary>
 		/// <param name="elapsedSeconds">The elapsed time in seconds since the last execution of the behavior.</param>

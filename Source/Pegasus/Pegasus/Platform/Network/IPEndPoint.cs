@@ -1,37 +1,50 @@
 ﻿namespace Pegasus.Platform.Network
 {
 	using System;
+	using System.Runtime.InteropServices;
 
 	/// <summary>
 	///     Represents an endpoint consisting of an IP address and a port number.
 	/// </summary>
-	/// <remarks>
-	///     We're not using the System.Net.EndPoint in order to reduce the pressure on the garbage collector as each invocation of
-	///     System.Net.Sockets.Socket.ReceiveFrom and System.Net.Sockets.Socket.SendTo allocates memory.
-	/// </remarks>
+	[StructLayout(LayoutKind.Sequential)]
 	public struct IPEndPoint : IEquatable<IPEndPoint>
 	{
+		/// <summary>
+		///     The IP address of the endpoint.
+		/// </summary>
+		private readonly IPAddress _address;
+
+		/// <summary>
+		///     The port of the endpoint.
+		/// </summary>
+		private readonly ushort _port;
+
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="address">The IP address of the endpoint.</param>
 		/// <param name="port">The port of the endpoint.</param>
 		public IPEndPoint(IPAddress address, ushort port)
-			: this()
 		{
-			Address = address;
-			Port = port;
+			_address = address;
+			_port = port;
 		}
 
 		/// <summary>
 		///     Gets the IP address of the endpoint.
 		/// </summary>
-		public IPAddress Address { get; private set; }
+		public IPAddress Address
+		{
+			get { return _address; }
+		}
 
 		/// <summary>
 		///     Gets the port of the endpoint.
 		/// </summary>
-		public ushort Port { get; private set; }
+		public ushort Port
+		{
+			get { return _port; }
+		}
 
 		/// <summary>
 		///     Indicates whether the the given IP endpoint is equal to the current one.

@@ -8,7 +8,7 @@
 	/// <summary>
 	///     Represents the base class for all scene nodes of a scene graph.
 	/// </summary>
-	public abstract class SceneNode : SharedPooledObject
+	public abstract class SceneNode : PooledObject
 	{
 		/// <summary>
 		///     The local transformation matrix of the scene node, relative to the parent scene node.
@@ -268,10 +268,7 @@
 			// If we're not attached to a scene graph yet, we can just add the behavior; otherwise, the scene
 			// graph might have to defer the operation
 			if (SceneGraph == null)
-			{
-				behavior.AcquireOwnership();
 				behavior.Attach(this);
-			}
 			else
 				SceneGraph.AddBehavior(this, behavior);
 		}
@@ -289,7 +286,6 @@
 			// If we're not attached to a scene graph yet, we can just add the behavior; otherwise, the scene
 			// graph might have to defer the operation
 			if (SceneGraph == null)
-
 				behavior.Detach();
 			else
 				SceneGraph.RemoveBehavior(behavior);

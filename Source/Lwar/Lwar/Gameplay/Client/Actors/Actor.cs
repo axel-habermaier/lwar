@@ -9,7 +9,7 @@
 	///     The base class of all actors.
 	/// </summary>
 	/// <typeparam name="TActor">The specialized actor type.</typeparam>
-	internal abstract class Actor<TActor> : UniquePooledObject, IActor
+	internal abstract class Actor<TActor> : PooledObject, IActor
 		where TActor : Actor<TActor>, new()
 	{
 		/// <summary>

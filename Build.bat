@@ -31,6 +31,6 @@ echo Copying files...
 echo =====================================================================
 copy "..\Build\Release\AnyCPU\*.pak" 
 copy "..\Build\Release\AnyCPU\Lwar.exe"
-copy "..\Build\Release\AnyCPU\SDL2.dll" 
+copy "..\Build\Release\AnyCPU\Platform.dll" 
 
 cd..

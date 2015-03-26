@@ -13,17 +13,9 @@ namespace Lwar.Network.Messages
 	internal sealed class UpdateShipMessage : Message
 	{
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static UpdateShipMessage()
-		{
-			ConstructorCache.Register(() => new UpdateShipMessage());
-		}
-
-		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		private UpdateShipMessage()
+		public UpdateShipMessage()
 		{
 			WeaponEnergyLevels = new int[NetworkProtocol.WeaponSlotCount];
 		}

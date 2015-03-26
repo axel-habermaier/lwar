@@ -84,12 +84,15 @@
 		{
 			Assert.ArgumentNotNull(message);
 
-			using (message.AcquireOwnership())
+			using (message)
 			{
 				foreach (var client in _clients)
 				{
-					if (!client.IsDisconnected && client.IsSynced)
-						client.Send(message);
+					if (client.IsDisconnected || !client.IsSynced)
+						continue;
+
+					message.AcquireOwnership();
+					client.Send(message);
 				}
 			}
 		}

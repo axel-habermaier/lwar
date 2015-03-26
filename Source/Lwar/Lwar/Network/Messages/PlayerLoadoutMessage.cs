@@ -12,17 +12,9 @@ namespace Lwar.Network.Messages
 	internal sealed class PlayerLoadoutMessage : Message
 	{
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static PlayerLoadoutMessage()
-		{
-			ConstructorCache.Register(() => new PlayerLoadoutMessage());
-		}
-
-		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		private PlayerLoadoutMessage()
+		public PlayerLoadoutMessage()
 		{
 			WeaponTypes = new EntityType[NetworkProtocol.WeaponSlotCount];
 		}

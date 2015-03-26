@@ -1,10 +1,12 @@
 namespace Pegasus.Platform.Graphics
 {
 	using System;
+	using System.Runtime.InteropServices;
 
 	/// <summary>
 	///     Describes the properties of a rasterizer state.
 	/// </summary>
+	[StructLayout(LayoutKind.Sequential)]
 	public struct RasterizerDescription
 	{
 		/// <summary>
@@ -13,29 +15,9 @@ namespace Pegasus.Platform.Graphics
 		public bool AntialiasedLineEnabled;
 
 		/// <summary>
-		///     The cull mode.
-		/// </summary>
-		public CullMode CullMode;
-
-		/// <summary>
-		///     The depth bias.
-		/// </summary>
-		public int DepthBias;
-
-		/// <summary>
-		///     The depth bias clamp.
-		/// </summary>
-		public float DepthBiasClamp;
-
-		/// <summary>
 		///     Indicates whether depth clip is enabled.
 		/// </summary>
 		public bool DepthClipEnabled;
-
-		/// <summary>
-		///     The fill mode.
-		/// </summary>
-		public FillMode FillMode;
 
 		/// <summary>
 		///     Indicates whether counter-clockwise faces are front-facing.
@@ -51,6 +33,26 @@ namespace Pegasus.Platform.Graphics
 		///     Indicates whether the scissor test is enabled.
 		/// </summary>
 		public bool ScissorEnabled;
+
+		/// <summary>
+		///     The cull mode.
+		/// </summary>
+		public CullMode CullMode;
+
+		/// <summary>
+		///     The fill mode.
+		/// </summary>
+		public FillMode FillMode;
+
+		/// <summary>
+		///     The depth bias.
+		/// </summary>
+		public int DepthBias;
+
+		/// <summary>
+		///     The depth bias clamp.
+		/// </summary>
+		public float DepthBiasClamp;
 
 		/// <summary>
 		///     The slope scaled depth bias.

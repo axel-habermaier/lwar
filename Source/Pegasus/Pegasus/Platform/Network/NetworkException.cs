@@ -1,13 +1,23 @@
 ﻿namespace Pegasus.Platform.Network
 {
 	using System;
+	using System.Runtime.InteropServices;
 	using Utilities;
 
 	/// <summary>
 	///     Raised when a network error occurred.
 	/// </summary>
-	public class NetworkException : Exception
+	public unsafe class NetworkException : Exception
 	{
+		/// <summary>
+		///     Initializes a new instance.
+		/// </summary>
+		/// <param name="udpInterface">The Udp interface the exception is raised for.</param>
+		internal NetworkException(UdpInterface* udpInterface)
+			: base(PlatformLibrary.NormalizeMessage(Marshal.PtrToStringAnsi(new IntPtr(udpInterface->GetErrorMessage()))))
+		{
+		}
+
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>

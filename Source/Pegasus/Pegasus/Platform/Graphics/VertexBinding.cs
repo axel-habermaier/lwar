@@ -1,12 +1,14 @@
 ﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
-	using Interface;
+	using System.Runtime.InteropServices;
+	using Utilities;
 
 	/// <summary>
 	///     Binds a vertex buffer to be used by the input-assembler stage.
 	/// </summary>
-	public struct VertexBinding
+	[StructLayout(LayoutKind.Sequential)]
+	public unsafe struct VertexBinding
 	{
 		/// <summary>
 		///     The format of the data.
@@ -14,8 +16,7 @@
 		internal readonly VertexDataFormat Format;
 
 		/// <summary>
-		///     The offset in bytes. The offset should point to the first byte of
-		///     the first data value in the associated vertex buffer.
+		///     The offset in bytes. The offset should point to the first byte of the first data value in the associated vertex buffer.
 		/// </summary>
 		internal readonly int Offset;
 
@@ -37,7 +38,7 @@
 		/// <summary>
 		///     The vertex buffer that stores the data.
 		/// </summary>
-		internal readonly VertexBuffer VertexBuffer;
+		internal readonly void* VertexBuffer;
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -47,22 +48,22 @@
 		/// <param name="semantics">A value indicating the usage scenario of the vertex data.</param>
 		/// <param name="stride">The stride in bytes between each data element.</param>
 		/// <param name="offset">
-		///     The offset in bytes. The offset should point to the first byte of
-		///     the first data value in the associated vertex buffer.
+		///     The offset in bytes. The offset should point to the first byte of the first data value in the associated vertex buffer.
 		/// </param>
 		/// <param name="stepRate">
-		///     The number of instances to draw using the same per-instance data before advancing in the
-		///     buffer by one element.
+		///     The number of instances to draw using the same per-instance data before advancing in the buffer by one element.
 		/// </param>
 		public VertexBinding(VertexBuffer buffer, VertexDataFormat format, DataSemantics semantics, int stride, int offset, uint stepRate = 0)
 			: this()
 		{
+			Assert.ArgumentNotNull(buffer);
+
 			Format = format;
 			Semantics = semantics;
 			Stride = stride;
 			Offset = offset;
 			StepRate = stepRate;
-			VertexBuffer = buffer;
+			VertexBuffer = buffer.NativeObject;
 		}
 	}
 }

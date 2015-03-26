@@ -11,21 +11,6 @@ namespace Lwar.Network.Messages
 	internal sealed class PlayerKillMessage : Message
 	{
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static PlayerKillMessage()
-		{
-			ConstructorCache.Register(() => new PlayerKillMessage());
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		private PlayerKillMessage()
-		{
-		}
-
-		/// <summary>
 		///     Gets the player that was killed.
 		/// </summary>
 		public NetworkIdentity Victim { get; private set; }

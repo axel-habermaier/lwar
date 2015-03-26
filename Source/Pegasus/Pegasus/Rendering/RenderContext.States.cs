@@ -20,7 +20,7 @@
 			{
 				var description = BlendDescription.Default();
 
-				Opaque = new BlendState(graphicsDevice, ref description);
+				Opaque = new BlendState(graphicsDevice, description);
 				Opaque.SetName("Opaque");
 				Opaque.Bind();
 
@@ -31,7 +31,7 @@
 				description.SourceBlendAlpha = BlendOption.One;
 				description.DestinationBlendAlpha = BlendOption.InverseSourceAlpha;
 
-				Premultiplied = new BlendState(graphicsDevice, ref description);
+				Premultiplied = new BlendState(graphicsDevice, description);
 				Premultiplied.SetName("Premultiplied");
 
 				description = BlendDescription.Default();
@@ -41,7 +41,7 @@
 				description.SourceBlendAlpha = BlendOption.One;
 				description.DestinationBlendAlpha = BlendOption.One;
 
-				Additive = new BlendState(graphicsDevice, ref description);
+				Additive = new BlendState(graphicsDevice, description);
 				Additive.SetName("Additive");
 
 				description = BlendDescription.Default();
@@ -51,7 +51,7 @@
 				description.SourceBlendAlpha = BlendOption.SourceAlpha;
 				description.DestinationBlendAlpha = BlendOption.InverseSourceAlpha;
 
-				Alpha = new BlendState(graphicsDevice, ref description);
+				Alpha = new BlendState(graphicsDevice, description);
 				Alpha.SetName("Alpha");
 			}
 
@@ -101,20 +101,20 @@
 			{
 				var description = DepthStencilDescription.Default();
 
-				DepthEnabled = new DepthStencilState(graphicsDevice, ref description);
+				DepthEnabled = new DepthStencilState(graphicsDevice, description);
 				DepthEnabled.SetName("DepthEnabled");
 
 				description = DepthStencilDescription.Default();
 				description.DepthEnabled = false;
 				description.DepthWriteEnabled = false;
 
-				DepthDisabled = new DepthStencilState(graphicsDevice, ref description);
+				DepthDisabled = new DepthStencilState(graphicsDevice, description);
 				DepthDisabled.SetName("DepthDisabled");
 				DepthDisabled.Bind();
 
 				description = DepthStencilDescription.Default();
 				description.DepthWriteEnabled = false;
-				DepthRead = new DepthStencilState(graphicsDevice, ref description);
+				DepthRead = new DepthStencilState(graphicsDevice, description);
 				DepthRead.SetName("DepthRead");
 			}
 
@@ -160,7 +160,7 @@
 				var description = RasterizerDescription.Default();
 				description.CullMode = CullMode.None;
 
-				CullNone = new RasterizerState(graphicsDevice, ref description);
+				CullNone = new RasterizerState(graphicsDevice, description);
 				CullNone.SetName("CullNone");
 				CullNone.Bind();
 
@@ -168,14 +168,14 @@
 				description.CullMode = CullMode.Back;
 				description.FrontIsCounterClockwise = true;
 
-				CullClockwise = new RasterizerState(graphicsDevice, ref description);
+				CullClockwise = new RasterizerState(graphicsDevice, description);
 				CullClockwise.SetName("CullClockwise");
 
 				description = RasterizerDescription.Default();
 				description.CullMode = CullMode.Back;
 				description.FrontIsCounterClockwise = false;
 
-				CullCounterClockwise = new RasterizerState(graphicsDevice, ref description);
+				CullCounterClockwise = new RasterizerState(graphicsDevice, description);
 				CullCounterClockwise.SetName("CullCounterClockwise");
 			}
 
@@ -223,13 +223,13 @@
 				description.AddressW = TextureAddressMode.Wrap;
 				description.Filter = TextureFilter.Nearest;
 
-				PointWrap = new SamplerState(graphicsDevice, ref description);
+				PointWrap = new SamplerState(graphicsDevice, description);
 				PointWrap.SetName("PointWrap");
 
 				description = SamplerDescription.Default();
 				description.Filter = TextureFilter.Nearest;
 
-				PointClamp = new SamplerState(graphicsDevice, ref description);
+				PointClamp = new SamplerState(graphicsDevice, description);
 				PointClamp.SetName("PointClamp");
 
 				description = SamplerDescription.Default();
@@ -238,13 +238,13 @@
 				description.AddressW = TextureAddressMode.Wrap;
 				description.Filter = TextureFilter.NearestNoMipmaps;
 
-				PointWrapNoMipmaps = new SamplerState(graphicsDevice, ref description);
+				PointWrapNoMipmaps = new SamplerState(graphicsDevice, description);
 				PointWrapNoMipmaps.SetName("PointWrapNoMipmaps");
 
 				description = SamplerDescription.Default();
 				description.Filter = TextureFilter.NearestNoMipmaps;
 
-				PointClampNoMipmaps = new SamplerState(graphicsDevice, ref description);
+				PointClampNoMipmaps = new SamplerState(graphicsDevice, description);
 				PointClampNoMipmaps.SetName("PointClampNoMipmaps");
 
 				description = SamplerDescription.Default();
@@ -252,12 +252,12 @@
 				description.AddressV = TextureAddressMode.Wrap;
 				description.AddressW = TextureAddressMode.Wrap;
 
-				BilinearWrap = new SamplerState(graphicsDevice, ref description);
+				BilinearWrap = new SamplerState(graphicsDevice, description);
 				BilinearWrap.SetName("BilinearWrap");
 
 				description = SamplerDescription.Default();
 
-				BilinearClamp = new SamplerState(graphicsDevice, ref description);
+				BilinearClamp = new SamplerState(graphicsDevice, description);
 				BilinearClamp.SetName("BilinearClamp");
 
 				description = SamplerDescription.Default();
@@ -266,13 +266,13 @@
 				description.AddressW = TextureAddressMode.Wrap;
 				description.Filter = TextureFilter.BilinearNoMipmaps;
 
-				BilinearWrapNoMipmaps = new SamplerState(graphicsDevice, ref description);
+				BilinearWrapNoMipmaps = new SamplerState(graphicsDevice, description);
 				BilinearWrapNoMipmaps.SetName("BilinearWrapNoMipmaps");
 
 				description = SamplerDescription.Default();
 				description.Filter = TextureFilter.BilinearNoMipmaps;
 
-				BilinearClampNoMipmaps = new SamplerState(graphicsDevice, ref description);
+				BilinearClampNoMipmaps = new SamplerState(graphicsDevice, description);
 				BilinearClampNoMipmaps.SetName("BilinearClampNoMipmaps");
 
 				description = SamplerDescription.Default();
@@ -282,14 +282,14 @@
 				description.Filter = TextureFilter.Trilinear;
 				description.MaximumAnisotropy = 1;
 
-				TrilinearWrap = new SamplerState(graphicsDevice, ref description);
+				TrilinearWrap = new SamplerState(graphicsDevice, description);
 				TrilinearWrap.SetName("TrilinearWrap");
 
 				description = SamplerDescription.Default();
 				description.Filter = TextureFilter.Trilinear;
 				description.MaximumAnisotropy = 1;
 
-				TrilinearClamp = new SamplerState(graphicsDevice, ref description);
+				TrilinearClamp = new SamplerState(graphicsDevice, description);
 				TrilinearClamp.SetName("TrilinearClamp");
 
 				description = SamplerDescription.Default();
@@ -298,13 +298,13 @@
 				description.AddressW = TextureAddressMode.Wrap;
 				description.Filter = TextureFilter.Anisotropic;
 
-				AnisotropicWrap = new SamplerState(graphicsDevice, ref description);
+				AnisotropicWrap = new SamplerState(graphicsDevice, description);
 				AnisotropicWrap.SetName("AnisotropicWrap");
 
 				description = SamplerDescription.Default();
 				description.Filter = TextureFilter.Anisotropic;
 
-				AnisotropicClamp = new SamplerState(graphicsDevice, ref description);
+				AnisotropicClamp = new SamplerState(graphicsDevice, description);
 				AnisotropicClamp.SetName("AnisotropicClamp");
 			}
 

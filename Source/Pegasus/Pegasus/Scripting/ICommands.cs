@@ -29,7 +29,7 @@ internal interface ICommands
 	/// <param name="cvar">The name of the cvar that should be reset to its default value.</param>
 	[Command]
 	void Reset([NotEmpty] string cvar);
-
+	
 	/// <summary>
 	///     Lists all cvars with names that match the search pattern.
 	/// </summary>

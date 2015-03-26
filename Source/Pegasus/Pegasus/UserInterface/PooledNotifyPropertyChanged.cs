@@ -10,7 +10,7 @@
 	///     A base class for pooled classes requiring property change notifications.
 	/// </summary>
 	[UsedImplicitly(ImplicitUseTargetFlags.WithMembers)]
-	public abstract class PooledNotifyPropertyChanged : UniquePooledObject, INotifyPropertyChanged
+	public abstract class PooledNotifyPropertyChanged : PooledObject, INotifyPropertyChanged
 	{
 		/// <summary>
 		///     Raised when a property of the view model has been changed.

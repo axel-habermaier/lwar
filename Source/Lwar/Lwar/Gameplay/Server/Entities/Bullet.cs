@@ -5,7 +5,6 @@ namespace Lwar.Gameplay.Server.Entities
 	using Network;
 	using Network.Messages;
 	using Pegasus.Math;
-	using Pegasus.Platform.Memory;
 	using Pegasus.Scene;
 	using Pegasus.Utilities;
 
@@ -15,17 +14,9 @@ namespace Lwar.Gameplay.Server.Entities
 	internal class Bullet : Entity
 	{
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static Bullet()
-		{
-			ConstructorCache.Register(() => new Bullet());
-		}
-
-		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		private Bullet()
+		public Bullet()
 		{
 			UpdateMessageType = MessageType.UpdatePosition;
 			NetworkType = EntityType.Bullet;

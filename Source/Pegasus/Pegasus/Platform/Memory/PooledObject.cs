@@ -13,31 +13,54 @@
 	public abstract class PooledObject : IPooledObject
 	{
 		/// <summary>
-		///     Gets a value indicating whether the instance is currently in use, i.e., not pooled.
-		/// </summary>
-		public bool InUse { get; private set; }
-
-		/// <summary>
 		///     The pool the instance should be returned to.
 		/// </summary>
 		private ObjectPool _pool;
 
-#if DEBUG
 		/// <summary>
-		///     A description for the instance in order to make debugging easier.
+		///     The number of times Dispose must be called before the object is returned to the pool.
 		/// </summary>
-		private string _description;
+		private int _referenceCount;
 
 		/// <summary>
-		///     Checks whether the instance has been returned to the pool.
+		///     Gets a value indicating whether the instance is currently in use, i.e., not pooled.
 		/// </summary>
-		~PooledObject()
+		public bool InUse
 		{
-			if (InUse)
-				Log.Error("A pooled object of type '{0}' was not returned to the pool.\nInstance description: '{1}'",
-					GetType().FullName, _description ?? "None");
+			get { return _referenceCount > 0; }
 		}
-#endif
+
+		/// <summary>
+		///     Returns the instance to the pool.
+		/// </summary>
+		[DebuggerHidden]
+		void IDisposable.Dispose()
+		{
+			Assert.That(InUse, "The instance has already been returned.");
+			Assert.NotNull(_pool, "Unknown object pool.");
+
+			// We have to ensure that while OnReturning is executed, the object is still considered to be in-use
+			if (_referenceCount - 1 <= 0)
+			{
+				OnReturning();
+				_pool.Free(this);
+			}
+
+			--_referenceCount;
+		}
+
+		/// <summary>
+		///     Allows the caller to acquire shared ownership of the object. The object will not be returned to the pool before the
+		///     caller called its Dispose method.
+		/// </summary>
+		/// <remarks>Unless, of course, some malicious caller invokes Dispose multiple times...</remarks>
+		public IDisposable AcquireOwnership()
+		{
+			Assert.NotPooled(this);
+
+			++_referenceCount;
+			return this;
+		}
 
 		/// <summary>
 		///     In debug builds, sets a description for the instance in order to make debugging easier.
@@ -63,7 +86,7 @@
 			Assert.ArgumentNotNull(objectPool);
 
 			_pool = objectPool;
-			InUse = true;
+			_referenceCount = 1;
 		}
 
 		/// <summary>
@@ -88,27 +111,21 @@
 		{
 		}
 
+#if DEBUG
 		/// <summary>
-		///     Invoked when an owner of the pooled object release its ownership. Returns true to indicate that
-		///     the object should be returned to the pool.
+		///     A description for the instance in order to make debugging easier.
 		/// </summary>
-		protected abstract bool OnOwnershipReleased();
+		private string _description;
 
 		/// <summary>
-		///     Returns the instance to the pool.
+		///     Checks whether the instance has been returned to the pool.
 		/// </summary>
-		[DebuggerHidden]
-		void IDisposable.Dispose()
+		~PooledObject()
 		{
-			Assert.That(InUse, "The instance has already been returned.");
-			Assert.NotNull(_pool, "Unknown object pool.");
-
-			if (!OnOwnershipReleased())
-				return;
-
-			OnReturning();
-			InUse = false;
-			_pool.Free(this);
+			if (InUse)
+				Log.Error("A pooled object of type '{0}' was not returned to the pool.\nInstance description: '{1}'",
+					GetType().FullName, _description ?? "None");
 		}
+#endif
 	}
 }

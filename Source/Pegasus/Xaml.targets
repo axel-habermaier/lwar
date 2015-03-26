@@ -1,7 +1,8 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+	<Import Project="AssetCompiler.targets" Condition="'$(AssetCompilerExecutable)' == ''" />
+	
 	<PropertyGroup>
-		<AssetCompilerExecutable>"$(OutDir)/pgc.exe"</AssetCompilerExecutable>
 		<AssetCompilerArguments>--project "$(ProjectPath)" --target "$(GeneratedUITargetPath)"</AssetCompilerArguments>
 	</PropertyGroup>
 	

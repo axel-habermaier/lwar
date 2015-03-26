@@ -76,7 +76,8 @@
   <ItemGroup>
     <Compile Include="Assets\Asset.cs" />
     <Compile Include="Assets\BundleAsset.cs" />
-    <Compile Include="Assets\CSharpAsset.cs" />
+    <Compile Include="Assets\InteropAsset.cs" />
+    <Compile Include="Assets\RegistryAsset.cs" />
     <Compile Include="Assets\CubeMapAsset.cs" />
     <Compile Include="Assets\CursorAsset.cs" />
     <Compile Include="Assets\EffectAsset.cs" />
@@ -85,7 +86,8 @@
     <Compile Include="Assets\TextureAsset.cs" />
     <Compile Include="Assets\XamlAsset.cs" />
     <Compile Include="Commands\AssetBundleCommand.cs" />
-    <Compile Include="Commands\CodeGenerationCommand.cs" />
+    <Compile Include="Commands\InteropCommand.cs" />
+    <Compile Include="Commands\RegistryCommand.cs" />
     <Compile Include="Commands\CompilationActions.cs" />
     <Compile Include="Commands\Configuration.cs" />
     <Compile Include="Commands\ICommand.cs" />

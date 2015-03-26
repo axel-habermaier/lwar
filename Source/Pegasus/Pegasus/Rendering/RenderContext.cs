@@ -64,7 +64,7 @@
 					}
 				};
 
-				WhiteTexture2D = new Texture2D(graphicsDevice, ref description, surfaces);
+				WhiteTexture2D = new Texture2D(graphicsDevice, description, surfaces);
 				WhiteTexture2D.SetName("White");
 			}
 		}

@@ -6,7 +6,7 @@
 	/// <summary>
 	///     Represents a query that checks whether the GPU has reached a CPU/GPU synchronization marker.
 	/// </summary>
-	public class SyncedQuery : Query
+	public unsafe class SyncedQuery : Query
 	{
 		/// <summary>
 		///     Initializes a new instance.
@@ -23,7 +23,7 @@
 		public void MarkSyncPoint()
 		{
 			Assert.NotDisposed(this);
-			QueryObject.End();
+			DeviceInterface->EndQuery(NativeObject);
 		}
 	}
 }

@@ -50,6 +50,7 @@
 		/// <param name="namespaceName">The namespace in which the generated class should live.</param>
 		public void GenerateCode(string namespaceName)
 		{
+			_writer.WriterHeader();
 			_writer.AppendLine("namespace {0}", namespaceName);
 			_writer.AppendBlockStatement(() =>
 			{

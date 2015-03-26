@@ -11,21 +11,6 @@ namespace Lwar.Network.Messages
 	internal sealed class PlayerLeaveMessage : Message
 	{
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static PlayerLeaveMessage()
-		{
-			ConstructorCache.Register(() => new PlayerLeaveMessage());
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		private PlayerLeaveMessage()
-		{
-		}
-
-		/// <summary>
 		///     Gets the player that has left the game session.
 		/// </summary>
 		public NetworkIdentity Player { get; private set; }

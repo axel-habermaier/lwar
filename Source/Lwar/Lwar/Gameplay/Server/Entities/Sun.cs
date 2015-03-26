@@ -4,7 +4,6 @@
 	using Network;
 	using Network.Messages;
 	using Pegasus.Math;
-	using Pegasus.Platform.Memory;
 	using Pegasus.Utilities;
 
 	/// <summary>
@@ -13,17 +12,9 @@
 	internal class Sun : Entity
 	{
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static Sun()
-		{
-			ConstructorCache.Register(() => new Sun());
-		}
-
-		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		private Sun()
+		public Sun()
 		{
 			NetworkType = EntityType.Sun;
 			UpdateMessageType = MessageType.UpdatePosition;

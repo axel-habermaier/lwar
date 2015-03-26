@@ -4,6 +4,7 @@
 	using System.Diagnostics;
 	using Input;
 	using Math;
+	using Platform;
 	using Platform.Graphics;
 	using Platform.Logging;
 	using Platform.Memory;
@@ -16,19 +17,14 @@
 	public class Window : Decorator, IDisposable
 	{
 		/// <summary>
-		///     The minimum overlap of a window that must always be visible.
-		/// </summary>
-		internal const int MinimumOverlap = 100;
-
-		/// <summary>
 		///     The minimal window size supported by the library.
 		/// </summary>
-		public static readonly Size MinimumSize = new Size(800, 600);
+		public static readonly Size MinimumSize;
 
 		/// <summary>
 		///     The maximal window size supported by the library.
 		/// </summary>
-		public static readonly Size MaximumSize = new Size(4096, 2160);
+		public static readonly Size MaximumSize;
 
 		/// <summary>
 		///     Indicates whether the window is in fullscreen or windowed mode.
@@ -68,9 +64,16 @@
 		/// <summary>
 		///     Initializes the type.
 		/// </summary>
-		static Window()
+		static unsafe Window()
 		{
 			FullscreenProperty.Changed += OnFullscreenChanged;
+			SizeProperty.Changed += OnSizeChanged;
+
+			int minWidth, maxWidth, minHeight, maxHeight;
+			NativeMethods.GetSupportedWindowDimensions(&minWidth, &minHeight, &maxWidth, &maxHeight);
+
+			MinimumSize = new Size(minWidth, minHeight);
+			MaximumSize = new Size(maxWidth, maxHeight);
 		}
 
 		/// <summary>
@@ -92,18 +95,7 @@
 		{
 			Assert.ArgumentNotNull(title);
 
-			var flags = WindowFlags.Resizable;
-			switch (mode)
-			{
-				case WindowMode.Fullscreen:
-					flags |= WindowFlags.FullscreenDesktop | WindowFlags.InputGrabbed;
-					break;
-				case WindowMode.Maximized:
-					flags |= WindowFlags.Maximized;
-					break;
-			}
-
-			_window = new NativeWindow(title, position, size, flags);
+			_window = new NativeWindow(title, position, size, mode);
 			Keyboard = new Keyboard(this) { FocusedElement = this };
 			Mouse = new Mouse(this);
 
@@ -161,7 +153,7 @@
 			get
 			{
 				CheckWindowOpen();
-				return _window.Focused;
+				return _window.HasFocus;
 			}
 		}
 
@@ -251,10 +243,7 @@
 
 			// Check if the window requested to be closed and raise the event, if necessary
 			if (_window.IsClosing && Closing != null)
-			{
-				// Reset the flag so that we don't raise the event again if the close request is ignored
 				Closing();
-			}
 
 			// Update the mode, position, and size dependency properties
 			UpdateDependencyProperties(_window.Mode, _window.Position, _window.Size);
@@ -294,6 +283,18 @@
 				window._window.ChangeToFullscreenMode();
 			else
 				window._window.ChangeToWindowedMode();
+		}
+
+		/// <summary>
+		///     Resizes the window's swap chain.
+		/// </summary>
+		private static void OnSizeChanged(DependencyObject obj, DependencyPropertyChangedEventArgs<Size> args)
+		{
+			var window = obj as Window;
+			if (window == null || window.SwapChain == null)
+				return;
+
+			window.SwapChain.Resize(args.NewValue);
 		}
 
 		/// <summary>

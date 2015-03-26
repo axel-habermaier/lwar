@@ -8,6 +8,7 @@
 	/// <summary>
 	///     Provides access to all public types exported by the registered assemblies.
 	/// </summary>
+	/// <remarks>This type is only required because WinRT does not support enumerating all loaded assemblies.</remarks>
 	internal static class AssemblyCache
 	{
 		/// <summary>

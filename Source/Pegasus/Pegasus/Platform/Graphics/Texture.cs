@@ -2,15 +2,13 @@
 {
 	using System;
 	using System.Diagnostics;
-	using Interface;
-	using Logging;
 	using Memory;
 	using Utilities;
 
 	/// <summary>
 	///     Represents a GPU texture.
 	/// </summary>
-	public abstract class Texture : GraphicsObject
+	public abstract unsafe class Texture : GraphicsObject
 	{
 		/// <summary>
 		///     Initializes a new instance, copying the given byte array to GPU memory.
@@ -26,13 +24,8 @@
 		/// </summary>
 		private bool IsInitialized
 		{
-			get { return TextureObject != null; }
+			get { return NativeObject != null; }
 		}
-
-		/// <summary>
-		///     Gets the underlying texture object.
-		/// </summary>
-		internal ITexture TextureObject { get; private set; }
 
 		/// <summary>
 		///     Gets the description of the texture.
@@ -88,31 +81,11 @@
 		}
 
 		/// <summary>
-		///     Gets a value indicating whether the given format is a compressed format.
+		///     Gets the function that should be used to set the debug name of the native object.
 		/// </summary>
-		/// <param name="format">The surface format that should be checked.</param>
-		internal static bool IsCompressedFormat(SurfaceFormat format)
+		protected override SetNameDelegate SetNameFunction
 		{
-			return format == SurfaceFormat.Bc1 || format == SurfaceFormat.Bc2 || format == SurfaceFormat.Bc3 ||
-				   format == SurfaceFormat.Bc4 || format == SurfaceFormat.Bc5;
-		}
-
-		/// <summary>
-		///     Gets a value indicating whether the given format is a floating point format.
-		/// </summary>
-		/// <param name="format">The surface format that should be checked.</param>
-		internal static bool IsFloatingPointFormat(SurfaceFormat format)
-		{
-			return format == SurfaceFormat.Rgba16F;
-		}
-
-		/// <summary>
-		///     Gets a value indicating whether the given format is a depth stencil format.
-		/// </summary>
-		/// <param name="format">The surface format that should be checked.</param>
-		internal static bool IsDepthStencilFormat(SurfaceFormat format)
-		{
-			return format == SurfaceFormat.Depth24Stencil8;
+			get { return DeviceInterface->SetTextureName; }
 		}
 
 		/// <summary>
@@ -124,8 +97,8 @@
 			Assert.That(slot < GraphicsDevice.TextureSlotCount, "Invalid slot.");
 			ValidateAccess();
 
-			if (DeviceState.Change(GraphicsDevice.State.Textures, slot, this))
-				TextureObject.Bind(slot);
+			if (DeviceState.Change(DeviceState.Textures, slot, this))
+				DeviceInterface->BindTexture(NativeObject, slot);
 		}
 
 		/// <summary>
@@ -137,8 +110,8 @@
 			Assert.That(slot < GraphicsDevice.TextureSlotCount, "Invalid slot.");
 			ValidateAccess();
 
-			if (DeviceState.Change(GraphicsDevice.State.Textures, slot, null))
-				TextureObject.Unbind(slot);
+			if (DeviceState.Change(DeviceState.Textures, slot, null))
+				DeviceInterface->UnbindTexture(NativeObject, slot);
 		}
 
 		/// <summary>
@@ -150,7 +123,7 @@
 			Assert.That(Description.Flags.HasFlag(TextureFlags.GenerateMipmaps),
 				"Cannot generate mipmaps for a texture that does not have the corresponding flag set.");
 
-			TextureObject.GenerateMipmaps();
+			DeviceInterface->GenerateMipmaps(NativeObject);
 		}
 
 		/// <summary>
@@ -158,7 +131,7 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			TextureObject.SafeDispose();
+			DeviceInterface->FreeTexture(NativeObject);
 		}
 
 		/// <summary>
@@ -171,7 +144,7 @@
 			Surface[] surfaces;
 
 			ExtractMetadata(ref buffer, out description, out surfaces);
-			Initialize(ref description, surfaces);
+			Initialize(description, surfaces);
 			SetName();
 		}
 
@@ -181,22 +154,19 @@
 		/// <param name="buffer">The buffer the meta data should be read from.</param>
 		/// <param name="description">Returns the texture description.</param>
 		/// <param name="surfaces">Returns the surfaces of the texture.</param>
-		internal static unsafe void ExtractMetadata(ref BufferReader buffer, out TextureDescription description, out Surface[] surfaces)
+		internal static void ExtractMetadata(ref BufferReader buffer, out TextureDescription description, out Surface[] surfaces)
 		{
 			description = new TextureDescription
 			{
-				Width = buffer.ReadUInt32(),
-				Height = buffer.ReadUInt32(),
-				Depth = buffer.ReadUInt32(),
-				ArraySize = buffer.ReadUInt32(),
+				Width = buffer.ReadInt32(),
+				Height = buffer.ReadInt32(),
+				Depth = buffer.ReadInt32(),
+				ArraySize = buffer.ReadInt32(),
 				Type = (TextureType)buffer.ReadInt32(),
 				Format = (SurfaceFormat)buffer.ReadInt32(),
-				Mipmaps = buffer.ReadUInt32(),
-				SurfaceCount = buffer.ReadUInt32()
+				Mipmaps = buffer.ReadInt32(),
+				SurfaceCount = buffer.ReadInt32()
 			};
-
-			if (description.SurfaceCount > GraphicsDevice.MaxSurfaceCount)
-				Log.Die("Too many surfaces stored in texture asset file.");
 
 			surfaces = new Surface[description.SurfaceCount];
 
@@ -204,16 +174,16 @@
 			{
 				surfaces[i] = new Surface
 				{
-					Width = buffer.ReadUInt32(),
-					Height = buffer.ReadUInt32(),
-					Depth = buffer.ReadUInt32(),
-					SizeInBytes = buffer.ReadUInt32(),
-					Stride = buffer.ReadUInt32(),
+					Width = buffer.ReadInt32(),
+					Height = buffer.ReadInt32(),
+					Depth = buffer.ReadInt32(),
+					SizeInBytes = buffer.ReadInt32(),
+					Stride = buffer.ReadInt32(),
 					Data = buffer.Pointer
 				};
 
 				var surfaceSize = surfaces[i].SizeInBytes * surfaces[i].Depth;
-				buffer.Skip((int)surfaceSize);
+				buffer.Skip(surfaceSize);
 			}
 		}
 
@@ -222,10 +192,11 @@
 		/// </summary>
 		/// <param name="description">The description of the texture's properties.</param>
 		/// <param name="surfaces">The optional surface data for the texture.</param>
-		protected void Initialize(ref TextureDescription description, Surface[] surfaces)
+		protected void Initialize(TextureDescription description, Surface[] surfaces)
 		{
-			Assert.InRange((int)description.Mipmaps, 1, GraphicsDevice.MaxMipmaps);
+			Assert.InRange(description.Mipmaps, 1, GraphicsDevice.MaxMipmaps);
 			Assert.That(description.Width > 0 && description.Height > 0, "Invalid size.");
+			Assert.That(description.SurfaceCount <= GraphicsDevice.MaxSurfaceCount, "Too many surfaces stored in texture asset file.");
 			Assert.That(surfaces != null || description.Mipmaps == 1, "Surfaces must be specified.");
 			Assert.That(!description.Flags.HasFlag(TextureFlags.GenerateMipmaps) || description.Mipmaps == 1,
 				"Cannot set mipmaps for a texture that has the generate mipmaps flag set.");
@@ -234,8 +205,10 @@
 			Assert.That(description.Type != TextureType.CubeMap || !description.Flags.HasFlag(TextureFlags.RenderTarget),
 				"A cube map cannot be used as the color buffer of a render target.");
 
-			TextureObject.SafeDispose();
-			TextureObject = GraphicsDevice.CreateTexture(ref description, surfaces);
+			DeviceInterface->FreeTexture(NativeObject);
+
+			fixed (void* surfacesArray = surfaces)
+				NativeObject = DeviceInterface->InitializeTexture(&description, surfacesArray);
 
 			SetName();
 			Description = description;
@@ -249,15 +222,6 @@
 		{
 			Assert.NotDisposed(this);
 			Assert.That(IsInitialized, "The texture has not yet been initialized.");
-		}
-
-		/// <summary>
-		///     Invoked after the name of the graphics object has changed. This method is only invoked in debug builds.
-		/// </summary>
-		/// <param name="name">The new name of the graphics object.</param>
-		protected override void OnRenamed(string name)
-		{
-			TextureObject.SetName(name);
 		}
 	}
 }

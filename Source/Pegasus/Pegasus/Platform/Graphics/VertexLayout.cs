@@ -2,21 +2,14 @@
 {
 	using System;
 	using System.Linq;
-	using Interface;
-	using Memory;
 	using Utilities;
 
 	/// <summary>
 	///     Represents a description of the memory layout and other properties of the vertex data that is fed into the
 	///     input-assembler stage of the graphics pipeline.
 	/// </summary>
-	public sealed class VertexLayout : GraphicsObject
+	public sealed unsafe class VertexLayout : GraphicsObject
 	{
-		/// <summary>
-		///     The underlying vertex layout object.
-		/// </summary>
-		private readonly IVertexLayout _vertexLayout;
-
 		/// <summary>
 		///     Initializes a new instance without an index buffer binding.
 		/// </summary>
@@ -53,18 +46,22 @@
 			Assert.That(!vertexBindings.GroupBy(e => e.Semantics).Select((s, _) => s.Count()).Any(c => c > 1),
 				"The list of vertex input elements contains at least two elements with the same value set for the Semantics property.");
 
-			var shaderSignature = ShaderSignature.GetShaderSignature(vertexBindings);
-			indexOffset = indexBuffer == null ? 0 : indexOffset;
-
-			var description = new VertexLayoutDescription
+			var signature = ShaderSignature.GetShaderSignature(vertexBindings);
+			fixed (byte* signaturePtr = signature)
+			fixed (VertexBinding* bindings = vertexBindings)
 			{
-				IndexBuffer = indexBuffer,
-				IndexOffset = indexOffset,
-				Bindings = vertexBindings,
-				ShaderSignature = shaderSignature
-			};
-
-			_vertexLayout = graphicsDevice.CreateVertexLayout(ref description);
+				var description = new VertexLayoutDescription
+				{
+					Bindings = bindings,
+					BindingsCount = vertexBindings.Length,
+					IndexBuffer = indexBuffer != null ? indexBuffer.NativeObject : null,
+					IndexOffset = indexOffset,
+					IndexSize = indexBuffer != null ? indexBuffer.IndexSize : 0,
+					Signature = signaturePtr,
+					SignatureLength = signature.Length
+				};
+				NativeObject = DeviceInterface->InitializeVertexLayout(&description);
+			}
 		}
 
 		/// <summary>
@@ -72,7 +69,7 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_vertexLayout.SafeDispose();
+			DeviceInterface->FreeVertexLayout(NativeObject);
 		}
 
 		/// <summary>
@@ -80,8 +77,8 @@
 		/// </summary>
 		public void Bind()
 		{
-			if (DeviceState.Change(ref GraphicsDevice.State.VertexLayout, this))
-				_vertexLayout.Bind();
+			if (DeviceState.Change(ref DeviceState.VertexLayout, this))
+				DeviceInterface->BindVertexLayout(NativeObject);
 		}
 	}
 }

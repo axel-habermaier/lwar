@@ -15,7 +15,7 @@
 	///     Represents a NRefactory C# project.
 	/// </summary>
 	/// <typeparam name="TFileElement">The type of the file elements that are compiled by the project.</typeparam>
-	internal abstract class CSharpProject<TFileElement> : IErrorReporter, IDisposable
+	internal abstract class CSharpProject<TFileElement> : IErrorReporter
 		where TFileElement : CodeElement
 	{
 		/// <summary>
@@ -44,13 +44,6 @@
 		public IEnumerable<CSharpFile> CSharpFiles { get; set; }
 
 		/// <summary>
-		///     Disposes the object, releasing all managed and unmanaged resources.
-		/// </summary>
-		public virtual void Dispose()
-		{
-		}
-
-		/// <summary>
 		///     Outputs a compilation message.
 		/// </summary>
 		/// <param name="type">The type of the compilation message.</param>
@@ -58,7 +51,13 @@
 		/// <param name="message">The message that should be output.</param>
 		/// <param name="begin">The beginning of the message location in the source file.</param>
 		/// <param name="end">The end of the message location in the source file.</param>
-		public abstract void Report(LogType type, string file, string message, TextLocation begin, TextLocation end);
+		public void Report(LogType type, string file, string message, TextLocation begin, TextLocation end)
+		{
+			file = file.ToLocationString(begin, end);
+
+			var logMessage = String.Format("{0}: {1}: {2}", file, type, message);
+			new LogEntry(type, logMessage).RaiseLogEvent();
+		}
 
 		/// <summary>
 		///     Loads the required assemblies into the project.
@@ -114,8 +113,7 @@
 		/// </summary>
 		public bool Compile()
 		{
-			TFileElement[] files;
-			TryGetValidatedFiles(out files);
+			var files = GetValidatedFiles();
 
 			foreach (var file in files.Where(file => !file.HasErrors))
 				Compile(file);
@@ -126,17 +124,18 @@
 		/// <summary>
 		///     Gets all validated file elements.
 		/// </summary>
-		/// <param name="files">Returns the validated file elements.</param>
-		public void TryGetValidatedFiles(out TFileElement[] files)
+		public TFileElement[] GetValidatedFiles()
 		{
 			LoadAssemblies();
-			files = LoadFiles().ToArray();
+			var files = LoadFiles().ToArray();
 
 			foreach (var file in files)
 			{
 				file.InitializeElement();
 				file.ValidateElement();
 			}
+
+			return files;
 		}
 
 		/// <summary>

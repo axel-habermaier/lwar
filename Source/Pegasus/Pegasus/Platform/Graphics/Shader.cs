@@ -1,14 +1,13 @@
 ﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
-	using Interface;
 	using Logging;
 	using Memory;
 
 	/// <summary>
 	///     Represents a shader that controls a programmable stage of the graphics pipeline.
 	/// </summary>
-	public abstract class Shader : GraphicsObject
+	public abstract unsafe class Shader : GraphicsObject
 	{
 		/// <summary>
 		///     Initializes a new instance.
@@ -20,23 +19,26 @@
 		}
 
 		/// <summary>
-		///     Gets the underlying shader object.
+		///     Gets the function that should be used to set the debug name of the native object.
 		/// </summary>
-		internal IShader ShaderObject { get; private set; }
+		protected override SetNameDelegate SetNameFunction
+		{
+			get { return DeviceInterface->SetShaderName; }
+		}
 
 		/// <summary>
 		///     Loads the shader from the given buffer.
 		/// </summary>
 		/// <param name="shaderType">The type of the shader that should be loaded.</param>
 		/// <param name="buffer">The buffer the fragment shader should be read from.</param>
-		protected unsafe void Load(ShaderType shaderType, ref BufferReader buffer)
+		protected void Load(ShaderType shaderType, ref BufferReader buffer)
 		{
 			byte* shaderCode;
 			int length;
 			ExtractShaderCode(ref buffer, out shaderCode, out length);
 
-			ShaderObject.SafeDispose();
-			ShaderObject = GraphicsDevice.CreateShader(shaderType, new IntPtr(shaderCode), length);
+			DeviceInterface->FreeShader(NativeObject);
+			NativeObject = DeviceInterface->InitializeShader((int)shaderType, shaderCode, length);
 
 			SetName();
 		}
@@ -46,16 +48,7 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			ShaderObject.SafeDispose();
-		}
-
-		/// <summary>
-		///     Invoked after the name of the graphics object has changed. This method is only invoked in debug builds.
-		/// </summary>
-		/// <param name="name">The new name of the graphics object.</param>
-		protected override void OnRenamed(string name)
-		{
-			ShaderObject.SetName(name);
+			DeviceInterface->FreeShader(NativeObject);
 		}
 
 		/// <summary>
@@ -64,7 +57,7 @@
 		/// <param name="buffer">The buffer that should be used to load the shader.</param>
 		/// <param name="shaderCode">The extracted shader source code.</param>
 		/// <param name="length">The length of the extracted shader code in bytes.</param>
-		private unsafe void ExtractShaderCode(ref BufferReader buffer, out byte* shaderCode, out int length)
+		private void ExtractShaderCode(ref BufferReader buffer, out byte* shaderCode, out int length)
 		{
 			var containsD3D11Shader = buffer.ReadBoolean();
 			var containsGL3Shader = buffer.ReadBoolean();

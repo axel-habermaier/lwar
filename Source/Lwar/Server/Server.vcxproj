@@ -70,18 +70,18 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)../Build/$(Configuration)/AnyCPU/</OutDir>
-    <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
+    <IntDir>$(SolutionDir)../Build/obj/$(TargetName)\$(Configuration) $(PlatformTarget)\</IntDir>
     <TargetName>Server</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>Server</TargetName>
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)../Build/$(Configuration)/x64/</OutDir>
-    <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
+    <IntDir>$(SolutionDir)../Build/obj/$(TargetName)\$(Configuration) $(PlatformTarget)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
+    <IntDir>$(SolutionDir)../Build/obj/$(TargetName)\$(Configuration) $(PlatformTarget)\</IntDir>
     <OutDir>$(SolutionDir)../Build/$(Configuration)/AnyCPU/</OutDir>
     <TargetName>Server</TargetName>
   </PropertyGroup>
@@ -89,7 +89,7 @@
     <TargetName>Server</TargetName>
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)../Build/$(Configuration)/x64/</OutDir>
-    <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
+    <IntDir>$(SolutionDir)../Build/obj/$(TargetName)\$(Configuration) $(PlatformTarget)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

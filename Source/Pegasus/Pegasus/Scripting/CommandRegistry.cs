@@ -34,7 +34,7 @@
 			Assert.That(!Commands.ContainsKey(command.Name), "A command with the name '{0}' has already been registered.", command.Name);
 			Assert.That(CvarRegistry.All.All(cvar => cvar.Name != command.Name),
 				"A cvar with the name '{0}' has already been registered.", command.Name);
-
+			 
 			Commands.Add(command.Name, command);
 		}
 

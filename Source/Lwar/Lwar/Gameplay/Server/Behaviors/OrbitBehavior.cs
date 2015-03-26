@@ -32,21 +32,6 @@
 		private double _totalSeconds;
 
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static OrbitBehavior()
-		{
-			ConstructorCache.Register(() => new OrbitBehavior());
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		private OrbitBehavior()
-		{
-		}
-
-		/// <summary>
 		///     Invoked when the behavior should execute a step.
 		/// </summary>
 		/// <param name="elapsedSeconds">The elapsed time in seconds since the last execution of the behavior.</param>

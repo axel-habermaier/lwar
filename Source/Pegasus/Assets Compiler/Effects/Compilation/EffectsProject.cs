@@ -3,7 +3,6 @@
 	using System;
 	using System.Collections.Generic;
 	using CSharp;
-	using ICSharpCode.NRefactory;
 	using ICSharpCode.NRefactory.CSharp;
 	using ICSharpCode.NRefactory.CSharp.Resolver;
 	using Utilities;
@@ -42,22 +41,6 @@
 		public IEnumerable<EffectFile> EffectFiles
 		{
 			get { return _effectFiles; }
-		}
-
-		/// <summary>
-		///     Outputs a compilation message.
-		/// </summary>
-		/// <param name="type">The type of the compilation message.</param>
-		/// <param name="file">The name of the file for which the message should be raised.</param>
-		/// <param name="message">The message that should be output.</param>
-		/// <param name="begin">The beginning of the message location in the source file.</param>
-		/// <param name="end">The end of the message location in the source file.</param>
-		public override void Report(LogType type, string file, string message, TextLocation begin, TextLocation end)
-		{
-			file = file.ToLocationString(begin, end);
-
-			var logMessage = String.Format("{0}: {1}: {2}", file, type, message);
-			new LogEntry(type, logMessage).RaiseLogEvent();
 		}
 
 		/// <summary>

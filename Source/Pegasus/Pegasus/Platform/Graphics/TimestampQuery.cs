@@ -7,7 +7,7 @@
 	///     Represents a query that records the current GPU timestamp. A timestamp query can only be issued when a timestamp
 	///     disjoint query is currently active.
 	/// </summary>
-	public class TimestampQuery : Query
+	public unsafe class TimestampQuery : Query
 	{
 		/// <summary>
 		///     Initializes a new instance.
@@ -21,14 +21,14 @@
 		/// <summary>
 		///     Gets the queried GPU timestamp.
 		/// </summary>
-		public unsafe ulong Timestamp
+		public ulong Timestamp
 		{
 			get
 			{
 				Assert.NotDisposed(this);
 
 				ulong data;
-				QueryObject.GetResult(&data);
+				DeviceInterface->GetQueryData(NativeObject, &data);
 				return data;
 			}
 		}
@@ -39,7 +39,7 @@
 		public void Query()
 		{
 			Assert.NotDisposed(this);
-			QueryObject.End();
+			DeviceInterface->EndQuery(NativeObject);
 		}
 	}
 }

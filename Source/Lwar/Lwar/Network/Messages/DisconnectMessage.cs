@@ -11,21 +11,6 @@ namespace Lwar.Network.Messages
 	internal sealed class DisconnectMessage : Message
 	{
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static DisconnectMessage()
-		{
-			ConstructorCache.Register(() => new DisconnectMessage());
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		private DisconnectMessage()
-		{
-		}
-
-		/// <summary>
 		///     Serializes the message using the given writer.
 		/// </summary>
 		/// <param name="writer">The writer that should be used to serialize the message.</param>

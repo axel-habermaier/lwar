@@ -46,12 +46,12 @@
 		public void Load()
 		{
 			Bitmap = (Bitmap)Image.FromFile(AbsoluteSourcePath);
-			uint componentCount;
+			int componentCount;
 
 			Description = new TextureDescription
 			{
-				Width = (uint)Bitmap.Width / 6,
-				Height = (uint)Bitmap.Height,
+				Width = Bitmap.Width / 6,
+				Height = Bitmap.Height,
 				Depth = 1,
 				Format = ToSurfaceFormat(Bitmap.PixelFormat, out componentCount),
 				ArraySize = 1,
@@ -76,7 +76,7 @@
 			foreach (var face in faces)
 				face.Dispose();
 
-			uint componentCount;
+			int componentCount;
 			ToSurfaceFormat(Bitmap.PixelFormat, out componentCount);
 
 			Surfaces = new Surface[6];

@@ -11,21 +11,6 @@ namespace Lwar.Network.Messages
 	internal sealed class ClientSyncedMessage : Message
 	{
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static ClientSyncedMessage()
-		{
-			ConstructorCache.Register(() => new ClientSyncedMessage());
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		private ClientSyncedMessage()
-		{
-		}
-
-		/// <summary>
 		///     Gets the identity of the synced client's local player.
 		/// </summary>
 		public NetworkIdentity LocalPlayer { get; private set; }

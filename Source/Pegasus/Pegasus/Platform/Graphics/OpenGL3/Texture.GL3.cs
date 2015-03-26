@@ -100,8 +100,8 @@
 			GraphicsDevice.ChangeActiveTexture(slot);
 			_gl.BindTexture(TargetType, Handle);
 
-			GraphicsDevice.State.Texture = Handle;
-			GraphicsDevice.State.TextureType = TargetType;
+			DeviceState.Texture = Handle;
+			DeviceState.TextureType = TargetType;
 		}
 
 		/// <summary>
@@ -113,8 +113,8 @@
 			GraphicsDevice.ChangeActiveTexture(slot);
 			_gl.BindTexture(TargetType, 0);
 
-			GraphicsDevice.State.Texture = 0;
-			GraphicsDevice.State.TextureType = TargetType;
+			DeviceState.Texture = 0;
+			DeviceState.TextureType = TargetType;
 		}
 
 		/// <summary>
@@ -173,8 +173,8 @@
 		/// </summary>
 		private void RebindTexture()
 		{
-			if (GraphicsDevice.State.Texture != 0)
-				_gl.BindTexture(GraphicsDevice.State.TextureType, GraphicsDevice.State.Texture);
+			if (DeviceState.Texture != 0)
+				_gl.BindTexture(DeviceState.TextureType, DeviceState.Texture);
 		}
 	}
 }

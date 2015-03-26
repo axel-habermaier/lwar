@@ -22,10 +22,9 @@
 		/// </summary>
 		/// <typeparam name="T">The type of the object that should be allocated.</typeparam>
 		public T Allocate<T>()
-			where T : class
+			where T : class, new()
 		{
 			Assert.NotDisposed(this);
-			Assert.ArgumentSatisfies(ConstructorCache.IsCached<T>(), "No constructor has been cached for type '{0}'.", typeof(T).FullName);
 
 			// Not using Linq for performance reasons
 			foreach (var pool in _objectPools)
@@ -35,7 +34,7 @@
 					return typedPool.Allocate();
 			}
 
-			var newPool = new ObjectPool<T>(ConstructorCache.Get<T>());
+			var newPool = new ObjectPool<T>();
 			_objectPools.Add(newPool);
 
 			return newPool.Allocate();

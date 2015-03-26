@@ -54,11 +54,6 @@
 		{
 			private string _description;
 
-			static TestNode()
-			{
-				ConstructorCache.Register(() => new TestNode());
-			}
-
 			public static TestNode Create(PoolAllocator allocator, string description)
 			{
 				var node = allocator.Allocate<TestNode>();

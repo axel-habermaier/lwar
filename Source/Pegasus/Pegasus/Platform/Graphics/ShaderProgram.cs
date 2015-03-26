@@ -1,20 +1,13 @@
 ﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
-	using Interface;
-	using Memory;
 	using Utilities;
 
 	/// <summary>
 	///     Represents a combination of different shader programs that control the various pipeline stages of the GPU.
 	/// </summary>
-	public sealed class ShaderProgram : GraphicsObject
+	public sealed unsafe class ShaderProgram : GraphicsObject
 	{
-		/// <summary>
-		///     The underlying shader program object.
-		/// </summary>
-		private readonly IShaderProgram _shaderProgram;
-
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
@@ -27,7 +20,7 @@
 			Assert.ArgumentNotNull(vertexShader);
 			Assert.ArgumentNotNull(fragmentShader);
 
-			_shaderProgram = graphicsDevice.CreateShaderProgram(vertexShader, fragmentShader);
+			NativeObject = DeviceInterface->InitializeShaderProgram(vertexShader.NativeObject, fragmentShader.NativeObject);
 		}
 
 		/// <summary>
@@ -35,7 +28,7 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			_shaderProgram.SafeDispose();
+			DeviceInterface->FreeShaderProgram(NativeObject);
 		}
 
 		/// <summary>
@@ -45,8 +38,8 @@
 		{
 			Assert.NotDisposed(this);
 
-			if (DeviceState.Change(ref GraphicsDevice.State.ShaderProgram, this))
-				_shaderProgram.Bind();
+			if (DeviceState.Change(ref DeviceState.ShaderProgram, this))
+				DeviceInterface->BindShaderProgram(NativeObject);
 		}
 	}
 }

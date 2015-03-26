@@ -3,11 +3,12 @@
 		<AvailableItemName Include="AssetBundle" />  
 	</ItemGroup>
 	
+	<Import Project="AssetCompiler.targets" Condition="'$(AssetCompilerExecutable)' == ''" />
+	
 	<PropertyGroup>
 		<AssetBundleDebug Condition=" '$(Configuration)' == 'Debug' ">--debug</AssetBundleDebug>
-		<AssetCompilerExecutable Condition="$(Configuration.Contains('Debug'))">"$(SolutionDir)../Build/Debug/pgc.exe"</AssetCompilerExecutable>
-		<AssetCompilerExecutable Condition="$(Configuration.Contains('Release'))">"$(SolutionDir)../Build/Release/pgc.exe"</AssetCompilerExecutable>
 	</PropertyGroup>
+	
 	<Target Name="AfterBuild">
 		<Exec Command="$(AssetCompilerExecutable) compile-assets --bundle &quot;%(AssetBundle.Identity)&quot; --platform Windows $(AssetBundleDebug) --assemblies &quot;$(OutDir) &quot; --target &quot;$(OutDir) &quot;" WorkingDirectory="$(ProjectDir)" Condition="'$(OS)' == 'Windows_NT'" />
 	</Target>

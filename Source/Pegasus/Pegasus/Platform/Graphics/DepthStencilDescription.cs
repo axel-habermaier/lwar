@@ -1,10 +1,12 @@
 ﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
+	using System.Runtime.InteropServices;
 
 	/// <summary>
 	///     Describes the properties of a depth stencil state.
 	/// </summary>
+	[StructLayout(LayoutKind.Sequential)]
 	public struct DepthStencilDescription
 	{
 		/// <summary>
@@ -13,14 +15,14 @@
 		public StencilOperationDescription BackFace;
 
 		/// <summary>
+		///     The stencil operation description for front faces.
+		/// </summary>
+		public StencilOperationDescription FrontFace;
+
+		/// <summary>
 		///     Indicates whether the depth test is enabled.
 		/// </summary>
 		public bool DepthEnabled;
-
-		/// <summary>
-		///     The depth comparison function.
-		/// </summary>
-		public Comparison DepthFunction;
 
 		/// <summary>
 		///     Indicates whether depth writes are enabled.
@@ -28,14 +30,14 @@
 		public bool DepthWriteEnabled;
 
 		/// <summary>
-		///     The stencil operation description for front faces.
-		/// </summary>
-		public StencilOperationDescription FrontFace;
-
-		/// <summary>
 		///     Indicates whether the stencil test is enabled.
 		/// </summary>
 		public bool StencilEnabled;
+
+		/// <summary>
+		///     The depth comparison function.
+		/// </summary>
+		public Comparison DepthFunction;
 
 		/// <summary>
 		///     The stencil read mask.

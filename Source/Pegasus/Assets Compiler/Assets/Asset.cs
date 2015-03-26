@@ -15,14 +15,14 @@
 	public abstract class Asset
 	{
 		/// <summary>
-		/// Indicates whether a temporary file is generated for the asset.
-		/// </summary>
-		private readonly bool _hasTempFile;
-
-		/// <summary>
 		///     The base path of the asset.
 		/// </summary>
 		private readonly string _basePath;
+
+		/// <summary>
+		///     Indicates whether a temporary file is generated for the asset.
+		/// </summary>
+		private readonly bool _hasTempFile;
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -42,7 +42,7 @@
 			SourcePath = SourcePath.Replace("\\", "/");
 			_basePath = basePath ?? Configuration.BasePath.Replace("\\", "/");
 
-				Directory.CreateDirectory(Path.GetDirectoryName(TempPath));
+			Directory.CreateDirectory(Path.GetDirectoryName(TempPath));
 
 			if (!File.Exists(AbsoluteSourcePath))
 				Log.Die("Asset '{0}' could not be found.", SourcePath);
@@ -63,7 +63,7 @@
 		/// </summary>
 		public string AbsoluteSourcePath
 		{
-			get { return Path.Combine(_basePath, SourcePath); }
+			get { return Path.Combine(_basePath, SourcePath).Replace("\\", "/"); }
 		}
 
 		/// <summary>
@@ -248,13 +248,17 @@
 		///     Gets the specified metadata value as a string.
 		/// </summary>
 		/// <param name="metadataName">The name of the metadata.</param>
-		protected string GetStringMetadata(string metadataName)
+		/// <param name="optional">Indicates whether the metadata is optional.</param>
+		protected string GetStringMetadata(string metadataName, bool optional = false)
 		{
 			Assert.ArgumentNotNullOrWhitespace(metadataName);
 
 			var attribute = Metadata.Attribute(metadataName);
-			if (attribute == null)
+			if (attribute == null && !optional)
 				Log.Die("'{0}' attribute missing for asset '{1}'.", metadataName, SourcePath);
+
+			if (attribute == null)
+				return null;
 
 			return attribute.Value;
 		}

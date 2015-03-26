@@ -2,10 +2,7 @@
 {
 	using System;
 	using System.Collections.Generic;
-	using System.Runtime.InteropServices;
 	using Platform;
-	using Platform.Logging;
-	using Platform.SDL2;
 	using Utilities;
 	using ViewModels;
 
@@ -62,29 +59,13 @@
 		/// </summary>
 		/// <param name="header">The header of the message box.</param>
 		/// <param name="message">The message that the message box should display.</param>
-		internal static unsafe void ShowNativeError(string header, string message)
+		internal static void ShowNativeError(string header, string message)
 		{
 			Assert.ArgumentNotNullOrWhitespace(header);
 			Assert.ArgumentNotNullOrWhitespace(message);
 
-			if (!NativeLibrary.IsInitialized)
-				return;
-
-			// The native Windows message box looks better, so on Windows, use the native message box instead of the SDL2 one
-			if (PlatformInfo.Platform == PlatformType.Windows)
-				MessageBoxW(null, message, header, 0x10 /* MB_ICONERROR | MB_OK */);
-			else if (SDL_ShowSimpleMessageBox(0x10 /* SDL_MESSAGEBOX_ERROR */, header, message, IntPtr.Zero) != 0)
-				Log.Error("Failed to show message box: {0}.", NativeLibrary.GetError());
+			if (PlatformLibrary.IsInitialized)
+				NativeMethods.ShowMessageBox(header, message);
 		}
-
-		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
-		private static extern int SDL_ShowSimpleMessageBox(
-			uint type,
-			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(StringMarshaler))] string title,
-			[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(StringMarshaler))] string message, 
-			IntPtr window);
-
-		[DllImport("user32.dll", CharSet = CharSet.Auto)]
-		private static extern unsafe int MessageBoxW(void* hWnd, string text, string caption, uint type);
 	}
 }

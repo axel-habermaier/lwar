@@ -10,7 +10,7 @@
 	/// <summary>
 	///     Represents a UDP channel to a remote peer.
 	/// </summary>
-	public sealed class UdpChannel : UniquePooledObject
+	public sealed class UdpChannel : PooledObject
 	{
 		/// <summary>
 		///     The allocator that is used to allocate packets.
@@ -35,7 +35,7 @@
 		/// <summary>
 		///     Stores the packets received by a UDP listener.
 		/// </summary>
-		private Queue<Shared<IncomingUdpPacket>> _packets;
+		private Queue<IncomingUdpPacket> _packets;
 
 		/// <summary>
 		///     Indicates whether packets should be received from the socket or retrieved from the packets queue.
@@ -46,21 +46,6 @@
 		///     The UDP socket that is used for communication over the network.
 		/// </summary>
 		private UdpSocket _socket;
-
-		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static UdpChannel()
-		{
-			ConstructorCache.Register(() => new UdpChannel());
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		private UdpChannel()
-		{
-		}
 
 		/// <summary>
 		///     Gets a value indicating whether the channel to the remote peer is faulted and can no longer be used.
@@ -142,7 +127,7 @@
 		///     Tries to receive a packet sent over the connection. Returns true if a packet has been received, false otherwise.
 		/// </summary>
 		/// <param name="packet">The packet that contains the received data.</param>
-		public bool TryReceive(out Shared<IncomingUdpPacket> packet)
+		public bool TryReceive(out IncomingUdpPacket packet)
 		{
 			Assert.NotPooled(this);
 			Assert.That(!IsFaulted, "The channel is faulted and can no longer be used.");
@@ -158,15 +143,16 @@
 				return true;
 			}
 
-			var allocatedPacket = _allocator.AllocateIncomingUdpPacket(_maxPacketSize);;
+			IncomingUdpPacket allocatedPacket = null;
 			try
 			{
+				allocatedPacket = IncomingUdpPacket.Allocate(_allocator, _maxPacketSize);
 				while (true)
 				{
 					IPEndPoint sender;
 					int size;
 
-					if (!_socket.TryReceive(allocatedPacket.Object.Buffer, out sender, out size))
+					if (!_socket.TryReceive(allocatedPacket.Buffer, out sender, out size))
 						return false;
 
 					if (sender != RemoteEndPoint)
@@ -174,7 +160,7 @@
 					else
 					{
 						packet = allocatedPacket;
-						packet.Object.Size = size;
+						packet.Size = size;
 						allocatedPacket = null; // We cannot dispose the packet in the finally block, as it is still in use
 						return true;
 					}

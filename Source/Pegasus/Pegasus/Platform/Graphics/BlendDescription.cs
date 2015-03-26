@@ -1,10 +1,12 @@
 ﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
+	using System.Runtime.InteropServices;
 
 	/// <summary>
 	///     Describes the properties of a blend state.
 	/// </summary>
+	[StructLayout(LayoutKind.Sequential)]
 	public struct BlendDescription
 	{
 		/// <summary>
@@ -13,24 +15,24 @@
 		public bool BlendEnabled;
 
 		/// <summary>
-		///     The blend operation.
-		/// </summary>
-		public BlendOperation BlendOperation;
-
-		/// <summary>
 		///     The blend operation for the alpha channel.
 		/// </summary>
 		public BlendOperation BlendOperationAlpha;
 
 		/// <summary>
-		///     The blend type for the destination.
+		///     The blend operation.
 		/// </summary>
-		public BlendOption DestinationBlend;
+		public BlendOperation BlendOperation;
 
 		/// <summary>
 		///     The blend type for the destination alpha.
 		/// </summary>
 		public BlendOption DestinationBlendAlpha;
+
+		/// <summary>
+		///     The blend type for the destination.
+		/// </summary>
+		public BlendOption DestinationBlend;
 
 		/// <summary>
 		///     The blend type for the source.

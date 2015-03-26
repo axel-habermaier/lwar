@@ -12,22 +12,22 @@
 		/// <summary>
 		///     The width of the texture.
 		/// </summary>
-		public uint Width;
+		public int Width;
 
 		/// <summary>
 		///     The height of the texture.
 		/// </summary>
-		public uint Height;
+		public int Height;
 
 		/// <summary>
 		///     The depth of the texture.
 		/// </summary>
-		public uint Depth;
+		public int Depth;
 
 		/// <summary>
 		///     The number of elements of the texture array.
 		/// </summary>
-		public uint ArraySize;
+		public int ArraySize;
 
 		/// <summary>
 		///     The type of the texture.
@@ -42,7 +42,7 @@
 		/// <summary>
 		///     The number of mipmap levels.
 		/// </summary>
-		public uint Mipmaps;
+		public int Mipmaps;
 
 		/// <summary>
 		///     The total number of surfaces, including all faces and mipmaps.
@@ -51,7 +51,7 @@
 		///     Cube maps have an array size of 1, hence the surface count is not necessarily equal to the array size times the
 		///     levels of mipmaps.
 		/// </remarks>
-		public uint SurfaceCount;
+		public int SurfaceCount;
 
 		/// <summary>
 		///     The texture flags that affect the texture.

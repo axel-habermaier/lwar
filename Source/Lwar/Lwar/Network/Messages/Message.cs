@@ -12,7 +12,7 @@
 	/// <summary>
 	///     Represents a message that is used for the communication between the server and the client.
 	/// </summary>
-	internal abstract class Message : SharedPooledObject
+	internal abstract class Message : PooledObject
 	{
 		/// <summary>
 		///     Maps a message type to its transmission information.
@@ -123,7 +123,7 @@
 		/// <typeparam name="T">The message type the allocator should be created for.</typeparam>
 		[UsedImplicitly]
 		private static Func<PoolAllocator, Message> CreateAllocator<T>()
-			where T : Message
+			where T : Message, new()
 		{
 			return allocator => allocator.Allocate<T>();
 		}

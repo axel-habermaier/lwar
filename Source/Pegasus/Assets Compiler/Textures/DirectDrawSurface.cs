@@ -11,8 +11,6 @@
 	/// </summary>
 	internal class DirectDrawSurface
 	{
-		// ReSharper restore InconsistentNaming
-
 		/// <summary>
 		///     The magic DDS file code "DDS ".
 		/// </summary>
@@ -79,7 +77,7 @@
 
 				for (var j = 0; j < _header.MipMapCount; ++j, ++index)
 				{
-					uint size, stride;
+					int size, stride;
 					GetSurfaceInfo(width, height, _header.Format, out size, out stride);
 
 					_surfaces[index] = new Surface
@@ -121,22 +119,22 @@
 		/// <param name="writer">The writer the DDS image should be serialized into.</param>
 		internal void Write(AssetWriter writer)
 		{
-			writer.WriteUInt32(Description.Width);
-			writer.WriteUInt32(Description.Height);
-			writer.WriteUInt32(Description.Depth);
-			writer.WriteUInt32(Description.ArraySize);
-			writer.WriteUInt32((uint)Description.Type);
-			writer.WriteUInt32((uint)Description.Format);
-			writer.WriteUInt32(Description.Mipmaps);
-			writer.WriteUInt32(Description.SurfaceCount);
+			writer.WriteInt32(Description.Width);
+			writer.WriteInt32(Description.Height);
+			writer.WriteInt32(Description.Depth);
+			writer.WriteInt32(Description.ArraySize);
+			writer.WriteInt32((int)Description.Type);
+			writer.WriteInt32((int)Description.Format);
+			writer.WriteInt32(Description.Mipmaps);
+			writer.WriteInt32(Description.SurfaceCount);
 
 			foreach (var surface in Surfaces)
 			{
-				writer.WriteUInt32(surface.Width);
-				writer.WriteUInt32(surface.Height);
-				writer.WriteUInt32(surface.Depth);
-				writer.WriteUInt32(surface.Size);
-				writer.WriteUInt32(surface.Stride);
+				writer.WriteInt32(surface.Width);
+				writer.WriteInt32(surface.Height);
+				writer.WriteInt32(surface.Depth);
+				writer.WriteInt32(surface.Size);
+				writer.WriteInt32(surface.Stride);
 
 				for (var i = 0; i < surface.Size * surface.Depth; ++i)
 					writer.WriteByte(surface.Data[i]);
@@ -205,11 +203,11 @@
 		/// <param name="format">The data format of the surface.</param>
 		/// <param name="size">The total number of bytes that are required to store the surface.</param>
 		/// <param name="stride">The total number of bytes that are required to store a row of the surface.</param>
-		private static void GetSurfaceInfo(uint width, uint height, Format format, out uint size, out uint stride)
+		private static void GetSurfaceInfo(int width, int height, Format format, out int size, out int stride)
 		{
 			var blockCompressed = false;
 			var packed = false;
-			uint bytesPerBlock = 0;
+			var bytesPerBlock = 0;
 
 			switch (format)
 			{
@@ -246,11 +244,11 @@
 					break;
 			}
 
-			uint numRows;
+			int numRows;
 			if (blockCompressed)
 			{
-				uint numBlocksWide = 0;
-				uint numBlocksHigh = 0;
+				var numBlocksWide = 0;
+				var numBlocksHigh = 0;
 
 				if (width > 0)
 					numBlocksWide = Math.Max(1, (width + 3) / 4);
@@ -268,7 +266,7 @@
 			else
 			{
 				var bpp = BitsPerPixel(format);
-				stride = (uint)(width * bpp + 7) / 8;
+				stride = (width * bpp + 7) / 8;
 				numRows = height;
 			}
 
@@ -412,8 +410,7 @@
 			NegativeZ = 0x00008200,
 
 			AllFaces = PositiveX | NegativeX | PositiveY | NegativeY | PositiveZ | NegativeZ,
-		}
-
+		} // ReSharper restore InconsistentNaming
 		// ReSharper disable InconsistentNaming
 
 		/// <summary>
@@ -545,13 +542,13 @@
 			{
 				Assert.ArgumentNotNull(reader);
 
-				Size = reader.ReadUInt32();
-				Flags = (HeaderFlags)reader.ReadUInt32();
-				Height = reader.ReadUInt32();
-				Width = reader.ReadUInt32();
+				Size = reader.ReadInt32();
+				Flags = (HeaderFlags)reader.ReadInt32();
+				Height = reader.ReadInt32();
+				Width = reader.ReadInt32();
 				reader.ReadUInt32();
-				Depth = reader.ReadUInt32();
-				MipMapCount = reader.ReadUInt32();
+				Depth = reader.ReadInt32();
+				MipMapCount = reader.ReadInt32();
 
 				for (var i = 0; i < 11; ++i)
 					reader.ReadUInt32();
@@ -566,14 +563,14 @@
 				Format = (Format)reader.ReadUInt32();
 				ResourceDimension = (ResourceDimension)reader.ReadUInt32();
 				MiscFlags = (ResourceOptionFlags)reader.ReadUInt32();
-				ArraySize = reader.ReadUInt32();
+				ArraySize = reader.ReadInt32();
 				reader.ReadUInt32();
 			}
 
 			/// <summary>
 			///     Gets the size of the texture array.
 			/// </summary>
-			public uint ArraySize { get; private set; }
+			public int ArraySize { get; private set; }
 
 			/// <summary>
 			///     Gets the texture format.
@@ -603,24 +600,24 @@
 			/// <summary>
 			///     Gets the depth of the texture.
 			/// </summary>
-			public uint Depth { get; private set; }
+			public int Depth { get; private set; }
 
 			public HeaderFlags Flags { get; private set; }
 
 			/// <summary>
 			///     Gets the height of the texture.
 			/// </summary>
-			public uint Height { get; private set; }
+			public int Height { get; private set; }
 
 			/// <summary>
 			///     Gets the number of mipmaps.
 			/// </summary>
-			public uint MipMapCount { get; private set; }
+			public int MipMapCount { get; private set; }
 
 			/// <summary>
 			///     Gets the size of the header in bytes.
 			/// </summary>
-			public uint Size { get; private set; }
+			public int Size { get; private set; }
 
 			/// <summary>
 			///     Gets the surface flags.
@@ -630,7 +627,7 @@
 			/// <summary>
 			///     Gets the width of the texture.
 			/// </summary>
-			public uint Width { get; private set; }
+			public int Width { get; private set; }
 		}
 
 		/// <summary>

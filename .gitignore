@@ -24,9 +24,18 @@ packages
 *.nvuser
 *.sln.ide
 *.ui.cs
+Source/Pegasus/Platform/Interop/*
+Source/Pegasus/Pegasus/Platform/PlatformInterface.asm
+Source/Pegasus/Pegasus/Platform/Graphics/DeviceInterface.asm
+Source/Pegasus/Pegasus/Platform/Network/UdpInterface.asm
+Source/Pegasus/Pegasus/UserInterface/WindowInterface.asm
 Source/Pegasus/Pegasus/Assets
+Source/Pegasus/Pegasus/Scripting/Commands.cs
+Source/Pegasus/Pegasus/Scripting/Cvars.cs
 Source/Pegasus/User Interface/UserInterface.cs
 Source/Lwar/Lwar/Assets
+Source/Lwar/Lwar/Scripting/Commands.cs
+Source/Lwar/Lwar/Scripting/Cvars.cs
 Source/Lwar/User Interface/UserInterface.cs
 Source/Lwar/Lwar/Gameplay/Client/Entities/EntityTemplates.cs
 Source/Lwar/Lwar/Network/EntityType.cs

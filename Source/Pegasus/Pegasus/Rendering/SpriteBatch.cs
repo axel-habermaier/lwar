@@ -155,7 +155,7 @@
 			var description = RasterizerDescription.Default();
 			description.CullMode = CullMode.None;
 			description.ScissorEnabled = true;
-			_scissorRasterizerState = new RasterizerState(graphicsDevice, ref description);
+			_scissorRasterizerState = new RasterizerState(graphicsDevice, description);
 
 			_vertexBuffer.SetName("SpriteBatch.VertexBuffer");
 			_indexBuffer.SetName("SpriteBatch.IndexBuffer");

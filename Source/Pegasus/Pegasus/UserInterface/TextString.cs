@@ -22,7 +22,7 @@
 		///     Pools list of color ranges.
 		/// </summary>
 		private static readonly ObjectPool<List<ColorRange>> ColorRangePool =
-			new ObjectPool<List<ColorRange>>(() => new List<ColorRange>(), hasGlobalLifetime: true);
+			new ObjectPool<List<ColorRange>>(hasGlobalLifetime: true);
 
 		/// <summary>
 		///     The color ranges defined by the text.
