@@ -17,7 +17,7 @@ void templates_register();
 
 #define SELF_NAME "server"
 static Str self_name = { sizeof(SELF_NAME)-1, SELF_NAME };
-static const Real gravity_factor = 10000; // 0.04;
+static const Real gravity_factor = 10000;
 
 static void level_init() {
     size_t i;
@@ -143,16 +143,25 @@ void phaser_shoot(Entity *phaser) {
     ray->active = 1;
 }
 
+static bool is_planet(EntityType *t) {
+    switch(t->id) {
+        case ENTITY_TYPE_SUN:
+        case ENTITY_TYPE_EARTH:
+        case ENTITY_TYPE_MOON:
+        case ENTITY_TYPE_JUPITER:
+        case ENTITY_TYPE_MARS:
+            return true;
+        default:
+            return false;
+    }
+}
+
 void gravity(Entity *e0) {
 	Entity *e1;
     Real m0 = e0->mass;
 
     entities_foreach(e1) {
-        if(e1->type->id == ENTITY_TYPE_SUN)		continue;
-        if(e1->type->id == ENTITY_TYPE_EARTH)	continue;
-		if(e1->type->id == ENTITY_TYPE_MOON)	continue;
-		if(e1->type->id == ENTITY_TYPE_JUPITER) continue;
-		if(e1->type->id == ENTITY_TYPE_MARS)	continue;
+        if(is_planet(e1->type)) continue;
 
         Real m1 = e1->mass;
         if(m1 == 0) continue;
