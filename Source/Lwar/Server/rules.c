@@ -120,6 +120,10 @@ void planet_hit(Entity *self, Entity *other, Real impact) {
     entity_hit(other, INFINITY, self->player);
 }
 
+void rocket_hit(Entity *self, Entity *other, Real impact) {
+    entity_hit(self, impact, other->player);
+}
+
 void decay(Entity *e) {
 	if(e->age > 5000)
         e->health = 0;
