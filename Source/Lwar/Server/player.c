@@ -26,7 +26,7 @@ void player_init(Player *p, size_t id) {
     /* p->name = ""; */
     slots_foreach(p,s,st)
         s->entity = 0;
-    player_input(p, 0,0,0,0,0,0,0,0,0,0,42,0);
+    player_input(p, 0,0,0,0,0,0,0,0,0,0,0,0);
     player_select(p, 0,0,0,0,0);
 }
 
