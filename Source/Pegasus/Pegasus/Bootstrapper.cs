@@ -129,6 +129,7 @@
 						  "See the log file for further details.\n\nThe error was: {0}\n\nLog file: {1}";
 
 			logFile.Enqueue(new LogEntry(LogType.Error, String.Format("Exception type: {0}", exception.GetType().FullName)));
+			logFile.Enqueue(new LogEntry(LogType.Error, String.Format("Exception message: {0}", exception.Message)));
 			logFile.Enqueue(new LogEntry(LogType.Error, String.Format("Stack trace:\n{0}", exception.StackTrace)));
 			logFile.WriteToFile(force: true);
 

@@ -29,10 +29,10 @@
 			Shield = 1,
 			Mass = 1,
 			Radius = 32,
-			Acceleration = new Vector2(4000, 1000),
+			Acceleration = new Vector2(2000, 1000),
 			Decelaration = new Vector2(1000, 1000),
 			Rotation = 20,
-			Format = "format_pos"
+			Format = "format_pos_rot"
 		};
 
 		public static readonly EntityTemplate Ray = new EntityTemplate

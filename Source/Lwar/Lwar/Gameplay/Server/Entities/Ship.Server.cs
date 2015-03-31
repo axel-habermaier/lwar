@@ -63,6 +63,7 @@
 						Weapons[i] = Weapon.Create(GameSession, this, WeaponTemplate.Gun, Player, behavior);
 						break;
 					}
+					case EntityType.RocketLauncher:
 					case EntityType.Phaser:
 					{
 						var behavior = PhaserBehavior.Create(GameSession.Allocator);

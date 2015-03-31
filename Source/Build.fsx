@@ -141,6 +141,17 @@ Target "Debug" (fun _ ->
     genRegistries "Debug"
     buildIL "Debug"
     make ()
+
+    // We can now compile Pegasus and Lwar
+    build (buildParams "Debug Linux" "x64") "Source/LwarMono.sln"
+
+    // Create or clean the output directory
+    CleanDir "Binaries"
+
+    // Copy the assemblies and all compiled asset bundles to the output directory
+    let bundles = !! "Build/Debug/AnyCPU/**/**.pak"
+    Copy "Binaries" (seq { yield "Build/Debug/AnyCPU/Lwar.exe"; yield! bundles })
+    Copy "Binaries" ["Build/Debug/AnyCPU/Lwar.exe"; "Build/Debug/AnyCPU/Pegasus.dll"; "Build/Debug/AnyCPU/Pegasus.IL.dll"]
 )
 
 // Run the target that was specified via the command line
