@@ -19,6 +19,27 @@ void templates_register();
 static Str self_name = { sizeof(SELF_NAME)-1, SELF_NAME };
 static const Real gravity_factor = 10000;
 
+static bool is_planet(EntityType *t) {
+    switch(t->id) {
+        case ENTITY_TYPE_SUN:
+        case ENTITY_TYPE_EARTH:
+        case ENTITY_TYPE_MOON:
+        case ENTITY_TYPE_JUPITER:
+        case ENTITY_TYPE_MARS:
+            return true;
+        default:
+            return false;
+    }
+}
+
+static bool use_energy(Entity *e, Real delta) {
+	if(e->energy < delta)
+        return false;
+
+    e->energy -= delta;
+    return true;
+}
+
 static void level_init() {
     size_t i;
 
@@ -105,29 +126,35 @@ void decay(Entity *e) {
 }
 
 void gun_shoot(Entity *gun) {
-	if(gun->energy <= 0)
+   if(!use_energy(gun, 1))
         return;
-
-    gun->energy --;
-
-	Entity *ship   = gun->parent;
-    assert(ship);
 
     Vec f = unit(gun->phi);
     Vec x = add(gun->x, scale(f, gun->radius + type_bullet.init_radius*2));
-	Vec a = add(ship->x, gun->player->aim);
+	Vec a = add(gun->x, gun->player->aim);
     Vec u = normalize(sub(a, x));
-    Vec v = add(gun->v, scale(u, type_bullet.max_a.y)); /* initial speed */
-    Entity *bullet = entity_create(&type_bullet,gun->player,x,v);
-    bullet->active = 1;
+
+    Vec v = add(gun->v, scale(u, type_bullet.max_a.x)); /* initial speed */
+    Entity *bullet = entity_create(&type_bullet, gun->player, x, v);
+    bullet->active = true;
+}
+
+void rocket_launch(Entity *launcher) {
+   if(!use_energy(launcher, 1))
+        return;
+
+    Vec f = unit(launcher->phi);
+    Vec x = add(launcher->x, scale(f, launcher->radius + type_rocket.init_radius*2));
+    Vec v = add(launcher->v, scale(f, type_rocket.max_a.x));
+
+    Entity *rocket = entity_create(&type_rocket, launcher->player, x, v);
+    rocket->active = true;
 }
 
 void phaser_shoot(Entity *phaser) {
 	/*
-    if(phaser->energy <= 0)
+   if(!use_energy(phase, 1))
         return;
-
-    phaser->energy --;
     */
 
     if(!list_empty(&phaser->children))
@@ -141,19 +168,6 @@ void phaser_shoot(Entity *phaser) {
     Entity *ray = entity_create(&type_ray,phaser->player,x,v);
     entity_attach(phaser, ray, _0, 0);
     ray->active = 1;
-}
-
-static bool is_planet(EntityType *t) {
-    switch(t->id) {
-        case ENTITY_TYPE_SUN:
-        case ENTITY_TYPE_EARTH:
-        case ENTITY_TYPE_MOON:
-        case ENTITY_TYPE_JUPITER:
-        case ENTITY_TYPE_MARS:
-            return true;
-        default:
-            return false;
-    }
 }
 
 void gravity(Entity *e0) {

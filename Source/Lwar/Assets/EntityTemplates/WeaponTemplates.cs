@@ -16,7 +16,7 @@
 			Shield = 1,
 			Mass = 0.1f,
 			Radius = 16,
-			Acceleration = new Vector2(0, 6000),
+			Acceleration = new Vector2(6000, 0),
 			Format = "format_pos"
 		};
 
@@ -62,5 +62,13 @@
 			Energy = 1000,
 			Health = 1
 		};
+
+        public static readonly EntityTemplate RocketLauncher = new EntityTemplate
+        {
+            Act = "rocket_launch",
+            Interval = 1000,
+            Energy = 10,
+            Health = 1
+        };
 	}
 }
