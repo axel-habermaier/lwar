@@ -52,25 +52,25 @@
 			buffers[2] = GL.ColorAttachment2;
 			buffers[3] = GL.ColorAttachment3;
 
-			Assert.That(Graphics.GraphicsDevice.MaxColorBuffers == bufferCount, "Color buffer count mismatch.");
-			_gl.BindFramebuffer(GL.DrawFramebuffer, _handle);
+			//Assert.That(Graphics.GraphicsDevice.MaxColorBuffers == bufferCount, "Color buffer count mismatch.");
+			//_gl.BindFramebuffer(GL.DrawFramebuffer, _handle);
 
-			if (depthStencil != null)
-			{
-				var texture = (TextureGL3)depthStencil.TextureObject;
-				_gl.FramebufferTexture2D(GL.DrawFramebuffer, GL.DepthStencilAttachment, texture.TargetType, texture.Handle, 0);
-			}
+			//if (depthStencil != null)
+			//{
+			//	var texture = (TextureGL3)depthStencil.TextureObject;
+			//	_gl.FramebufferTexture2D(GL.DrawFramebuffer, GL.DepthStencilAttachment, texture.TargetType, texture.Handle, 0);
+			//}
 
-			for (var i = 0; i < colorBuffers.Length; ++i)
-			{
-				var texture = (TextureGL3)colorBuffers[i].TextureObject;
-				_gl.FramebufferTexture2D(GL.DrawFramebuffer, (uint)(GL.ColorAttachment0 + i), texture.TargetType, texture.Handle, 0);
-			}
+			//for (var i = 0; i < colorBuffers.Length; ++i)
+			//{
+			//	var texture = (TextureGL3)colorBuffers[i].TextureObject;
+			//	_gl.FramebufferTexture2D(GL.DrawFramebuffer, (uint)(GL.ColorAttachment0 + i), texture.TargetType, texture.Handle, 0);
+			//}
 
-			ValidateFramebufferCompleteness();
-			_gl.DrawBuffers(colorBuffers.Length, buffers);
+			//ValidateFramebufferCompleteness();
+			//_gl.DrawBuffers(colorBuffers.Length, buffers);
 
-			RebindRenderTarget();
+			//RebindRenderTarget();
 		}
 
 		/// <summary>
@@ -92,7 +92,7 @@
 		/// <param name="color">The color the color buffer should be set to.</param>
 		public void ClearColor(Color color)
 		{
-			var scissorEnabled = GraphicsDevice.State.ScissorEnabled;
+			var scissorEnabled = DeviceState.ScissorEnabled;
 			GraphicsDevice.EnableScissor(false);
 
 			GraphicsDevice.SetClearColor(color);
@@ -111,8 +111,8 @@
 		/// <param name="stencil">The value the stencil buffer should be set to.</param>
 		public void ClearDepthStencil(bool clearDepth, bool clearStencil, float depth, byte stencil)
 		{
-			var scissorEnabled = GraphicsDevice.State.ScissorEnabled;
-			var depthWritesEnabled = GraphicsDevice.State.DepthWritesEnabled;
+			var scissorEnabled = DeviceState.ScissorEnabled;
+			var depthWritesEnabled = DeviceState.DepthWritesEnabled;
 
 			GraphicsDevice.EnableScissor(false);
 			GraphicsDevice.EnableDepthWrites(true);
@@ -139,8 +139,8 @@
 		/// </summary>
 		public void Bind()
 		{
-			var viewport = GraphicsDevice.State.Viewport;
-			var scissorArea = GraphicsDevice.State.ScissorArea;
+			var viewport = DeviceState.Viewport;
+			var scissorArea = DeviceState.ScissorArea;
 
 			Bind(this);
 
@@ -203,8 +203,8 @@
 		/// </summary>
 		private void RebindRenderTarget()
 		{
-			if (GraphicsDevice.State.RenderTarget != null)
-				Bind(GraphicsDevice.State.RenderTarget);
+			if (DeviceState.RenderTarget != null)
+				Bind(DeviceState.RenderTarget);
 		}
 
 		/// <summary>
@@ -215,7 +215,7 @@
 		{
 			Assert.ArgumentNotNull(renderTarget);
 
-			GraphicsDevice.State.RenderTarget = this;
+			DeviceState.RenderTarget = this;
 
 			if (_swapChain != null)
 			{

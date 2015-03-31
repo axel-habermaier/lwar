@@ -1,19 +1,15 @@
 ﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
-	using Direct3D11;
-	using Interface;
 	using Logging;
 	using Math;
 	using Memory;
-	using OpenGL3;
-	using UserInterface;
 	using Utilities;
 
 	/// <summary>
 	///     Represents the graphics device.
 	/// </summary>
-	public sealed class GraphicsDevice : DisposableObject
+	public sealed unsafe class GraphicsDevice : DisposableObject
 	{
 		/// <summary>
 		///     The maximum number of frames the GPU can be behind the CPU.
@@ -21,49 +17,9 @@
 		public const int FrameLag = 3;
 
 		/// <summary>
-		///     The maximum number of constant buffers that can be bound simultaneously.
-		/// </summary>
-		public const int ConstantBufferSlotCount = 14;
-
-		/// <summary>
-		///     The maximum number of textures and samplers that can be bound simultaneously.
-		/// </summary>
-		public const int TextureSlotCount = 16;
-
-		/// <summary>
-		///     The maximum number of color buffers that can be bound simultaneously.
-		/// </summary>
-		public const int MaxColorBuffers = 4;
-
-		/// <summary>
-		///     The maximum number of mipmaps supported for each texture.
-		/// </summary>
-		public const int MaxMipmaps = 16;
-
-		/// <summary>
-		///     The maximum texture size in all directions.
-		/// </summary>
-		public const int MaxTextureSize = 8192;
-
-		/// <summary>
-		///     The maximum number of surfaces supported for each texture.
-		/// </summary>
-		public const int MaxSurfaceCount = MaxMipmaps * 6 * 3;
-
-		/// <summary>
-		///     The maximum number of vertex bindings that can be bound simultaneously.
-		/// </summary>
-		public const int MaxVertexBindings = 8;
-
-		/// <summary>
 		///     The timestamp queries that mark the beginning of a frame.
 		/// </summary>
 		private readonly TimestampQuery[] _beginQueries = new TimestampQuery[FrameLag];
-
-		/// <summary>
-		///     The underlying graphics device object.
-		/// </summary>
-		private readonly IGraphicsDevice _device;
 
 		/// <summary>
 		///     The timestamp disjoint queries that are used to check whether the timestamps are valid and that allow the
@@ -92,24 +48,16 @@
 		internal GraphicsDevice(GraphicsApi graphicsApi)
 		{
 			Assert.ArgumentInRange(graphicsApi);
-			Log.Info("Initializing graphics device...");
+			Log.Info("Initializing {0} graphics device...", graphicsApi);
 
 			GraphicsApi = graphicsApi;
-			State = new DeviceState();
+			State = new DeviceState(this);
+			DeviceInterface = NativeMethods.CreateDeviceInterface(graphicsApi);
 
-			switch (graphicsApi)
-			{
-				case GraphicsApi.Direct3D11:
-					_device = new GraphicsDeviceD3D11();
-					break;
-				case GraphicsApi.OpenGL3:
-					_device = new GraphicsDeviceGL3();
-					break;
-				default:
-					throw new ArgumentOutOfRangeException("graphicsApi");
-			}
+			if (DeviceInterface == null)
+				throw new InvalidOperationException(String.Format("{0} is not supported by the OS or graphics driver.", graphicsApi));
 
-			_device.PrintInfo();
+			DeviceInterface->PrintDeviceInfo();
 
 			for (var i = 0; i < FrameLag; ++i)
 			{
@@ -129,6 +77,67 @@
 				_disjointQueries[i].End();
 				_syncedQueries[i].MarkSyncPoint();
 			}
+		}
+
+		/// <summary>
+		///     Gets the native interface of the graphics device..
+		/// </summary>
+		internal DeviceInterface* DeviceInterface { get; private set; }
+
+		/// <summary>
+		///     Gets the maximum number of constant buffers that can be bound simultaneously.
+		/// </summary>
+		public static int ConstantBufferSlotCount
+		{
+			get { return NativeMethods.GetConstantBufferSlotCount(); }
+		}
+
+		/// <summary>
+		///     Gets the maximum number of textures and samplers that can be bound simultaneously.
+		/// </summary>
+		public static int TextureSlotCount
+		{
+			get { return NativeMethods.GetTextureSlotCount(); }
+		}
+
+		/// <summary>
+		///     Gets the maximum number of color buffers that can be bound simultaneously.
+		/// </summary>
+		public static int MaxColorBuffers
+		{
+			get { return NativeMethods.GetMaxColorBuffers(); }
+		}
+
+		/// <summary>
+		///     Gets the maximum number of mipmaps supported for each texture.
+		/// </summary>
+		public static int MaxMipmaps
+		{
+			get { return NativeMethods.GetMaxMipmaps(); }
+		}
+
+		/// <summary>
+		///     Gets the maximum texture size in all directions.
+		/// </summary>
+		public static int MaxTextureSize
+		{
+			get { return NativeMethods.GetMaxTextureSize(); }
+		}
+
+		/// <summary>
+		///     Gets the maximum number of surfaces supported for each texture.
+		/// </summary>
+		public static int MaxSurfaceCount
+		{
+			get { return NativeMethods.GetMaxSurfaceCount(); }
+		}
+
+		/// <summary>
+		///     Gets the maximum number of vertex bindings that can be bound simultaneously.
+		/// </summary>
+		public static int MaxVertexBindings
+		{
+			get { return NativeMethods.GetMaxVertexBindings(); }
 		}
 
 		/// <summary>
@@ -156,7 +165,7 @@
 			_endQueries.SafeDisposeAll();
 			_disjointQueries.SafeDisposeAll();
 
-			_device.SafeDispose();
+			NativeMethods.FreeDeviceInterface(DeviceInterface);
 		}
 
 		/// <summary>
@@ -225,119 +234,6 @@
 		}
 
 		/// <summary>
-		///     Creates a buffer object.
-		/// </summary>
-		/// <param name="description">The description of the buffer.</param>
-		internal IBuffer CreateBuffer(ref BufferDescription description)
-		{
-			return _device.CreateBuffer(ref description);
-		}
-
-		/// <summary>
-		///     Creates a blend state.
-		/// </summary>
-		/// <param name="description">The description of the blend state.</param>
-		internal IBlendState CreateBlendState(ref BlendDescription description)
-		{
-			return _device.CreateBlendState(ref description);
-		}
-
-		/// <summary>
-		///     Creates a depth stencil state.
-		/// </summary>
-		/// <param name="description">The description of the depth stencil state.</param>
-		internal IDepthStencilState CreateDepthStencilState(ref DepthStencilDescription description)
-		{
-			return _device.CreateDepthStencilState(ref description);
-		}
-
-		/// <summary>
-		///     Creates a rasterizer state.
-		/// </summary>
-		/// <param name="description">The description of the rasterizer state.</param>
-		internal IRasterizerState CreateRasterizerState(ref RasterizerDescription description)
-		{
-			return _device.CreateRasterizerState(ref description);
-		}
-
-		/// <summary>
-		///     Creates a sampler state.
-		/// </summary>
-		/// <param name="description">The description of the sampler state.</param>
-		internal ISamplerState CreateSamplerState(ref SamplerDescription description)
-		{
-			return _device.CreateSamplerState(ref description);
-		}
-
-		/// <summary>
-		///     Creates a texture.
-		/// </summary>
-		/// <param name="description">The description of the texture.</param>
-		/// <param name="surfaces">The surface data of the texture.</param>
-		internal ITexture CreateTexture(ref TextureDescription description, Surface[] surfaces)
-		{
-			return _device.CreateTexture(ref description, surfaces);
-		}
-
-		/// <summary>
-		///     Creates a query.
-		/// </summary>
-		/// <param name="queryType">The type of the query.</param>
-		internal IQuery CreateQuery(QueryType queryType)
-		{
-			return _device.CreateQuery(queryType);
-		}
-
-		/// <summary>
-		///     Creates a shader.
-		/// </summary>
-		/// <param name="shaderType">The type of the shader.</param>
-		/// <param name="byteCode">The shader byte code.</param>
-		/// <param name="byteCodeLength">The length of the byte code in bytes.</param>
-		internal IShader CreateShader(ShaderType shaderType, IntPtr byteCode, int byteCodeLength)
-		{
-			return _device.CreateShader(shaderType, byteCode, byteCodeLength);
-		}
-
-		/// <summary>
-		///     Creates a shader program.
-		/// </summary>
-		/// <param name="vertexShader">The vertex shader that should be used by the shader program.</param>
-		/// <param name="fragmentShader">The fragment shader that should be used by the shader program.</param>
-		internal IShaderProgram CreateShaderProgram(VertexShader vertexShader, FragmentShader fragmentShader)
-		{
-			return _device.CreateShaderProgram(vertexShader, fragmentShader);
-		}
-
-		/// <summary>
-		///     Creates a vertex layout.
-		/// </summary>
-		/// <param name="description">The description of the vertex layout.</param>
-		internal IVertexLayout CreateVertexLayout(ref VertexLayoutDescription description)
-		{
-			return _device.CreateVertexLayout(ref description);
-		}
-
-		/// <summary>
-		///     Creates a render target.
-		/// </summary>
-		/// <param name="depthStencil">The depth stencil buffer that should be bound to the render target.</param>
-		/// <param name="colorBuffers">The color buffers that should be bound to the render target.</param>
-		internal IRenderTarget CreateRenderTarget(Texture2D depthStencil, Texture2D[] colorBuffers)
-		{
-			return _device.CreateRenderTarget(depthStencil, colorBuffers);
-		}
-
-		/// <summary>
-		///     Creates a swap chain.
-		/// </summary>
-		/// <param name="window">The window the swap chain should be created for..</param>
-		internal ISwapChain CreateSwapChain(NativeWindow window)
-		{
-			return _device.CreateSwapChain(window);
-		}
-
-		/// <summary>
 		///     Changes the primitive type that is used for drawing.
 		/// </summary>
 		/// <param name="primitiveType">The primitive type that should be used for drawing.</param>
@@ -351,7 +247,7 @@
 				return;
 
 			State.PrimitiveType = primitiveType;
-			_device.ChangePrimitiveType(primitiveType);
+			DeviceInterface->SetPrimitiveType((int)primitiveType);
 		}
 
 		/// <summary>
@@ -360,8 +256,11 @@
 		/// <param name="viewport">The viewport that should be drawn to.</param>
 		internal void ChangeViewport(Rectangle viewport)
 		{
-			if (DeviceState.Change(ref State.Viewport, viewport))
-				_device.ChangeViewport(ref viewport);
+			if (!DeviceState.Change(ref State.Viewport, viewport))
+				return;
+
+			DeviceInterface->SetViewport(MathUtils.RoundIntegral(viewport.Left), MathUtils.RoundIntegral(viewport.Top),
+				MathUtils.RoundIntegral(viewport.Width), MathUtils.RoundIntegral(viewport.Height));
 		}
 
 		/// <summary>
@@ -370,8 +269,11 @@
 		/// <param name="scissorArea">The scissor area that should be used by the scissor test.</param>
 		internal void ChangeScissorArea(Rectangle scissorArea)
 		{
-			if (DeviceState.Change(ref State.ScissorArea, scissorArea))
-				_device.ChangeScissorArea(ref scissorArea);
+			if (!DeviceState.Change(ref State.ScissorArea, scissorArea))
+				return;
+
+			DeviceInterface->SetScissorArea(MathUtils.RoundIntegral(scissorArea.Left), MathUtils.RoundIntegral(scissorArea.Top),
+				MathUtils.RoundIntegral(scissorArea.Width), MathUtils.RoundIntegral(scissorArea.Height));
 		}
 
 		/// <summary>
@@ -384,7 +286,7 @@
 			Assert.NotDisposed(this);
 			State.Validate();
 
-			_device.Draw(GetVertexCount(primitiveCount), vertexOffset);
+			DeviceInterface->Draw(GetVertexCount(primitiveCount), vertexOffset);
 		}
 
 		/// <summary>
@@ -399,7 +301,7 @@
 			Assert.NotDisposed(this);
 			State.Validate();
 
-			_device.DrawInstanced(instanceCount, GetVertexCount(primitiveCount), vertexOffset, instanceOffset);
+			DeviceInterface->DrawInstanced(instanceCount, GetVertexCount(primitiveCount), vertexOffset, instanceOffset);
 		}
 
 		/// <summary>
@@ -414,7 +316,7 @@
 			Assert.NotDisposed(this);
 			State.Validate();
 
-			_device.DrawIndexed(indexCount, indexOffset, vertexOffset);
+			DeviceInterface->DrawIndexed(indexCount, indexOffset, vertexOffset);
 		}
 
 		/// <summary>
@@ -430,7 +332,7 @@
 			Assert.NotDisposed(this);
 			State.Validate();
 
-			_device.DrawIndexedInstanced(instanceCount, indexCount, indexOffset, vertexOffset, instanceOffset);
+			DeviceInterface->DrawIndexedInstanced(instanceCount, indexCount, indexOffset, vertexOffset, instanceOffset);
 		}
 	}
 }

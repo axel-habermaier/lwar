@@ -35,7 +35,6 @@
 
 			Root = RootNode.Create(allocator);
 			Root.Attach(this, null);
-			Root.AcquireOwnership();
 		}
 
 		/// <summary>
@@ -90,11 +89,7 @@
 			sceneNode.SceneGraph = this;
 
 			if (IsEnumerated)
-			{
-				sceneNode.AcquireOwnership();
-				parentNode.AcquireOwnership();
 				_deferredUpdates.Enqueue(new Update { UpdateType = UpdateType.AddNode, SceneNode = sceneNode, ParentNode = parentNode });
-			}
 			else
 				AddImmediately(sceneNode, parentNode);
 		}
@@ -122,10 +117,7 @@
 				node.IsRemoved = true;
 
 				if (IsEnumerated)
-				{
-					node.AcquireOwnership();
 					_deferredUpdates.Enqueue(new Update { UpdateType = UpdateType.RemoveNode, SceneNode = node });
-				}
 				else
 					RemoveImmediately(node);
 			}
@@ -149,11 +141,7 @@
 			Assert.ArgumentSatisfies(sceneNode != parentNode, "The scene node cannot be its own parent.");
 
 			if (IsEnumerated)
-			{
-				sceneNode.AcquireOwnership();
-				parentNode.AcquireOwnership();
 				_deferredUpdates.Enqueue(new Update { UpdateType = UpdateType.ReparentNode, SceneNode = sceneNode, ParentNode = parentNode });
-			}
 			else
 				ReparentImmediately(sceneNode, parentNode);
 		}
@@ -231,11 +219,7 @@
 			Assert.ArgumentSatisfies(behavior.SceneNode == null, "The behavior is already attached to a scene node.");
 
 			if (IsEnumerated)
-			{
-				sceneNode.AcquireOwnership();
-				behavior.AcquireOwnership();
 				_deferredUpdates.Enqueue(new Update { UpdateType = UpdateType.AddBehavior, SceneNode = sceneNode, Behavior = behavior });
-			}
 			else
 				AddBehaviorImmediately(sceneNode, behavior);
 		}
@@ -250,10 +234,7 @@
 			Assert.ArgumentNotNull(behavior);
 
 			if (IsEnumerated)
-			{
-				behavior.AcquireOwnership();
 				_deferredUpdates.Enqueue(new Update { UpdateType = UpdateType.RemoveBehavior, Behavior = behavior });
-			}
 			else
 				RemoveBehaviorImmediately(behavior);
 		}
@@ -265,7 +246,6 @@
 		/// <param name="parentNode">The parent the scene node should be added to.</param>
 		private void AddImmediately(SceneNode sceneNode, SceneNode parentNode)
 		{
-			sceneNode.AcquireOwnership();
 			sceneNode.Attach(this, parentNode);
 
 			if (NodeAdded != null)
@@ -355,10 +335,6 @@
 					default:
 						throw new InvalidOperationException("Unknown update type.");
 				}
-
-				update.SceneNode.SafeDispose();
-				update.ParentNode.SafeDispose();
-				update.Behavior.SafeDispose();
 			}
 		}
 

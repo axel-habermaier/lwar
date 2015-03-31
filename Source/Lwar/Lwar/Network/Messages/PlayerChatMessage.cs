@@ -12,21 +12,6 @@ namespace Lwar.Network.Messages
 	internal sealed class PlayerChatMessage : Message
 	{
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static PlayerChatMessage()
-		{
-			ConstructorCache.Register(() => new PlayerChatMessage());
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		private PlayerChatMessage()
-		{
-		}
-
-		/// <summary>
 		///     Gets the message sent by the player.
 		/// </summary>
 		public string Message { get; private set; }

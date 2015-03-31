@@ -12,21 +12,6 @@ namespace Lwar.Network.Messages
 	internal sealed class ClientConnectMessage : Message
 	{
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static ClientConnectMessage()
-		{
-			ConstructorCache.Register(() => new ClientConnectMessage());
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		private ClientConnectMessage()
-		{
-		}
-
-		/// <summary>
 		///     Gets the name of the player that is connecting.
 		/// </summary>
 		public string PlayerName { get; private set; }

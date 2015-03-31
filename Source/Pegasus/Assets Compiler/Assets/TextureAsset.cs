@@ -94,22 +94,22 @@
 			Assert.That(!Mipmaps, "Mipmap generation is not supported for uncompressed cube maps.");
 			Assert.That(!Compressed, "Texture compression is not supported.");
 
-			writer.WriteUInt32(Description.Width);
-			writer.WriteUInt32(Description.Height);
-			writer.WriteUInt32(Description.Depth);
-			writer.WriteUInt32(Description.ArraySize);
-			writer.WriteUInt32((uint)Description.Type);
-			writer.WriteUInt32((uint)Description.Format);
-			writer.WriteUInt32(Description.Mipmaps);
-			writer.WriteUInt32(Description.SurfaceCount);
+			writer.WriteInt32(Description.Width);
+			writer.WriteInt32(Description.Height);
+			writer.WriteInt32(Description.Depth);
+			writer.WriteInt32(Description.ArraySize);
+			writer.WriteInt32((int)Description.Type);
+			writer.WriteInt32((int)Description.Format);
+			writer.WriteInt32(Description.Mipmaps);
+			writer.WriteInt32(Description.SurfaceCount);
 
 			foreach (var surface in Surfaces)
 			{
-				writer.WriteUInt32(surface.Width);
-				writer.WriteUInt32(surface.Height);
-				writer.WriteUInt32(surface.Depth);
-				writer.WriteUInt32(surface.Size);
-				writer.WriteUInt32(surface.Stride);
+				writer.WriteInt32(surface.Width);
+				writer.WriteInt32(surface.Height);
+				writer.WriteInt32(surface.Depth);
+				writer.WriteInt32(surface.Size);
+				writer.WriteInt32(surface.Stride);
 
 				for (var i = 0; i < surface.Size * surface.Depth; ++i)
 					writer.WriteByte(surface.Data[i]);
@@ -121,7 +121,7 @@
 		/// </summary>
 		/// <param name="format">The pixel format for which a suitable compressed format should be chosen.</param>
 		/// <param name="componentCount">Returns the number of color components of each pixel.</param>
-		protected static SurfaceFormat ToSurfaceFormat(PixelFormat format, out uint componentCount)
+		protected static SurfaceFormat ToSurfaceFormat(PixelFormat format, out int componentCount)
 		{
 			switch (format)
 			{
@@ -143,7 +143,7 @@
 		/// <param name="bitmap">The bitmap from which the data should be loaded.</param>
 		protected static unsafe byte[] GetBitmapData(Bitmap bitmap)
 		{
-			uint componentCount;
+			int componentCount;
 			ToSurfaceFormat(bitmap.PixelFormat, out componentCount);
 
 			var buffer = new byte[bitmap.Width * bitmap.Height * componentCount];

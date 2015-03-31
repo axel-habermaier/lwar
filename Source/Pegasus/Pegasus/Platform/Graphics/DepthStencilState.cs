@@ -1,29 +1,30 @@
 ﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
-	using Interface;
-	using Memory;
 	using Utilities;
 
 	/// <summary>
 	///     Describes a depth stencil state of the output merger pipeline stage.
 	/// </summary>
-	public sealed class DepthStencilState : GraphicsObject
+	public sealed unsafe class DepthStencilState : GraphicsObject
 	{
-		/// <summary>
-		///     The underlying depth stencil state object.
-		/// </summary>
-		private readonly IDepthStencilState _state;
-
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="description">A description of the depth stencil state that should be created.</param>
-		public DepthStencilState(GraphicsDevice graphicsDevice, ref DepthStencilDescription description)
+		public DepthStencilState(GraphicsDevice graphicsDevice, DepthStencilDescription description)
 			: base(graphicsDevice)
 		{
-			_state = graphicsDevice.CreateDepthStencilState(ref description);
+			NativeObject = DeviceInterface->InitializeDepthStencilState(&description);
+		}
+
+		/// <summary>
+		///     Gets the function that should be used to set the debug name of the native object.
+		/// </summary>
+		protected override SetNameDelegate SetNameFunction
+		{
+			get { return DeviceInterface->SetDepthStencilStateName; }
 		}
 
 		/// <summary>
@@ -31,8 +32,8 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			DeviceState.Unset(ref GraphicsDevice.State.DepthStencilState, this);
-			_state.SafeDispose();
+			DeviceState.Unset(ref DeviceState.DepthStencilState, this);
+			DeviceInterface->FreeDepthStencilState(NativeObject);
 		}
 
 		/// <summary>
@@ -42,17 +43,8 @@
 		{
 			Assert.NotDisposed(this);
 
-			if (DeviceState.Change(ref GraphicsDevice.State.DepthStencilState, this))
-				_state.Bind();
-		}
-
-		/// <summary>
-		///     Invoked after the name of the graphics object has changed. This method is only invoked in debug builds.
-		/// </summary>
-		/// <param name="name">The new name of the graphics object.</param>
-		protected override void OnRenamed(string name)
-		{
-			_state.SetName(name);
+			if (DeviceState.Change(ref DeviceState.DepthStencilState, this))
+				DeviceInterface->BindDepthStencilState(NativeObject);
 		}
 	}
 }

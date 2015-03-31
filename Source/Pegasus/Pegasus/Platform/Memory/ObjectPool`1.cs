@@ -16,13 +16,8 @@
 	/// <typeparam name="T">The type of the pooled objects.</typeparam>
 	[DebuggerDisplay("{_pooledObjects.Count} of {_allocationCount} available ({typeof(T)})")]
 	public sealed class ObjectPool<T> : ObjectPool
-		where T : class
+		where T : class, new()
 	{
-		/// <summary>
-		///     The constructor function that is used to allocate new objects.
-		/// </summary>
-		private readonly Func<T> _constructor;
-
 		/// <summary>
 		///     The pooled objects that are currently not in use.
 		/// </summary>
@@ -43,16 +38,12 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="constructor">The constructor function that should be used to allocate new objects.</param>
 		/// <param name="hasGlobalLifetime">
 		///     Indicates whether the object pool should have global lifetime and should be
 		///     disposed automatically during application shutdown.
 		/// </param>
-		public ObjectPool(Func<T> constructor, bool hasGlobalLifetime = false)
+		public ObjectPool(bool hasGlobalLifetime = false)
 		{
-			Assert.ArgumentNotNull(constructor);
-
-			_constructor = constructor;
 			if (hasGlobalLifetime)
 				AddGlobalPool(this);
 		}
@@ -66,7 +57,7 @@
 			if (_pooledObjects.Count == 0)
 			{
 				++_allocationCount;
-				obj = _constructor();
+				obj = new T();
 #if DEBUG
 				_allocatedObjects.Add(obj);
 #endif

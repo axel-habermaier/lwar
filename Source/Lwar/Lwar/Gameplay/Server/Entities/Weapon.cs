@@ -2,7 +2,6 @@ namespace Lwar.Gameplay.Server.Entities
 {
 	using System;
 	using Network.Messages;
-	using Pegasus.Platform.Memory;
 	using Templates;
 
 	/// <summary>
@@ -11,17 +10,9 @@ namespace Lwar.Gameplay.Server.Entities
 	internal partial class Weapon : Entity
 	{
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static Weapon()
-		{
-			ConstructorCache.Register(() => new Weapon());
-		}
-
-		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		private Weapon()
+		public Weapon()
 		{
 			UpdateMessageType = MessageType.UpdatePosition;
 		}

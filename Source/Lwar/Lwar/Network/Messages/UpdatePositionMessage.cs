@@ -12,21 +12,6 @@ namespace Lwar.Network.Messages
 	internal sealed class UpdatePositionMessage : Message
 	{
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static UpdatePositionMessage()
-		{
-			ConstructorCache.Register(() => new UpdatePositionMessage());
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		private UpdatePositionMessage()
-		{
-		}
-
-		/// <summary>
 		///     Gets the entity that is updated.
 		/// </summary>
 		public NetworkIdentity Entity { get; private set; }

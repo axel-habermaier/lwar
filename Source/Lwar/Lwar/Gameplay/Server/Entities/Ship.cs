@@ -3,7 +3,6 @@
 	using System;
 	using Network;
 	using Network.Messages;
-	using Pegasus.Platform.Memory;
 	using Templates;
 
 	/// <summary>
@@ -12,17 +11,9 @@
 	internal partial class Ship : Entity
 	{
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static Ship()
-		{
-			ConstructorCache.Register(() => new Ship());
-		}
-
-		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		private Ship()
+		public Ship()
 		{
 			NetworkType = EntityType.Ship;
 			UpdateMessageType = MessageType.UpdateShip;

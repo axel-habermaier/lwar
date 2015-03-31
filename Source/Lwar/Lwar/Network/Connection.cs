@@ -13,7 +13,7 @@
 	/// <summary>
 	///     Represents a connection to a remote peer, using the Lwar network protocol specification.
 	/// </summary>
-	internal class Connection : UniquePooledObject
+	internal class Connection : PooledObject
 	{
 		/// <summary>
 		///     The delivery manager responsible for the delivery guarantees of all incoming and outgoing messages.
@@ -57,17 +57,9 @@
 		private double _timeSinceLastPacket;
 
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static Connection()
-		{
-			ConstructorCache.Register(() => new Connection());
-		}
-
-		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		private Connection()
+		public Connection()
 		{
 			_deliveryManager = new DeliveryManager();
 			_outgoingMessages = new MessageQueue(_deliveryManager);
@@ -149,8 +141,11 @@
 		/// <param name="message">The message that should be sent.</param>
 		public void Send(Message message)
 		{
-			CheckAccess();
-			_outgoingMessages.Enqueue(message);
+			using (message)
+			{
+				CheckAccess();
+				_outgoingMessages.Enqueue(message);
+			}
 		}
 
 		/// <summary>

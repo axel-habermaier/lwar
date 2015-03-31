@@ -10,7 +10,7 @@
 	/// <summary>
 	///     Represents a UDP channel to a remote peer.
 	/// </summary>
-	public sealed class UdpChannel : UniquePooledObject
+	public sealed class UdpChannel : PooledObject
 	{
 		/// <summary>
 		///     The allocator that is used to allocate packets.
@@ -46,21 +46,6 @@
 		///     The UDP socket that is used for communication over the network.
 		/// </summary>
 		private UdpSocket _socket;
-
-		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static UdpChannel()
-		{
-			ConstructorCache.Register(() => new UdpChannel());
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		private UdpChannel()
-		{
-		}
 
 		/// <summary>
 		///     Gets a value indicating whether the channel to the remote peer is faulted and can no longer be used.

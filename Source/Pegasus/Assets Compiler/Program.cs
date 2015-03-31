@@ -100,6 +100,10 @@
 				CompileXaml = new XamlCommand { Actions = CompilationActions.Compile };
 				RecompileXaml = new XamlCommand { Actions = CompilationActions.Compile | CompilationActions.Clean };
 				CleanXaml = new XamlCommand { Actions = CompilationActions.Clean };
+				GenerateRegistry = new RegistryCommand { Actions = CompilationActions.Compile };
+				CleanRegistry = new RegistryCommand { Actions = CompilationActions.Clean };
+				GenerateInterop = new InteropCommand { Actions = CompilationActions.Compile };
+				CleanInterop = new InteropCommand { Actions = CompilationActions.Clean };
 			}
 
 			/// <summary>
@@ -107,6 +111,30 @@
 			/// </summary>
 			[VerbOption("compile-assets", HelpText = "Compiles an asset bundle.")]
 			public AssetBundleCommand CompileBundle { get; set; }
+
+			/// <summary>
+			///     Gets the registry code generation command.
+			/// </summary>
+			[VerbOption("gen-registry", HelpText = "Generates C# code for cvar and command registries.")]
+			public RegistryCommand GenerateRegistry { get; set; }
+
+			/// <summary>
+			///     Cleans the generated C# code for cvar and command registries.
+			/// </summary>
+			[VerbOption("clean-registry", HelpText = "Cleans the generated C# code for cvar and command registries.")]
+			public RegistryCommand CleanRegistry { get; set; }
+
+			/// <summary>
+			///     Gets the interop code generation command.
+			/// </summary>
+			[VerbOption("gen-interop", HelpText = "Generates native interop code.")]
+			public InteropCommand GenerateInterop { get; set; }
+
+			/// <summary>
+			///     Cleans the generated interop code.
+			/// </summary>
+			[VerbOption("clean-interop", HelpText = "Cleans the generated interop code.")]
+			public InteropCommand CleanInterop { get; set; }
 
 			/// <summary>
 			///     Gets the asset bundle re-compilation command.

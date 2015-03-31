@@ -48,7 +48,7 @@
 		/// <param name="data">The address of the memory the result should be written to.</param>
 		public unsafe void GetResult(void* data)
 		{
-			var typedData = (TimestampDisjointQuery.Result*)data;
+			var typedData = (TimestampDisjointQueryResult*)data;
 			typedData->Frequency = 1000000000;
 			typedData->Disjoint = false;
 		}

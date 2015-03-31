@@ -2,12 +2,11 @@
 {
 	using System;
 	using System.Collections.Generic;
-	using System.Runtime.InteropServices;
 	using Controls;
 	using Math;
+	using Platform;
 	using Platform.Logging;
 	using Platform.Memory;
-	using Platform.SDL2;
 	using Rendering;
 	using Scripting;
 	using Utilities;
@@ -66,28 +65,8 @@
 		/// </summary>
 		public static bool RelativeMouseMode
 		{
-			get { return SDL_GetRelativeMouseMode(); }
-			set
-			{
-				if (value && !RelativeMouseMode)
-				{
-					if (SDL_SetRelativeMouseMode(true) != 0)
-						Log.Die("Failed to enable relative mouse mode: {0}.", NativeLibrary.GetError());
-				}
-				else if (!value && RelativeMouseMode)
-				{
-					if (SDL_SetRelativeMouseMode(false) != 0)
-						Log.Die("Failed to disable relative mouse mode: {0}.", NativeLibrary.GetError());
-
-					var window = SDL_GetMouseFocus();
-					if (window == IntPtr.Zero)
-						return;
-
-					int width, height;
-					SDL_GetWindowSize(window, out width, out height);
-					SDL_WarpMouseInWindow(window, width / 2, height / 2);
-				}
-			}
+			get { return NativeMethods.IsRelativeMouseModeEnabled(); }
+			set { NativeMethods.EnableRelativeMouseMode(value); }
 		}
 
 		/// <summary>
@@ -123,25 +102,18 @@
 		/// <param name="show">Indicates whether the cursor should be hidden or shown.</param>
 		private static void ShowHardwareCursor(bool show)
 		{
-			if (SDL_ShowCursor(show) < 0)
-				Log.Error("Failed to hide or show the cursor: {0}.", NativeLibrary.GetError());
+			NativeMethods.ShowHardwareCursor(show);
 		}
 
 		/// <summary>
 		///     Gets the position of the mouse relative to the current active window.
 		/// </summary>
 		/// <param name="window">The window the mouse position should be retrieved for.</param>
-		private static Vector2 GetMousePosition(NativeWindow window)
+		private static unsafe Vector2 GetMousePosition(NativeWindow window)
 		{
-			var sdlWindow = SDL_GetMouseFocus();
-			if (sdlWindow == IntPtr.Zero)
-				return new Vector2(Single.MaxValue);
-
-			if (NativeWindow.Lookup(sdlWindow) != window)
-				return new Vector2(Single.MaxValue);
-
 			int x, y;
-			SDL_GetMouseState(out x, out y);
+			NativeMethods.GetMousePosition(window.NativePtr, &x, &y);
+
 			return new Vector2(x, y);
 		}
 
@@ -413,26 +385,5 @@
 			cursor = cursor ?? Cursors.Arrow;
 			cursor.Draw(spriteBatch, Position);
 		}
-
-		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
-		private static extern IntPtr SDL_GetMouseFocus();
-
-		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
-		private static extern void SDL_WarpMouseInWindow(IntPtr window, int x, int y);
-
-		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
-		private static extern int SDL_SetRelativeMouseMode(bool enabled);
-
-		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
-		private static extern bool SDL_GetRelativeMouseMode();
-
-		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
-		private static extern uint SDL_GetMouseState(out int x, out int y);
-
-		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
-		private static extern void SDL_GetWindowSize(IntPtr window, out int w, out int h);
-
-		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
-		private static extern int SDL_ShowCursor(bool toggle);
 	}
 }

@@ -1,9 +1,7 @@
 ﻿namespace Pegasus.Platform
 {
 	using System;
-	using System.Runtime.InteropServices;
 	using Scripting;
-	using SDL2;
 
 	/// <summary>
 	///     Represents a clock that can be used to query the time that has elapsed since the creation of the clock.
@@ -13,7 +11,7 @@
 		/// <summary>
 		///     The startup time of the application.
 		/// </summary>
-		private static double _startTime;
+		private static readonly double _startTime;
 
 		/// <summary>
 		///     Scales the passing of time. If null, time advances in constant steps.
@@ -35,6 +33,14 @@
 		///     The current time in seconds.
 		/// </summary>
 		private double _time;
+
+		/// <summary>
+		///     Initializes the type.
+		/// </summary>
+		static Clock()
+		{
+			_startTime = GetSystemTime();
+		}
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -71,19 +77,11 @@
 		}
 
 		/// <summary>
-		///     Initializes the clock.
-		/// </summary>
-		internal static void Initialize()
-		{
-			_startTime = GetSystemTime();
-		}
-
-		/// <summary>
 		///     Gets the unmodified system time in seconds.
 		/// </summary>
 		private static double GetSystemTime()
 		{
-			return SDL_GetPerformanceCounter() / (double)SDL_GetPerformanceFrequency();
+			return NativeMethods.GetTime();
 		}
 
 		/// <summary>
@@ -118,11 +116,5 @@
 			var scale = _scale == null ? 1 : _scale.Value;
 			_time += elapsedTime * scale;
 		}
-
-		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
-		private static extern ulong SDL_GetPerformanceCounter();
-
-		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
-		private static extern ulong SDL_GetPerformanceFrequency();
 	}
 }

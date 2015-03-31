@@ -13,17 +13,9 @@ namespace Lwar.Network.Messages
 	internal sealed class PlayerInputMessage : Message
 	{
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static PlayerInputMessage()
-		{
-			ConstructorCache.Register(() => new PlayerInputMessage());
-		}
-
-		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		private PlayerInputMessage()
+		public PlayerInputMessage()
 		{
 			FireWeapons = new byte[NetworkProtocol.WeaponSlotCount];
 		}
@@ -156,7 +148,7 @@ namespace Lwar.Network.Messages
 												byte forward, byte backward,
 												byte strafeLeft, byte strafeRight,
 												byte turnLeft, byte turnRight,
-			byte afterBurner,
+												byte afterBurner,
 												byte[] fireWeapons)
 		{
 			Assert.ArgumentNotNull(poolAllocator);

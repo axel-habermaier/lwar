@@ -6,7 +6,7 @@ namespace Pegasus.Scene
 	/// <summary>
 	///     Represents a behavior that can be attached to a scene node.
 	/// </summary>
-	public interface IBehavior : ISharedPooledObject
+	public interface IBehavior : IPooledObject
 	{
 		/// <summary>
 		///     Gets or sets the next behavior in an intrusive list.

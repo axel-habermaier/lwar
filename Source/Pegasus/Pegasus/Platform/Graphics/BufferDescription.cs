@@ -1,10 +1,12 @@
 ﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
+	using System.Runtime.InteropServices;
 
 	/// <summary>
 	///     Describes the properties of a buffer.
 	/// </summary>
+	[StructLayout(LayoutKind.Sequential)]
 	internal struct BufferDescription
 	{
 		/// <summary>

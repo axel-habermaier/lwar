@@ -10,7 +10,7 @@
 	/// <summary>
 	///     Represents a connection to a client.
 	/// </summary>
-	internal partial class Client : UniquePooledObject, IMessageHandler
+	internal partial class Client : PooledObject, IMessageHandler
 	{
 		/// <summary>
 		///     The allocator that is used to allocate game objects.
@@ -36,21 +36,6 @@
 		///     The server logic that handles the communication between the server and the clients.
 		/// </summary>
 		private ServerLogic _serverLogic;
-
-		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static Client()
-		{
-			ConstructorCache.Register(() => new Client());
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		private Client()
-		{
-		}
 
 		/// <summary>
 		///     Gets a value indicating whether the client is disconnected and can be removed from the server's list of active clients.
@@ -214,6 +199,8 @@
 
 			if (!IsDisconnected)
 				_connection.Send(message);
+			else
+				message.SafeDispose();
 		}
 
 		/// <summary>
@@ -265,7 +252,7 @@
 		/// <param name="message">The message that should be dispatched.</param>
 		private bool IsClientConnected(Message message)
 		{
-			if (_player != null && ! _connection.IsFaulted)
+			if (_player != null && !_connection.IsFaulted)
 				return true;
 
 			Log.Error("Received an unexpected message of type '{0}' from client at '{1}'.", message.MessageType, _connection.RemoteEndPoint);

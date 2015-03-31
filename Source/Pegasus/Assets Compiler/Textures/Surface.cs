@@ -12,27 +12,27 @@
 		/// <summary>
 		///     The width of the surface.
 		/// </summary>
-		public uint Width;
+		public int Width;
 
 		/// <summary>
 		///     The height of the surface.
 		/// </summary>
-		public uint Height;
+		public int Height;
 
 		/// <summary>
 		///     The depth of the surface.
 		/// </summary>
-		public uint Depth;
+		public int Depth;
 
 		/// <summary>
 		///     The size of the surface data in bytes.
 		/// </summary>
-		public uint Size;
+		public int Size;
 
 		/// <summary>
 		///     The stride between two rows of the surface in bytes.
 		/// </summary>
-		public uint Stride;
+		public int Stride;
 
 		/// <summary>
 		///     The surface data.

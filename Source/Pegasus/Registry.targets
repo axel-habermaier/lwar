@@ -1,0 +1,13 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<Import Project="AssetCompiler.targets" Condition="'$(AssetCompilerExecutable)' == ''" />
+	
+	<Target Name="RegistryCodeGen" BeforeTargets="BeforeBuild">
+		<Exec Command="$(AssetCompilerExecutable) gen-registry --registry &quot;%(Compile.Identity)&quot; --namespace &quot;%(Compile.Namespace)&quot; --import &quot;%(Compile.Import)&quot;" Condition="%(Compile.Registry) == 'true'" WorkingDirectory="$(ProjectDir)"/>
+	</Target>
+	
+	<Target Name="RegistryCodeGenClean" BeforeTargets="BeforeClean">
+		<Exec Command="$(AssetCompilerExecutable) clean-registry --registry &quot;%(Compile.Identity)&quot; --namespace &quot;%(Compile.Namespace)&quot; --import &quot;%(Compile.Import)&quot;" WorkingDirectory="$(ProjectDir)" Condition="%(Compile.Registry) == 'true'" />
+	</Target>
+	
+</Project>

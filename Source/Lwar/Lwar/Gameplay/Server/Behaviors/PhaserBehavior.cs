@@ -16,21 +16,6 @@ namespace Lwar.Gameplay.Server.Behaviors
 		private Phaser _phaser;
 
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static PhaserBehavior()
-		{
-			ConstructorCache.Register(() => new PhaserBehavior());
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		private PhaserBehavior()
-		{
-		}
-
-		/// <summary>
 		///     Starts firing a continuous weapon.
 		/// </summary>
 		protected override void StartFiring()

@@ -18,16 +18,26 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug Linux|x64 = Debug Linux|x64
 		Release Linux|x64 = Release Linux|x64
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Debug Linux|x64.ActiveCfg = Debug OpenGL3|Any CPU
 		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Debug Linux|x64.Build.0 = Debug OpenGL3|Any CPU
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Debug|Any CPU.ActiveCfg = Debug Direct3D11|x64
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Debug|Any CPU.Build.0 = Debug Direct3D11|x64
 		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Release Linux|x64.ActiveCfg = Release OpenGL3|Any CPU
 		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Release Linux|x64.Build.0 = Release OpenGL3|Any CPU
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Release|Any CPU.ActiveCfg = Debug Direct3D11|x64
+		{288C9D6B-72B8-4EFF-B636-E8886657AF1A}.Release|Any CPU.Build.0 = Debug Direct3D11|x64
 		{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}.Debug Linux|x64.ActiveCfg = Debug|Any CPU
 		{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}.Debug Linux|x64.Build.0 = Debug|Any CPU
+		{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}.Release Linux|x64.ActiveCfg = Release|Any CPU
 		{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}.Release Linux|x64.Build.0 = Release|Any CPU
+		{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 	EndGlobalSection

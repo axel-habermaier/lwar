@@ -12,21 +12,6 @@ namespace Lwar.Network.Messages
 	internal sealed class UpdateCircleMessage : Message
 	{
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static UpdateCircleMessage()
-		{
-			ConstructorCache.Register(() => new UpdateCircleMessage());
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		private UpdateCircleMessage()
-		{
-		}
-
-		/// <summary>
 		///     Gets the entity that is updated.
 		/// </summary>
 		public NetworkIdentity Entity { get; private set; }

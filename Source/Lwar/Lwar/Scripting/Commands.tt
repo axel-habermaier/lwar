@@ -1,6 +1,0 @@
-﻿<#
-	SourceFile = "ICommands.cs";
-	Import = "../../../Pegasus/Pegasus/Scripting/ICommands.cs";
-	Namespace = "Lwar.Scripting";
-#>
-<#@ include file="../../../Pegasus/Pegasus/Scripting/RegistryGenerator.tt" #>

@@ -1,10 +1,9 @@
 ﻿namespace Pegasus.UserInterface
 {
 	using System;
-	using System.Runtime.InteropServices;
 	using Controls;
 	using Math;
-	using Platform.SDL2;
+	using Platform;
 	using Rendering;
 
 	/// <summary>
@@ -42,15 +41,7 @@
 		/// </summary>
 		public void HandleInput()
 		{
-			NativeWindow.ResetClosingStates();
-
-			Event e;
-			while (SDL_PollEvent(out e))
-			{
-				var window = NativeWindow.Lookup(e.WindowID);
-				if (window != null)
-					window.HandleEvent(ref e);
-			}
+			NativeMethods.HandleEventMessages();
 
 			foreach (Window window  in LogicalChildren)
 				window.HandleInput();
@@ -107,8 +98,5 @@
 		{
 			throw new NotSupportedException("Call Draw() instead.");
 		}
-
-		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
-		private static extern bool SDL_PollEvent(out Event e);
 	}
 }

@@ -9,20 +9,12 @@
 	/// <summary>
 	///     Represents a player that is participating in a game session.
 	/// </summary>
-	internal class Player : UniquePooledObject
+	internal class Player : PooledObject
 	{
-		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static Player()
-		{
-			ConstructorCache.Register(() => new Player());
-		}
-
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		private Player()
+		public Player()
 		{
 			WeaponTypes = new EntityType[NetworkProtocol.WeaponSlotCount];
 		}

@@ -7,23 +7,8 @@ namespace Pegasus.Platform.Network
 	/// <summary>
 	///     Represents an incoming UDP data packet.
 	/// </summary>
-	public sealed class IncomingUdpPacket : UniquePooledObject
+	public sealed class IncomingUdpPacket : PooledObject
 	{
-		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static IncomingUdpPacket()
-		{
-			ConstructorCache.Register(() => new IncomingUdpPacket());
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		private IncomingUdpPacket()
-		{
-		}
-
 		/// <summary>
 		///     Gets the buffer storing the data of the packet.
 		/// </summary>

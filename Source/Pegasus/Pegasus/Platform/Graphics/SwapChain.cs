@@ -1,7 +1,6 @@
 ﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
-	using Interface;
 	using Math;
 	using Memory;
 	using UserInterface;
@@ -11,13 +10,8 @@
 	///     A swap chain provides a front buffer and a back buffer for a window that can be used as the target of a
 	///     rendering operation by a graphics device.
 	/// </summary>
-	public sealed class SwapChain : GraphicsObject
+	public sealed unsafe class SwapChain : GraphicsObject
 	{
-		/// <summary>
-		///     The underlying swap chain object.
-		/// </summary>
-		private readonly ISwapChain _swapChain;
-
 		/// <summary>
 		///     The window the swap chain belongs to.
 		/// </summary>
@@ -37,13 +31,11 @@
 			_window = window;
 			_window.SwapChain = this;
 
-			_swapChain = graphicsDevice.CreateSwapChain(window);
+			NativeObject = DeviceInterface->InitializeSwapChain(window.NativePtr);
 
-			BackBuffer = new RenderTarget(graphicsDevice, _swapChain.BackBuffer);
+			BackBuffer = new RenderTarget(graphicsDevice, DeviceInterface->GetBackBuffer(NativeObject));
 			Resize(window.Size);
-
 			BackBuffer.Bind();
-			BackBuffer.SetName("BackBuffer");
 		}
 
 		/// <summary>
@@ -57,21 +49,21 @@
 		public void Present()
 		{
 			Assert.NotDisposed(this);
-			_swapChain.Present();
+			DeviceInterface->PresentSwapChain(NativeObject);
 		}
 
 		/// <summary>
 		///     Resizes the swap chain to the given size.
 		/// </summary>
 		/// <param name="size">The new size of the swap chain.</param>
-		public void Resize(Size size)
+		internal void Resize(Size size)
 		{
 			Assert.NotDisposed(this);
 
 			if (BackBuffer.Size == size || size.IntegralWidth == 0 || size.IntegralHeight == 0)
 				return;
 
-			_swapChain.Resize(size);
+			DeviceInterface->ResizeSwapChain(NativeObject, size.IntegralWidth, size.IntegralHeight);
 		}
 
 		/// <summary>
@@ -79,9 +71,9 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			DeviceState.Unset(ref GraphicsDevice.State.RenderTarget, BackBuffer);
+			DeviceState.Unset(ref DeviceState.RenderTarget, BackBuffer);
 
-			_swapChain.SafeDispose();
+			DeviceInterface->FreeSwapChain(NativeObject);
 			BackBuffer.SafeDispose();
 
 			_window.SwapChain = null;

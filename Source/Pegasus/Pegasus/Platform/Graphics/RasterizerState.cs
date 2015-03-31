@@ -1,29 +1,30 @@
 ﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
-	using Interface;
-	using Memory;
 	using Utilities;
 
 	/// <summary>
 	///     Describes the state of the rasterizer pipeline stage.
 	/// </summary>
-	public sealed class RasterizerState : GraphicsObject
+	public sealed unsafe class RasterizerState : GraphicsObject
 	{
-		/// <summary>
-		///     The underlying rasterizer state object.
-		/// </summary>
-		private readonly IRasterizerState _state;
-
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="description">A description of the rasterizer state that should be created.</param>
-		public RasterizerState(GraphicsDevice graphicsDevice, ref RasterizerDescription description)
+		public RasterizerState(GraphicsDevice graphicsDevice, RasterizerDescription description)
 			: base(graphicsDevice)
 		{
-			_state = graphicsDevice.CreateRasterizerState(ref description);
+			NativeObject = DeviceInterface->InitializeRasterizerState(&description);
+		}
+
+		/// <summary>
+		///     Gets the function that should be used to set the debug name of the native object.
+		/// </summary>
+		protected override SetNameDelegate SetNameFunction
+		{
+			get { return DeviceInterface->SetRasterizerStateName; }
 		}
 
 		/// <summary>
@@ -31,8 +32,8 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			DeviceState.Unset(ref GraphicsDevice.State.RasterizerState, this);
-			_state.SafeDispose();
+			DeviceState.Unset(ref DeviceState.RasterizerState, this);
+			DeviceInterface->FreeRasterizerState(NativeObject);
 		}
 
 		/// <summary>
@@ -42,17 +43,8 @@
 		{
 			Assert.NotDisposed(this);
 
-			if (DeviceState.Change(ref GraphicsDevice.State.RasterizerState, this))
-				_state.Bind();
-		}
-
-		/// <summary>
-		///     Invoked after the name of the graphics object has changed. This method is only invoked in debug builds.
-		/// </summary>
-		/// <param name="name">The new name of the graphics object.</param>
-		protected override void OnRenamed(string name)
-		{
-			_state.SetName(name);
+			if (DeviceState.Change(ref DeviceState.RasterizerState, this))
+				DeviceInterface->BindRasterizerState(NativeObject);
 		}
 	}
 }

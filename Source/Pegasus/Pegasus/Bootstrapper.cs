@@ -8,7 +8,6 @@
 	using Platform;
 	using Platform.Logging;
 	using Platform.Memory;
-	using Platform.SDL2;
 	using Scripting;
 	using UserInterface;
 	using UserInterface.ViewModels;
@@ -55,7 +54,7 @@
 				// Initialize the console view model here, as we don't want to miss
 				// any log entries while the application initializes itself...
 				using (var consoleViewModel = new ConsoleViewModel())
-				using (new NativeLibrary())
+				using (new PlatformLibrary())
 				using (var logFile = new LogFile(appName))
 				{
 					try

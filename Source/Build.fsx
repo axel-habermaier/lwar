@@ -1,11 +1,24 @@
 #I "packages/FAKE/tools"
 #r "FakeLib.dll"
+#r "System.Core"
+#r "System.Xml"
+#r "System.Xml.Linq"
 
 open Fake
 open System
 open System.IO
 open System.Collections.Generic
-open System.Text.RegularExpressions;
+open System.Text.RegularExpressions
+open System.Xml
+open System.Linq
+open System.Xml.Linq
+
+let getInteropFiles (project : string) = 
+  let ns = "http://schemas.microsoft.com/developer/msbuild/2003"
+  let document = XDocument.Load(project);
+  document.Descendants(XName.Get(sprintf "{%s}Compile" ns))
+  |> Seq.filter (fun e -> e.Elements(XName.Get(sprintf "{%s}NativeInterop" ns)).Any())
+  |> Seq.map (fun e -> "Source/Pegasus/Pegasus/" + e.Attribute(XName.Get "Include").Value)
 
 // MSBuild parameters for the projects
 let buildParams configuration platform defaults = { 
@@ -83,10 +96,27 @@ let buildIL configuration =
     // Finally, compile the IL code
     if Shell.Exec ("ilasm", sprintf "/dll /output:Build/%s/AnyCPU/Pegasus.IL.dll %s" configuration (String.Join (" ", modifiedFiles)), "") <> 0 then
         failwith "Failed to compile IL project"
+        
+let genRegistries configuration =
+  let genRegistry file ns import =
+      if Shell.Exec ("mono", sprintf "--debug=mdb-optimizations Build/%s/pgc.exe gen-registry --registry \"%s\" --namespace \"%s\" --import \"%s\"" configuration file ns import) <> 0 then
+          sprintf "Failed to compile registry %s" file |> failwith 
+
+  genRegistry "Source/Pegasus/Pegasus/Scripting/ICommands.cs" "Pegasus.Scripting" ""
+  genRegistry "Source/Pegasus/Pegasus/Scripting/ICvars.cs" "Pegasus.Scripting" ""
+  genRegistry "Source/Lwar/Lwar/Scripting/ICommands.cs" "Lwar.Scripting" "Source/Pegasus/Pegasus/Scripting/ICommands.cs"
+  genRegistry "Source/Lwar/Lwar/Scripting/ICvars.cs" "Lwar.Scripting" "Source/Pegasus/Pegasus/Scripting/ICvars.cs"
+  
+let genInterop configuration output =
+  printfn "--debug=mdb-optimizations Build/%s/pgc.exe gen-interop --files \"%s\" --output \"%s\"" configuration (String.Join (", ", getInteropFiles "Source/Pegasus/Pegasus/Pegasus.csproj")) output
+  if Shell.Exec ("mono", sprintf "--debug=mdb-optimizations Build/%s/pgc.exe gen-interop --files \"%s\" --output \"%s\"" configuration (String.Join (";", getInteropFiles "Source/Pegasus/Pegasus/Pegasus.csproj")) output) <> 0 then
+       sprintf "Failed to compile native interop code." |> failwith 
 
 // The Release target builds the assets the Release and Debug targets
 Target "Release" (fun _ -> 
     buildAssets "Release"
+    genRegistries "Release"
+    genInterop "Release" "Source/Pegasus/Platform/Interop"
     buildIL "Release"
 
     // We can now compile Pegasus and Lwar
@@ -104,6 +134,7 @@ Target "Release" (fun _ ->
 // The Debug target only builds the assets and the IL library
 Target "Debug" (fun _ ->
     buildAssets "Debug"
+    genRegistries "Debug"
     buildIL "Debug"
 )
 

@@ -13,7 +13,7 @@ namespace Lwar.Network
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		/// <param name="messageType">The type of the batches messages.</param>
+		/// <param name="messageType">The type of the batched messages.</param>
 		public BatchedMessage(MessageType messageType)
 		{
 			Assert.ArgumentInRange(messageType);

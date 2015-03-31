@@ -54,7 +54,7 @@ namespace Lwar.Network
 		}
 
 		/// <summary>
-		///     Checks whether the given identity is valid, i.e., has been allocated previously and not has yet freed.
+		///     Checks whether the given identity is valid, i.e., has been allocated previously and has not yet been freed.
 		/// </summary>
 		/// <param name="identity">The identity that should be checked.</param>
 		public bool IsValid(NetworkIdentity identity)

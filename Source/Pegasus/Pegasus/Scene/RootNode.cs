@@ -10,21 +10,6 @@
 	internal class RootNode : SceneNode
 	{
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static RootNode()
-		{
-			ConstructorCache.Register(() => new RootNode());
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		private RootNode()
-		{
-		}
-
-		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="allocator">The game session the planet should belong to.</param>

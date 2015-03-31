@@ -12,21 +12,6 @@ namespace Lwar.Network.Messages
 	internal sealed class EntityCollisionMessage : Message
 	{
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static EntityCollisionMessage()
-		{
-			ConstructorCache.Register(() => new EntityCollisionMessage());
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		private EntityCollisionMessage()
-		{
-		}
-
-		/// <summary>
 		///     Gets the first entity involved in the collision.
 		/// </summary>
 		public NetworkIdentity Entity1 { get; private set; }

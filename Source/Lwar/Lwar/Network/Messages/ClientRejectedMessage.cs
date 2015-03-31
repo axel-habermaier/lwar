@@ -11,21 +11,6 @@ namespace Lwar.Network.Messages
 	internal sealed class ClientRejectedMessage : Message
 	{
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static ClientRejectedMessage()
-		{
-			ConstructorCache.Register(() => new ClientRejectedMessage());
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		private ClientRejectedMessage()
-		{
-		}
-
-		/// <summary>
 		///     Gets the reason for the reject.
 		/// </summary>
 		public RejectReason Reason { get; private set; }

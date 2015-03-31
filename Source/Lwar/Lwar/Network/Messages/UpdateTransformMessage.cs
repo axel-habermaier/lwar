@@ -12,21 +12,6 @@ namespace Lwar.Network.Messages
 	internal sealed class UpdateTransformMessage : Message
 	{
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static UpdateTransformMessage()
-		{
-			ConstructorCache.Register(() => new UpdateTransformMessage());
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		private UpdateTransformMessage()
-		{
-		}
-
-		/// <summary>
 		///     Gets the entity that is updated.
 		/// </summary>
 		public NetworkIdentity Entity { get; private set; }

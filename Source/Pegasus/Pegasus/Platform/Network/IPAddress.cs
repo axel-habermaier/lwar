@@ -9,10 +9,7 @@
 	/// <summary>
 	///     Represents an IPv4 or IPv6 internet protocol address.
 	/// </summary>
-	/// <remarks>
-	///     We're not using the System.Net.IPAddress in order to reduce the pressure on the garbage collector as each invocation of
-	///     System.Net.Sockets.Socket.ReceiveFrom and System.Net.Sockets.Socket.SendTo allocates memory.
-	/// </remarks>
+	[StructLayout(LayoutKind.Sequential)]
 	public unsafe struct IPAddress : IEquatable<IPAddress>
 	{
 		/// <summary>
@@ -63,35 +60,6 @@
 		}
 
 		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		/// <param name="address">The socket address the IP address should be initialized from.</param>
-		internal IPAddress(ref SocketAddress address)
-			: this()
-		{
-			fixed (IPAddress* ip = &this)
-			fixed (SocketAddress* addr = &address)
-			{
-				switch (address.AddressFamily)
-				{
-					case AddressFamily.InterNetwork:
-						ip->IsIPv4 = true;
-						ip->_bytes[10] = 255;
-						ip->_bytes[11] = 255;
-						for (var i = 0; i < 4; ++i)
-							ip->_bytes[i + 12] = addr->IPv4[i];
-						break;
-					case AddressFamily.InterNetworkV6:
-						for (var i = 0; i < 16; ++i)
-							ip->_bytes[i] = addr->IPv6[i];
-						break;
-					default:
-						throw new InvalidOperationException(String.Format("Unsupported address family '{0}'.", address.AddressFamily));
-				}
-			}
-		}
-
-		/// <summary>
 		///     Gets a value indicating whether the IP address is an IPv4 address.
 		/// </summary>
 		public bool IsIPv4 { get; private set; }
@@ -111,19 +79,6 @@
 			}
 
 			return true;
-		}
-
-		/// <summary>
-		///     Writes the IP address into the given socket address.
-		/// </summary>
-		/// <param name="address">The location the IP address should be written to.</param>
-		internal void CopyTo(byte* address)
-		{
-			fixed (IPAddress* ip = &this)
-			{
-				for (var i = 0; i < 16; ++i)
-					address[i] = ip->_bytes[i];
-			}
 		}
 
 		/// <summary>
@@ -170,7 +125,7 @@
 		/// <summary>
 		///     Converts the IP address to a System.Net.IPAddress instance.
 		/// </summary>
-		internal System.Net.IPAddress ToSystemAddress()
+		private System.Net.IPAddress ToSystemAddress()
 		{
 			var byteCount = IsIPv4 ? 4 : 16;
 			var offset = IsIPv4 ? 12 : 0;

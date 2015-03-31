@@ -25,10 +25,10 @@
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="description">The description of the texture's properties.</param>
 		/// <param name="surfaces">The optional surface data for the texture.</param>
-		public Texture2D(GraphicsDevice graphicsDevice, ref TextureDescription description, Surface[] surfaces)
+		public Texture2D(GraphicsDevice graphicsDevice, TextureDescription description, Surface[] surfaces)
 			: base(graphicsDevice)
 		{
-			Initialize(ref description, surfaces);
+			Initialize(description, surfaces);
 		}
 
 		/// <summary>
@@ -59,8 +59,8 @@
 
 			var description = new TextureDescription
 			{
-				Width = (uint)width,
-				Height = (uint)height,
+				Width = width,
+				Height = height,
 				Depth = 1,
 				ArraySize = 1,
 				Flags = flags,
@@ -70,7 +70,7 @@
 				Type = TextureType.Texture2D
 			};
 
-			Initialize(ref description, null);
+			Initialize(description, null);
 		}
 
 		/// <summary>
@@ -93,7 +93,7 @@
 			get
 			{
 				ValidateAccess();
-				return (int)Description.Width;
+				return Description.Width;
 			}
 		}
 
@@ -105,7 +105,7 @@
 			get
 			{
 				ValidateAccess();
-				return (int)Description.Height;
+				return Description.Height;
 			}
 		}
 

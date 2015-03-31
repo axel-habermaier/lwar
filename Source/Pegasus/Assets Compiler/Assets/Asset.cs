@@ -20,13 +20,20 @@
 		private readonly string _basePath;
 
 		/// <summary>
+		///     Indicates whether a temporary file is generated for the asset.
+		/// </summary>
+		private readonly bool _hasTempFile;
+
+		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="metadata">The metadata of the asset.</param>
 		/// <param name="sourcePath">The metadata attribute the source path should be extracted from.</param>
 		/// <param name="basePath">Overrides the default base path of the asset.</param>
-		protected Asset(XElement metadata, string sourcePath, string basePath = null)
+		/// <param name="hasTempFile">Indicates whether a temporary file is generated for the asset.</param>
+		protected Asset(XElement metadata, string sourcePath, string basePath = null, bool hasTempFile = true)
 		{
+			_hasTempFile = hasTempFile;
 			Assert.ArgumentNotNullOrWhitespace(sourcePath);
 			Assert.ArgumentNotNull(metadata);
 
@@ -56,7 +63,7 @@
 		/// </summary>
 		public string AbsoluteSourcePath
 		{
-			get { return Path.Combine(_basePath, SourcePath); }
+			get { return Path.Combine(_basePath, SourcePath).Replace("\\", "/"); }
 		}
 
 		/// <summary>
@@ -148,7 +155,7 @@
 		{
 			get
 			{
-				if (!File.Exists(MetadataPath) || !File.Exists(TempPath))
+				if (!File.Exists(MetadataPath) || (_hasTempFile && !File.Exists(TempPath)))
 					return true;
 
 				var oldMetadata = File.ReadAllLines(MetadataPath);
@@ -241,13 +248,17 @@
 		///     Gets the specified metadata value as a string.
 		/// </summary>
 		/// <param name="metadataName">The name of the metadata.</param>
-		protected string GetStringMetadata(string metadataName)
+		/// <param name="optional">Indicates whether the metadata is optional.</param>
+		protected string GetStringMetadata(string metadataName, bool optional = false)
 		{
 			Assert.ArgumentNotNullOrWhitespace(metadataName);
 
 			var attribute = Metadata.Attribute(metadataName);
-			if (attribute == null)
+			if (attribute == null && !optional)
 				Log.Die("'{0}' attribute missing for asset '{1}'.", metadataName, SourcePath);
+
+			if (attribute == null)
+				return null;
 
 			return attribute.Value;
 		}

@@ -11,21 +11,6 @@ namespace Lwar.Network.Messages
 	internal sealed class EntityAddMessage : Message
 	{
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static EntityAddMessage()
-		{
-			ConstructorCache.Register(() => new EntityAddMessage());
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		private EntityAddMessage()
-		{
-		}
-
-		/// <summary>
 		///     Gets the entity that is added.
 		/// </summary>
 		public NetworkIdentity Entity { get; private set; }

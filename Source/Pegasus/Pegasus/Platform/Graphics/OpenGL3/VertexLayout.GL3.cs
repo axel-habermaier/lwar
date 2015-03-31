@@ -19,41 +19,41 @@
 		public VertexLayoutGL3(GraphicsDeviceGL3 graphicsDevice, ref VertexLayoutDescription description)
 			: base(graphicsDevice)
 		{
-			NativeObject = GLContext.Allocate(_gl.GenVertexArrays, "VertexLayout");
-			_gl.BindVertexArray(NativeObject);
+			//NativeObject = GLContext.Allocate(_gl.GenVertexArrays, "VertexLayout");
+			//_gl.BindVertexArray(NativeObject);
 
-			if (description.IndexBuffer != null)
-			{
-				var handle = ((BufferGL3)description.IndexBuffer.BufferObject).Handle;
-				_gl.BindBuffer(GL.ElementArrayBuffer, handle);
+			//if (description.IndexBuffer != null)
+			//{
+			//	var handle = ((BufferGL3)description.IndexBuffer.BufferObject).Handle;
+			//	_gl.BindBuffer(GL.ElementArrayBuffer, handle);
 
-				IndexOffset = description.IndexOffset;
-				IndexType = description.IndexBuffer.IndexSize.Map();
-				IndexSizeInBytes = description.IndexBuffer.IndexSize.GetIndexSizeInBytes();
-			}
+			//	IndexOffset = description.IndexOffset;
+			//	IndexType = description.IndexBuffer.IndexSize.Map();
+			//	IndexSizeInBytes = description.IndexBuffer.IndexSize.GetIndexSizeInBytes();
+			//}
 
-			for (var i = 0; i < description.Bindings.Length; ++i)
-			{
-				var type = description.Bindings[i].Format.GetVertexDataType();
-				var size = description.Bindings[i].Format.GetVertexDataComponentCount();
-				var slot = (uint)description.Bindings[i].Semantics;
+			//for (var i = 0; i < description.Bindings.Length; ++i)
+			//{
+			//	var type = description.Bindings[i].Format.GetVertexDataType();
+			//	var size = description.Bindings[i].Format.GetVertexDataComponentCount();
+			//	var slot = (uint)description.Bindings[i].Semantics;
 
-				Assert.NotNull(description.Bindings[i].VertexBuffer);
+			//	Assert.NotNull(description.Bindings[i].VertexBuffer);
 
-				var handle = ((BufferGL3)description.Bindings[i].VertexBuffer.BufferObject).Handle;
-				_gl.BindBuffer(GL.ArrayBuffer, handle);
-				_gl.EnableVertexAttribArray(slot);
+			//	var handle = ((BufferGL3)description.Bindings[i].VertexBuffer.BufferObject).Handle;
+			//	_gl.BindBuffer(GL.ArrayBuffer, handle);
+			//	_gl.EnableVertexAttribArray(slot);
 
-				var normalize = description.Bindings[i].Semantics == DataSemantics.Color0 ||
-								description.Bindings[i].Semantics == DataSemantics.Color1 ||
-								description.Bindings[i].Semantics == DataSemantics.Color2 ||
-								description.Bindings[i].Semantics == DataSemantics.Color3;
+			//	var normalize = description.Bindings[i].Semantics == DataSemantics.Color0 ||
+			//					description.Bindings[i].Semantics == DataSemantics.Color1 ||
+			//					description.Bindings[i].Semantics == DataSemantics.Color2 ||
+			//					description.Bindings[i].Semantics == DataSemantics.Color3;
 
-				_gl.VertexAttribPointer(slot, size, type, normalize, description.Bindings[i].Stride, (void*)description.Bindings[i].Offset);
-				_gl.VertexAttribDivisor(slot, description.Bindings[i].StepRate);
-			}
+			//	_gl.VertexAttribPointer(slot, size, type, normalize, description.Bindings[i].Stride, (void*)description.Bindings[i].Offset);
+			//	_gl.VertexAttribDivisor(slot, description.Bindings[i].StepRate);
+			//}
 
-			_gl.BindVertexArray(0);
+			//_gl.BindVertexArray(0);
 		}
 
 		/// <summary>
@@ -83,7 +83,7 @@
 		{
 			// Do not actually bind the input layout here, as that causes all sorts of problems with buffer updates between
 			// the binding of the input layout and the actual draw call using the input layout
-			GraphicsDevice.State.VertexLayout = this;
+			DeviceState.VertexLayout = this;
 		}
 
 		/// <summary>

@@ -11,21 +11,6 @@ namespace Lwar.Network.Messages
 	internal sealed class PlayerStatsMessage : Message
 	{
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static PlayerStatsMessage()
-		{
-			ConstructorCache.Register(() => new PlayerStatsMessage());
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		private PlayerStatsMessage()
-		{
-		}
-
-		/// <summary>
 		///     Gets the number of deaths of the player.
 		/// </summary>
 		public ushort Deaths { get; private set; }

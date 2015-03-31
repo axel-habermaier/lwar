@@ -24,7 +24,7 @@
 		///     Invoked when a description of the cvar or command with the given name should be displayed.
 		/// </summary>
 		/// <param name="name">The name of the cvar or the command for which the help should be displayed.</param>
-		private void OnHelp(string name)
+		private static void OnHelp(string name)
 		{
 			Assert.ArgumentNotNull(name);
 

@@ -3,93 +3,32 @@
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
-<#@ output extension=".asm" encoding="us-ascii" #>
+<#@ output extension=".cpp" encoding="us-ascii" #>
 <# var methods = GetMethods(); #>
 
-#include "Debug.asm"
 
-.class private auto ansi sealed beforefieldinit Pegasus.Platform.Graphics.OpenGL3.Bindings.EntryPoints
-	extends System.Object
-{
-	.field private class [mscorlib]System.Action _checkErrors
-	.field private class [mscorlib]System.Func`2<string, native int> _loader
-
-	.method public hidebysig specialname rtspecialname instance void .ctor (
-			class [mscorlib]System.Action checkErrors,
-			class [mscorlib]System.Func`2<string, native int> loader
-		) cil managed 
-	{
-		.maxstack 3
-
-		ldarg.0
-		call instance void [mscorlib]System.Object::.ctor()
-
-		ldarg.0
-		ldarg.1
-		stfld class [mscorlib]System.Action Pegasus.Platform.Graphics.OpenGL3.Bindings.EntryPoints::_checkErrors
-
-		ldarg.0
-		ldarg.2
-		stfld class [mscorlib]System.Func`2<string, native int> Pegasus.Platform.Graphics.OpenGL3.Bindings.EntryPoints::_loader
-		
-		ldarg.0
-		ldarg.2
-		ldstr "glGetError"
-		callvirt instance !1 class [mscorlib]System.Func`2<string, native int>::Invoke(!0)
-		stfld native int Pegasus.Platform.Graphics.OpenGL3.Bindings.EntryPoints::_getError
-
-		ldarg.0
-		ldarg.2
-		ldstr "glGetIntegerv"
-		callvirt instance !1 class [mscorlib]System.Func`2<string, native int>::Invoke(!0)
-		stfld native int Pegasus.Platform.Graphics.OpenGL3.Bindings.EntryPoints::_getIntegerv
-
-		ret
-	}
-
-	.method public hidebysig void Load() cil managed 
-	{
-<# foreach (var method in methods) { #>
-		ldarg.0
-		ldarg.0
-		ldfld class [mscorlib]System.Func`2<string, native int> Pegasus.Platform.Graphics.OpenGL3.Bindings.EntryPoints::_loader
-		ldstr "gl<#= method.MethodName #>"
-		callvirt instance !1 class [mscorlib]System.Func`2<string, native int>::Invoke(!0)
-		stfld native int Pegasus.Platform.Graphics.OpenGL3.Bindings.EntryPoints::<#= method.FieldName #>
-
+<# foreach (var method in methods.OrderBy(m=>m.MethodName)) { #>
+	using gl<#= method.MethodName #>Func = <#= method.ReturnType #>(*)(<#= String.Join(", ", method.Parameters.Select(p => p.Item2)) #>);
 <# } #>
-		ret
-	}
 
-<# foreach (var method in methods) { #>
-	.method public hidebysig <#= method.ReturnType #> <#= method.MethodName #>(<#= String.Join(", ", method.Parameters.Select(p => p.Item2 + " " + p.Item1)) #>) cil managed aggressiveinlining
-	{
-		.custom instance void [mscorlib]System.Diagnostics.DebuggerHiddenAttribute::.ctor() = (
-			01 00 00 00
-		)
-		.maxstack <#= method.Parameters.Length + 2 #>
+<# foreach (var method in methods.OrderBy(m=>m.MethodName)) { #>
+	gl<#= method.MethodName #>Func <#= method.MethodName #>;
+<# } #>
 
-<# for (var i = 0; i < method.Parameters.Length; ++i) { #>
-		ldarg.s <#= i + 1 #>
+#define PG_DEL \
+<# foreach (var method in methods.OrderBy(m=>m.MethodName)) { #>
+	<# if (method.ReturnType != "void") { #>
+	<#= method.ReturnType #> gl<#= method.MethodName #>(<#= String.Join(", ", method.Parameters.Select(p => String.Format("{0} {1}", p.Item2, p.Item1))) #>) { auto result = _gl.<#=method.MethodName#>(<#= String.Join(", ", method.Parameters.Select(p=>p.Item1))#>); PG_GL_CHECK_ERRORS(); return result; } \
+	<#} else{#>
+	void gl<#= method.MethodName #>(<#= String.Join(", ", method.Parameters.Select(p => String.Format("{0} {1}", p.Item2, p.Item1))) #>) { _gl.<#=method.MethodName#>(<#= String.Join(", ", method.Parameters.Select(p=>p.Item1))#>); PG_GL_CHECK_ERRORS(); } \
+	<#}#>
 <# } #>
-		ldarg.0
-		ldfld native int Pegasus.Platform.Graphics.OpenGL3.Bindings.EntryPoints::<#= method.FieldName #>
-		calli unmanaged stdcall <#= method.ReturnType #>(<#= String.Join(", ", method.Parameters.Select(p => p.Item2)) #>)
-<# if (!method.NoErrorChecks) { #>
-		#ifdef DEBUG
-			ldarg.0
-			ldfld class [mscorlib]System.Action Pegasus.Platform.Graphics.OpenGL3.Bindings.EntryPoints::_checkErrors
-			callvirt instance void class [mscorlib]System.Action::Invoke()
-		#endif
-<# } #>
-		ret
-	}
 
+
+<# foreach (var method in methods.OrderBy(m=>m.MethodName)) { #>
+	LoadFunc("gl<#= method.MethodName #>", reinterpret_cast<void**>(&<#= method.MethodName #>));
 <# } #>
-<# foreach (var method in methods) { #>
-	.field private native int <#= method.FieldName #>
-<# } #>
-}
+
 <#+
 
 struct Method

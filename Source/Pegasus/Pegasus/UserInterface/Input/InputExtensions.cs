@@ -1,8 +1,7 @@
 ﻿namespace Pegasus.UserInterface.Input
 {
 	using System;
-	using System.Runtime.InteropServices;
-	using Platform.SDL2;
+	using Platform;
 	using Utilities;
 
 	/// <summary>
@@ -127,10 +126,7 @@
 		internal static ScanCode ToScanCode(this Key key)
 		{
 			Assert.ArgumentInRange(key);
-			return (ScanCode)SDL_GetScancodeFromKey((int)key);
+			return (ScanCode)NativeMethods.KeyToScanCode((int)key);
 		}
-
-		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
-		private static extern int SDL_GetScancodeFromKey(int key);
 	}
 }

@@ -2,12 +2,11 @@
 {
 	using System;
 	using System.Collections.Generic;
-	using System.Runtime.InteropServices;
 	using Controls;
 	using Math;
+	using Platform;
 	using Platform.Logging;
 	using Platform.Memory;
-	using Platform.SDL2;
 	using Utilities;
 
 	/// <summary>
@@ -75,24 +74,8 @@
 		/// </summary>
 		internal static bool TextInputEnabled
 		{
-			get { return SDL_IsTextInputActive(); }
-			set
-			{
-				var sdlWindow = SDL_GetKeyboardFocus();
-				if (sdlWindow == IntPtr.Zero)
-					return;
-
-				var window = NativeWindow.Lookup(sdlWindow);
-				if (window == null)
-					return;
-
-				window.TextInputEnabled = value;
-
-				if (value)
-					SDL_StartTextInput();
-				else
-					SDL_StopTextInput();
-			}
+			get { return NativeMethods.IsTextInputEnabled(); }
+			set { NativeMethods.EnableTextInput(value); }
 		}
 
 		/// <summary>
@@ -142,8 +125,8 @@
 		/// <param name="area">The new text input area.</param>
 		internal static void ChangeTextInputArea(Rectangle area)
 		{
-			var rect = new Rect(area);
-			SDL_SetTextInputRect(ref rect);
+			NativeMethods.SetTextInputArea(MathUtils.RoundIntegral(area.Left), MathUtils.RoundIntegral(area.Top),
+				MathUtils.RoundIntegral(area.Width), MathUtils.RoundIntegral(area.Height));
 		}
 
 		/// <summary>
@@ -414,20 +397,5 @@
 
 			return modifiers;
 		}
-
-		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
-		private static extern void SDL_StartTextInput();
-
-		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
-		private static extern bool SDL_IsTextInputActive();
-
-		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
-		private static extern void SDL_StopTextInput();
-
-		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
-		private static extern void SDL_SetTextInputRect(ref Rect rect);
-
-		[DllImport(NativeLibrary.Name, CallingConvention = CallingConvention.Cdecl)]
-		private static extern IntPtr SDL_GetKeyboardFocus();
 	}
 }

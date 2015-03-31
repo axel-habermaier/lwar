@@ -49,11 +49,11 @@
 		{
 			Bitmap = (Bitmap)Image.FromFile(AbsoluteSourcePath);
 
-			uint componentCount;
+			int componentCount;
 			Description = new TextureDescription
 			{
-				Width = (uint)Bitmap.Width,
-				Height = (uint)Bitmap.Height,
+				Width = Bitmap.Width,
+				Height = Bitmap.Height,
 				Depth = 1,
 				Format = ToSurfaceFormat(Bitmap.PixelFormat, out componentCount),
 				ArraySize = 1,

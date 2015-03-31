@@ -4,7 +4,6 @@ namespace Lwar.Gameplay.Server.Entities
 	using Behaviors;
 	using Network;
 	using Network.Messages;
-	using Pegasus.Platform.Memory;
 	using Pegasus.Utilities;
 
 	/// <summary>
@@ -13,17 +12,9 @@ namespace Lwar.Gameplay.Server.Entities
 	internal class Planet : Entity
 	{
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static Planet()
-		{
-			ConstructorCache.Register(() => new Planet());
-		}
-
-		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		private Planet()
+		public Planet()
 		{
 			UpdateMessageType = MessageType.UpdatePosition;
 		}

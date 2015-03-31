@@ -12,7 +12,7 @@
 	///     This class is not implemented as an iterator in order to avoid the memory allocations required by the use of
 	///     iterators.
 	/// </remarks>
-	internal sealed class MessageDeserializer : UniquePooledObject
+	internal sealed class MessageDeserializer : PooledObject
 	{
 		/// <summary>
 		///     The object pool that is used to allocate message objects.
@@ -43,21 +43,6 @@
 		///     The delivery manager that is used to decide whether the packet should be delivered.
 		/// </summary>
 		private DeliveryManager _deliveryManager;
-
-		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static MessageDeserializer()
-		{
-			ConstructorCache.Register(() => new MessageDeserializer());
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		private MessageDeserializer()
-		{
-		}
 
 		/// <summary>
 		///     Invoked when the pooled instance is returned to the pool.
@@ -153,7 +138,6 @@
 			var sequenceNumber = _batchedMessageType == null ? reader.ReadUInt32() : _batchedSequenceNumber;
 
 			var message = Message.Allocate(_allocator, messageType);
-			message.AcquireOwnership();
 
 			if (message.UseBatchedTransmission)
 			{
@@ -165,7 +149,7 @@
 				_batchedSequenceNumber = sequenceNumber;
 			}
 
-			// If the remote peer sent an batched message with a message count of 0, there's no message to return
+			// If the remote peer sent a batched message with a message count of 0, there's no message to return
 			if (_batchedMessageCount < 0)
 			{
 				message.SafeDispose();

@@ -240,6 +240,8 @@
 			if (hasChanged)
 			{
 				Log.DebugIf(EnableTracing, "(Server) Changing loadout of player '{0}' ({1}): {2}.", player.Name, player.Identity, loadout);
+
+				loadout.AcquireOwnership();
 				Broadcast(loadout);
 			}
 

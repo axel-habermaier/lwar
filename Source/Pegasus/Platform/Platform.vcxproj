@@ -1,0 +1,288 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Graphics\Graphics.cpp" />
+    <ClCompile Include="Graphics\Direct3D11\BufferD3D11.cpp" />
+    <ClCompile Include="Graphics\Direct3D11\Direct3D11.cpp" />
+    <ClCompile Include="Graphics\Direct3D11\GraphicsDeviceD3D11.cpp" />
+    <ClCompile Include="Graphics\Direct3D11\PipelineStateD3D11.cpp" />
+    <ClCompile Include="Graphics\Direct3D11\QueryD3D11.cpp" />
+    <ClCompile Include="Graphics\Direct3D11\RenderTargetD3D11.cpp" />
+    <ClCompile Include="Graphics\Direct3D11\ShaderD3D11.cpp" />
+    <ClCompile Include="Graphics\Direct3D11\SwapChainD3D11.cpp" />
+    <ClCompile Include="Graphics\Direct3D11\TextureD3D11.cpp" />
+    <ClCompile Include="Graphics\Direct3D11\VertexLayoutD3D11.cpp" />
+    <ClCompile Include="Graphics\OpenGL3\BindingsGL3.cpp" />
+    <ClCompile Include="Graphics\OpenGL3\BufferGL3.cpp" />
+    <ClCompile Include="Graphics\OpenGL3\GraphicsDeviceGL3.cpp" />
+    <ClCompile Include="Graphics\OpenGL3\OpenGL3.cpp" />
+    <ClCompile Include="Graphics\OpenGL3\PipelineStateGL3.cpp" />
+    <ClCompile Include="Graphics\OpenGL3\QueryGL3.cpp" />
+    <ClCompile Include="Graphics\OpenGL3\RenderTargetGL3.cpp" />
+    <ClCompile Include="Graphics\OpenGL3\ShaderGL3.cpp" />
+    <ClCompile Include="Graphics\OpenGL3\SwapChainGL3.cpp" />
+    <ClCompile Include="Graphics\OpenGL3\TextureGL3.cpp" />
+    <ClCompile Include="Graphics\OpenGL3\VertexLayoutGL3.cpp" />
+    <ClCompile Include="Network\Network.cpp" />
+    <ClCompile Include="Platform\Keyboard.cpp" />
+    <ClCompile Include="Platform\Mouse.cpp" />
+    <ClCompile Include="Platform\NativeWindow.cpp" />
+    <ClCompile Include="Network\IPAddress.cpp" />
+    <ClCompile Include="Network\IPEndPoint.cpp" />
+    <ClCompile Include="Network\NetworkException.cpp" />
+    <ClCompile Include="Network\UdpSocket.cpp" />
+    <ClCompile Include="Platform\Platform.cpp" />
+    <ClCompile Include="Platform\Win32.cpp" />
+    <ClCompile Include="Platform\Window.cpp" />
+    <ClCompile Include="Prelude.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="Utilities\Memory.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Graphics\Direct3D11\Direct3D11.hpp" />
+    <ClInclude Include="Graphics\Direct3D11\GraphicsDeviceD3D11.hpp" />
+    <ClInclude Include="Graphics\Graphics.hpp" />
+    <ClInclude Include="Graphics\OpenGL3\BindingsGL3.hpp" />
+    <ClInclude Include="Graphics\OpenGL3\GraphicsDeviceGL3.hpp" />
+    <ClInclude Include="Graphics\OpenGL3\OpenGL3.hpp" />
+    <ClInclude Include="Interop\Callbacks.hpp" />
+    <ClInclude Include="Interop\Enums.hpp" />
+    <ClInclude Include="Interop\Funcs.hpp" />
+    <ClInclude Include="Interop\Interfaces.hpp" />
+    <ClInclude Include="Interop\Structs.hpp" />
+    <ClInclude Include="Platform\NativeWindow.hpp" />
+    <ClInclude Include="Network\IPAddress.hpp" />
+    <ClInclude Include="Network\IPEndPoint.hpp" />
+    <ClInclude Include="Network\NetworkException.hpp" />
+    <ClInclude Include="Network\UdpSocket.hpp" />
+    <ClInclude Include="Platform\Win32.hpp" />
+    <ClInclude Include="Prelude.hpp" />
+    <ClInclude Include="Utilities\Casts.hpp" />
+    <ClInclude Include="Utilities\Enumeration.hpp" />
+    <ClInclude Include="Utilities\Log.hpp" />
+    <ClInclude Include="Utilities\Memory.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Utilities\Log.inl" />
+    <None Include="Graphics\Graphics.inl" />
+    <None Include="Utilities\Casts.inl" />
+    <None Include="Utilities\Enumeration.inl" />
+    <None Include="Utilities\Memory.inl" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{E008FA73-A930-40B5-93A4-959A4D30492D}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Platform</RootNamespace>
+    <ProjectName>Platform</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)../Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
+    <TargetName>Platform</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <TargetName>Platform</TargetName>
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)../Build/$(Configuration)/x64/</OutDir>
+    <IntDir>$(SolutionDir)../Build/obj/$(TargetName)\$(Configuration) $(PlatformTarget)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)../Binaries $(PlatformTarget)\$(Configuration)\</OutDir>
+    <IntDir>obj\$(Configuration) $(PlatformTarget)\</IntDir>
+    <TargetName>Platform</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <TargetName>Platform</TargetName>
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)../Build/$(Configuration)/x64/</OutDir>
+    <IntDir>$(SolutionDir)../Build/obj/$(TargetName)\$(Configuration) $(PlatformTarget)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(SolutionDir)../Build/$(Configuration)/AnyCPU/</OutDir>
+    <IntDir>$(SolutionDir)../Build/obj/$(TargetName)\$(Configuration) $(PlatformTarget)\</IntDir>
+    <TargetName>Platform</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <TargetName>Platform</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)../Build/$(Configuration)/AnyCPU/</OutDir>
+    <IntDir>$(SolutionDir)../Build/obj/$(TargetName)\$(Configuration) $(PlatformTarget)\</IntDir>
+    <TargetName>Platform</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <TargetName>Platform</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>DEBUG;PG_GRAPHICS_DIRECT3D11</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>Prelude.hpp</PrecompiledHeaderFile>
+      <CallingConvention>StdCall</CallingConvention>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BrowseInformation>true</BrowseInformation>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)../Dependencies</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>d3d11.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies);Ws2_32.lib;SDL2d.lib;winmm.lib;imm32.lib;version.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)../Dependencies/SDL2/x86</AdditionalLibraryDirectories>
+    </Link>
+    <Bscmake>
+      <PreserveSbr>true</PreserveSbr>
+    </Bscmake>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>DEBUG;PG_GRAPHICS_DIRECT3D11</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>Prelude.hpp</PrecompiledHeaderFile>
+      <CallingConvention>StdCall</CallingConvention>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)../Dependencies</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>d3d11.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies);Ws2_32.lib;SDL2d.lib;winmm.lib;imm32.lib;version.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)../Dependencies/SDL2/x64</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>PG_GRAPHICS_DIRECT3D11</PreprocessorDefinitions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <PrecompiledHeaderFile>Prelude.hpp</PrecompiledHeaderFile>
+      <CallingConvention>StdCall</CallingConvention>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)../Dependencies</AdditionalIncludeDirectories>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <OmitFramePointers>true</OmitFramePointers>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>d3d11.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies);Ws2_32.lib;SDL2.lib;winmm.lib;imm32.lib;version.lib</AdditionalDependencies>
+      <Profile>true</Profile>
+      <AdditionalLibraryDirectories>$(SolutionDir)../Dependencies/SDL2/x86</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>Full</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>PG_GRAPHICS_DIRECT3D11</PreprocessorDefinitions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <PrecompiledHeaderFile>Prelude.hpp</PrecompiledHeaderFile>
+      <CallingConvention>StdCall</CallingConvention>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(SolutionDir)../Dependencies</AdditionalIncludeDirectories>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <OmitFramePointers>true</OmitFramePointers>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>d3d11.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies);Ws2_32.lib;SDL2.lib;winmm.lib;imm32.lib;version.lib</AdditionalDependencies>
+      <Profile>true</Profile>
+      <AdditionalLibraryDirectories>$(SolutionDir)../Dependencies/SDL2/x64</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

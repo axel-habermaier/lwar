@@ -12,21 +12,6 @@ namespace Lwar.Gameplay.Server.Behaviors
 	internal class GunBehavior : WeaponBehavior
 	{
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static GunBehavior()
-		{
-			ConstructorCache.Register(() => new GunBehavior());
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		private GunBehavior()
-		{
-		}
-
-		/// <summary>
 		///     Fires a single shot of a non-continuous weapon.
 		/// </summary>
 		protected override void Fire()

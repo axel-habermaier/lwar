@@ -12,21 +12,6 @@ namespace Lwar.Network.Messages
 	internal sealed class UpdateRayMessage : Message
 	{
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static UpdateRayMessage()
-		{
-			ConstructorCache.Register(() => new UpdateRayMessage());
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		private UpdateRayMessage()
-		{
-		}
-
-		/// <summary>
 		///     Gets the entity that is updated.
 		/// </summary>
 		public NetworkIdentity Entity { get; private set; }

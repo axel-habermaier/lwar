@@ -1,0 +1,13 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<Import Project="AssetCompiler.targets" Condition="'$(AssetCompilerExecutable)' == ''" />
+	
+	<Target Name="NativeInteropCodeGen" BeforeTargets="BeforeBuild;GenerateILAssembly">
+		<Exec Command="$(AssetCompilerExecutable) gen-interop --files &quot;@(Compile)&quot; --output &quot;$(NativeInteropOutputPath)&quot;" Condition="%(Compile.NativeInterop) == 'true'" WorkingDirectory="$(ProjectDir)"/>
+	</Target>
+	
+	<Target Name="NativeInteropCodeGenClean" BeforeTargets="BeforeClean">
+		<Exec Command="$(AssetCompilerExecutable) clean-interop --files &quot;@(Compile)&quot; --output &quot;$(NativeInteropOutputPath)&quot;" Condition="%(Compile.NativeInterop) == 'true'" WorkingDirectory="$(ProjectDir)"/>
+	</Target>
+	
+</Project>

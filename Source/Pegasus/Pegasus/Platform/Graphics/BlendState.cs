@@ -1,29 +1,30 @@
 ﻿namespace Pegasus.Platform.Graphics
 {
 	using System;
-	using Interface;
-	using Memory;
 	using Utilities;
 
 	/// <summary>
 	///     Describes a blend state of the output merger pipeline stage.
 	/// </summary>
-	public sealed class BlendState : GraphicsObject
+	public sealed unsafe class BlendState : GraphicsObject
 	{
-		/// <summary>
-		///     The underlying blend state object.
-		/// </summary>
-		private readonly IBlendState _state;
-
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		/// <param name="graphicsDevice">The graphics device associated with this instance.</param>
 		/// <param name="description">A description of the blend state that should be created.</param>
-		public BlendState(GraphicsDevice graphicsDevice, ref BlendDescription description)
+		public BlendState(GraphicsDevice graphicsDevice, BlendDescription description)
 			: base(graphicsDevice)
 		{
-			_state = graphicsDevice.CreateBlendState(ref description);
+			NativeObject = DeviceInterface->InitializeBlendState(&description);
+		}
+
+		/// <summary>
+		///     Gets the function that should be used to set the debug name of the native object.
+		/// </summary>
+		protected override SetNameDelegate SetNameFunction
+		{
+			get { return DeviceInterface->SetBlendStateName; }
 		}
 
 		/// <summary>
@@ -31,8 +32,8 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
-			DeviceState.Unset(ref GraphicsDevice.State.BlendState, this);
-			_state.SafeDispose();
+			DeviceState.Unset(ref DeviceState.BlendState, this);
+			DeviceInterface->FreeBlendState(NativeObject);
 		}
 
 		/// <summary>
@@ -42,17 +43,8 @@
 		{
 			Assert.NotDisposed(this);
 
-			if (DeviceState.Change(ref GraphicsDevice.State.BlendState, this))
-				_state.Bind();
-		}
-
-		/// <summary>
-		///     Invoked after the name of the graphics object has changed. This method is only invoked in debug builds.
-		/// </summary>
-		/// <param name="name">The new name of the graphics object.</param>
-		protected override void OnRenamed(string name)
-		{
-			_state.SetName(name);
+			if (DeviceState.Change(ref DeviceState.BlendState, this))
+				DeviceInterface->BindBlendState(NativeObject);
 		}
 	}
 }

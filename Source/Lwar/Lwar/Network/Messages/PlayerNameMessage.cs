@@ -12,21 +12,6 @@ namespace Lwar.Network.Messages
 	internal sealed class PlayerNameMessage : Message
 	{
 		/// <summary>
-		///     Initializes the type.
-		/// </summary>
-		static PlayerNameMessage()
-		{
-			ConstructorCache.Register(() => new PlayerNameMessage());
-		}
-
-		/// <summary>
-		///     Initializes a new instance.
-		/// </summary>
-		private PlayerNameMessage()
-		{
-		}
-
-		/// <summary>
 		///     Gets the new name of the player.
 		/// </summary>
 		public string PlayerName { get; private set; }
