@@ -107,7 +107,7 @@ void debug_message(Message *m, const char *s) {
         log_debug("%schat %d: %.*s", s, m->chat.player_id.n, m->chat.msg.n, m->chat.msg.s);
         break;
     case MESSAGE_ADD:
-        log_debug("%sadd %d: player %d, type %d, parent %d", s, m->add.entity_id.n, m->add.player_id.n, m->add.type_id, m->add.parent_id);
+        log_debug("%sadd %d: player %d, type %d, parent %d", s, m->add.entity_id.n, m->add.player_id.n, m->add.type_id, m->add.parent_id.n);
         break;
     case MESSAGE_REMOVE:
         log_debug("%srem %d", s, m->remove.entity_id.n);
