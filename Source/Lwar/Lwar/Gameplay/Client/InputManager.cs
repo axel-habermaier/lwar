@@ -32,7 +32,7 @@
 		/// <summary>
 		///     A cached array of weapon slot types.
 		/// </summary>
-		private readonly EntityType[] _weaponTypes = { EntityType.Gun, EntityType.RocketLauncher, EntityType.Phaser, EntityType.Phaser };
+		private readonly EntityType[] _weaponTypes = { EntityType.Gun, EntityType.Phaser, EntityType.RocketLauncher, EntityType.RocketLauncher };
 
 		/// <summary>
 		///     The clock that is used for time measurements.

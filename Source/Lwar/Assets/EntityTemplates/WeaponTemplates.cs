@@ -14,7 +14,7 @@
 			Collide = "bullet_hit",
 			Health = 2000,
 			Shield = 1,
-			Mass = 0.1f,
+			Mass = 0.01f,
 			Radius = 16,
 			Acceleration = new Vector2(6000, 0),
 			Format = "format_pos"
@@ -23,6 +23,7 @@
 		public static readonly EntityTemplate Rocket = new EntityTemplate
 		{
 			Act = "rocket_aim",
+			Collide = "rocket_hit",
 			Energy = 1000,
 			Health = 1,
 			Shield = 1,
@@ -30,7 +31,7 @@
 			Radius = 32,
 			Acceleration = new Vector2(4000, 1000),
 			Decelaration = new Vector2(1000, 1000),
-			Rotation = 5,
+			Rotation = 20,
 			Format = "format_pos"
 		};
 

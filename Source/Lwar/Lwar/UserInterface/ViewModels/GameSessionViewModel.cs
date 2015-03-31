@@ -60,7 +60,7 @@
 
 			_gameSession.InputDevice.UIElement = View;
 			_gameSession.Connection.Send(PlayerLoadoutMessage.Create(_gameSession.Allocator, _gameSession.LocalPlayer.Identity,
-				EntityType.Ship, new[] { EntityType.Gun, EntityType.Phaser, EntityType.Phaser, EntityType.Phaser }));
+				EntityType.Ship, new[] { EntityType.Gun, EntityType.Phaser, EntityType.RocketLauncher, EntityType.RocketLauncher }));
 		}
 
 		/// <summary>
