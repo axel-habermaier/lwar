@@ -151,6 +151,8 @@ void players_update() {
     Client *c;
     Player *p;
     clients_foreach(c) {
+        if(c->dead) continue;
+
         p = &c->player;
 
         if(!p->ship.entity) {
