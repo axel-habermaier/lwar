@@ -39,6 +39,7 @@ Pegasus
 - support vsync
 - write C# analyzer that checks whether PooledObjects are not constructed directly
 - write C# analyzer that checks whether all fields of PooledObjects are reset
+- pools thread-safe!!! server log -> textstring pooled
 
 Assets Compiler
 ========
