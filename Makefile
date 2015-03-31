@@ -78,12 +78,12 @@ SERVER_SO     = $(DIST)/libServer.so
 SERVER_LIB    = 
 
 DEDICATED_OBJ = $(addprefix $(BUILD)/,$(DEDICATED_SRC:.c=.o))
-DEDICATED_LIB = -lm -lGL -lX11 -lrt -lserver -L $(DIST)
+DEDICATED_LIB = -lm -lGL -lX11 -lrt -lServer -L $(DIST)
 DEDICATED_BIN = $(DIST)/dedicated
 
 PEGASUS_OBJ   = $(addprefix $(BUILD)/,$(PEGASUS_SRC:.cpp=.o))
 PEGASUS_SO    = $(DIST)/libPlatform.so
-PEGASUS_LIB   = -lSDL2
+PEGASUS_LIB   = -lSDL2 -lstdc++
 
 
 CC = clang
@@ -105,7 +105,7 @@ gdb: $(DEDICATED_BIN)
 	LD_LIBRARY_PATH=$(DIST) gdb ./$(DEDICATED_BIN)
 
 clean:
-	rm $(SERVER_OBJ) $(DEDICATED_OBJ)
+	rm $(SERVER_OBJ) $(DEDICATED_OBJ) $(PEGASUS_OBJ)
 
 $(BUILD):
 	mkdir -p $@

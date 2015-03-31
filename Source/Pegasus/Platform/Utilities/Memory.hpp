@@ -32,8 +32,13 @@ namespace Memory
 	void Set(void* destination, uint32 byteCount, int32 value);
 }
 
-#define PG_NEW(type, ...) \
-	static_cast<type*>(Memory::Allocate(new (std::nothrow) type(##__VA_ARGS__), #type, __FILE__, __LINE__))
+#ifdef PG_SYSTEM_WINDOWS
+	#define PG_NEW(type, ...) \
+		static_cast<type*>(Memory::Allocate(new (std::nothrow) type(##__VA_ARGS__), #type, __FILE__, __LINE__))
+#else
+	#define PG_NEW(type, ...) \
+		static_cast<type*>(Memory::Allocate(new (std::nothrow) type(__VA_ARGS__), #type, __FILE__, __LINE__))
+#endif
 
 #define PG_NEW_ARRAY(type, elementCount) \
 	static_cast<type*>(Memory::AllocateArray(new (std::nothrow) type[elementCount], elementCount, #type, __FILE__, __LINE__))

@@ -110,7 +110,10 @@ let genRegistries configuration =
 let genInterop configuration output =
   printfn "--debug=mdb-optimizations Build/%s/pgc.exe gen-interop --files \"%s\" --output \"%s\"" configuration (String.Join (", ", getInteropFiles "Source/Pegasus/Pegasus/Pegasus.csproj")) output
   if Shell.Exec ("mono", sprintf "--debug=mdb-optimizations Build/%s/pgc.exe gen-interop --files \"%s\" --output \"%s\"" configuration (String.Join (";", getInteropFiles "Source/Pegasus/Pegasus/Pegasus.csproj")) output) <> 0 then
-       sprintf "Failed to compile native interop code." |> failwith 
+       sprintf "Failed to compile native interop code." |> failwith
+
+let make () =
+  Shell.Exec ("make") |> ignore
 
 // The Release target builds the assets the Release and Debug targets
 Target "Release" (fun _ -> 
@@ -118,6 +121,7 @@ Target "Release" (fun _ ->
     genRegistries "Release"
     genInterop "Release" "Source/Pegasus/Platform/Interop"
     buildIL "Release"
+    make ()
 
     // We can now compile Pegasus and Lwar
     build (buildParams "Release Linux" "x64") "Source/LwarMono.sln"
@@ -136,6 +140,7 @@ Target "Debug" (fun _ ->
     buildAssets "Debug"
     genRegistries "Debug"
     buildIL "Debug"
+    make ()
 )
 
 // Run the target that was specified via the command line
