@@ -30,12 +30,6 @@ namespace Memory
 		Set(static_cast<void*>(destination), sizeof(T), value);
 	}
 
-	template <typename T>
-	bool Equals(const T* obj1, const T* obj2)
-	{
-		return Equals(static_cast<const void*>(obj1), static_cast<const void*>(obj2), sizeof(T));
-	}
-
 	PG_INLINE void* Allocate(void* ptr, const char* typeName, const char* file, int line)
 	{
 		if (ptr == nullptr)

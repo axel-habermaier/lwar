@@ -178,7 +178,6 @@ using float64 = double;
 #include <vector>
 #include <map>
 #include <algorithm>
-#include <exception>
 #include <string>
 #include <sstream>
 
@@ -208,7 +207,9 @@ using float64 = double;
 // SDL2 includes
 PG_DISABLE_WARNING(4668) // 'macro' is not defined as a preprocessor macro
 	#include "SDL2/SDL.h"
-	#include "SDL2/SDL_syswm.h"
+	#ifdef PG_SYSTEM_WINDOWS
+		#include "SDL2/SDL_syswm.h"
+	#endif
 PG_ENABLE_WARNING(4668)
 
 // Utility includes

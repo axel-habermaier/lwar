@@ -22,10 +22,6 @@ namespace Memory
 	template <typename T>
 	void Set(T* destination, int32 value);
 
-	// Checks whether the two objects are byte-equivalent.
-	template <typename T>
-	bool Equals(const T* obj1, const T* obj2);
-
 	// Copies the given number of bytes from source to destination.
 	void Copy(void* destination, const void* source, uint32 byteCount);
 

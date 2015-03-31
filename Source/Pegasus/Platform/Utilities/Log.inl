@@ -9,7 +9,7 @@ namespace Internal
 				if (*(fmt + 1) == '%')
 					++fmt;
 				else
-					throw std::exception("Too few arguments for format string.");
+					throw "Too few arguments for format string.";
 			}
 			s << *fmt++;
 		}
@@ -34,7 +34,7 @@ namespace Internal
 			s << *fmt++;
 		}
 
-		throw std::exception("Too many arguments for format string.");
+		throw "Too many arguments for format string.";
 	}
 }
 
@@ -48,5 +48,5 @@ inline std::string Format(const char* fmt, TArgs... args)
 
 PG_NORETURN inline void NoReturn()
 {
-	throw std::exception("The log function should never return control after a fatal log message.");
+	throw "The log function should never return control after a fatal log message.";
 }
