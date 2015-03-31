@@ -143,11 +143,15 @@ void rocket_launch(Entity *launcher) {
    if(!use_energy(launcher, 1))
         return;
 
-    Vec f = unit(launcher->phi);
+    Entity *ship = launcher->parent;
+    assert(ship);
+
+    Vec f = unit(ship->phi);
     Vec x = add(launcher->x, scale(f, launcher->radius + type_rocket.init_radius*2));
     Vec v = add(launcher->v, scale(f, type_rocket.max_a.x));
 
     Entity *rocket = entity_create(&type_rocket, launcher->player, x, v);
+    rocket->phi = ship->phi;
     rocket->active = true;
 }
 
@@ -272,8 +276,8 @@ void rocket_aim(Entity *rocket) {
     Entity *target = 0;
 
     entities_foreach(e) {
-        // if(rocket->player == e->player)
-        //     continue;
+        if(rocket->player == e->player)
+            continue;
 
         Vec dx = sub(e->x, rocket->x);
 

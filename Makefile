@@ -95,8 +95,7 @@ CXXFLAGS = -Wall -g -fPIC -ISource/Pegasus/Platform -DDEBUG
 all: $(BUILD) $(SERVER_SO) $(DEDICATED_BIN) $(PEGASUS_SO)
 
 run:
-	#(cd $(DIST); mono Lwar.exe)
-	echo "don't use it does not work!"
+	(cd $(DIST); mono Lwar.exe)
 
 rund: $(DEDICATED_BIN)
 	LD_LIBRARY_PATH=$(DIST) ./$(DEDICATED_BIN)

@@ -50,7 +50,7 @@ static void move_remaining(Entity *e) {
     if(e->parent) {
         e->x   = add(e->parent->x, rotate(e->dx, e->parent->phi));
         e->v   = e->parent->v;
-        //e->phi = e->parent->phi + e->dphi;
+        //e->phi = e->parent->phi + e->dphi; TODO: WHY?
     } else {
         move(e, e->remaining);
     }
