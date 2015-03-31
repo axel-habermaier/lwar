@@ -2,6 +2,7 @@
 {
 	using System;
 	using Messages;
+	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Utilities;
 
@@ -14,6 +15,11 @@
 	/// </remarks>
 	internal sealed class MessageDeserializer : PooledObject
 	{
+		/// <summary>
+		///     If tracing is enabled, the contents of all sent packets are shown in the debug output.
+		/// </summary>
+		private const bool EnableTracing = true;
+
 		/// <summary>
 		///     The object pool that is used to allocate message objects.
 		/// </summary>
@@ -157,6 +163,10 @@
 			}
 
 			message.Deserialize(ref reader);
+
+			if (message.IsReliable)
+				Log.DebugIf(EnableTracing, "(Client) {0}: {1}", sequenceNumber, message);
+
 			return new SequencedMessage(message, sequenceNumber);
 		}
 	}
