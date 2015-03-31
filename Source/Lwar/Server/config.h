@@ -5,6 +5,7 @@ enum {
     /* network */
     APP_ID              = 0xf27087c5,
 	NETWORK_REVISION    =   28,
+    DEFAULT_PORT        = 32422,
 
     UPDATE_INTERVAL     = 30        /*ms*/, /* only used if server_update is called with force == false */
     TIMEOUT_INTERVAL    = 15 * 1000 /*ms*/, /* drop connection after 15 seconds */

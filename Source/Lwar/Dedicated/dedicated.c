@@ -1,5 +1,6 @@
 #include "types.h"
 
+#include "config.h"
 #include "debug.h"
 #include "log.h"
 #include "performance.h"
@@ -102,7 +103,7 @@ int main(int argc, char *argv[]) {
     server_log_callbacks(_log);
     server_performance_callbacks(perf);
 
-    if(!server_init()) return 1;
+    if(!server_init(DEFAULT_PORT)) return 1;
 
     if(visual) {
         if(!visualization_init()) return 1;
