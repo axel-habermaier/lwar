@@ -265,15 +265,15 @@ void ray_act(Entity *ray) {
     }
 }
 
-void aim(Entity *rocket) {
+void rocket_aim(Entity *rocket) {
 	Entity *e;
 
     Vec     best_v;
     Entity *target = 0;
 
     entities_foreach(e) {
-        if(rocket->player == e->player)
-            continue;
+        // if(rocket->player == e->player)
+        //     continue;
 
         Vec dx = sub(e->x, rocket->x);
 

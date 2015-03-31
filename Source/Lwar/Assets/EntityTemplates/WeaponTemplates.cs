@@ -22,15 +22,15 @@
 
 		public static readonly EntityTemplate Rocket = new EntityTemplate
 		{
-			Act = "aim",
+			Act = "rocket_aim",
 			Energy = 1000,
 			Health = 1,
 			Shield = 1,
 			Mass = 1,
-			Radius = 16,
-			Acceleration = new Vector2(500, 20),
-			Decelaration = new Vector2(20, 20),
-			Rotation = 1,
+			Radius = 32,
+			Acceleration = new Vector2(4000, 1000),
+			Decelaration = new Vector2(1000, 1000),
+			Rotation = 5,
 			Format = "format_pos"
 		};
 
