@@ -267,6 +267,10 @@
 
 			ship.HullIntegrity = message.HullIntegrity;
 			ship.Shields = message.Shields;
+			ship.Energy1 = message.WeaponEnergyLevels[0];
+			ship.Energy2 = message.WeaponEnergyLevels[1];
+			ship.Energy3 = message.WeaponEnergyLevels[2];
+			ship.Energy4 = message.WeaponEnergyLevels[3];
 		}
 	}
 }

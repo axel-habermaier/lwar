@@ -113,7 +113,8 @@ namespace Lwar.Network.Server
 				}
 				catch (AggregateException aggregateException)
 				{
-					throw new InvalidOperationException(String.Join("\n", aggregateException.InnerExceptions.Select(ex => ex.Message)));
+					var messages = aggregateException.InnerExceptions.Select(ex => String.Format("{0}\n{1}", ex.Message, ex.StackTrace));
+					throw new InvalidOperationException(String.Join("\n\n", messages));
 				}
 			}
 			finally
