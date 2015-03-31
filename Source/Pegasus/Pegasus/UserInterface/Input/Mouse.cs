@@ -19,7 +19,7 @@
 		/// <summary>
 		///     Stores whether a button is currently being double-clicked.
 		/// </summary>
-		private readonly bool[] _doubleClicked = new bool[Enum.GetValues(typeof(MouseButton)).Length];
+		private readonly bool[] _doubleClicked = new bool[Enum.GetValues(typeof(MouseButton)).Length + 1];
 
 		/// <summary>
 		///     A stack of hovered UI elements, with the topmost element in the visual tree at the bottom of the stack.
@@ -29,7 +29,7 @@
 		/// <summary>
 		///     The mouse button states.
 		/// </summary>
-		private readonly InputState[] _states = new InputState[Enum.GetValues(typeof(MouseButton)).Length];
+		private readonly InputState[] _states = new InputState[Enum.GetValues(typeof(MouseButton)).Length + 1];
 
 		/// <summary>
 		///     The UI element the mouse is currently over. Null if the mouse is not over any UI element.

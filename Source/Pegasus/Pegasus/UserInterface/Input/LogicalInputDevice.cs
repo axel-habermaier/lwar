@@ -19,7 +19,7 @@
 		/// <summary>
 		///     Stores whether a button is currently being double-clicked.
 		/// </summary>
-		private readonly bool[] _doubleClicked = new bool[Enum.GetValues(typeof(MouseButton)).Length];
+		private readonly bool[] _doubleClicked = new bool[Enum.GetValues(typeof(MouseButton)).Length + 1];
 
 		/// <summary>
 		///     The logical inputs that are currently registered on the device.
@@ -34,7 +34,7 @@
 		/// <summary>
 		///     The mouse button states.
 		/// </summary>
-		private readonly InputState[] _mouseButtonStates = new InputState[Enum.GetValues(typeof(MouseButton)).Length];
+		private readonly InputState[] _mouseButtonStates = new InputState[Enum.GetValues(typeof(MouseButton)).Length + 1];
 
 		/// <summary>
 		///     Indicates whether the preview input events are used to check for user input.
