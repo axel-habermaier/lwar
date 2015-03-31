@@ -204,19 +204,18 @@ size_t update_ship_pack(char *s, void *p) {
     i += uint8_pack(s+i, 100 * e->health / e->type->init_health);
     i += uint8_pack(s+i, 100 * e->health / e->type->init_health); /* TODO: actually use some shield */
 
-	i += uint8_pack(s+i, 100);	 /* TODO remove */
-	i += uint8_pack(s+i, 100);   /* TODO remove */
-	i += uint8_pack(s+i, 100);   /* TODO remove */
-	i += uint8_pack(s+i, 100);   /* TODO remove */
-
-	/* TODO
-    Slot *sl;
-    SlotType *st;
-    slots_foreach(e->player,sl,st) {
-        Entity *r = sl->entity;
-        i += uint8_pack(s+i, 100 * r->energy / r->type->init_energy);
+    if(e->player) {
+        Slot *sl;
+        SlotType *st;
+        slots_foreach(e->player,sl,st) {
+            Entity *r = sl->entity;
+            i += uint8_pack(s+i, 100 * r->energy / r->type->init_energy);
+        }
+    } else {
+        size_t sn;
+        for(sn=0; sn<NUM_SLOTS; sn++)
+	        i += uint8_pack(s+i, 100);
     }
-	*/
 
     return i;
 }
