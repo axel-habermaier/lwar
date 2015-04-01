@@ -98,23 +98,23 @@ void debug_message(Message *m, const char *s) {
         log_debug("%sdisconnect", s);
         break;
     case MESSAGE_JOIN:
-        log_debug("%sjoin %d: %.*s", s, m->join.player_id.n, m->join.nick.n, m->join.nick.s);
+        log_debug("%sjoin %d:%d %.*s", s, ID_ARG(m->join.player_id), STR_ARG(m->join.nick));
         break;
     case MESSAGE_LEAVE:
-        log_debug("%sleave %d", s, m->leave.player_id.n);
+        log_debug("%sleave %d:%d", s, ID_ARG(m->leave.player_id));
         break;
     case MESSAGE_CHAT:
-        log_debug("%schat %d: %.*s", s, m->chat.player_id.n, m->chat.msg.n, m->chat.msg.s);
+        log_debug("%schat %d:%d %.*s", s, ID_ARG(m->chat.player_id), STR_ARG(m->chat.msg));
         break;
     case MESSAGE_ADD:
-        log_debug("%sadd %d: player %d, type %d, parent %d", s, m->add.entity_id.n, m->add.player_id.n, m->add.type_id, m->add.parent_id.n);
+        log_debug("%sadd %d:%d player %d:%d, type %d, parent %d:%d", s, ID_ARG(m->add.entity_id), ID_ARG(m->add.player_id), m->add.type_id, ID_ARG(m->add.parent_id));
         break;
     case MESSAGE_REMOVE:
-        log_debug("%srem %d", s, m->remove.entity_id.n);
+        log_debug("%srem %d:%d", s, ID_ARG(m->remove.entity_id));
         break;
     case MESSAGE_SELECTION:
-        log_debug("%sselect %d: ship %d, weapons [%d,%d,%d,%d]",
-                  s, m->selection.player_id.n,
+        log_debug("%sselect %d:%d ship %d, weapons [%d,%d,%d,%d]",
+                  s, ID_ARG(m->selection.player_id),
                   m->selection.ship_type,
                   m->selection.weapon_type1,
                   m->selection.weapon_type2,
@@ -122,13 +122,13 @@ void debug_message(Message *m, const char *s) {
                   m->selection.weapon_type4);
         break;
     case MESSAGE_NAME:
-        log_debug("%sname %d: %.*s", s, m->name.player_id.n, m->name.nick.n, m->name.nick.s);
+        log_debug("%sname %d:%d %.*s", s, ID_ARG(m->name.player_id), STR_ARG(m->name.nick));
         break;
 	case MESSAGE_KILL:
-        log_debug("%skill %d by %d ", s, m->kill.victim_id.n, m->kill.killer_id.n);
+        log_debug("%skill %d:%d by %d:%d ", s, ID_ARG(m->kill.victim_id), ID_ARG(m->kill.killer_id));
         break;
     case MESSAGE_SYNCED:
-        log_debug("%ssynced %d", s, m->synced.player_id.n);
+        log_debug("%ssynced %d:%d", s, ID_ARG(m->synced.player_id));
         break;
     case MESSAGE_REJECT:
         log_debug("%sreject", s);
@@ -144,10 +144,10 @@ void debug_message(Message *m, const char *s) {
         log_debug("%supdate #%d", s, m->update.n);
         break;
     case MESSAGE_INPUT:
-        log_debug("%sinput %d", s, m->input.player_id.n);
+        log_debug("%sinput %d:%d", s, ID_ARG(m->input.player_id));
         break;
     case MESSAGE_COLLISION:
-        log_debug("%scollision %d, %d", s, m->collision.entity_id[0].n, m->collision.entity_id[1].n);
+        log_debug("%scollision %d:%d, %d:%d", s, ID_ARG(m->collision.entity_id[0]), ID_ARG(m->collision.entity_id[1]));
         break;
     }
 }

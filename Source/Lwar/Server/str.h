@@ -10,4 +10,6 @@ struct Str {
     char *s;
 };
 
+#define STR_ARG(id) (id).n, (id).s
+
 #endif

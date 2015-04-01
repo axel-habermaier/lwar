@@ -14,4 +14,6 @@ struct Id {
 
 bool id_eq(Id id0, Id id1);
 
+#define ID_ARG(id) (id).n, (id).gen
+
 #endif
