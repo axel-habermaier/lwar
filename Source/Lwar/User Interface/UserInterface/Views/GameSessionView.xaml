@@ -5,6 +5,7 @@
 			 xmlns:controls="clr-namespace:Pegasus.UserInterface.Controls;assembly=PegasusUI"
 			 xmlns:input="clr-namespace:Pegasus.UserInterface.Input;assembly=PegasusUI"
 			 xmlns:userInterface="clr-namespace:Lwar.UserInterface.Views"
+			 xmlns:converters="clr-namespace:Pegasus.UserInterface.Converters;assembly=PegasusUI"
 			 mc:Ignorable="d"
 			 FontFamily="Liberation Sans"
 			 FontSize="16"
@@ -16,8 +17,8 @@
 		<input:ConfigurableBinding Cvar="Lwar.Scripting.Cvars.InputChatCvar" Method="ShowChatInput" />
 		<input:ConfigurableBinding Cvar="Lwar.Scripting.Cvars.InputShowScoreboardCvar" TriggerMode="Activated" Method="ShowScoreboard" />
 		<input:ConfigurableBinding Cvar="Lwar.Scripting.Cvars.InputShowScoreboardCvar" TriggerMode="Deactivated" Method="HideScoreboard" />
-		<input:KeyBinding Key="Escape" Method="ShowInGameMenu" TriggerOnRepeat="false"></input:KeyBinding>
-		<input:KeyBinding Key="C" Method="ToggleDebugCamera" Modifiers="Control+Shift" TriggerOnRepeat="false"></input:KeyBinding>
+		<input:KeyBinding Key="Escape" Method="ShowInGameMenu" TriggerOnRepeat="false" />
+		<input:KeyBinding Key="C" Method="ToggleDebugCamera" Modifiers="Control+Shift" TriggerOnRepeat="false" />
 	</UserControl.InputBindings>
 	<controls:RenderOutputPanel Camera="{Binding CameraManager.ActiveCamera}"
 								HasDepthStencil="true"
@@ -26,12 +27,37 @@
 								ResolutionSource="{Binding ResolutionSource}">
 		<controls:AreaPanel x:Name="LayoutRoot">
 
-			<userInterface:ShipOverlayPanel/>
+			<userInterface:ShipOverlayPanel />
 			<userInterface:RespawnView DataContext="{Binding Respawn}" />
-			<userInterface:WaitingView/>
-			<userInterface:EventListView/>
+			<userInterface:WaitingView />
+			<userInterface:EventListView />
 			<userInterface:ScoreboardView DataContext="{Binding Scoreboard}" />
 			<userInterface:ChatView DataContext="{Binding Chat}" />
+
+			<Grid VerticalAlignment="Bottom" HorizontalAlignment="Right">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition />
+					<ColumnDefinition />
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition />
+					<RowDefinition />
+					<RowDefinition />
+					<RowDefinition />
+				</Grid.RowDefinitions>
+
+				<TextBox Text="Weapon 1" Grid.Row="0" Grid.Column="0" />
+				<TextBox Text="{Binding WeaponEnergy1, Converter={converters:Int32ToStringConverter}}" Grid.Row="0" Grid.Column="1" />
+
+				<TextBox Text="Weapon 2" Grid.Row="1" Grid.Column="0" />
+				<TextBox Text="{Binding WeaponEnergy2, Converter={converters:Int32ToStringConverter}}" Grid.Row="1" Grid.Column="1" />
+
+				<TextBox Text="Weapon 3" Grid.Row="2" Grid.Column="0" />
+				<TextBox Text="{Binding WeaponEnergy3, Converter={converters:Int32ToStringConverter}}" Grid.Row="2" Grid.Column="1" />
+
+				<TextBox Text="Weapon 4" Grid.Row="3" Grid.Column="0" />
+				<TextBox Text="{Binding WeaponEnergy4, Converter={converters:Int32ToStringConverter}}" Grid.Row="3" Grid.Column="1" />
+			</Grid>
 
 		</controls:AreaPanel>
 	</controls:RenderOutputPanel>

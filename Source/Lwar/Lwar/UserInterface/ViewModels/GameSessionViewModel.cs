@@ -6,7 +6,6 @@
 	using Network;
 	using Network.Messages;
 	using Pegasus;
-	using Pegasus.Platform.Graphics;
 	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Platform.Network;
@@ -42,6 +41,11 @@
 		///     The remaining number of seconds before the connection of the server is dropped.
 		/// </summary>
 		private double _waitForServerTimeout;
+
+		private int _weaponEnergy1;
+		private int _weaponEnergy2;
+		private int _weaponEnergy3;
+		private int _weaponEnergy4;
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -91,6 +95,30 @@
 		///     Gets the event messages that should be displayed.
 		/// </summary>
 		public IEnumerable<EventMessage> EventMessages { get; private set; }
+
+		public int WeaponEnergy1
+		{
+			get { return _weaponEnergy1; }
+			set { ChangePropertyValue(ref _weaponEnergy1, value); }
+		}
+
+		public int WeaponEnergy2
+		{
+			get { return _weaponEnergy2; }
+			set { ChangePropertyValue(ref _weaponEnergy2, value); }
+		}
+
+		public int WeaponEnergy3
+		{
+			get { return _weaponEnergy3; }
+			set { ChangePropertyValue(ref _weaponEnergy3, value); }
+		}
+
+		public int WeaponEnergy4
+		{
+			get { return _weaponEnergy4; }
+			set { ChangePropertyValue(ref _weaponEnergy4, value); }
+		}
 
 		/// <summary>
 		///     Gets the camera manager that toggles between the game camera and the debug camera.
@@ -229,6 +257,15 @@
 				// Ensure that the scoreboard is hidden when the chat input or the console are visible
 				if (Chat.IsVisible || Application.Current.IsConsoleOpen)
 					Scoreboard.IsVisible = false;
+
+				if (_gameSession.LocalPlayer != null && _gameSession.LocalPlayer.Ship != null)
+				{
+					var ship = _gameSession.LocalPlayer.Ship;
+					WeaponEnergy1 = ship.Energy1;
+					WeaponEnergy2 = ship.Energy2;
+					WeaponEnergy3 = ship.Energy3;
+					WeaponEnergy4 = ship.Energy4;
+				}
 			}
 			catch (ConnectionDroppedException)
 			{
