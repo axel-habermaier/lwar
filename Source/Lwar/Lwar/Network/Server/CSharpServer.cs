@@ -58,7 +58,7 @@ namespace Lwar.Network.Server
 
 				Log.Info("Server started.");
 			}
-			catch (NetworkException)
+			catch (Exception)
 			{
 				this.SafeDispose();
 				throw;
@@ -84,6 +84,8 @@ namespace Lwar.Network.Server
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			base.OnDisposing();
+
 			_clients.SafeDispose();
 			_gameSession.SafeDispose();
 			_listener.SafeDispose();

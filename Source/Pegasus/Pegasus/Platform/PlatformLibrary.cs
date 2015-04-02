@@ -8,6 +8,7 @@ namespace Pegasus.Platform
 	using Memory;
 	using Network;
 	using Rendering;
+	using Scripting;
 	using UserInterface;
 	using Utilities;
 
@@ -43,6 +44,9 @@ namespace Pegasus.Platform
 				sizeof(StencilOperationDescription), sizeof(Surface), sizeof(TextureDescription),
 				sizeof(TimestampDisjointQueryResult), sizeof(VertexBinding),
 				sizeof(VertexLayoutDescription), Marshal.SizeOf(typeof(NativeMethods.WindowCallbacks)));
+
+			Cvars.VsyncChanged += _ => NativeMethods.EnableVsync(Cvars.Vsync);
+			NativeMethods.EnableVsync(Cvars.Vsync);
 		}
 
 		/// <summary>

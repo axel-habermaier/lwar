@@ -61,4 +61,10 @@ internal interface ICvars
 	/// </summary>
 	[Cvar(true), Persistent]
 	bool HardwareCursor { get; set; }
+
+	/// <summary>
+	///     Enables or disable vertical synchronization (vsync). Enabling vsync avoids screen tearing but increases latency.
+	/// </summary>
+	[Cvar(true), Persistent]
+	bool Vsync { get; set; }
 }

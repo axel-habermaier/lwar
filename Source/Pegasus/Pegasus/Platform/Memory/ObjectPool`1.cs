@@ -53,6 +53,8 @@
 		/// </summary>
 		public T Allocate()
 		{
+			Assert.NotDisposed(this);
+
 			T obj;
 			if (_pooledObjects.Count == 0)
 			{
@@ -78,7 +80,9 @@
 		/// <param name="obj">The object that should be returned to the pool.</param>
 		public override void Free(object obj)
 		{
+			Assert.NotDisposed(this);
 			Assert.OfType<T>(obj);
+
 			Free(obj as T);
 		}
 
@@ -88,6 +92,7 @@
 		/// <param name="obj">The object that should be returned to the pool.</param>
 		public void Free(T obj)
 		{
+			Assert.NotDisposed(this);
 			Assert.ArgumentNotNull(obj);
 			Assert.ArgumentSatisfies(!_pooledObjects.Contains(obj), "The object has already been returned.");
 			Assert.That(_pooledObjects.Count < _allocationCount, "More objects returned than allocated.");
@@ -100,6 +105,8 @@
 		/// </summary>
 		public override void Free()
 		{
+			Assert.NotDisposed(this);
+
 			if (_allocationCount == 0)
 				return;
 

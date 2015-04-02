@@ -22,6 +22,9 @@ public:
 	bool ShouldClose = false;
 	bool Focused = false;
 
+	int32 LastMouseX = 0;
+	int32 LastMouseY = 0;
+
 	WindowCallbacks Callbacks;
 
 	SDL_Window* GetSDLWindow();
@@ -29,5 +32,4 @@ public:
 
 private:
 	SDL_Window* _window = nullptr;
-	bool _mouseCaptured = false;
 };

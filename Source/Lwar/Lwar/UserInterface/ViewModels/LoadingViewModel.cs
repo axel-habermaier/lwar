@@ -7,7 +7,6 @@
 	using Pegasus.Platform.Memory;
 	using Pegasus.Platform.Network;
 	using Pegasus.UserInterface.ViewModels;
-	using Pegasus.Utilities;
 	using Scripting;
 	using Views;
 
@@ -16,6 +15,11 @@
 	/// </summary>
 	internal class LoadingViewModel : StackedViewModel
 	{
+		/// <summary>
+		///     The remote end point of the server.
+		/// </summary>
+		private readonly IPEndPoint _serverEndPoint;
+
 		/// <summary>
 		///     The clock that is used for time measurements.
 		/// </summary>
@@ -38,9 +42,9 @@
 		public LoadingViewModel(IPEndPoint serverEndPoint)
 		{
 			Commands.ShowConsole(false);
-			View = new LoadingView();
 
-			_gameSession = new ClientGameSession(serverEndPoint);
+			View = new LoadingView();
+			_serverEndPoint = serverEndPoint;
 		}
 
 		/// <summary>
@@ -48,7 +52,7 @@
 		/// </summary>
 		public IPEndPoint ServerEndPoint
 		{
-			get { return _gameSession.ServerEndPoint; }
+			get { return _serverEndPoint; }
 		}
 
 		/// <summary>
@@ -67,6 +71,9 @@
 		{
 			try
 			{
+				if (_gameSession == null)
+					_gameSession = new ClientGameSession(_serverEndPoint);
+
 				ElapsedTime = _clock.Seconds;
 
 				if (!_gameSession.Load())

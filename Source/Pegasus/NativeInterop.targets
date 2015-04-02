@@ -2,7 +2,32 @@
 
 	<Import Project="AssetCompiler.targets" Condition="'$(AssetCompilerExecutable)' == ''" />
 	
-	<Target Name="NativeInteropCodeGen" BeforeTargets="BeforeBuild;GenerateILAssembly">
+	<ItemGroup>
+		<AvailableItemName Include="IL" />  
+	</ItemGroup>
+	
+	<PropertyGroup>
+		<ILAssembly>$(TargetName).IL.dll</ILAssembly>
+	</PropertyGroup>
+	
+	<Target Name="GenerateILAssembly" BeforeTargets="BeforeBuild" Inputs="$(MSBuildAllProjects);@(IL);" Outputs="$(ILAssembly);$(NonExistentFile);">
+		<GetFrameworkPath>
+			<Output TaskParameter="Path" PropertyName="FrameworkPath" />
+		</GetFrameworkPath>
+		<PropertyGroup>
+			<IlAsmCommand>"$(FrameworkPath)\Ilasm.exe" /nologo /quiet /dll /output:"$(OutDir)$(ILAssembly)" </IlAsmCommand>
+		</PropertyGroup>
+		<PropertyGroup Condition="$(Configuration.Contains('Debug'))">
+			<IlAsmCommand>$(IlAsmCommand) /debug </IlAsmCommand>
+		</PropertyGroup>
+		<PropertyGroup Condition="$(Configuration.Contains('Release'))">
+			<IlAsmCommand>$(IlAsmCommand) /optimize </IlAsmCommand>
+		</PropertyGroup>
+		<Exec Command="$(IlAsmCommand) @(IL->'&quot;%(FullPath)&quot;', ' ')" Outputs="$(ILAssembly)" />
+		<Message Importance="High" Text="Compiled IL assembly '$(ILAssembly)'." />
+	</Target>
+	
+	<Target Name="NativeInteropCodeGen" BeforeTargets="GenerateILAssembly">
 		<Exec Command="$(AssetCompilerExecutable) gen-interop --files &quot;@(Compile)&quot; --output &quot;$(NativeInteropOutputPath)&quot;" Condition="%(Compile.NativeInterop) == 'true'" WorkingDirectory="$(ProjectDir)"/>
 	</Target>
 	

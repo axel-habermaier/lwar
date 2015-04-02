@@ -31,6 +31,11 @@
 		private readonly RootUIElement _root = new RootUIElement();
 
 		/// <summary>
+		///     The step timer that is used to schedule updates.
+		/// </summary>
+		private readonly StepTimer _stepTimer = new StepTimer();
+
+		/// <summary>
 		///     Gets the view model of the window the application is rendered to.
 		/// </summary>
 		private AppWindowViewModel _appWindowViewModel;
@@ -43,9 +48,27 @@
 		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
-		protected Application()
+		protected Application(double? targetElapsedSeconds = null)
 		{
 			Current = this;
+		}
+
+		/// <summary>
+		///     Gets or sets a value indicating whether the fixed or the variable timestep mode should be used.
+		/// </summary>
+		public bool UseFixedTimeStep
+		{
+			get { return _stepTimer.UseFixedTimeStep; }
+			set { _stepTimer.UseFixedTimeStep = value; }
+		}
+
+		/// <summary>
+		///     Gets or sets the target elapsed time in seconds between two consecutive updates in fixed timestep mode.
+		/// </summary>
+		public double TargetElapsedSeconds
+		{
+			get { return _stepTimer.TargetElapsedSeconds; }
+			set { _stepTimer.TargetElapsedSeconds = value; }
 		}
 
 		/// <summary>
@@ -166,10 +189,10 @@
 					Commands.Help();
 					Commands.OnExit += Exit;
 
-					while (_running)
+					_stepTimer.UpdateRequired += () =>
 					{
 						// Update the input, application, and UI state
-						double updateTime, drawTime;
+						double updateTime;
 						using (TimeMeasurement.Measure(&updateTime))
 						{
 							_root.HandleInput();
@@ -179,16 +202,27 @@
 							_root.UpdateLayout();
 						}
 
+						DebugOverlay.UpdateTime = updateTime;
+					};
+
+					while (_running)
+					{
+						// Perform zero, one, or more frame updates
+						_stepTimer.Update();
+
 						// Draw the frame
 						GraphicsDevice.BeginFrame();
+
+						double drawTime;
 						using (TimeMeasurement.Measure(&drawTime))
 							_root.Draw();
+
 						GraphicsDevice.EndFrame();
 
 						// Update the debug overlay and particle statistics
 						DebugOverlay.GpuTime = GraphicsDevice.FrameTime;
 						DebugOverlay.RenderTime = drawTime;
-						DebugOverlay.UpdateTime = updateTime;
+						
 						ParticleStatistics.UpdateDebugOverlay(DebugOverlay);
 
 						// Present the contents of all windows' backbuffers

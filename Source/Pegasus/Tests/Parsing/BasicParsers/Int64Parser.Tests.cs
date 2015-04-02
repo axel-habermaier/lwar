@@ -46,13 +46,13 @@
 		[Test]
 		public void Overflow()
 		{
-			Message("1111111111111111111111111", String.Format(NumberParser<int>.OverflowMessage, TypeRegistry.GetDescription<long>()));
+			Message("1111111111111111111111111", String.Format(NumberParser<long>.OverflowMessage, TypeRegistry.GetDescription<long>()));
 		}
 
 		[Test]
 		public void Underflow()
 		{
-			Message("-111111111111111111111111", String.Format(NumberParser<int>.OverflowMessage, TypeRegistry.GetDescription<long>()));
+			Message("-111111111111111111111111", String.Format(NumberParser<long>.OverflowMessage, TypeRegistry.GetDescription<long>()));
 		}
 
 		[Test]

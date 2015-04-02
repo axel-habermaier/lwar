@@ -5,8 +5,6 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug Direct3D11</Configuration>
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
     <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{288C9D6B-72B8-4EFF-B636-E8886657AF1A}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>

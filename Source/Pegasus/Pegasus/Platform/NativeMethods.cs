@@ -95,6 +95,9 @@
 		[DllImport(PlatformLibrary.Name)]
 		internal static extern int GetMaxVertexBindings();
 
+		[DllImport(PlatformLibrary.Name)]
+		internal static extern void EnableVsync([MarshalAs(UnmanagedType.I1)] bool enable);
+
 		#endregion
 
 		#region Network

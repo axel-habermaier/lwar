@@ -5,7 +5,6 @@
 	using Converters;
 	using Input;
 	using Math;
-	using Platform.Graphics;
 	using Rendering;
 	using Utilities;
 
@@ -115,6 +114,8 @@
 		/// </summary>
 		private static void OnDependencyPropertyChanged(DependencyObject obj, DependencyProperty property)
 		{
+			Assert.MainThread();
+
 			var element = obj as UIElement;
 			if (element != null)
 				element.SetDirtyState(property.AffectsMeasure, property.AffectsArrange);
@@ -160,6 +161,7 @@
 		public void AddHandler<T>(RoutedEvent<T> routedEvent, RoutedEventHandler<T> handler)
 			where T : RoutedEventArgs
 		{
+			Assert.MainThread();
 			Assert.ArgumentNotNull(routedEvent);
 			Assert.ArgumentNotNull(handler);
 
@@ -175,6 +177,7 @@
 		public void RemoveHandler<T>(RoutedEvent<T> routedEvent, RoutedEventHandler<T> handler)
 			where T : RoutedEventArgs
 		{
+			Assert.MainThread();
 			Assert.ArgumentNotNull(routedEvent);
 			Assert.ArgumentNotNull(handler);
 
@@ -393,6 +396,7 @@
 		/// <param name="resource">Returns the resource with the specified key, if it is found.</param>
 		internal bool TryFindResource(object key, out object resource)
 		{
+			Assert.MainThread();
 			Assert.ArgumentNotNull(key);
 
 			// If the key is in our resource dictionary, return the resource
@@ -437,6 +441,8 @@
 		/// </param>
 		internal void ChangeLogicalParent(UIElement parent)
 		{
+			Assert.MainThread();
+
 			if (parent == LogicalParent)
 				return;
 
@@ -504,6 +510,7 @@
 		public void CreateEventBinding<T>(RoutedEvent<T> routedEvent, string method)
 			where T : RoutedEventArgs
 		{
+			Assert.MainThread();
 			Assert.ArgumentNotNull(routedEvent);
 			Assert.ArgumentNotNullOrWhitespace(method);
 
@@ -527,6 +534,7 @@
 										 string property1, string property2 = null, string property3 = null,
 										 IValueConverter<T> converter = null)
 		{
+			Assert.MainThread();
 			Assert.ArgumentNotNull(sourceObject);
 			Assert.ArgumentNotNull(targetProperty);
 			Assert.ArgumentInRange(bindingMode);
@@ -552,6 +560,7 @@
 										 string property1, string property2 = null, string property3 = null,
 										 IValueConverter<T> converter = null)
 		{
+			Assert.MainThread();
 			Assert.ArgumentNotNull(sourceObject);
 			Assert.ArgumentNotNull(targetProperty);
 			Assert.ArgumentInRange(bindingMode);
@@ -602,6 +611,7 @@
 		/// <param name="targetProperty">The dependency property that should be target of the binding.</param>
 		public void CreateTemplateBinding<T>(Control sourceObject, DependencyProperty<T> sourceProperty, DependencyProperty<T> targetProperty)
 		{
+			Assert.MainThread();
 			Assert.ArgumentNotNull(sourceObject);
 			Assert.ArgumentNotNull(sourceProperty);
 			Assert.ArgumentNotNull(targetProperty);
@@ -617,6 +627,7 @@
 		/// <param name="targetProperty">The dependency property that should be target of the binding.</param>
 		public void CreateResourceBinding<T>(object key, DependencyProperty<T> targetProperty)
 		{
+			Assert.MainThread();
 			Assert.ArgumentNotNull(key);
 			Assert.ArgumentNotNull(targetProperty);
 
@@ -646,6 +657,8 @@
 		/// </summary>
 		public void Focus()
 		{
+			Assert.MainThread();
+
 			if (!CanBeFocused)
 				return;
 
@@ -659,6 +672,8 @@
 		/// </summary>
 		public void Unfocus()
 		{
+			Assert.MainThread();
+
 			if (!IsFocused)
 				return;
 
@@ -689,6 +704,7 @@
 		internal void RaiseEvent<T>(RoutedEvent<T> routedEvent, T eventArgs)
 			where T : RoutedEventArgs
 		{
+			Assert.MainThread();
 			Assert.ArgumentNotNull(routedEvent);
 			Assert.ArgumentNotNull(eventArgs);
 
@@ -721,6 +737,7 @@
 		private void RaiseBubblingEvent<T>(RoutedEvent<T> routedEvent, T eventArgs)
 			where T : RoutedEventArgs
 		{
+			Assert.MainThread();
 			Assert.ArgumentNotNull(routedEvent);
 			Assert.ArgumentNotNull(eventArgs);
 			Assert.ArgumentSatisfies(routedEvent.RoutingStrategy == RoutingStrategy.Bubble, "Unexpected routing strategy.");
@@ -743,6 +760,7 @@
 		private static void RaiseTunnelingEvent<T>(UIElement element, RoutedEvent<T> routedEvent, T eventArgs)
 			where T : RoutedEventArgs
 		{
+			Assert.MainThread();
 			Assert.ArgumentNotNull(element);
 			Assert.ArgumentNotNull(routedEvent);
 			Assert.ArgumentNotNull(eventArgs);
@@ -762,6 +780,8 @@
 		/// <param name="boundsTestOnly">A value indicating whether only the bounds of the UI elements should be checked.</param>
 		internal UIElement HitTest(Vector2 position, bool boundsTestOnly)
 		{
+			Assert.MainThread();
+
 			// If the element isn't visible or hit test visible, there can be no hit.
 			if (!IsVisible || !IsHitTestVisible)
 				return null;
@@ -820,6 +840,8 @@
 		/// </param>
 		public void Measure(Size availableSize)
 		{
+			Assert.MainThread();
+
 			if (!IsMeasureDataDirty && _previousAvailableSize == availableSize)
 				return;
 
@@ -887,6 +909,8 @@
 		/// </remarks>
 		public void Arrange(Rectangle finalRect)
 		{
+			Assert.MainThread();
+
 			if (!IsArrangeDataDirty && _previousFinalRect == finalRect)
 				return;
 
@@ -937,6 +961,8 @@
 		/// <param name="visualOffset">The visual offset that should be applied to the UI element.</param>
 		internal void UpdateVisualOffsets(Vector2 visualOffset)
 		{
+			Assert.MainThread();
+
 			if (!IsVisualOffsetDirty && visualOffset == _previousVisualOffset)
 				return;
 

@@ -130,7 +130,9 @@
 		/// <param name="obj">The dependency object the value should be returned for.</param>
 		internal override object GetValue(DependencyObject obj)
 		{
+			Assert.MainThread();
 			Assert.ArgumentNotNull(obj);
+
 			return obj.GetValue(this);
 		}
 
@@ -141,6 +143,7 @@
 		/// <param name="target">The dependency object the value should be set for.</param>
 		internal override void CopyInheritedValue(DependencyObject source, DependencyObject target)
 		{
+			Assert.MainThread();
 			Assert.ArgumentNotNull(source);
 			Assert.ArgumentNotNull(target);
 			Assert.That(Inherits, "The dependency property does not support value inheritance.");
@@ -154,6 +157,7 @@
 		/// <param name="obj">The dependency object whose inherited value should be unset.</param>
 		internal override void UnsetInheritedValue(DependencyObject obj)
 		{
+			Assert.MainThread();
 			Assert.ArgumentNotNull(obj);
 			Assert.That(Inherits, "The dependency property does not support value inheritance.");
 
@@ -165,6 +169,7 @@
 		/// </summary>
 		internal void OnValueChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs<T> changedEventArgs)
 		{
+			Assert.MainThread();
 			RaiseChangeEvent(dependencyObject);
 
 			if (Changed != null)

@@ -138,7 +138,7 @@
 		/// <param name="type">The type the examples should be returned for.</param>
 		private static string GetExampleString(Type type)
 		{
-			return string.Format("Examples of valid inputs: {0}, ...", string.Join(", ", TypeRegistry.GetExamples(type).Take(10)));
+			return string.Format("Examples of valid inputs: {0}", string.Join(", ", TypeRegistry.GetExamples(type).Take(10)));
 		}
 	}
 }

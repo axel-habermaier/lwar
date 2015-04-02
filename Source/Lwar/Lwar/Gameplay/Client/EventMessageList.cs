@@ -73,6 +73,9 @@
 		/// <param name="player">The identity of the player that has joined the session.</param>
 		public void AddJoinMessage(NetworkIdentity player)
 		{
+			if (player == NetworkProtocol.ServerPlayerIdentity)
+				return;
+
 			var message = new EventMessage(EventType.Join);
 			if (TryGetPlayer(player, out message.Player))
 				Add(message);

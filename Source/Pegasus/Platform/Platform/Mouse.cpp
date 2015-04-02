@@ -33,8 +33,9 @@ PG_API_EXPORT void GetMousePosition(void* window, int32* x, int32* y)
 	PG_ASSERT_NOT_NULL(x);
 	PG_ASSERT_NOT_NULL(y);
 
-	*x = std::numeric_limits<int32>::max();
-	*y = std::numeric_limits<int32>::max();
+	auto nativeWindow = static_cast<NativeWindow*>(window);
+	*x = nativeWindow->LastMouseX;
+	*y = nativeWindow->LastMouseY;
 
 	auto sdlWindow = SDL_GetMouseFocus();
 	if (sdlWindow == nullptr)
@@ -44,6 +45,8 @@ PG_API_EXPORT void GetMousePosition(void* window, int32* x, int32* y)
 		return;
 
 	SDL_GetMouseState(x, y);
+	nativeWindow->LastMouseX = *x;
+	nativeWindow->LastMouseY = *y;
 }
 
 PG_API_EXPORT void* CreateHardwareCursor(Surface* surface, int32 hotSpotX, int32 hotSpotY)

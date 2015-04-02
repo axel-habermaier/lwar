@@ -81,7 +81,7 @@
 			{
 				Log.Error("Failed to parse the value '{0}\\\0' specified via the command line for cvar '{1}'.", value, cvar.Name);
 				Log.Error("Cvar type: {0}", TypeRegistry.GetDescription(cvar.ValueType));
-				Log.Error("Examples of valid inputs: {0}, ...", string.Join(", ", TypeRegistry.GetExamples(cvar.ValueType)));
+				Log.Error("Examples of valid inputs: {0}", string.Join(", ", TypeRegistry.GetExamples(cvar.ValueType)));
 				Log.Error(Help.GetHint(cvar.Name));
 			}
 			else

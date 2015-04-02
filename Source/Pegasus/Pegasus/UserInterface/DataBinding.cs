@@ -446,6 +446,8 @@
 		/// </param>
 		private void OnMemberChanged(ref MemberAccess memberAccess, ref MemberAccess nextMemberAccess, int memberAccessCount)
 		{
+			Assert.MainThread();
+
 			Log.DebugIf(Active && !_pathHasNullValue && _bindingMode != BindingMode.OneWayToSource && memberAccess.Value == null,
 				"Data binding failure: Encountered a null value in property path '{0}' when accessing '{1}'.",
 				PropertyPath, memberAccess.MemberName);

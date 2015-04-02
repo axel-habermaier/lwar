@@ -68,12 +68,21 @@
 			Assert.ArgumentNotNull(allocator);
 
 			var channel = allocator.Allocate<UdpChannel>();
-			channel.RemoteEndPoint = remoteEndPoint;
-			channel._socket = new UdpSocket();
-			channel._maxPacketSize = maxPacketSize;
-			channel._receiveFromSocket = true;
-			channel._allocator = allocator;
-			return channel;
+
+			try
+			{
+				channel.RemoteEndPoint = remoteEndPoint;
+				channel._socket = new UdpSocket();
+				channel._maxPacketSize = maxPacketSize;
+				channel._receiveFromSocket = true;
+				channel._allocator = allocator;
+				return channel;
+			}
+			catch (NetworkException)
+			{
+				channel.SafeDispose();
+				throw;
+			}
 		}
 
 		/// <summary>

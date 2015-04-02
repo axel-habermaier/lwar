@@ -14,6 +14,11 @@
 		internal const string Description = "IP address (either IPv4 or IPv6)";
 
 		/// <summary>
+		///     Parses the 'localhost' keyword.
+		/// </summary>
+		private readonly SkipStringParser _localHostParser = new SkipStringParser("localhost", ignoreCase: true);
+
+		/// <summary>
 		///     Parses the given input string and returns the parser's reply.
 		/// </summary>
 		/// <param name="inputStream">The input stream that should be parsed.</param>
@@ -21,6 +26,10 @@
 		{
 			var state = inputStream.State;
 			IPAddress address;
+
+			// Check for the 'localhost' keyword first
+			if (_localHostParser.Parse(inputStream).Status == ReplyStatus.Success)
+				return Success(IPAddress.LocalHost);
 
 			// Try to find out whether it is an IPv4 or IPv6 address
 			var ipv4 = inputStream.Skip(c => c != '.');

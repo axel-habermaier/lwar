@@ -5,7 +5,6 @@
 			 xmlns:controls="clr-namespace:Pegasus.UserInterface.Controls;assembly=PegasusUI"
 			 xmlns:input="clr-namespace:Pegasus.UserInterface.Input;assembly=PegasusUI"
 			 xmlns:userInterface="clr-namespace:Lwar.UserInterface.Views"
-			 xmlns:converters="clr-namespace:Pegasus.UserInterface.Converters;assembly=PegasusUI"
 			 mc:Ignorable="d"
 			 FontFamily="Liberation Sans"
 			 FontSize="16"
@@ -28,15 +27,10 @@
 		<controls:AreaPanel x:Name="LayoutRoot">
 
 			<userInterface:ShipOverlayPanel />
-			<userInterface:RespawnView DataContext="{Binding Respawn}" />
-			<userInterface:WaitingView />
-			<userInterface:EventListView />
-			<userInterface:ScoreboardView DataContext="{Binding Scoreboard}" />
-			<userInterface:ChatView DataContext="{Binding Chat}" />
 
-			<Grid VerticalAlignment="Bottom" HorizontalAlignment="Right">
+			<Grid VerticalAlignment="Bottom" HorizontalAlignment="Right" Background="#AA000000">
 				<Grid.ColumnDefinitions>
-					<ColumnDefinition />
+					<ColumnDefinition Width="100" />
 					<ColumnDefinition />
 				</Grid.ColumnDefinitions>
 				<Grid.RowDefinitions>
@@ -46,18 +40,24 @@
 					<RowDefinition />
 				</Grid.RowDefinitions>
 
-				<TextBox Text="Weapon 1" Grid.Row="0" Grid.Column="0" />
-				<TextBox Text="{Binding WeaponEnergy1, Converter={converters:Int32ToStringConverter}}" Grid.Row="0" Grid.Column="1" />
+				<TextBlock Text="Weapon 1" Grid.Row="0" Grid.Column="0" Margin="5,5,0,0" />
+				<TextBlock Text="{Binding WeaponEnergy1}" Grid.Row="0" Grid.Column="1" Margin="0,5,5,0" />
 
-				<TextBox Text="Weapon 2" Grid.Row="1" Grid.Column="0" />
-				<TextBox Text="{Binding WeaponEnergy2, Converter={converters:Int32ToStringConverter}}" Grid.Row="1" Grid.Column="1" />
+				<TextBlock Text="Weapon 2" Grid.Row="1" Grid.Column="0" Margin="5,2,0,0" />
+				<TextBlock Text="{Binding WeaponEnergy2}" Grid.Row="1" Grid.Column="1" Margin="0,2,5,0" />
 
-				<TextBox Text="Weapon 3" Grid.Row="2" Grid.Column="0" />
-				<TextBox Text="{Binding WeaponEnergy3, Converter={converters:Int32ToStringConverter}}" Grid.Row="2" Grid.Column="1" />
+				<TextBlock Text="Weapon 3" Grid.Row="2" Grid.Column="0" Margin="5,2,0,0" />
+				<TextBlock Text="{Binding WeaponEnergy3}" Grid.Row="2" Grid.Column="1" Margin="0,2,5,0" />
 
-				<TextBox Text="Weapon 4" Grid.Row="3" Grid.Column="0" />
-				<TextBox Text="{Binding WeaponEnergy4, Converter={converters:Int32ToStringConverter}}" Grid.Row="3" Grid.Column="1" />
+				<TextBlock Text="Weapon 4" Grid.Row="3" Grid.Column="0" Margin="5,2,0,5" />
+				<TextBlock Text="{Binding WeaponEnergy4}" Grid.Row="3" Grid.Column="1" Margin="0,2,5,5" />
 			</Grid>
+			
+			<userInterface:RespawnView DataContext="{Binding Respawn}" />
+			<userInterface:WaitingView />
+			<userInterface:EventListView />
+			<userInterface:ScoreboardView DataContext="{Binding Scoreboard}" />
+			<userInterface:ChatView DataContext="{Binding Chat}" />
 
 		</controls:AreaPanel>
 	</controls:RenderOutputPanel>

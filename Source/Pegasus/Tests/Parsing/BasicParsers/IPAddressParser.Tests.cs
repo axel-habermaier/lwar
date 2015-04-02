@@ -37,12 +37,12 @@
 
 		private void CheckMappedIPv4Valid(string ip, bool parseAll = true)
 		{
-			IP.Parse(Success(ip, parseAll).ToString()).MapToIPv6().Should().Be(IP.Parse(ip));
+			IP.Parse(Success(ip, parseAll).ToString()).Should().Be(IP.Parse(ip));
 		}
 
 		private void CheckMappedIPv4Valid(string ip, IP expected, bool parseAll = true)
 		{
-			IP.Parse(Success(ip, parseAll).ToString()).MapToIPv6().Should().Be(expected);
+			IP.Parse(Success(ip, parseAll).ToString()).Should().Be(expected);
 		}
 
 		private void CheckIPv4Invalid(string ip)
@@ -53,6 +53,24 @@
 		private void CheckIPv6Invalid(string ip)
 		{
 			Expected(ip, IPAddressParser.Description);
+		}
+
+		[Test]
+		public void Valid_Localhost()
+		{
+			Success("localhost", IPAddress.LocalHost);
+			Success("localHost", IPAddress.LocalHost);
+			Success("LocalHost", IPAddress.LocalHost);
+			Success("LOCALHOST", IPAddress.LocalHost);
+		}
+
+		[Test]
+		public void Invalid_Localhost()
+		{
+			Expected("localhst", IPAddressParser.Description);
+			Expected("abcd", IPAddressParser.Description);
+			Expected("Local!Host", IPAddressParser.Description);
+			Expected("LOCAL_HOST", IPAddressParser.Description);
 		}
 
 		[Test]

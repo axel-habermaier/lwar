@@ -25,7 +25,7 @@ UdpSocket::UdpSocket(UdpInterface* udpInterface)
 
 UdpSocket::~UdpSocket()
 {
-	if (IsSocketError(closesocket(_socket)))
+	if (!IsSocketInvalid() && IsSocketError(closesocket(_socket)))
 		PG_ERROR("Unable to close UDP socket.");
 }
 
@@ -64,7 +64,7 @@ bool UdpSocket::Send(byte* buffer, int32 sizeInBytes, IPEndPoint* remoteEndPoint
 
 	try
 	{
-		sockaddr_in6 ipv6 = { 0 } ;
+		sockaddr_in6 ipv6 = {};
 		ipv6.sin6_family = AF_INET6;
 		ipv6.sin6_port = htons(remoteEndPoint->GetPort());
 		Memory::CopyArray(reinterpret_cast<byte*>(&ipv6.sin6_addr), remoteEndPoint->GetAddress().GetIPv6Address(), sizeof(ipv6.sin6_addr));
@@ -137,7 +137,7 @@ ReceiveStatus UdpSocket::TryReceive(byte* buffer, int32 capacityInBytes, IPEndPo
 
 bool UdpSocket::Bind(uint16 port)
 {
-	sockaddr_in6 addr = { 0 };
+	sockaddr_in6 addr = {};
 	addr.sin6_family = AF_INET6;
 	addr.sin6_addr = in6addr_any;
 	addr.sin6_port = htons(port);
@@ -160,12 +160,12 @@ bool UdpSocket::BindMulticast(IPEndPoint* endPoint, int32 timeToLive)
 		if (IsSocketError(setsockopt(_socket, IPPROTO_IPV6, IPV6_MULTICAST_HOPS, reinterpret_cast<char*>(&timeToLive), sizeof(timeToLive))))
 			throw NetworkException("Failed to set multicast TTL.");
 
-		sockaddr_in6 addr = { 0 };
+		sockaddr_in6 addr = {};
 		addr.sin6_family = AF_INET6;
 		addr.sin6_port = htons(endPoint->GetPort());
 		Memory::Copy(&addr.sin6_addr, &endPoint->GetAddress(), sizeof(addr.sin6_addr));
 
-		ipv6_mreq group = { 0 };
+		ipv6_mreq group = {};
 		group.ipv6mr_multiaddr = addr.sin6_addr;
 		if (IsSocketError(setsockopt(_socket, IPPROTO_IPV6, IPV6_ADD_MEMBERSHIP, reinterpret_cast<char*>(&group), sizeof(group))))
 			throw NetworkException("Failed to add multicast membership.");

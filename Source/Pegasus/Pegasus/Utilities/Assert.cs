@@ -5,6 +5,7 @@ namespace Pegasus.Utilities
 	using System;
 	using System.Collections;
 	using System.Diagnostics;
+	using System.Threading;
 	using Platform.Memory;
 	using UserInterface;
 
@@ -386,6 +387,19 @@ namespace Pegasus.Utilities
 
 			if (!obj.InUse)
 				throw new PegasusException("The object of type '{0}' is currently pooled.", obj.GetType().FullName);
+		}
+
+		/// <summary>
+		///     Throws a PegasusException if the method is called on a thread other than the main thread.
+		/// </summary>
+		[Conditional("DEBUG"), DebuggerHidden]
+		public static void MainThread()
+		{
+			if (Bootstrapper.MainThreadId == Thread.CurrentThread.ManagedThreadId)
+				return;
+
+			throw new PegasusException("Expected code to run on the main thread. Current Thread: Id '{0}', Name '{1}'.",
+				Thread.CurrentThread.ManagedThreadId, Thread.CurrentThread.Name);
 		}
 	}
 }

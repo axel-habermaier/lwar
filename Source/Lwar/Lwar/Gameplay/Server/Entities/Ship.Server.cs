@@ -119,7 +119,7 @@
 			// Update the acceleration of the entity
 			var acceleration = Vector2.Zero;
 
-			// When the warp drive is active an while we're dropping out of warp, always move forward
+			// When the warp drive is active and while we're dropping out of warp, always move forward
 			if (WarpDriveEnabled)
 				acceleration = new Vector2(1, 0);
 			else if (_propulsionVelocity.Length <= Template.MaxSpeed * 1.2f)

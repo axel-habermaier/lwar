@@ -15,15 +15,23 @@
 		private static readonly List<DisposableObject> GlobalPools = new List<DisposableObject>();
 
 		/// <summary>
+		///     Used for thread synchronization.
+		/// </summary>
+		private static readonly object LockObject = new object();
+
+		/// <summary>
 		///     Adds the given pool to the list of global pools that are disposed automatically during application shutdown.
 		/// </summary>
 		/// <param name="objectPool">The object pool that should be added.</param>
 		protected static void AddGlobalPool(ObjectPool objectPool)
 		{
 			Assert.ArgumentNotNull(objectPool);
-			Assert.That(!GlobalPools.Contains(objectPool), "The object pool has already been added.");
 
-			GlobalPools.Add(objectPool);
+			lock (LockObject)
+			{
+				Assert.That(!GlobalPools.Contains(objectPool), "The object pool has already been added.");
+				GlobalPools.Add(objectPool);
+			}
 		}
 
 		/// <summary>
@@ -31,7 +39,8 @@
 		/// </summary>
 		internal static void DisposeGlobalPools()
 		{
-			GlobalPools.SafeDisposeAll();
+			lock (LockObject)
+				GlobalPools.SafeDisposeAll();
 		}
 
 		/// <summary>

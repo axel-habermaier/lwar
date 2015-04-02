@@ -12,8 +12,7 @@ namespace Pegasus.Platform.Memory
 		/// <summary>
 		///     The default pool for string builder instances.
 		/// </summary>
-		private static readonly ObjectPool<StringBuilder> StringBuilders =
-			new ObjectPool<StringBuilder>(hasGlobalLifetime: true);
+		private static readonly ObjectPool<StringBuilder> StringBuilders = new ObjectPool<StringBuilder>(hasGlobalLifetime: true);
 
 		/// <summary>
 		///     Allocates a string builder instance from a application-wide pool.

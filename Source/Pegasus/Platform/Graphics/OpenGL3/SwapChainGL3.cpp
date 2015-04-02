@@ -11,6 +11,8 @@ SwapChain* GraphicsDevice::InitializeSwapChain(NativeWindow* window)
 	swapChain->Window = window->GetSDLWindow();
 	swapChain->BackBuffer.SwapChain = swapChain;
 
+	SDL_GL_SetSwapInterval(Graphics::VsyncEnabled ? 1 : 0);
+
 	return swapChain;
 }
 

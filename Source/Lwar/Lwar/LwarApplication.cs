@@ -32,6 +32,9 @@
 		/// </summary>
 		protected override void Initialize()
 		{
+			UseFixedTimeStep = true;
+			TargetElapsedSeconds = 1 / 60.0;
+
 			Commands.Resolve();
 			Cvars.Resolve();
 

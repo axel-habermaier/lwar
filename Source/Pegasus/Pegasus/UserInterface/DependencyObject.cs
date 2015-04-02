@@ -311,6 +311,10 @@
 			public DependencyPropertyValueSetter(DependencyObject obj, DependencyProperty<T> property, T newValue)
 				: this(obj, property)
 			{
+				Assert.ArgumentNotNull(obj);
+				Assert.ArgumentNotNull(property);
+				Assert.MainThread();
+
 				_property.ValidateValue(newValue);
 			}
 
@@ -322,6 +326,7 @@
 			public DependencyPropertyValueSetter(DependencyObject obj, DependencyProperty<T> property)
 				: this()
 			{
+				Assert.MainThread();
 				Assert.ArgumentNotNull(obj);
 				Assert.ArgumentNotNull(property);
 

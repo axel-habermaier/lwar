@@ -44,7 +44,7 @@
 		/// <summary>
 		///     The UDP socket that is used to send server discovery messages.
 		/// </summary>
-		private UdpSocket _socket = new UdpSocket();
+		private UdpSocket _socket;
 
 		/// <summary>
 		///     Initializes a new instance.
@@ -76,32 +76,29 @@
 		/// <param name="elapsedSeconds">The number of seconds that have passed since the last update.</param>
 		public void SendDiscoveryMessage(double elapsedSeconds)
 		{
-			if (_socket == null)
-				return;
-
-			_secondsSinceLastDiscoveryMessage += elapsedSeconds;
-			if (_secondsSinceLastDiscoveryMessage < 1 / NetworkProtocol.DiscoveryFrequency)
-				return;
-
 			try
 			{
+				if (_faultCount > RetryCount)
+					return;
+
+				if (_socket == null)
+					_socket = new UdpSocket();
+
+				_secondsSinceLastDiscoveryMessage += elapsedSeconds;
+				if (_secondsSinceLastDiscoveryMessage < 1 / NetworkProtocol.DiscoveryFrequency)
+					return;
+
 				_socket.Send(_buffer, _buffer.Length, NetworkProtocol.MulticastGroup);
 				_secondsSinceLastDiscoveryMessage = 0;
 			}
 			catch (NetworkException e)
 			{
 				if (_faultCount >= RetryCount)
-				{
 					Log.Error("Server discovery has been disabled. {0}", e.Message);
-
-					_socket.SafeDispose();
-					_socket = null;
-					return;
-				}
 
 				++_faultCount;
 				_socket.SafeDispose();
-				_socket = new UdpSocket();
+				_socket = null;
 			}
 		}
 

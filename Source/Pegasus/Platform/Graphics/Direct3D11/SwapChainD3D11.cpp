@@ -4,7 +4,7 @@ using namespace Direct3D11;
 
 SwapChain* GraphicsDevice::InitializeSwapChain(NativeWindow* window)
 {
-	DXGI_SWAP_CHAIN_DESC d3d11Desc = { 0 };
+	DXGI_SWAP_CHAIN_DESC d3d11Desc = {};
 	d3d11Desc.BufferCount = 2;
 	d3d11Desc.Flags = 0;
 	d3d11Desc.Windowed = true;
@@ -35,7 +35,7 @@ void GraphicsDevice::FreeSwapChain(SwapChain* swapChain)
 
 void GraphicsDevice::PresentSwapChain(SwapChain* swapChain)
 {
-	swapChain->Obj->Present(0, 0);
+	swapChain->Obj->Present(Graphics::VsyncEnabled ? 1u : 0u, 0);
 }
 
 void GraphicsDevice::ResizeSwapChain(SwapChain* swapChain, int32 width, int32 height)
@@ -83,7 +83,7 @@ void GraphicsDevice::InitializeBackBuffer(SwapChain* swapChain)
 
 void GraphicsDevice::ChangeToWindowedCore(SwapChain* swapChain, int32 width, int32 height)
 {
-	DXGI_MODE_DESC desc = { 0 };
+	DXGI_MODE_DESC desc = {};
 	desc.Format = SwapChainFormat;
 	desc.Width = safe_static_cast<UINT>(width);
 	desc.Height = safe_static_cast<UINT>(height);
@@ -101,7 +101,7 @@ bool GraphicsDevice::ChangeToFullscreenCore(SwapChain* swapChain, int32 width, i
 {
 	// See also http://msdn.microsoft.com/en-us/library/windows/desktop/ee417025(v=vs.85).aspx#full-screen_issues
 
-	DXGI_MODE_DESC desc = { 0 };
+	DXGI_MODE_DESC desc = {};
 	desc.Format = SwapChainFormat;
 	desc.Width = safe_static_cast<UINT>(width);
 	desc.Height = safe_static_cast<UINT>(height);

@@ -22,7 +22,7 @@ Texture* GraphicsDevice::InitializeTexture(TextureDescription* desc, Surface* su
 		}
 		else
 		{
-			Surface surface = { 0 };
+			Surface surface = {};
 			surface.Width = desc->Width;
 			surface.Height = desc->Height;
 
@@ -58,7 +58,7 @@ Texture* GraphicsDevice::InitializeTexture(TextureDescription* desc, Surface* su
 		}
 		else
 		{
-			Surface surface = { 0 };
+			Surface surface = {};
 			surface.Width = desc->Width;
 			surface.Height = desc->Height;
 

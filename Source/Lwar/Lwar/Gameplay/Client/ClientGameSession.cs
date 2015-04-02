@@ -47,23 +47,31 @@
 		/// <param name="serverEndPoint">The remote end point of the server.</param>
 		public ClientGameSession(IPEndPoint serverEndPoint)
 		{
-			_messageHandler = new MessageHandler(this);
-			_assets = new GameBundle(Application.Current.RenderContext);
+			try
+			{
+				_messageHandler = new MessageHandler(this);
+				_assets = new GameBundle(Application.Current.RenderContext);
 
-			Allocator = new PoolAllocator();
-			Renderer = new GameSessionRenderer();
+				Allocator = new PoolAllocator();
+				Renderer = new GameSessionRenderer();
 
-			Actors = new ActorList(this, Renderer);
-			Entities = new EntityList(this, Renderer);
-			Players = new PlayerList(this);
-			RootTransform = new Transformation();
-			EventMessages = new EventMessageList(this);
+				Actors = new ActorList(this, Renderer);
+				Entities = new EntityList(this, Renderer);
+				Players = new PlayerList(this);
+				RootTransform = new Transformation();
+				EventMessages = new EventMessageList(this);
 
-			var channel = UdpChannel.Create(Allocator, serverEndPoint, NetworkProtocol.MaxPacketSize);
-			Connection = Connection.Create(Allocator, channel);
-			Connection.Send(ClientConnectMessage.Create(Allocator, Cvars.PlayerName));
+				var channel = UdpChannel.Create(Allocator, serverEndPoint, NetworkProtocol.MaxPacketSize);
+				Connection = Connection.Create(Allocator, channel);
+				Connection.Send(ClientConnectMessage.Create(Allocator, Cvars.PlayerName));
 
-			_initializationRoutine = Initialize().GetEnumerator();
+				_initializationRoutine = Initialize().GetEnumerator();
+			}
+			catch (Exception)
+			{
+				this.SafeDispose();
+				throw;
+			}
 		}
 
 		/// <summary>
@@ -292,7 +300,9 @@
 			Commands.OnSay -= OnSay;
 			Cvars.PlayerNameChanged -= OnPlayerNameChanged;
 
-			Connection.Disconnect();
+			if (Connection != null)
+				Connection.Disconnect();
+
 			EntityTemplates.Dispose();
 			Actors.SafeDispose();
 			Entities.SafeDispose();

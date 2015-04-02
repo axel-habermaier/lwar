@@ -45,10 +45,18 @@
 		{
 			Assert.ArgumentNotNull(allocator);
 
-			_allocator = allocator;
-			_socket = new UdpSocket();
-			_port = port;
-			_maxPacketSize = maxPacketSize;
+			try
+			{
+				_allocator = allocator;
+				_socket = new UdpSocket();
+				_port = port;
+				_maxPacketSize = maxPacketSize;
+			}
+			catch (NetworkException)
+			{
+				this.SafeDispose();
+				throw;
+			}
 		}
 
 		/// <summary>

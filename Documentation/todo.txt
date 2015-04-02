@@ -23,7 +23,8 @@ Client
 	- Show server network statistics
 	- Collect and show client network statistics (avg number of times a reliable message was sent/received, # of incoming packets per second, etc.)
 - Fix respawn screen being displayed for a couple of frames after the player joined a new game session
-- Socket initialization failure during client connect brings down entire process
+- NRE in Client.MessageHandler.OnShipUpdated
+- Support Linux debug builds
 
 Pegasus
 ========
@@ -35,11 +36,13 @@ Pegasus
 	* Add to TextBox: Text selection (both via mouse and keyboard), copy & paste
 	* Add to SrollViewer: Horizontal scrolling, scrollbars
 	* Add to Button: hover/click feedback
-- cvars for fixed frame rate
-- support vsync
 - write C# analyzer that checks whether PooledObjects are not constructed directly
 - write C# analyzer that checks whether all fields of PooledObjects are reset
-- pools thread-safe!!! server log -> textstring pooled
+- Can't write IL project output
+
+Platform
+========
+- fix clang/gcc build warnings
 
 Assets Compiler
 ========

@@ -126,10 +126,8 @@
 		{
 			Assert.NotPooled(this);
 
-			if (!IsClientConnected(message) || !IsClientPlayer(message, message.Player))
-				return;
-
-			_serverLogic.Chat(_player, message.Message);
+			if (IsClientConnected(message) && IsClientPlayer(message, message.Player))
+				_serverLogic.Chat(_player, message.Message);
 		}
 
 		/// <summary>
@@ -140,10 +138,8 @@
 		{
 			Assert.NotPooled(this);
 
-			if (!IsClientConnected(message) || !IsClientPlayer(message, message.Player))
-				return;
-
-			_serverLogic.ChangePlayerName(_player, message.PlayerName);
+			if (IsClientConnected(message) && IsClientPlayer(message, message.Player))
+				_serverLogic.ChangePlayerName(_player, message.PlayerName);
 		}
 
 		/// <summary>
@@ -154,10 +150,8 @@
 		{
 			Assert.NotPooled(this);
 
-			if (!IsClientConnected(message) || !IsClientPlayer(message, message.Player))
-				return;
-
-			_serverLogic.ChangeLoadout(_player, message);
+			if (IsClientConnected(message) && IsClientPlayer(message, message.Player))
+				_serverLogic.ChangeLoadout(_player, message);
 		}
 
 		/// <summary>
@@ -271,6 +265,9 @@
 		{
 			if (_player != null && player == _player.Identity)
 				return true;
+
+			if (_player == null)
+				return false;
 
 			Log.Error("Client '{0}' has been kicked: Client message of type '{3}' references invalid player {1} instead of client's player {2}.",
 				_connection.RemoteEndPoint, player.Identifier, _player.Identity, message.MessageType);

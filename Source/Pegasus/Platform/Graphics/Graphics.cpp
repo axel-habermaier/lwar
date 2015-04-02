@@ -1,5 +1,7 @@
 #include "Prelude.hpp"
 
+bool Graphics::VsyncEnabled = true;
+
 PG_API_EXPORT DeviceInterface* CreateDeviceInterface(GraphicsApi graphicsApi)
 {
 	DeviceInterface* deviceInterface = nullptr;
@@ -42,6 +44,12 @@ PG_API_EXPORT void FreeDeviceInterface(DeviceInterface* deviceInterface)
 	default:
 		PG_NO_SWITCH_DEFAULT;
 	}
+}
+
+PG_API_EXPORT void EnableVsync(bool enable)
+{
+	SDL_GL_SetSwapInterval(enable ? 1 : 0);
+	Graphics::VsyncEnabled = enable;
 }
 
 PG_API_EXPORT int32 GetConstantBufferSlotCount()

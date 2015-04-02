@@ -32,11 +32,6 @@
 		private double _leftOverTime;
 
 		/// <summary>
-		///     Used to compute the framerate.
-		/// </summary>
-		private double _secondCounter;
-
-		/// <summary>
 		///     Initializes a new instance.
 		/// </summary>
 		public StepTimer()
@@ -58,7 +53,7 @@
 		/// <summary>
 		///     Gets or sets a value indicating whether the fixed or the variable timestep mode should be used.
 		/// </summary>
-		public bool IsFixedTimeStep { get; set; }
+		public bool UseFixedTimeStep { get; set; }
 
 		/// <summary>
 		///     Gets or sets the target elapsed time in seconds between two consecutive updates in fixed timestep mode.
@@ -73,7 +68,6 @@
 		{
 			_lastTime = Clock.GetTime();
 			_leftOverTime = 0;
-			_secondCounter = 0;
 		}
 
 		/// <summary>
@@ -87,18 +81,18 @@
 		public void Update()
 		{
 			Assert.That(UpdateRequired != null, "UpdateRequired event has no listeners.");
+			Assert.That(TargetElapsedSeconds > 0 || !UseFixedTimeStep, "Invalid target elapsed time.");
 
 			var currentTime = Clock.GetTime();
 			var timeDelta = currentTime - _lastTime;
 
 			_lastTime = currentTime;
-			_secondCounter += timeDelta;
 
 			// Clamp large time deltas, as the application might have been paused in the debugger, etc.
 			if (timeDelta > MaxDelta)
 				timeDelta = MaxDelta;
 
-			if (IsFixedTimeStep)
+			if (UseFixedTimeStep)
 			{
 				// If the app is running very close to the target elapsed time (within 1/4 of a millisecond) just clamp
 				// the clock to exactly match the target value. This prevents tiny and irrelevant errors
@@ -128,12 +122,6 @@
 
 				UpdateRequired();
 			}
-
-			// Reset the second counter if it exceeds one second (the time delta never exceeds MaxDelta seconds).
-			if (!(_secondCounter >= 1.0))
-				return;
-
-			_secondCounter -= 1.0;
 		}
 	}
 }

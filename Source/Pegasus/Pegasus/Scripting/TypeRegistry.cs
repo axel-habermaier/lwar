@@ -2,6 +2,7 @@
 {
 	using System;
 	using System.Collections.Generic;
+	using System.Linq;
 	using System.Reflection;
 	using Parsing;
 	using Parsing.BasicParsers;
@@ -47,13 +48,13 @@
 			Register(stringParser, "string", null, "\"\"", "word", "\"multiple words\"", "\"escaped quote: \\\"\"");
 
 			// Register default Pegasus framework types
-			Register(new IPAddressParser(), "IPv4 or IPv6 address", null, "::1", "127.0.0.1");
+			Register(new IPAddressParser(), "IPv4 or IPv6 address", null, "localhost", "::1", "127.0.0.1");
 			Register(new IPEndPointParser(), "IPv4 or IPv6 address with optional port", null, "::1", "[::1]:8081", "127.0.0.1", "127.0.0.1:8081");
 			Register(new EnumerationLiteralParser<WindowMode>(ignoreCase: true), null, null);
 			Register(new Vector2Parser(), null, v => String.Format("{0};{1}", v.X, v.Y), "0;0", "-10.0;10.5");
 			Register(new SizeParser(), null, s => String.Format("{0}x{1}", s.Width, s.Height), "0x0", "-10x10.5", "1920x1200");
-			Register(new EnumerationLiteralParser<Key>(false), "Keyboard key name", null, "A", "B", "LeftControl", "Return", "F1");
-			Register(new EnumerationLiteralParser<MouseButton>(false), "Mouse button", null, "Left", "Right", "Middle", "XButton1", "XButton2");
+			Register(new EnumerationLiteralParser<Key>(false), "Key", null, "A", "B", "LeftControl", "Return", "F1");
+			Register(new EnumerationLiteralParser<MouseButton>(false), "Mouse Button", null, "Left", "Right", "Middle", "XButton1", "XButton2");
 			Register(new EnumerationLiteralParser<GraphicsApi>(true), "Graphics API", null, "OpenGL3", "Direct3D11");
 			Register(new InputTriggerParser(), null, i => String.Format("[{0}]", i), "[Key(Return,WentDown)]", "[Key(A,Pressed)]",
 				"[Key(Left,Repeated)]", "[Mouse(Left,Pressed) | Mouse(Right,Pressed)]");
@@ -83,6 +84,9 @@
 
 			if (examples.Length == 0)
 				examples = Enum.GetNames(typeof(T));
+
+			if (!typeof(T).GetTypeInfo().IsEnum || examples.Length != Enum.GetNames(typeof(T)).Length)
+				examples = examples.Concat(new[] { "..." }).ToArray();
 
 			Func<object, string> objToString;
 			if (toString == null)

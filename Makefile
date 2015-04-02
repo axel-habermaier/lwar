@@ -10,8 +10,8 @@ Source/Pegasus/Platform/Network \
 Source/Pegasus/Platform/Platform \
 Source/Pegasus/Platform/Utilities \
 
-BUILD = Build/Debug/Server
-DIST  = Binaries
+BUILD = Build/Release/Server
+DIST  = Build/Release/AnyCPU
 
 SERVER_SRC    = \
 address.c       \
@@ -90,7 +90,7 @@ CC = clang
 CXX = clang++ -std=c++11
 LD = clang
 CFLAGS = -Wall -g -fPIC -ISource/Lwar/Server -DDEBUG
-CXXFLAGS = -Wall -g -fPIC -ISource/Pegasus/Platform -DDEBUG
+CXXFLAGS = -Wall -g -fPIC -ISource/Pegasus/Platform -O2
 
 all: $(BUILD) $(SERVER_SO) $(DEDICATED_BIN) $(PEGASUS_SO)
 

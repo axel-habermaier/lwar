@@ -40,7 +40,7 @@
 		[Test]
 		public void Overflow()
 		{
-			Message("1111111111111", String.Format(NumberParser<uint>.OverflowMessage, TypeRegistry.GetDescription<ushort>()));
+			Message("1111111111111", String.Format(NumberParser<ushort>.OverflowMessage, TypeRegistry.GetDescription<ushort>()));
 		}
 
 		[Test]

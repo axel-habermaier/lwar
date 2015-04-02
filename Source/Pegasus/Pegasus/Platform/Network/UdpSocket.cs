@@ -21,8 +21,18 @@
 		{
 			_udpInterface = NativeMethods.CreateUdpInterface();
 
-			if (!_udpInterface->Initialize())
+			if (_udpInterface->Initialize())
+				return;
+
+			try
+			{
 				throw new NetworkException(_udpInterface);
+			}
+			finally
+			{
+				// We have to dispose the socket after we got the error message for the exception
+				this.SafeDispose();
+			}
 		}
 
 		/// <summary>

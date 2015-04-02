@@ -13,13 +13,6 @@ open System.Xml
 open System.Linq
 open System.Xml.Linq
 
-let getInteropFiles (project : string) = 
-  let ns = "http://schemas.microsoft.com/developer/msbuild/2003"
-  let document = XDocument.Load(project);
-  document.Descendants(XName.Get(sprintf "{%s}Compile" ns))
-  |> Seq.filter (fun e -> e.Elements(XName.Get(sprintf "{%s}NativeInterop" ns)).Any())
-  |> Seq.map (fun e -> "Source/Pegasus/Pegasus/" + e.Attribute(XName.Get "Include").Value)
-
 // MSBuild parameters for the projects
 let buildParams configuration platform defaults = { 
     defaults with
@@ -66,65 +59,67 @@ let buildAssets configuration =
 // Builds the IL project
 let buildIL configuration =
     let files = !! "Source/Pegasus/Pegasus/**/**.asm"
-    let modifiedFiles = new List<string> ()
-    for file in files do 
-        // Unfortunately, Mono's ilasm is quite limited:
-        // - we have to remove all preprocessor directives, simulation the preprocessor manually
-        // - we have to remove the aggressiveinlining flag, as it is not supported by Mono's ilasm but
-        //   shouldn't be required for OpenGL code anyway (all OpenGL entry points have less than 32 bytes
-        //   of IL code, making them eligible for inlining by default); Direct3D11 might be slower, but
-        //   can't be run on Linux anyway
-        let content = File.ReadAllText file
-        let content = content.Replace("aggressiveinlining", "")
-        let content = content.Replace("#include \"Debug.asm\"", "")
-        let content = content.Replace("#define DEBUG", "")
-        let content = 
-            if configuration = "Release" then
-                // In release builds, remove the preprocessor directives and the enclosed content
-                let regex = new Regex("""\#ifdef DEBUG(.|\r|\n)*?\#endif""", RegexOptions.Multiline)
-                regex.Replace (content, "")
-            else
-                // In debug builds, just remove the preprocessor directives and leave the content as-is
-                let content = content.Replace("#ifdef DEBUG", "")
-                content.Replace("#endif", "")
-
-        // Write the modified file content to a temporary file
-        let fileName = sprintf "Build/%s/%s%d" configuration (Path.GetFileName file) modifiedFiles.Count
-        modifiedFiles.Add fileName
-        File.WriteAllText (fileName , content)  
-
-    // Finally, compile the IL code
-    if Shell.Exec ("ilasm", sprintf "/dll /output:Build/%s/AnyCPU/Pegasus.IL.dll %s" configuration (String.Join (" ", modifiedFiles)), "") <> 0 then
+    if Shell.Exec ("ilasm", sprintf "/dll /output:Build/%s/AnyCPU/Pegasus.IL.dll %s" configuration (String.Join (" ", files)), "") <> 0 then
         failwith "Failed to compile IL project"
-        
+     
+// Generates the code for all cvar and command registries        
 let genRegistries configuration =
-  let genRegistry file ns import =
-      if Shell.Exec ("mono", sprintf "--debug=mdb-optimizations Build/%s/pgc.exe gen-registry --registry \"%s\" --namespace \"%s\" --import \"%s\"" configuration file ns import) <> 0 then
-          sprintf "Failed to compile registry %s" file |> failwith 
+    let genRegistry file ns import directory =
+        if Shell.Exec ("mono", sprintf "--debug=mdb-optimizations ../../../Build/%s/pgc.exe gen-registry --registry \"%s\" --namespace \"%s\" --import \"%s\"" configuration file ns import, directory) <> 0 then
+            sprintf "Failed to generate code for registry %s" file |> failwith 
 
-  genRegistry "Source/Pegasus/Pegasus/Scripting/ICommands.cs" "Pegasus.Scripting" ""
-  genRegistry "Source/Pegasus/Pegasus/Scripting/ICvars.cs" "Pegasus.Scripting" ""
-  genRegistry "Source/Lwar/Lwar/Scripting/ICommands.cs" "Lwar.Scripting" "Source/Pegasus/Pegasus/Scripting/ICommands.cs"
-  genRegistry "Source/Lwar/Lwar/Scripting/ICvars.cs" "Lwar.Scripting" "Source/Pegasus/Pegasus/Scripting/ICvars.cs"
+    printfn "Generating Pegasus cvar/command registries"
+    genRegistry "Scripting/ICommands.cs" "Pegasus.Scripting" "" "Source/Pegasus/Pegasus"
+    genRegistry "Scripting/ICvars.cs" "Pegasus.Scripting" "" "Source/Pegasus/Pegasus"
+
+    printfn "Generating Lwar cvar/command registries"
+    genRegistry "Scripting/ICommands.cs" "Lwar.Scripting" "../../Pegasus/Pegasus/Scripting/ICommands.cs" "Source/Lwar/Lwar"
+    genRegistry "Scripting/ICvars.cs" "Lwar.Scripting" "../../Pegasus/Pegasus/Scripting/ICvars.cs" "Source/Lwar/Lwar"
   
-let genInterop configuration output =
-  printfn "--debug=mdb-optimizations Build/%s/pgc.exe gen-interop --files \"%s\" --output \"%s\"" configuration (String.Join (", ", getInteropFiles "Source/Pegasus/Pegasus/Pegasus.csproj")) output
-  if Shell.Exec ("mono", sprintf "--debug=mdb-optimizations Build/%s/pgc.exe gen-interop --files \"%s\" --output \"%s\"" configuration (String.Join (";", getInteropFiles "Source/Pegasus/Pegasus/Pegasus.csproj")) output) <> 0 then
-       sprintf "Failed to compile native interop code." |> failwith
+// Generates the interop C++ and IL code for all interop files
+let genInterop (project : string) configuration output =
+    let interopFiles = 
+        let ns = "http://schemas.microsoft.com/developer/msbuild/2003"
+        let xn name = sprintf "{%s}%s" ns name |> XName.Get
+        let document = XDocument.Load(project);
+        document.Descendants(xn "Compile")
+        |> Seq.filter (fun e -> e.Elements(xn "NativeInterop").Any ())
+        |> Seq.map (fun e -> e.Attribute(XName.Get "Include").Value)
 
-let make () =
-  Shell.Exec ("make") |> ignore
+    printfn "Generating native interop code for C# project '%s'" project
+    if Shell.Exec ("mono", sprintf "--debug=mdb-optimizations ../../../Build/%s/pgc.exe gen-interop --files \"%s\" --output \"%s\"" configuration (String.Join (";", interopFiles)) output, Path.GetDirectoryName project) <> 0 then
+        sprintf "Failed to generate native interop code" |> failwith
 
-// The Release target builds the assets the Release and Debug targets
+// Compiles the native Server and Platform projects
+let runMake target =
+    if target = "Debug" then failwith "makefile does not support debug builds"
+    if Shell.Exec ("make", if target = "Release" then "" else target) <> 0 then
+        sprintf "make failed" |> failwith
+
+// Uses the NUnit test runner to run all tests within the given assembly
+let runTests assembly = 
+    let runner = findToolFolderInSubPath "nunit-console.exe" "Source/packages"
+    NUnit (fun p ->
+        { p with
+             ToolPath = runner
+             DisableShadowCopy = true
+             ShowLabels = false
+             OutputFile = Path.Combine(Path.GetDirectoryName(assembly), Path.GetFileName(assembly) + ".xml") }
+    ) [assembly]
+
+// Compiles everything in the given configuration
+let compile configuration =
+    buildAssets configuration
+    genRegistries configuration
+    genInterop "Source/Pegasus/Pegasus/Pegasus.csproj" configuration "../Platform/Interop"
+    buildIL configuration
+    runMake configuration
+    build (buildParams (sprintf "%s Linux" configuration) "x64") "Source/LwarMono.sln"
+    runTests (sprintf "Build/%s/AnyCPU/Tests.dll" configuration)
+
+// The Release target builds everything and copies the outputs to the Binaries directory
 Target "Release" (fun _ -> 
-    buildAssets "Release"
-    genRegistries "Release"
-    genInterop "Release" "Source/Pegasus/Platform/Interop"
-    buildIL "Release"
-    make ()
-
-    // We can now compile Pegasus and Lwar
-    build (buildParams "Release Linux" "x64") "Source/LwarMono.sln"
+    compile "Release"
 
     // Create or clean the output directory
     CleanDir "Binaries"
@@ -133,25 +128,18 @@ Target "Release" (fun _ ->
     let bundles = !! "Build/Release/AnyCPU/**/**.pak"
     Copy "Binaries" (seq { yield "Build/Release/AnyCPU/Lwar.exe"; yield! bundles })
     Copy "Binaries" ["Build/Release/AnyCPU/Lwar.exe"; "Build/Release/AnyCPU/Pegasus.dll"; "Build/Release/AnyCPU/Pegasus.IL.dll"]
+    Copy "Binaries" ["Build/Release/AnyCPU/libPlatform.so"; "Build/Release/AnyCPU/libServer.so"]
 )
 
-// The Debug target only builds the assets and the IL library
+// The Debug target builds everything
 Target "Debug" (fun _ ->
-    buildAssets "Debug"
-    genRegistries "Debug"
-    buildIL "Debug"
-    make ()
+    compile "Debug"
+)
 
-    // We can now compile Pegasus and Lwar
-    build (buildParams "Debug Linux" "x64") "Source/LwarMono.sln"
-
-    // Create or clean the output directory
+// Cleans all build output
+Target "Clean" (fun _ ->
     CleanDir "Binaries"
-
-    // Copy the assemblies and all compiled asset bundles to the output directory
-    let bundles = !! "Build/Debug/AnyCPU/**/**.pak"
-    Copy "Binaries" (seq { yield "Build/Debug/AnyCPU/Lwar.exe"; yield! bundles })
-    Copy "Binaries" ["Build/Debug/AnyCPU/Lwar.exe"; "Build/Debug/AnyCPU/Pegasus.dll"; "Build/Debug/AnyCPU/Pegasus.IL.dll"]
+    CleanDir "Build"
 )
 
 // Run the target that was specified via the command line

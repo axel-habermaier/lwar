@@ -83,6 +83,8 @@
 		/// </summary>
 		protected override void OnDisposing()
 		{
+			base.OnDisposing();
+
 			if (!_isRunning)
 				return;
 

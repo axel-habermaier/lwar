@@ -5,8 +5,6 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <MinimumVisualStudioVersion>11.0</MinimumVisualStudioVersion>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{C8A6F23B-0B3D-4910-8512-BEDE93D1F604}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -615,7 +613,6 @@
     </IL>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="IL.targets" />
   <Import Project="../Registry.targets" Condition="'$(OS)' == 'Windows_NT'" />
   <PropertyGroup>
     <NativeInteropOutputPath>../Platform/Interop/</NativeInteropOutputPath>

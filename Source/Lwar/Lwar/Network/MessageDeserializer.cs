@@ -18,7 +18,7 @@
 		/// <summary>
 		///     If tracing is enabled, the contents of all sent packets are shown in the debug output.
 		/// </summary>
-		private const bool EnableTracing = true;
+		private const bool EnableTracing = false;
 
 		/// <summary>
 		///     The object pool that is used to allocate message objects.

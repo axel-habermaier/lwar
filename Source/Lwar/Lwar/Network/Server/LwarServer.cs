@@ -34,7 +34,7 @@ namespace Lwar.Network.Server
 		/// <summary>
 		///     The step timer that is used to update the server at a fixed rate.
 		/// </summary>
-		private readonly StepTimer _timer = new StepTimer { IsFixedTimeStep = true };
+		private readonly StepTimer _timer = new StepTimer { UseFixedTimeStep = true };
 
 		/// <summary>
 		///     The task that executes the server.
@@ -113,13 +113,21 @@ namespace Lwar.Network.Server
 				}
 				catch (AggregateException aggregateException)
 				{
-					var messages = aggregateException.InnerExceptions.Select(ex => String.Format("{0}\n{1}", ex.Message, ex.StackTrace));
+					Log.Error("One ore more exceptions occurred on the server thread.");
+
+					foreach (var exception in aggregateException.InnerExceptions)
+					{
+						Log.Error("Exception type: {0}", exception.GetType().FullName);
+						Log.Error("Exception message: {0}", exception.Message);
+						Log.Error("Stack trace: {0}", exception.StackTrace);
+					}
+
+					var messages = aggregateException.InnerExceptions.Select(ex => ex.Message);
 					throw new InvalidOperationException(String.Join("\n\n", messages));
 				}
 			}
 			finally
 			{
-				_server._serverDiscovery.SafeDispose();
 				_server.SafeDispose();
 				_server = null;
 			}
@@ -135,6 +143,14 @@ namespace Lwar.Network.Server
 
 			if (_server._task != null && _server._task.IsFaulted)
 				Stop();
+		}
+
+		/// <summary>
+		///     Disposes the object, releasing all managed and unmanaged resources.
+		/// </summary>
+		protected override void OnDisposing()
+		{
+			_serverDiscovery.SafeDispose();
 		}
 
 		/// <summary>

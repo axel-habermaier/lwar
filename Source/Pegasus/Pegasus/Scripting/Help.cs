@@ -78,7 +78,7 @@
 			{
 				builder.AppendFormat("\nCvar:          {0}\n", cvar.Name);
 				builder.AppendFormat("Description:   {0}\n", cvar.Description);
-				builder.AppendFormat("Type:          {0} (e.g., {1}, ...)\n", TypeRegistry.GetDescription(cvar.ValueType),
+				builder.AppendFormat("Type:          {0} (e.g., {1})\n", TypeRegistry.GetDescription(cvar.ValueType),
 					String.Join(", ", TypeRegistry.GetExamples(cvar.ValueType)));
 				builder.AppendFormat("Default Value: {0}\\\0\n", TypeRegistry.ToString(cvar.DefaultValue));
 				builder.AppendFormat("Current Value: {0}\\\0\n", TypeRegistry.ToString(cvar.Value));
@@ -123,7 +123,7 @@
 
 					builder.AppendFormat("    Parameter:     {0}\n", parameter.Name);
 					builder.AppendFormat("    Description:   {0}\n", parameter.Description);
-					builder.AppendFormat("    Type:          {0} (e.g., {1}, ...)", TypeRegistry.GetDescription(parameter.Type),
+					builder.AppendFormat("    Type:          {0} (e.g., {1})", TypeRegistry.GetDescription(parameter.Type),
 						String.Join(", ", TypeRegistry.GetExamples(parameter.Type)));
 
 					if (parameter.Validators.Any())

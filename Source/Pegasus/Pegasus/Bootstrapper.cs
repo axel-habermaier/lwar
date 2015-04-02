@@ -4,6 +4,8 @@
 	using System.Diagnostics;
 	using System.Globalization;
 	using System.Reflection;
+	using System.Text;
+	using System.Threading;
 	using System.Threading.Tasks;
 	using Platform;
 	using Platform.Logging;
@@ -18,6 +20,27 @@
 	/// </summary>
 	public static class Bootstrapper
 	{
+		/// <summary>
+		///     Initializes the type.
+		/// </summary>
+		static Bootstrapper()
+		{
+			MainThreadId = Thread.CurrentThread.ManagedThreadId;
+
+			// Set the thread name if it hasn't been set already by the test runner
+			if (Thread.CurrentThread.Name == null)
+				Thread.CurrentThread.Name = "Main Thread";
+
+			TaskScheduler.UnobservedTaskException += (o, e) => { throw e.Exception.InnerException; };
+			CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+			CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
+		}
+
+		/// <summary>
+		///     Gets the identifier of the main thread input handling and rendering has to be performed on.
+		/// </summary>
+		internal static int MainThreadId { get; private set; }
+
 		/// <summary>
 		///     Gets a value indicating whether the bootstrapping process is completed.
 		/// </summary>
@@ -36,10 +59,6 @@
 
 			try
 			{
-				TaskScheduler.UnobservedTaskException += (o, e) => { throw e.Exception.InnerException; };
-				CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
-				CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
-
 				AssemblyCache.Register(typeof(TApp).GetTypeInfo().Assembly);
 				AssemblyCache.Register(typeof(Bootstrapper).GetTypeInfo().Assembly);
 
@@ -108,8 +127,9 @@
 			}
 			catch (Exception e)
 			{
-				MessageBox.ShowNativeError(appName + " Fatal Error", String.Format("Application startup failed. {0}", e.Message));
-				Console.WriteLine("Application startup failed: {0}", e.Message);
+				var message = String.Format("Application startup failed. {0} ({1})", e.Message, e.GetType().FullName);
+				MessageBox.ShowNativeError(appName + " Fatal Error", message);
+				Console.WriteLine(message);
 			}
 			finally
 			{
@@ -136,7 +156,13 @@
 			message = String.Format(message, exception.Message, logFile.FilePath);
 			MessageBox.ShowNativeError(appName + " Fatal Error", message);
 
-			Log.Error("The application has been terminated after a fatal error. See the log file ({0}) for further details.", logFile.FilePath);
+			if (!(exception is PegasusException))
+			{
+				Log.Error("Exception type: {0}", exception.GetType().FullName);
+				Log.Error("Exception message: {0}", exception.Message);
+			}
+
+			Log.Error("The application has been terminated after a fatal error. The log file is located at '{0}'.", logFile.FilePath);
 		}
 
 		/// <summary>
@@ -158,8 +184,10 @@
 		private static void WriteToConsole(LogEntry entry)
 		{
 #if DEBUG
-			using (var text = new TextString(entry.Message))
-				Debug.WriteLine("[{0}] {1}", entry.LogTypeString, text);
+			var builder = new StringBuilder();
+			TextString.Write(builder, entry.Message);
+
+			Debug.WriteLine("[{0}] {1}", entry.LogTypeString, builder);
 #else
 			Console.Out.Write("[");
 			Console.Out.Write(entry.LogTypeString);
