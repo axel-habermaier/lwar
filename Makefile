@@ -90,7 +90,7 @@ CC = clang
 CXX = clang++ -std=c++11
 LD = clang
 CFLAGS = -Wall -g -fPIC -ISource/Lwar/Server -DDEBUG
-CXXFLAGS = -Wall -g -fPIC -ISource/Pegasus/Platform -O2
+CXXFLAGS = -Wall -g -fPIC -ISource/Pegasus/Platform
 
 all: $(BUILD) $(SERVER_SO) $(DEDICATED_BIN) $(PEGASUS_SO)
 
