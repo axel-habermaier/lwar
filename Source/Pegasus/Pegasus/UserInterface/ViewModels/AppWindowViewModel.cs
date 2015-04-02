@@ -156,6 +156,15 @@
 		}
 
 		/// <summary>
+		///     Draws the application's 3D content.
+		/// </summary>
+		public void Draw()
+		{
+			if (_particleEffectViewer != null)
+				_particleEffectViewer.DrawParticlePreview();
+		}
+
+		/// <summary>
 		///     Disposes the object, releasing all managed and unmanaged resources.
 		/// </summary>
 		protected override void OnDisposing()

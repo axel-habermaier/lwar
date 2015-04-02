@@ -9,7 +9,6 @@
 	using Pegasus.Platform.Logging;
 	using Pegasus.Platform.Memory;
 	using Pegasus.Platform.Network;
-	using Pegasus.Rendering;
 	using Pegasus.UserInterface.Controls;
 	using Pegasus.UserInterface.ViewModels;
 	using Pegasus.Utilities;
@@ -121,14 +120,6 @@
 		}
 
 		/// <summary>
-		///     Gets the camera manager that toggles between the game camera and the debug camera.
-		/// </summary>
-		public CameraManager CameraManager
-		{
-			get { return _gameSession.CameraManager; }
-		}
-
-		/// <summary>
 		///     Gets the list of players of the game session.
 		/// </summary>
 		public PlayerList Players
@@ -156,6 +147,22 @@
 				if (IsLagging)
 					ChangePropertyValue(ref _waitForServerTimeout, Math.Round(value));
 			}
+		}
+
+		/// <summary>
+		///     Gets the renderer of the game session.
+		/// </summary>
+		public GameSessionRenderer Renderer
+		{
+			get { return _gameSession.Renderer; }
+		}
+
+		/// <summary>
+		///     Gets the camera manager that toggles between the game camera and the debug camera.
+		/// </summary>
+		public CameraManager CameraManager
+		{
+			get { return _gameSession.CameraManager; }
 		}
 
 		/// <summary>
@@ -191,12 +198,11 @@
 		}
 
 		/// <summary>
-		///     Draws the 3D scene to the given render output.
+		///     Draws the view model's 3D visuals.
 		/// </summary>
-		/// <param name="renderOutput">The render output the current scene should be drawn to.</param>
-		public void OnDraw(RenderOutput renderOutput)
+		protected override void OnDraw()
 		{
-			_gameSession.Renderer.Draw(renderOutput);
+			Renderer.Draw(_gameSession.Camera);
 		}
 
 		/// <summary>
@@ -204,7 +210,7 @@
 		/// </summary>
 		public void ToggleDebugCamera()
 		{
-			CameraManager.ToggleDebugCamera();
+			_gameSession.CameraManager.ToggleDebugCamera();
 		}
 
 		/// <summary>

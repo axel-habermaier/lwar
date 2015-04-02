@@ -40,6 +40,11 @@
 		private readonly SpriteBatch _spriteBatch = new SpriteBatch();
 
 		/// <summary>
+		///     Gets or sets the render output the game session is rendered to.
+		/// </summary>
+		public RenderOutput RenderOutput { get; set; }
+
+		/// <summary>
 		///     Adds the given element to the appropriate renderer.
 		/// </summary>
 		/// <typeparam name="TElement">The type of the element that should be added.</typeparam>
@@ -88,6 +93,8 @@
 		/// </summary>
 		public void Initialize()
 		{
+			RenderOutput = new RenderOutput(Application.Current.RenderContext);
+
 			var assets = Application.Current.RenderContext.GetAssetBundle<GameBundle>();
 			foreach (var renderer in _renderers)
 				renderer.Initialize(Application.Current.RenderContext, assets);
@@ -96,28 +103,36 @@
 		/// <summary>
 		///     Draws the current frame.
 		/// </summary>
-		/// <param name="output">The output that the render context should render to.</param>
-		public void Draw(RenderOutput output)
+		/// <param name="camera">The camera that should be used to draw the frame.</param>
+		public void Draw(Camera camera)
 		{
-			Assert.ArgumentNotNull(output);
+			Assert.ArgumentNotNull(camera);
+
+			// The render target can be null if the render output panel is too small
+			if (RenderOutput.RenderTarget == null)
+				return;
+
+			// Set the camera and update its viewport
+			RenderOutput.Camera = camera;
+			camera.Viewport = RenderOutput.Viewport;
 
 			// Only clear the depth buffer; the color buffer will be completely overwritten anyway
-			output.ClearDepth();
+			RenderOutput.ClearDepth();
 
 			// Draw all 3D elements
 			foreach (var renderer in _renderers)
-				renderer.Draw(output);
+				renderer.Draw(RenderOutput);
 
 			// Draw all 2D elements into the 3D scenes
-			_spriteBatch.BlendState = output.RenderContext.BlendStates.Premultiplied;
-			_spriteBatch.DepthStencilState = output.RenderContext.DepthStencilStates.DepthRead;
-			_spriteBatch.SamplerState = output.RenderContext.SamplerStates.BilinearClampNoMipmaps;
+			_spriteBatch.BlendState = RenderOutput.RenderContext.BlendStates.Premultiplied;
+			_spriteBatch.DepthStencilState = RenderOutput.RenderContext.DepthStencilStates.DepthRead;
+			_spriteBatch.SamplerState = RenderOutput.RenderContext.SamplerStates.BilinearClampNoMipmaps;
 			_spriteBatch.WorldMatrix = Matrix.CreateRotationX(-MathUtils.PiOver2);
 
 			foreach (var renderer in _renderers)
 				renderer.Draw(_spriteBatch);
 
-			_spriteBatch.DrawBatch(output);
+			_spriteBatch.DrawBatch(RenderOutput);
 		}
 
 		/// <summary>

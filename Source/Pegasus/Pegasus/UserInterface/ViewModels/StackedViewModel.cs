@@ -2,7 +2,6 @@
 {
 	using System;
 	using Controls;
-	using UserInterface;
 	using Platform.Logging;
 	using Platform.Memory;
 	using Utilities;
@@ -175,6 +174,19 @@
 		}
 
 		/// <summary>
+		///     Draws the view model's 3D visuals.
+		/// </summary>
+		public void Draw()
+		{
+			Assert.NotDisposed(this);
+
+			if (_child != null)
+				_child.Draw();
+
+			OnDraw();
+		}
+
+		/// <summary>
 		///     Activates the view model, presenting its content and view on the UI.
 		/// </summary>
 		protected virtual void OnActivated()
@@ -192,6 +204,13 @@
 		///     Updates the view model's state.
 		/// </summary>
 		protected virtual void OnUpdate()
+		{
+		}
+
+		/// <summary>
+		///     Draws the view model's 3D visuals.
+		/// </summary>
+		protected virtual void OnDraw()
 		{
 		}
 

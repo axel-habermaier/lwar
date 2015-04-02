@@ -31,7 +31,7 @@
 		/// <summary>
 		///     Gets the graphics device the graphics object belongs to.
 		/// </summary>
-		protected GraphicsDevice GraphicsDevice { get; private set; }
+		public GraphicsDevice GraphicsDevice { get; private set; }
 
 		/// <summary>
 		///     Gets the device state of the graphics device this graphics object belongs to.

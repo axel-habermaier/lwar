@@ -4,7 +4,6 @@
 	using System.Windows;
 	using System.Windows.Controls;
 	using System.Windows.Media;
-	using System.Windows.Media.Media3D;
 	using Platform.Graphics;
 
 	public class RenderOutputPanel : Border
@@ -18,11 +17,8 @@
 		public static readonly DependencyProperty ColorBufferFormatProperty = DependencyProperty.Register(
 			"ColorBufferFormat", typeof(SurfaceFormat), typeof(RenderOutputPanel), new PropertyMetadata(SurfaceFormat.Rgba8));
 
-		public static readonly DependencyProperty DrawMethodProperty = DependencyProperty.Register(
-			"DrawMethod", typeof(string), typeof(RenderOutputPanel), new PropertyMetadata(default(Action)));
-
-		public static readonly DependencyProperty CameraProperty = DependencyProperty.Register(
-			"Camera", typeof(Camera), typeof(RenderOutputPanel), new PropertyMetadata(default(Camera)));
+		public static readonly DependencyProperty RenderOutputProperty = DependencyProperty.Register(
+			"RenderOutput", typeof(string), typeof(RenderOutputPanel), new PropertyMetadata(default(string)));
 
 		public static readonly DependencyProperty ResolutionSourceProperty = DependencyProperty.Register(
 			"ResolutionSource", typeof(ResolutionSource), typeof(RenderOutputPanel), new PropertyMetadata(default(ResolutionSource)));
@@ -47,12 +43,6 @@
 			set { SetValue(ResolutionSourceProperty, value); }
 		}
 
-		public Camera Camera
-		{
-			get { return (Camera)GetValue(CameraProperty); }
-			set { SetValue(CameraProperty, value); }
-		}
-
 		public bool HasDepthStencil
 		{
 			get { return (bool)GetValue(HasDepthStencilProperty); }
@@ -71,10 +61,10 @@
 			set { SetValue(ColorBufferFormatProperty, value); }
 		}
 
-		public string DrawMethod
+		public string RenderOutput
 		{
-			get { return (string)GetValue(DrawMethodProperty); }
-			set { SetValue(DrawMethodProperty, value); }
+			get { return (string)GetValue(RenderOutputProperty); }
+			set { SetValue(RenderOutputProperty, value); }
 		}
 	}
 }

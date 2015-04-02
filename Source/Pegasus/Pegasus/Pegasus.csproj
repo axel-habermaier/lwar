@@ -109,6 +109,9 @@
       <NativeInterop>true</NativeInterop>
     </Compile>
     <Compile Include="Platform\Network\ConnectionDroppedException.cs" />
+    <Compile Include="Rendering\Pipeline\PipelineCommand.cs" />
+    <Compile Include="Rendering\Pipeline\RenderPipeline.cs" />
+    <Compile Include="Rendering\Pipeline\SpriteBatchCommand.cs" />
     <Compile Include="Rendering\RenderContext.States.cs" />
     <Compile Include="Rendering\RenderContext.cs" />
     <Compile Include="Scene\Behavior.cs" />

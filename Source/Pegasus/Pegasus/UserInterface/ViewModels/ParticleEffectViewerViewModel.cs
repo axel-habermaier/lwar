@@ -26,6 +26,11 @@
 		private AssetBundle[] _assetBundles;
 
 		/// <summary>
+		///     The debug camera that is used to draw the particle effect preview.
+		/// </summary>
+		private DebugCamera _camera;
+
+		/// <summary>
 		///     The clock used for time measurements.
 		/// </summary>
 		private Clock _clock;
@@ -66,12 +71,11 @@
 		/// </summary>
 		public ParticleEffectViewerViewModel()
 		{
-			_renderContext = new RenderContext(Application.Current.GraphicsDevice);
-			_relativeMouseMode = Mouse.RelativeMouseMode;
 			_view = new ParticleEffectViewerView();
 			_inputDevice = new LogicalInputDevice(_view, usePreviewEvents: true);
-			_view.DataContext = this;
-			Camera = new DebugCamera(Application.Current.GraphicsDevice, _inputDevice) { MoveSpeed = 250, IsActive = false };
+			_renderContext = new RenderContext(Application.Current.GraphicsDevice);
+			_relativeMouseMode = Mouse.RelativeMouseMode;
+			_camera = new DebugCamera(Application.Current.GraphicsDevice, _inputDevice) { MoveSpeed = 250, IsActive = false };
 
 			// Load all asset bundles
 			_assetBundles = AssemblyCache.CreateInstancesOfType<AssetBundle>(_renderContext).ToArray();
@@ -81,18 +85,21 @@
 			// Load all templates
 			var templates = AssemblyCache.CreateInstancesOfType<ParticleEffectTemplate>(_renderContext);
 			ParticleTemplates = templates.OrderBy(t => t.DisplayName).ToArray();
-
-			Application.Current.Window.LayoutRoot.Add(_view);
+			
 			Mouse.RelativeMouseMode = false;
 			MessageBox.CloseAll();
 
+			RenderOutput = new RenderOutput(_renderContext) { Camera = _camera };
 			ResetCamera();
+
+			_view.DataContext = this;
+			Application.Current.Window.LayoutRoot.Add(_view);
 		}
 
 		/// <summary>
-		///     Gets the debug camera that is used to draw the particle effect preview.
+		///     Gets or sets the render output the particle effect viewer is rendered to.
 		/// </summary>
-		public DebugCamera Camera { get; private set; }
+		public RenderOutput RenderOutput { get; set; }
 
 		/// <summary>
 		///     Gets the particle effects defined by the application.
@@ -127,22 +134,26 @@
 		/// </summary>
 		public void ResetCamera()
 		{
-			Camera.Reset();
+			_camera.Reset();
 		}
 
 		/// <summary>
 		///     Draws a preview of the selected particle effect.
 		/// </summary>
-		/// <param name="renderOutput">The render output the preview should be drawn to.</param>
-		public void OnDraw(RenderOutput renderOutput)
+		public void DrawParticlePreview()
 		{
-			renderOutput.ClearColor(Colors.Black);
-			renderOutput.ClearDepth();
+			if (RenderOutput.RenderTarget == null)
+				return;
+
+			_camera.Viewport = RenderOutput.Viewport;
+
+			RenderOutput.ClearColor(Colors.Black);
+			RenderOutput.ClearDepth();
 
 			if (_inputCaptured)
 			{
 				_inputDevice.Update();
-				Camera.Update();
+				_camera.Update();
 			}
 
 			if (_particleEffect.IsCompleted)
@@ -152,7 +163,7 @@
 			_clock.Reset();
 
 			_particleEffect.Update(elapsedSeconds);
-			_particleEffect.Draw(renderOutput);
+			_particleEffect.Draw(RenderOutput);
 		}
 
 		/// <summary>
@@ -165,7 +176,7 @@
 
 			_inputCaptured = true;
 			Mouse.RelativeMouseMode = true;
-			Camera.IsActive = true;
+			_camera.IsActive = true;
 		}
 
 		/// <summary>
@@ -178,7 +189,7 @@
 
 			_inputCaptured = false;
 			Mouse.RelativeMouseMode = false;
-			Camera.IsActive = false;
+			_camera.IsActive = false;
 		}
 
 		/// <summary>
@@ -193,7 +204,7 @@
 				Application.Current.Window.LayoutRoot.Remove(_view);
 
 			ParticleTemplates.SafeDisposeAll();
-			Camera.SafeDispose();
+			_camera.SafeDispose();
 
 			_inputDevice.SafeDispose();
 			_particleEffect.SafeDispose();

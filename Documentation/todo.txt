@@ -38,7 +38,7 @@ Pegasus
 	* Add to Button: hover/click feedback
 - write C# analyzer that checks whether PooledObjects are not constructed directly
 - write C# analyzer that checks whether all fields of PooledObjects are reset
-- Can't write IL project output
+- Bug: windowDevice->IsClosing() always returns true on some Linux machines?
 
 Platform
 ========

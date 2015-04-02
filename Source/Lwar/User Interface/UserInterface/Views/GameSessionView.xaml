@@ -19,9 +19,8 @@
 		<input:KeyBinding Key="Escape" Method="ShowInGameMenu" TriggerOnRepeat="false" />
 		<input:KeyBinding Key="C" Method="ToggleDebugCamera" Modifiers="Control+Shift" TriggerOnRepeat="false" />
 	</UserControl.InputBindings>
-	<controls:RenderOutputPanel Camera="{Binding CameraManager.ActiveCamera}"
-								HasDepthStencil="true"
-								DrawMethod="OnDraw"
+	<controls:RenderOutputPanel HasDepthStencil="true"
+								RenderOutput="{Binding Renderer.RenderOutput}"
 								input:Cursor.Cursor="Lwar.Assets.GameBundle.Crosshair"
 								ResolutionSource="{Binding ResolutionSource}">
 		<controls:AreaPanel x:Name="LayoutRoot">

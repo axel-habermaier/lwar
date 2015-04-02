@@ -3,6 +3,7 @@
 //-------------------------------------------------------------------------------------------------------------------------------------------------------
 // Compile-time size checks of standard data types
 //-------------------------------------------------------------------------------------------------------------------------------------------------------
+static_assert(sizeof(bool) == 1, "Unexpected size.");
 static_assert(sizeof(char) == 1, "Unexpected size.");
 static_assert(sizeof(byte) == 1, "Unexpected size.");
 static_assert(sizeof(sbyte) == 1, "Unexpected size.");

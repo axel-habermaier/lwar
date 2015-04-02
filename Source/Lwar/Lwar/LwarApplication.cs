@@ -32,9 +32,6 @@
 		/// </summary>
 		protected override void Initialize()
 		{
-			UseFixedTimeStep = true;
-			TargetElapsedSeconds = 1 / 60.0;
-
 			Commands.Resolve();
 			Cvars.Resolve();
 
@@ -115,12 +112,20 @@
 		}
 
 		/// <summary>
-		///     Invoked when the application should update the its state.
+		///     Invoked when the application should update its state.
 		/// </summary>
 		protected override void Update()
 		{
 			LwarServer.CheckForErrors();
 			_viewModelRoot.Update();
+		}
+
+		/// <summary>
+		///     Invoked when the application should draw its 3D visuals.
+		/// </summary>
+		protected override void Draw()
+		{
+			_viewModelRoot.Draw();
 		}
 
 		/// <summary>

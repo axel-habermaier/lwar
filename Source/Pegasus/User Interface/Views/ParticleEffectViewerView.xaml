@@ -38,12 +38,11 @@
 					</ListBox.ItemTemplate>
 				</ListBox>
 				<Border BorderBrush="#FF444444" Padding="2" Margin="2">
-					<controls:RenderOutputPanel Camera="{Binding Camera}"
-												DockPanel.Dock="Left"
+					<controls:RenderOutputPanel DockPanel.Dock="Left"
 												MouseDown="{Binding CaptureInput}"
+												RenderOutput="{Binding RenderOutput}"
 												MouseUp="{Binding ReleaseInput}"
 												HasDepthStencil="true"
-												DrawMethod="OnDraw"
 												ResolutionSource="Layout">
 						<controls:AreaPanel />
 					</controls:RenderOutputPanel>
