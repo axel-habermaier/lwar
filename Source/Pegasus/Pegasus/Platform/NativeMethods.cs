@@ -123,7 +123,7 @@
 		internal static extern void SetTextInputArea(int left, int top, int width, int height);
 
 		[DllImport(PlatformLibrary.Name)]
-		internal static extern uint GetScanCodeCount();
+		internal static extern int GetScanCodeCount();
 
 		[DllImport(PlatformLibrary.Name)]
 		internal static extern int KeyToScanCode(int key);

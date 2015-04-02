@@ -34,7 +34,7 @@ PG_API_EXPORT void SetTextInputArea(int32 left, int32 top, int32 width, int32 he
 	SDL_SetTextInputRect(&rect);
 }
 
-PG_API_EXPORT uint32 GetScanCodeCount()
+PG_API_EXPORT int32 GetScanCodeCount()
 {
 	return SDL_NUM_SCANCODES;
 }
