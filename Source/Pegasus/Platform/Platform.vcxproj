@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -101,26 +101,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -197,8 +197,9 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies);Ws2_32.lib;SDL2d.lib;winmm.lib;imm32.lib;version.lib</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies);Ws2_32.lib;SDL2.lib;winmm.lib;imm32.lib;version.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)../Dependencies/SDL2/x86</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <Bscmake>
       <PreserveSbr>true</PreserveSbr>
@@ -220,8 +221,9 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies);Ws2_32.lib;SDL2d.lib;winmm.lib;imm32.lib;version.lib</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies);Ws2_32.lib;SDL2.lib;winmm.lib;imm32.lib;version.lib</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)../Dependencies/SDL2/x64</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -251,6 +253,7 @@
       <AdditionalDependencies>d3d11.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies);Ws2_32.lib;SDL2.lib;winmm.lib;imm32.lib;version.lib</AdditionalDependencies>
       <Profile>true</Profile>
       <AdditionalLibraryDirectories>$(SolutionDir)../Dependencies/SDL2/x86</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -280,6 +283,7 @@
       <AdditionalDependencies>d3d11.lib;dxgi.lib;dxguid.lib;%(AdditionalDependencies);Ws2_32.lib;SDL2.lib;winmm.lib;imm32.lib;version.lib</AdditionalDependencies>
       <Profile>true</Profile>
       <AdditionalLibraryDirectories>$(SolutionDir)../Dependencies/SDL2/x64</AdditionalLibraryDirectories>
+      <AdditionalOptions>/ignore:4099 %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

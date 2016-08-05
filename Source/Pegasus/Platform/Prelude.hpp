@@ -167,19 +167,21 @@ using float64 = double;
 //-------------------------------------------------------------------------------------------------------------------------------------------------------
 
 // Required C library and STL includes
-#include <cstddef>
-#include <cstring>
-#include <cctype>
-#include <type_traits>
-#include <utility>
-#include <new>
-#include <memory>
-#include <limits>
-#include <vector>
-#include <map>
-#include <algorithm>
-#include <string>
-#include <sstream>
+PG_DISABLE_WARNING(4548) // expression before comma has no effect
+	#include <cstddef>
+	#include <cstring>
+	#include <cctype>
+	#include <type_traits>
+	#include <utility>
+	#include <new>
+	#include <memory>
+	#include <limits>
+	#include <vector>
+	#include <map>
+	#include <algorithm>
+	#include <string>
+	#include <sstream>
+PG_ENABLE_WARNING(4548)
 
 // Interop includes
 #include "Interop/Enums.hpp"
