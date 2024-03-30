@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lwar", "Lwar\Lwar\Lwar.csproj", "{288C9D6B-72B8-4EFF-B636-E8886657AF1A}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -252,5 +252,8 @@ Global
 		{1785E559-5B80-4EB1-956F-415B210A6B45} = {2888CBDE-4111-4F27-BECF-3C67562FBABC}
 		{032C4229-B3A4-417F-8ED3-B2470E371F2D} = {2888CBDE-4111-4F27-BECF-3C67562FBABC}
 		{E008FA73-A930-40B5-93A4-959A4D30492D} = {D826BBBC-720E-4A28-BB06-8244F58FFDEA}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {116E2CA5-A3EB-4575-B039-4CE2BC8CFE00}
 	EndGlobalSection
 EndGlobal

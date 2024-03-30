@@ -18,3 +18,17 @@ Some notable learning highlights that are completely over the top:
 lwar's game client, 3D rendering, shaders, and the asset compilation pipeline are written C#, C++, .NET IL byte code, OpenGL 3, and Direct3D 11. The server is implemented in C, with an additional C# version.
 
 The game can be compiled for Windows using Visual Studio 2015 and also runs on Linux using Mono.
+
+## Screenshots
+
+![lwar screenshot](screenshot-1.jpg)
+_In-game screenshot showing the player's ship shooting a laser in sun's orbit with Earth nearby._
+
+![lwar screenshot](screenshot-2.jpg)
+_Screenshot of the in-game console, listing available commands, with the sun in the background._
+
+![lwar screenshot](screenshot-3.jpg)
+_In-game particle viewer rendering almost 1 million particles in roughly 3ms of CPU and GPU time on a Ryzen 7 5800X and a GeForce 1060._
+
+![lwar screenshot](screenshot-4.jpg)
+_Screenshot of the in-game Join menu rendered with a partial reimplementation of WPF. It is quite obvious that the goal was to learn how WPF works, and not to implement a good looking UI itself._
