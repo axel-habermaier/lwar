@@ -5,7 +5,7 @@ lwar is a 2.5D multiplayer space shooting game; but first and foremost, it's a l
 It thus avoids the use of libraries except for SDL2 and some asset compilation tools.
 Everything is implemented by hand to maximize the learning experience.
 There is a lot of infrastructure code that is not at all necessary for this kind of small game.
-But when it was interesting to implement it anyway, it was indeed implemented.
+But when it was interesting to implement it anyway, I indeed implemented it.
 
 Some notable learning highlights that are completely over the top:
 
@@ -17,7 +17,7 @@ Some notable learning highlights that are completely over the top:
 
 lwar's game client, 3D rendering, shaders, and the asset compilation pipeline are written C#, C++, .NET IL byte code, OpenGL 3, and Direct3D 11. The server is implemented in C, with an additional C# version.
 
-The game can be compiled for Windows using Visual Studio 2015 and also runs on Linux using Mono.
+The game can be compiled for Windows using Visual Studio 2022 and also runs on Linux using Mono.
 
 ## Screenshots
 
